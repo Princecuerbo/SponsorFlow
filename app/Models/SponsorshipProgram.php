@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SponsorshipProgram extends Model
@@ -48,6 +49,16 @@ class SponsorshipProgram extends Model
     public function sponsor(): BelongsTo
     {
         return $this->belongsTo(Sponsor::class);
+    }
+
+    public function academicPrograms(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            AcademicProgram::class,
+            'program_academic_program',
+            'sponsorship_program_id',
+            'academic_program_id'
+        )->withTimestamps();
     }
 
     public function applications(): HasMany

@@ -56,6 +56,42 @@
             class="form-control" id="address_requirement" name="address_requirement"
             value="{{ old('address_requirement', $program->address_requirement) }}"></div>
     <div class="col-12">
+        <div class="mb-4 mt-2">
+            <label class="form-label fw-bold">Eligible Courses / Academic Programs</label>
+            <p class="text-muted small mb-2">Select the courses eligible for this scholarship program (leave empty to
+                allow all courses).</p>
+
+            @php
+                $selectedProgramIds = is_array(old('academic_program_ids'))
+                    ? old('academic_program_ids')
+                    : ($program->exists ? $program->academicPrograms->pluck('program_id')->toArray() : []);
+            @endphp
+
+            <div class="card p-3 border rounded-3" style="max-height: 250px; overflow-y: auto;">
+                <div class="row g-2">
+                    @forelse ($academicPrograms as $academicProg)
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="academic_program_ids[]"
+                                    value="{{ $academicProg->program_id }}" id="prog_{{ $academicProg->program_id }}"
+                                    {{ in_array($academicProg->program_id, $selectedProgramIds) ? 'checked' : '' }}>
+                                <label class="form-check-label small" for="prog_{{ $academicProg->program_id }}">
+                                    <strong>{{ $academicProg->code }}</strong> — {{ $academicProg->name }}
+                                </label>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="col-12 text-muted small">No active academic programs are available. Please add academic
+                            programs first.</div>
+                    @endforelse
+                </div>
+            </div>
+            @error('academic_program_ids')
+                <div class="text-danger small mt-1">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
+    <div class="col-12">
         <div class="d-flex align-items-center gap-2 mt-4"><button type="submit" class="btn btn-success fw-bold"><i
                     class="bi bi-check-lg"></i> Save program</button><a href="{{ route('fassg.programs.index') }}"
                 class="btn btn-light border">Cancel</a></div>

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AcademicProgram extends Model
 {
@@ -27,4 +29,19 @@ class AcademicProgram extends Model
         'is_undergraduate' => 'boolean',
         'is_active' => 'boolean',
     ];
+
+    public function studentProfiles(): HasMany
+    {
+        return $this->hasMany(StudentProfile::class, 'academic_program_id', 'program_id');
+    }
+
+    public function scholarshipPrograms(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            SponsorshipProgram::class,
+            'program_academic_program',
+            'academic_program_id',
+            'sponsorship_program_id'
+        )->withTimestamps();
+    }
 }

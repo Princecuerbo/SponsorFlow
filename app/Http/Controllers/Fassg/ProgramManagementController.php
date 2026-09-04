@@ -10,6 +10,7 @@ use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Fassg\StoreSponsorshipProgramRequest;
 use App\Http\Requests\Fassg\UpdateSponsorshipProgramRequest;
+use App\Models\AcademicProgram;
 use App\Models\Sponsor;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
@@ -72,6 +73,7 @@ class ProgramManagementController extends Controller
             'user' => $this->actor($request),
             'program' => new SponsorshipProgram,
             'sponsors' => $this->availableSponsors(),
+            'academicPrograms' => $this->availableAcademicPrograms(),
         ]);
     }
 
@@ -81,6 +83,8 @@ class ProgramManagementController extends Controller
             ...$request->validated(),
             'status' => ProgramStatus::Open,
         ]);
+
+        $program->academicPrograms()->sync($request->input('academic_program_ids', []));
 
         $this->audit($request, 'fassg.program.created', 'sponsorship_programs');
 
@@ -95,6 +99,7 @@ class ProgramManagementController extends Controller
             'user' => $this->actor($request),
             'program' => $sponsorshipProgram,
             'sponsors' => $this->availableSponsors(),
+            'academicPrograms' => $this->availableAcademicPrograms(),
         ]);
     }
 
@@ -116,6 +121,8 @@ class ProgramManagementController extends Controller
             }
 
             $sponsorshipProgram->update($attributes);
+
+            $sponsorshipProgram->academicPrograms()->sync($request->input('academic_program_ids', []));
 
             if ($shouldExpire) {
                 $applicationIds = $sponsorshipProgram->applications()
@@ -145,8 +152,7 @@ class ProgramManagementController extends Controller
     }
 
     private function availableSponsors()
-    {
-        User::query()
+    {        User::query()
             ->where('role', UserRole::Sponsor)
             ->each(function (User $user): void {
                 Sponsor::query()->updateOrCreate(
@@ -166,6 +172,14 @@ class ProgramManagementController extends Controller
                 ->where('role', UserRole::Sponsor)
                 ->where('status', UserStatus::Active))
             ->orderBy('company_organization_name')
+            ->get();
+    }
+
+    private function availableAcademicPrograms()
+    {
+        return AcademicProgram::query()
+            ->where('is_active', true)
+            ->orderBy('code')
             ->get();
     }
 

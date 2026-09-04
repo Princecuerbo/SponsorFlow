@@ -27,6 +27,8 @@ class StoreSponsorshipProgramRequest extends FormRequest
             'min_gpa' => ['nullable', 'numeric', 'min:1', 'max:5'],
             'target_course' => ['nullable', 'string', 'max:150'],
             'address_requirement' => ['nullable', 'string', 'max:255'],
+            'academic_program_ids' => ['nullable', 'array'],
+            'academic_program_ids.*' => ['exists:academic_programs,program_id'],
         ];
     }
 }
