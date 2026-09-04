@@ -1,0 +1,1 @@
+@extends('student.programs.index')
