@@ -45,7 +45,7 @@ class RegisteredUserController extends Controller
         $isRural = $request->boolean('is_rural');
 
         $user = DB::transaction(function () use ($validated, $isRural): User {
-            $fullName = trim("{$validated['first_name']} {$validated['middle_name']} {$validated['last_name']}");
+            $fullName = trim("{$validated['first_name']} " . ($validated['middle_name'] ?? '') . " {$validated['last_name']}");
 
             $user = User::query()->create([
                 'name' => $fullName,

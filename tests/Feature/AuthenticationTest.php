@@ -15,11 +15,9 @@ class AuthenticationTest extends TestCase
 
     public function test_student_can_register_with_a_dorsu_email(): void
     {
-        $response = $this->withSession([
-            'data_privacy_consented' => true,
-            'privacy_consented_session' => true,
-        ])->post(route('register.store'), [
-            'name' => 'DORSU Student',
+        $response = $this->post(route('register.store'), [
+            'first_name' => 'DORSU',
+            'last_name' => 'Student',
             'email' => 'student@dorsu.edu.ph',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
@@ -32,8 +30,8 @@ class AuthenticationTest extends TestCase
             'is_rural' => 1,
         ]);
 
-        $response->assertRedirect(route('student.verification.show'));
-        $this->assertAuthenticated();
+        $response->assertRedirect(route('login'));
+        $this->assertGuest();
         $this->assertDatabaseHas('users', ['email' => 'student@dorsu.edu.ph', 'role' => UserRole::Student->value]);
         $this->assertDatabaseHas('student_profiles', ['student_id_number' => '2026-00001', 'is_sle_fhe_verified' => false]);
     }
@@ -77,35 +75,26 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
-    public function test_student_without_privacy_consent_session_is_redirected_to_dashboard(): void
+    public function test_student_dashboard_renders_without_privacy_consent_session(): void
     {
         $student = User::factory()->create(['role' => UserRole::Student]);
 
         $this->actingAs($student)
             ->get(route('student.dashboard'))
-            ->assertRedirect(route('student.dashboard'));
+            ->assertOk();
     }
 
-    public function test_student_with_session_consent_is_sent_to_dashboard_when_visiting_consent_page(): void
+    public function test_student_can_accept_privacy_consent_to_finish_login(): void
     {
         $student = User::factory()->create(['role' => UserRole::Student]);
 
-        $this->actingAs($student)
-            ->withSession(['privacy_consented_session' => true])
-            ->get(route('student.dashboard'))
-            ->assertRedirect(route('student.dashboard'));
-    }
+        $response = $this->withSession(['pending_user_id' => $student->id])
+            ->postJson(route('login.complete'), ['privacy_consent' => true])
+            ->assertOk()
+            ->assertJsonPath('redirect', route('student.dashboard'));
 
-    public function test_student_can_accept_privacy_consent_for_current_session(): void
-    {
-        $student = User::factory()->create(['role' => UserRole::Student]);
-
-        $this->actingAs($student)
-            ->post(route('privacy.accept'), ['agree' => '1'])
-            ->assertRedirect(route('student.dashboard'))
-            ->assertSessionHas('success', 'Data privacy terms accepted for this session.');
-
-        $this->assertTrue(session()->get('privacy_consented_session'));
+        $this->assertAuthenticatedAs($student);
+        $this->assertNotNull($student->fresh()->privacy_consent_at);
     }
 
     public function test_student_can_logout_without_privacy_consent(): void

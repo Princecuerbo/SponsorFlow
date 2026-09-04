@@ -14,7 +14,8 @@ class StudentRegistrationTest extends TestCase
     public function test_student_can_register_without_checking_is_rural_checkbox(): void
     {
         $response = $this->post(route('register.store'), [
-            'name' => 'Juan Dela Cruz',
+            'first_name' => 'Juan',
+            'last_name' => 'Dela Cruz',
             'email' => 'juan.delacruz@dorsu.edu.ph',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
@@ -27,8 +28,8 @@ class StudentRegistrationTest extends TestCase
             // Intentionally omit 'is_rural' to test checkbox default
         ]);
 
-        $response->assertRedirect(route('student.verification.show'));
-        $response->assertSessionHas('status', 'Account created. Complete verification before applying.');
+        $response->assertRedirect(route('login'));
+        $response->assertSessionHas('status', 'Registration successful! Please sign in with your credentials.');
 
         $user = User::query()->where('email', 'juan.delacruz@dorsu.edu.ph')->firstOrFail();
         $profile = StudentProfile::query()->where('user_id', $user->id)->firstOrFail();
@@ -40,7 +41,8 @@ class StudentRegistrationTest extends TestCase
     public function test_student_can_register_with_is_rural_checkbox_checked(): void
     {
         $response = $this->post(route('register.store'), [
-            'name' => 'Maria Santos',
+            'first_name' => 'Maria',
+            'last_name' => 'Santos',
             'email' => 'maria.santos@dorsu.edu.ph',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
@@ -53,7 +55,7 @@ class StudentRegistrationTest extends TestCase
             'is_rural' => '1',
         ]);
 
-        $response->assertRedirect(route('student.verification.show'));
+        $response->assertRedirect(route('login'));
 
         $user = User::query()->where('email', 'maria.santos@dorsu.edu.ph')->firstOrFail();
         $profile = StudentProfile::query()->where('user_id', $user->id)->firstOrFail();
@@ -104,7 +106,8 @@ class StudentRegistrationTest extends TestCase
     public function test_student_registration_succeeds_with_mixed_case_dorsu_email(): void
     {
         $response = $this->post(route('register.store'), [
-            'name' => 'Case Test User',
+            'first_name' => 'Case',
+            'last_name' => 'Test User',
             'email' => 'CaseUser@DORSU.EDU.PH',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
@@ -116,7 +119,7 @@ class StudentRegistrationTest extends TestCase
             'address' => '654 Central Avenue',
         ]);
 
-        $response->assertRedirect(route('student.verification.show'));
+        $response->assertRedirect(route('login'));
 
         $user = User::query()->where('email', 'CaseUser@DORSU.EDU.PH')->firstOrFail();
         $this->assertNotNull($user, 'User with mixed-case DORSU email should be created');

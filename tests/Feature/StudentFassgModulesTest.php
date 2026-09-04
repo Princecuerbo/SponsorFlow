@@ -61,7 +61,7 @@ class StudentFassgModulesTest extends TestCase
             'address' => 'Purok 2, Barangay San Isidro, Mati City, Davao Oriental',
             'barangay' => 'San Isidro',
             'is_rural' => '1',
-        ])->assertRedirect(route('student.verification.show'));
+        ])->assertRedirect(route('student.sle-fhe'));
 
         $this->assertDatabaseHas('student_profiles', [
             'user_id' => $student->id,
