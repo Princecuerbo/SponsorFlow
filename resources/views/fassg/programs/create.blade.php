@@ -114,6 +114,40 @@
                             @enderror
                         </div>
                     </div>
+
+                    <div class="mt-4">
+                        <label class="form-label fw-bold">Eligible Courses / Academic Programs</label>
+                        <p class="text-muted small mb-2">Select the courses eligible for this scholarship program (leave
+                            empty to allow all courses).</p>
+
+                        @php
+                            $selectedProgramIds = is_array(old('academic_program_ids')) ? old('academic_program_ids') : [];
+                        @endphp
+
+                        <div class="card p-3 border rounded-3" style="max-height: 250px; overflow-y: auto;">
+                            <div class="row g-2">
+                                @forelse ($academicPrograms as $academicProg)
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="academic_program_ids[]"
+                                                value="{{ $academicProg->program_id }}"
+                                                id="prog_{{ $academicProg->program_id }}"
+                                                {{ in_array($academicProg->program_id, $selectedProgramIds) ? 'checked' : '' }}>
+                                            <label class="form-check-label small" for="prog_{{ $academicProg->program_id }}">
+                                                <strong>{{ $academicProg->code }}</strong> — {{ $academicProg->name }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                @empty
+                                    <div class="col-12 text-muted small">No active academic programs are available. Please add
+                                        academic programs first.</div>
+                                @endforelse
+                            </div>
+                        </div>
+                        @error('academic_program_ids')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="card-footer bg-white border-top p-4 d-flex justify-content-end gap-2">
