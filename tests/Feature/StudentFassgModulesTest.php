@@ -666,6 +666,50 @@ class StudentFassgModulesTest extends TestCase
         $this->assertSame($list->batch_name, $list->fresh()->batch_name);
     }
 
+    public function test_fassg_can_set_eligible_academic_programs_on_create_and_update(): void
+    {
+        $fassg = User::factory()->create(['role' => UserRole::Fassg]);
+        $sponsor = Sponsor::factory()->create();
+
+        $it = \App\Models\AcademicProgram::factory()->create(['code' => 'BSIT', 'name' => 'BS Information Technology']);
+        $cs = \App\Models\AcademicProgram::factory()->create(['code' => 'BSCS', 'name' => 'BS Computer Science']);
+
+        $this->actingAs($fassg)->post(route('fassg.programs.store'), [
+            'sponsor_id' => $sponsor->id,
+            'program_name' => 'Tech Scholars Grant',
+            'category' => ProgramCategory::Group->value,
+            'available_slots' => 10,
+            'target_course' => null,
+            'academic_program_ids' => [$it->program_id, $cs->program_id],
+        ])->assertRedirect(route('fassg.programs.index'));
+
+        $program = SponsorshipProgram::query()->where('program_name', 'Tech Scholars Grant')->firstOrFail();
+
+        $this->assertSame(
+            [$it->program_id, $cs->program_id],
+            $program->academicPrograms()->orderBy('program_id')->pluck('academic_programs.program_id')->all(),
+        );
+        $this->assertDatabaseHas('program_academic_program', [
+            'sponsorship_program_id' => $program->id,
+            'academic_program_id' => $it->program_id,
+        ]);
+
+        $this->actingAs($fassg)->put(route('fassg.programs.update', $program), [
+            'sponsor_id' => $sponsor->id,
+            'program_name' => 'Tech Scholars Grant',
+            'category' => ProgramCategory::Group->value,
+            'available_slots' => 10,
+            'status' => ProgramStatus::Open->value,
+            'academic_program_ids' => [$cs->program_id],
+        ])->assertRedirect(route('fassg.programs.index'));
+
+        $program->refresh();
+        $this->assertSame(
+            [$cs->program_id],
+            $program->academicPrograms()->pluck('academic_programs.program_id')->all(),
+        );
+    }
+
     /**
      * @return array<string, mixed>
      */
