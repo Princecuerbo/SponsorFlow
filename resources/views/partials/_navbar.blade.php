@@ -1,13 +1,15 @@
 @php
     $user = auth()->user();
     $role = $user->role;
+    $firstName = trim((string) ($user->name ?? ''));
+    $firstName = $firstName === '' ? '' : explode(' ', $firstName)[0];
 @endphp
 
 <nav class="sf-navbar navbar bg-white border-bottom py-0 sticky-top" style="min-height:60px;">
-    <div class="container-fluid px-3 d-flex align-items-center justify-content-between flex-nowrap">
+    <div class="container d-flex align-items-center justify-content-center gap-4 py-2">
 
         {{-- Brand --}}
-        <a class="navbar-brand d-flex align-items-center gap-2 m-0 text-nowrap flex-shrink-0"
+        <a class="navbar-brand d-flex align-items-center gap-2 m-0 text-nowrap flex-shrink-0 text-decoration-none"
             href="{{ route($user->homeRoute()) }}">
             <div class="d-flex align-items-center justify-content-center rounded-3"
                 style="background-color: #0f294a; width: 34px; height: 34px;">
@@ -18,8 +20,8 @@
             <span class="fw-bold tracking-tight" style="font-size: 1.1rem; color: #0f294a;">SponsorFlow</span>
         </a>
 
-        {{-- Center Nav Links --}}
-        <div class="d-none d-md-flex align-items-center justify-content-center mx-2 flex-nowrap">
+        {{-- Navigation Links --}}
+        <div class="d-none d-md-flex align-items-center flex-nowrap">
             <ul class="navbar-nav d-flex flex-row gap-0.5 flex-nowrap mb-0">
 
                 {{-- Student --}}
@@ -165,26 +167,26 @@
             </ul>
         </div>
 
-        {{-- Right: Notifications + User Pill --}}
-        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+        {{-- Notification Bell + User Profile (inline, left-aligned) --}}
+        <div class="d-flex align-items-center gap-3 flex-shrink-0">
 
-            <a href="#" class="position-relative p-1.5 text-secondary d-none d-md-flex align-items-center">
+            <a href="#" class="position-relative text-secondary d-none d-md-inline-flex align-items-center"
+                aria-label="Notifications">
                 <i class="bi bi-bell fs-5"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger"
-                    style="font-size: 0.6rem; padding: 0.25em 0.45em;">0</span>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-white fw-bold"
+                    style="font-size: 0.6rem; padding: 0.4em 0.7em;">0</span>
             </a>
 
             {{-- Desktop User Dropdown --}}
             <div class="dropdown d-none d-md-block">
-                <button class="btn sf-user-pill d-flex align-items-center gap-2 border-0 bg-light rounded-pill px-2.5 py-1"
+                <button
+                    class="bg-transparent border-0 p-0 d-flex align-items-center gap-2 text-decoration-none"
                     type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
                         style="width: 30px; height: 30px; background-color: #0f294a; font-size: 0.8rem;">
                         <i class="bi bi-person-fill"></i>
                     </div>
-                    <span class="fw-semibold text-dark small d-none d-lg-inline">{{ $user->name }}</span>
-                    <span class="badge bg-primary-subtle text-primary-emphasis d-none d-lg-inline fw-semibold"
-                        style="font-size: 0.65rem;">{{ $role->label() }}</span>
+                    <span class="fw-medium text-secondary small d-none d-lg-inline">{{ $firstName }}</span>
                     <i class="bi bi-chevron-down text-secondary" style="font-size: 0.7rem;"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-4 mt-2 p-1.5" style="min-width: 180px;">
@@ -397,6 +399,9 @@
 </nav>
 
 <style>
+    .sf-navbar .container {
+        justify-content: center;
+    }
     .sf-topnav-link {
         color: #475569 !important;
         font-weight: 500;
@@ -415,14 +420,6 @@
         background-color: #eef2f6 !important;
         color: #0f294a !important;
         font-weight: 600;
-    }
-    .sf-user-pill {
-        background-color: #f8fafc !important;
-        border-radius: 30px !important;
-        transition: all 0.15s ease-in-out;
-    }
-    .sf-user-pill:hover {
-        background-color: #eef2f6 !important;
     }
     .sf-dropdown-hover {
         color: #334155;
