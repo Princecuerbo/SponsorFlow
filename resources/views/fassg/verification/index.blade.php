@@ -20,7 +20,15 @@
     <div class="card sf-card mb-4">
         <div class="card-body p-3">
             <form method="GET" action="{{ route('fassg.verification.index') }}" class="row g-2">
-                <div class="col-md-10">
+                <div class="col-md-3">
+                    <select name="academic_program_id" class="form-select" onchange="this.form.submit()">
+                        <option value="">All academic programs</option>
+                        @foreach ($academicPrograms as $academicProgram)
+                            <option value="{{ $academicProgram->program_id }}" @selected((int) request('academic_program_id') === (int) $academicProgram->program_id)>{{ $academicProgram->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-7">
                     <div class="input-group">
                         <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-secondary"></i></span>
                         <input type="text" name="q" value="{{ request('q') }}" class="form-control border-start-0 ps-0" placeholder="Search by name, student ID, or course" oninput="clearTimeout(window.searchTimer); window.searchTimer = setTimeout(() => this.form.submit(), 600)">

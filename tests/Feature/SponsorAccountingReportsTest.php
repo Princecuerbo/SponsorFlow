@@ -8,6 +8,7 @@ use App\Enums\FixedListStatus;
 use App\Enums\ProgramCategory;
 use App\Enums\ProgramStatus;
 use App\Enums\UserRole;
+use App\Models\AcademicProgram;
 use App\Models\Application;
 use App\Models\FixedList;
 use App\Models\FixedListItem;
@@ -91,6 +92,77 @@ class SponsorAccountingReportsTest extends TestCase
         $this->actingAs($sponsor->user)
             ->get(route('sponsor.lists.show', $otherList))
             ->assertForbidden();
+    }
+
+    public function test_sponsor_can_filter_forwarded_applicants_by_academic_program(): void
+    {
+        $sponsor = Sponsor::factory()->create();
+        $program = SponsorshipProgram::factory()->create(['sponsor_id' => $sponsor->id]);
+        $it = AcademicProgram::factory()->create(['name' => 'BS Information Technology']);
+        $cs = AcademicProgram::factory()->create(['name' => 'BS Computer Science']);
+
+        $itProfile = StudentProfile::factory()->create([
+            'is_sle_fhe_verified' => true,
+            'academic_program_id' => $it->program_id,
+        ]);
+        $csProfile = StudentProfile::factory()->create([
+            'is_sle_fhe_verified' => true,
+            'academic_program_id' => $cs->program_id,
+        ]);
+
+        Application::factory()->create([
+            'student_profile_id' => $itProfile->id,
+            'sponsorship_program_id' => $program->id,
+            'status' => ApplicationStatus::Verified,
+        ]);
+        Application::factory()->create([
+            'student_profile_id' => $csProfile->id,
+            'sponsorship_program_id' => $program->id,
+            'status' => ApplicationStatus::Verified,
+        ]);
+
+        $this->actingAs($sponsor->user)
+            ->get(route('sponsor.applicants.index', ['academic_program_id' => $it->program_id]))
+            ->assertOk()
+            ->assertSee($itProfile->user->name)
+            ->assertDontSee($csProfile->user->name);
+    }
+
+    public function test_accounting_can_filter_beneficiaries_by_academic_program(): void
+    {
+        $accounting = User::factory()->create(['role' => UserRole::Accounting]);
+        $sponsor = Sponsor::factory()->create();
+        $program = SponsorshipProgram::factory()->create(['sponsor_id' => $sponsor->id]);
+        $it = AcademicProgram::factory()->create(['name' => 'BS Information Technology']);
+        $cs = AcademicProgram::factory()->create(['name' => 'BS Computer Science']);
+
+        $itProfile = StudentProfile::factory()->create([
+            'is_sle_fhe_verified' => true,
+            'academic_program_id' => $it->program_id,
+        ]);
+        $csProfile = StudentProfile::factory()->create([
+            'is_sle_fhe_verified' => true,
+            'academic_program_id' => $cs->program_id,
+        ]);
+
+        Application::factory()->create([
+            'student_profile_id' => $itProfile->id,
+            'sponsorship_program_id' => $program->id,
+            'status' => ApplicationStatus::Approved,
+            'approved_at' => now(),
+        ]);
+        Application::factory()->create([
+            'student_profile_id' => $csProfile->id,
+            'sponsorship_program_id' => $program->id,
+            'status' => ApplicationStatus::Approved,
+            'approved_at' => now(),
+        ]);
+
+        $this->actingAs($accounting)
+            ->get(route('accounting.beneficiaries.index', ['academic_program_id' => $it->program_id]))
+            ->assertOk()
+            ->assertSee($itProfile->user->name)
+            ->assertDontSee($csProfile->user->name);
     }
 
     public function test_sponsor_can_review_and_confirm_an_individual_verified_application(): void

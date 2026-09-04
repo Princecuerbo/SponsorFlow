@@ -43,6 +43,10 @@ class ReferenceController extends Controller
             'user' => $this->actor($request),
             'beneficiaries' => $beneficiaries,
             'totalApproved' => count($beneficiaries),
+            'academicPrograms' => \App\Models\AcademicProgram::query()
+                ->where('is_active', true)
+                ->orderBy('name')
+                ->get(),
         ]);
     }
 
@@ -178,10 +182,12 @@ class ReferenceController extends Controller
     private function beneficiaryRows(Request $request): array
     {
         $search = $request->string('q')->trim()->toString();
+        $academicProgramId = $request->integer('academic_program_id', 0);
 
         $approvedApplications = Application::query()
             ->approvedBeneficiaries()
             ->with(['studentProfile.user', 'sponsorshipProgram.sponsor'])
+            ->when($academicProgramId > 0, fn($query) => $query->whereHas('studentProfile', fn($profileQuery) => $profileQuery->where('academic_program_id', $academicProgramId)))
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($query) use ($search): void {
                     $query->whereHas('studentProfile', function ($profileQuery) use ($search): void {
@@ -226,9 +232,12 @@ class ReferenceController extends Controller
 
         $confirmedItems = FixedListItem::query()
             ->where('is_sle_fhe_verified', true)
-            ->whereHas('fixedList', function ($query): void {
+            ->whereHas('fixedList', function ($query) use ($academicProgramId): void {
                 $query->where('status', FixedListStatus::Approved)
                     ->whereHas('latestApproval', fn($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed));
+                if ($academicProgramId > 0) {
+                    $query->whereHas('sponsorshipProgram', fn($programQuery) => $programQuery->whereHas('academicPrograms', fn($programFilter) => $programFilter->where('academic_programs.program_id', $academicProgramId)));
+                }
             })
             ->with(['fixedList.sponsorshipProgram.sponsor', 'fixedList.latestApproval'])
             ->when($search !== '', fn($query) => $query->where(function ($query) use ($search): void {

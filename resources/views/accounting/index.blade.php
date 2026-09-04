@@ -57,7 +57,15 @@
     <div class="card sf-card mb-4 no-print">
         <div class="card-body p-3">
             <form method="GET" action="{{ route('accounting.beneficiaries.index') }}" class="row g-2">
-                <div class="col-md-12">
+                <div class="col-md-3">
+                    <select name="academic_program_id" class="form-select" onchange="this.form.submit()">
+                        <option value="">All academic programs</option>
+                        @foreach ($academicPrograms as $academicProgram)
+                            <option value="{{ $academicProgram->program_id }}" @selected((int) request('academic_program_id') === (int) $academicProgram->program_id)>{{ $academicProgram->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-9">
                     <div class="input-group"><span class="input-group-text bg-white border-end-0"><i
                                 class="bi bi-search text-secondary"></i></span><input
                             class="form-control border-start-0 ps-0" type="search" name="q"

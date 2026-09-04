@@ -7,6 +7,7 @@ use App\Enums\FixedListStatus;
 use App\Enums\ProgramStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
+use App\Models\AcademicProgram;
 use App\Models\Application;
 use App\Models\FixedList;
 use App\Models\Sponsor;
@@ -103,6 +104,7 @@ class ReviewController extends Controller
                 ->where('status', '!=', ProgramStatus::Expired))
             ->where('status', ApplicationStatus::Verified)
             ->when($request->filled('course'), fn($query) => $query->whereHas('studentProfile', fn($profileQuery) => $profileQuery->where('course', $request->string('course'))))
+            ->when($request->filled('academic_program_id'), fn($query) => $query->whereHas('studentProfile', fn($profileQuery) => $profileQuery->where('academic_program_id', $request->integer('academic_program_id'))))
             ->with(['studentProfile.user', 'sponsorshipProgram'])
             ->latest('submitted_at')
             ->get();
@@ -114,6 +116,10 @@ class ReviewController extends Controller
             ->get();
 
         $courses = $applicants->pluck('studentProfile.course')->filter()->unique()->values();
+        $academicPrograms = \App\Models\AcademicProgram::query()
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
 
         return view('sponsor.applicants.index', [
             'user' => $this->actor($request),
@@ -121,6 +127,7 @@ class ReviewController extends Controller
             'applicants' => $applicants,
             'fixedLists' => $fixedLists,
             'courses' => $courses,
+            'academicPrograms' => $academicPrograms,
         ]);
     }
 

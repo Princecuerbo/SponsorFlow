@@ -18,14 +18,21 @@
     <div class="card sf-card mb-4">
         <div class="card-body p-3">
             <form method="GET" action="{{ route('sponsor.applicants.index') }}" class="row g-2">
-                <div class="col-md-6"><select name="course" class="form-select" onchange="this.form.submit()">
+                <div class="col-md-4"><select name="academic_program_id" class="form-select" onchange="this.form.submit()">
+                        <option value="">All academic programs</option>
+                        @foreach ($academicPrograms as $academicProgram)
+                            <option value="{{ $academicProgram->program_id }}" @selected((int) request('academic_program_id') === (int) $academicProgram->program_id)>{{ $academicProgram->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3"><select name="course" class="form-select" onchange="this.form.submit()">
                         <option value="">All courses</option>
                         @foreach ($courses as $course)
                             <option value="{{ $course }}" @selected(request('course') === $course)>{{ $course }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-4"><select name="status" class="form-select" onchange="this.form.submit()">
+                <div class="col-md-3"><select name="status" class="form-select" onchange="this.form.submit()">
                         <option value="">All Actionable Applicants</option>
                         <option value="verified" @selected(request('status') === 'verified')>FASSG Verified</option>
                     </select></div>

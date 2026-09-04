@@ -24,6 +24,7 @@ class VerificationController extends Controller
     public function index(Request $request): View
     {
         $search = $request->string('q')->trim()->toString();
+        $academicProgramId = $request->integer('academic_program_id', 0);
 
         $profiles = StudentProfile::query()
             ->with(['user', 'applications.documents'])
@@ -35,6 +36,7 @@ class VerificationController extends Controller
                         ->orWhereHas('user', fn($userQuery) => $userQuery->where('name', 'like', "%{$search}%"));
                 });
             })
+            ->when($academicProgramId > 0, fn($query) => $query->where('academic_program_id', $academicProgramId))
             ->latest()
             ->get();
 
@@ -47,6 +49,7 @@ class VerificationController extends Controller
                         ->orWhereHas('user', fn($userQuery) => $userQuery->where('name', 'like', "%{$search}%"));
                 });
             })
+            ->when($academicProgramId > 0, fn($query) => $query->whereHas('studentProfile', fn($profileQuery) => $profileQuery->where('academic_program_id', $academicProgramId)))
             ->latest('submitted_at')
             ->get();
 
@@ -56,11 +59,17 @@ class VerificationController extends Controller
             fn(Application $application): array => ['type' => 'application', 'profile' => $application->studentProfile, 'application' => $application],
         ))->values();
 
+        $academicPrograms = \App\Models\AcademicProgram::query()
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
         return view('fassg.verification.index', [
             'user' => $this->actor($request),
             'verificationItems' => $verificationItems,
             'pendingStudents' => $profiles->count(),
             'pendingApplications' => $applications->count(),
+            'academicPrograms' => $academicPrograms,
         ]);
     }
 

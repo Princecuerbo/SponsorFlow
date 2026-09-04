@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Enums\UserRole;
+use App\Models\AcademicProgram;
 use App\Models\AuditLog;
 use App\Models\StudentProfile;
 use App\Models\User;
@@ -12,6 +13,30 @@ use Tests\TestCase;
 class FassgVerificationQueueTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function test_verification_queue_can_be_filtered_by_academic_program(): void
+    {
+        $fassg = User::factory()->create(['role' => UserRole::Fassg]);
+        $it = AcademicProgram::factory()->create(['name' => 'BS Information Technology']);
+        $cs = AcademicProgram::factory()->create(['name' => 'BS Computer Science']);
+
+        $itProfile = StudentProfile::factory()->create([
+            'is_sle_fhe_verified' => false,
+            'academic_program_id' => $it->program_id,
+            'student_id_number' => '2026-00011',
+        ]);
+        $csProfile = StudentProfile::factory()->create([
+            'is_sle_fhe_verified' => false,
+            'academic_program_id' => $cs->program_id,
+            'student_id_number' => '2026-00022',
+        ]);
+
+        $this->actingAs($fassg)
+            ->get(route('fassg.verification.index', ['academic_program_id' => $it->program_id]))
+            ->assertOk()
+            ->assertSee($itProfile->student_id_number)
+            ->assertDontSee($csProfile->student_id_number);
+    }
 
     public function test_unverified_student_profiles_are_visible_in_the_queue(): void
     {
