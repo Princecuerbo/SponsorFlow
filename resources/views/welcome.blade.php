@@ -19,11 +19,13 @@
                 {{-- Brand Logo & Name --}}
                 <div class="flex items-center gap-3">
                     <div
-                        class="w-10 h-10 bg-[#002B66] rounded-xl flex items-center justify-center text-[#FFC72C] font-extrabold text-xl shadow-md border border-[#FFC72C]/30">
-                        S
+                        class="w-10 h-10 bg-[#0f294a] rounded-lg flex items-center justify-center shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="18" height="18" fill="#ffffff">
+                            <path d="M312 96c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 8c-30.9 0-56 25.1-56 56s25.1 56 56 56l32 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-48 0c-13.3 0-24-10.7-24-24c0-13.3-10.7-24-24-24s-24 10.7-24 24c0 30.9 25.1 56 56 56l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8c30.9 0 56-25.1 56-56s-25.1-56-56-56l-32 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l48 0c13.3 0 24 10.7 24 24c0 13.3 10.7 24 24 24s24-10.7 24-24c0-30.9-25.1-56-56-56l0-8zM0 384c0-35.3 28.7-64 64-64l119.7 0c15.6 0 30.3 5.7 41.7 16l103.8 93.4c22.1 19.9 51.1 30.6 80.8 30.6l102 0c35.3 0 64-28.7 64-64s-28.7-64-64-64l-96 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l96 0c61.9 0 112 50.1 112 112s-50.1 112-112 112l-102 0c-42.5 0-83.9-15.3-115.5-43.7L186.3 368 64 368c-8.8 0-16 7.2-16 16s7.2 16 16 16l112 0c13.3 0 24 10.7 24 24s-10.7 24-24 24L64 448c-35.3 0-64-28.7-64-64z"/>
+                        </svg>
                     </div>
-                    <span class="text-xl font-black text-[#002B66] tracking-tight">
-                        Sponsor<span class="text-[#FFC72C]">Flow</span>
+                    <span class="text-xl font-black text-[#0f294a] tracking-tight">
+                        SponsorFlow
                     </span>
                 </div>
 
@@ -31,16 +33,16 @@
                 <div class="flex items-center gap-4">
                     @auth
                         <a href="{{ route('dashboard') }}"
-                            class="px-5 py-2 text-sm font-bold text-[#002B66] bg-[#FFC72C] hover:bg-amber-400 rounded-lg shadow transition">
+                            class="px-5 py-2 text-sm font-bold text-white bg-[#0f294a] hover:bg-[#0a1b30] rounded-lg shadow transition">
                             Go to Dashboard &rarr;
                         </a>
                     @else
                         <a href="{{ route('login') }}"
-                            class="px-4 py-2 text-sm font-semibold text-slate-700 hover:text-[#002B66] transition">
+                            class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-[#0f294a] transition">
                             Log in
                         </a>
                         <a href="{{ route('register') }}"
-                            class="px-5 py-2 text-sm font-bold text-white bg-[#002B66] hover:bg-[#001f4d] rounded-lg shadow transition border border-indigo-950">
+                            class="px-5 py-2 text-sm font-bold text-white bg-[#0f294a] hover:bg-[#0a1b30] rounded-lg shadow transition">
                             Apply now
                         </a>
                     @endauth
@@ -51,13 +53,13 @@
 
     {{-- Hero Section --}}
     <section
-        class="bg-gradient-to-b from-[#00193d] via-[#002B66] to-[#001e47] text-white py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        class="bg-[#0f294a] text-white py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
             {{-- Left Content --}}
             <div class="lg:col-span-7 space-y-6">
                 <span
-                    class="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-[#FFC72C]/15 text-[#FFC72C] border border-[#FFC72C]/30">
+                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-amber-400/10 text-amber-300 border border-amber-400/30">
                     Davao Oriental State University
                 </span>
                 <h1 class="text-4xl sm:text-5xl font-black tracking-tight leading-tight text-white">
@@ -69,11 +71,11 @@
                 </p>
                 <div class="pt-2 flex flex-wrap gap-4">
                     <a href="{{ route('register') }}"
-                        class="px-6 py-3 text-sm font-bold text-[#002B66] bg-[#FFC72C] hover:bg-amber-400 rounded-xl shadow-lg transition">
+                        class="px-6 py-3 text-sm font-bold text-slate-900 bg-amber-500 hover:bg-amber-600 rounded-xl shadow-lg transition">
                         ⚡ Verify SLE-FHE status
                     </a>
                     <a href="#programs"
-                        class="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-slate-200 hover:text-white bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl transition border border-white/10">
+                        class="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-slate-200 hover:text-white bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl transition border border-white/25">
                         Explore programs <i class="bi bi-arrow-down" aria-hidden="true"></i>
                     </a>
                 </div>
@@ -83,7 +85,7 @@
             <div
                 class="lg:col-span-5 bg-white/5 border border-white/15 backdrop-blur-md rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl">
                 <div class="flex gap-4 items-start">
-                    <div class="p-2.5 rounded-xl bg-[#FFC72C]/20 text-[#FFC72C] font-bold">
+                    <div class="p-2.5 rounded-xl bg-amber-400/20 text-amber-300 font-bold">
                         ✓
                     </div>
                     <div>
@@ -94,7 +96,7 @@
                 </div>
 
                 <div class="flex gap-4 items-start">
-                    <div class="p-2.5 rounded-xl bg-[#FFC72C]/20 text-[#FFC72C] font-bold">
+                    <div class="p-2.5 rounded-xl bg-amber-400/20 text-amber-300 font-bold">
                         ☍
                     </div>
                     <div>
@@ -105,7 +107,7 @@
                 </div>
 
                 <div class="flex gap-4 items-start">
-                    <div class="p-2.5 rounded-xl bg-[#FFC72C]/20 text-[#FFC72C] font-bold">
+                    <div class="p-2.5 rounded-xl bg-amber-400/20 text-amber-300 font-bold">
                         🔒
                     </div>
                     <div>
@@ -123,7 +125,7 @@
     <section id="programs" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="mb-8 border-b border-slate-200 pb-4">
             <div>
-                <span class="text-xs font-bold uppercase tracking-wider text-[#002B66]">Open Opportunities</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-[#0f294a]">Open Opportunities</span>
                 <h2 class="text-2xl font-black text-slate-900 mt-1">Active scholarship programs</h2>
             </div>
         </div>
@@ -131,11 +133,11 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             @forelse($programs as $program)
                 <div
-                    class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                    class="bg-white rounded-3 border border-slate-200 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-center mb-4">
                             <span
-                                class="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-50 text-[#002B66] border border-blue-100">
+                                class="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-50 text-[#0f294a] border border-blue-100">
                                 {{ $program->category ?? 'General' }}
                             </span>
                             <span
@@ -149,7 +151,7 @@
                     </div>
 
                     <a href="{{ route('login') }}"
-                        class="w-full py-2.5 px-4 bg-[#002B66] hover:bg-[#001f4d] text-white text-xs font-bold rounded-xl text-center shadow transition block">
+                        class="w-full py-2.5 px-4 bg-[#0f294a] hover:bg-[#0a1b30] text-white text-xs font-bold rounded-xl text-center shadow transition block">
                         View eligibility &rarr;
                     </a>
                 </div>
@@ -166,28 +168,28 @@
     {{-- Sponsorship Category Highlights --}}
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div class="mb-8">
-            <span class="text-xs font-bold uppercase tracking-wider text-[#002B66]">Program pathways</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-[#0f294a]">Program pathways</span>
             <h2 class="text-2xl font-black text-slate-900 mt-1">Sponsorship categories</h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-                <div class="w-11 h-11 mb-5 rounded-xl bg-blue-50 text-[#002B66] flex items-center justify-center">
+            <article class="bg-white rounded-3 border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
+                <div class="w-11 h-11 mb-5 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
                     <i class="bi bi-people-fill text-lg" aria-hidden="true"></i>
                 </div>
                 <h3 class="text-base font-bold text-slate-900 mb-2">Group Sponsorship</h3>
                 <p class="text-sm leading-relaxed text-slate-500">Apply to open programs filtered by academic grades,
                     address, rurality, and course.</p>
             </article>
-            <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-                <div class="w-11 h-11 mb-5 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center">
+            <article class="bg-white rounded-3 border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
+                <div class="w-11 h-11 mb-5 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
                     <i class="bi bi-person-heart text-lg" aria-hidden="true"></i>
                 </div>
                 <h3 class="text-base font-bold text-slate-900 mb-2">Individual Sponsorship</h3>
                 <p class="text-sm leading-relaxed text-slate-500">Recorded and monitored for prospective sponsor
                     matching.</p>
             </article>
-            <article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-                <div class="w-11 h-11 mb-5 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
+            <article class="bg-white rounded-3 border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
+                <div class="w-11 h-11 mb-5 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
                     <i class="bi bi-building-check text-lg" aria-hidden="true"></i>
                 </div>
                 <h3 class="text-base font-bold text-slate-900 mb-2">Employee-Based Sponsorship</h3>
@@ -198,7 +200,7 @@
     </section>
 
     {{-- Footer --}}
-    <footer class="mt-auto bg-[#00193d] border-t border-slate-800 text-slate-400 py-8 text-center text-xs font-medium">
+    <footer class="mt-auto bg-[#0f294a] border-t border-slate-800 text-slate-400 py-8 text-center text-xs font-medium">
         <p>&copy; {{ date('Y') }} Davao Oriental State University – SponsorFlow. All rights reserved.</p>
     </footer>
 
