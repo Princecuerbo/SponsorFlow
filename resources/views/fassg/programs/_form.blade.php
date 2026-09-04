@@ -47,14 +47,24 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    <div class="col-md-4"><label class="form-label" for="min_gpa">Minimum GWA</label><input class="form-control"
-            id="min_gpa" type="number" step="0.01" min="1" max="5" name="min_gpa"
-            value="{{ old('min_gpa', $program->min_gpa) }}"></div>
-    <div class="col-md-4"><label class="form-label" for="target_course">Target course</label><input class="form-control"
-            id="target_course" name="target_course" value="{{ old('target_course', $program->target_course) }}"></div>
-    <div class="col-md-4"><label class="form-label" for="address_requirement">Address requirement</label><input
-            class="form-control" id="address_requirement" name="address_requirement"
-            value="{{ old('address_requirement', $program->address_requirement) }}"></div>
+    <div class="col-md-6"><label class="form-label fw-semibold" for="min_gpa">Minimum GPA</label><input
+            class="form-control" id="min_gpa" type="number" step="0.01" min="1" max="5" name="min_gpa"
+            value="{{ old('min_gpa', $program->min_gpa ?? '') }}"></div>
+    <div class="col-md-6"><label class="form-label fw-semibold" for="address_requirement">Address
+            Requirement</label>
+        @php
+            $selectedAddress = (string) old('address_requirement', $program->address_requirement ?? '');
+            $standardAddressOptions = ['', 'Rural', 'Urban'];
+        @endphp
+        <select class="form-select" id="address_requirement" name="address_requirement">
+            <option value="" @selected($selectedAddress === '')>No preference</option>
+            <option value="Rural" @selected($selectedAddress === 'Rural')>Rural only</option>
+            <option value="Urban" @selected($selectedAddress === 'Urban')>Urban only</option>
+            @if ($selectedAddress !== '' && ! in_array($selectedAddress, $standardAddressOptions, true))
+                <option value="{{ $selectedAddress }}" selected>{{ $selectedAddress }}</option>
+            @endif
+        </select>
+    </div>
     <div class="col-12">
         <div class="mb-4 mt-2">
             <label class="form-label fw-bold">Eligible Courses / Academic Programs</label>

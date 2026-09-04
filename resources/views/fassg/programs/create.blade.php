@@ -84,7 +84,7 @@
                         FASSG and the sponsor make the final call.</p>
 
                     <div class="row g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label small text-secondary">Minimum GPA</label>
                             <input type="number" step="0.01" min="1" max="5" name="min_gpa"
                                 value="{{ old('min_gpa') }}" class="form-control @error('min_gpa') is-invalid @enderror">
@@ -92,16 +92,7 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label small text-secondary">Target Course</label>
-                            <input type="text" name="target_course" placeholder="e.g. BS Information Technology"
-                                value="{{ old('target_course') }}"
-                                class="form-control @error('target_course') is-invalid @enderror">
-                            @error('target_course')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label small text-secondary">Address Requirement</label>
                             <select name="address_requirement"
                                 class="form-select @error('address_requirement') is-invalid @enderror">
