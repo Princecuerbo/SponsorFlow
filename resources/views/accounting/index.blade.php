@@ -61,7 +61,8 @@
                     <select name="academic_program_id" class="form-select" onchange="this.form.submit()">
                         <option value="">All academic programs</option>
                         @foreach ($academicPrograms as $academicProgram)
-                            <option value="{{ $academicProgram->program_id }}" @selected((int) request('academic_program_id') === (int) $academicProgram->program_id)>{{ $academicProgram->name }}</option>
+                            <option value="{{ $academicProgram->program_id }}" @selected((int) request('academic_program_id') === (int) $academicProgram->program_id)>
+                                {{ $academicProgram->name }}</option>
                         @endforeach
                     </select>
                 </div>

@@ -4,7 +4,8 @@
 @section('page-title', 'Database Backup Snapshots')
 
 @section('content')
-    <div class="alert alert-warning border-0">
+    <div class="alert border-0 border-start border-4 border-primary rounded-3 p-3 mb-4"
+        style="background-color: rgba(15, 41, 66, 0.05); color: #0F2942;">
         <i class="bi bi-exclamation-triangle me-2"></i>Restoring a snapshot replaces current database data. Confirm the file
         and maintenance procedure before restoring.
     </div>
@@ -23,7 +24,7 @@
         </form>
     </div>
 
-    <div class="card sf-card" style="border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div class="card border-0 shadow-sm rounded-3">
         <div class="table-responsive">
             <table class="table sf-table mb-0">
                 <thead>
@@ -47,7 +48,8 @@
                                     href="{{ route('admin.backups.download', $backup) }}" title="Download snapshot">
                                     <i class="bi bi-download"></i>
                                 </a>
-                                <form class="d-inline" method="POST" action="{{ route('admin.backups.restore', $backup) }}">
+                                <form class="d-inline" method="POST"
+                                    action="{{ route('admin.backups.restore', $backup) }}">
                                     @csrf
                                     <button class="btn btn-sm btn-outline-danger" type="submit" title="Restore snapshot"
                                         onclick="return confirm('Restore this database snapshot?')">
@@ -58,7 +60,11 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center text-secondary py-5">No backup snapshots have been created.</td>
+                            <td colspan="5" class="text-center py-5">
+                                <i class="bi bi-database-fill-gear display-5 text-muted mb-3 d-block"></i>
+                                <h6 class="fw-bold text-dark mb-1">No Backup Snapshots Found</h6>
+                                <p class="text-muted small mb-0">Create a new backup to safeguard system data.</p>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
