@@ -56,12 +56,12 @@
         <div class="staff-login-card text-center">
 
             <div class="mb-3">
-                <div class="staff-logo-box shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="18" height="18" fill="#ffffff">
-                        <path d="M312 96c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 8c-30.9 0-56 25.1-56 56s25.1 56 56 56l32 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-48 0c-13.3 0-24-10.7-24-24c0-13.3-10.7-24-24-24s-24 10.7-24 24c0 30.9 25.1 56 56 56l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8c30.9 0 56-25.1 56-56s-25.1-56-56-56l-32 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l48 0c13.3 0 24 10.7 24 24c0 13.3 10.7 24 24 24s24-10.7 24-24c0-30.9-25.1-56-56-56l0-8zM0 384c0-35.3 28.7-64 64-64l119.7 0c15.6 0 30.3 5.7 41.7 16l103.8 93.4c22.1 19.9 51.1 30.6 80.8 30.6l102 0c35.3 0 64-28.7 64-64s-28.7-64-64-64l-96 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l96 0c61.9 0 112 50.1 112 112s-50.1 112-112 112l-102 0c-42.5 0-83.9-15.3-115.5-43.7L186.3 368 64 368c-8.8 0-16 7.2-16 16s7.2 16 16 16l112 0c13.3 0 24 10.7 24 24s-10.7 24-24 24L64 448c-35.3 0-64-28.7-64-64z"/>
-                    </svg>
-                    <span>SponsorFlow</span>
-                </div>
+<div class="staff-logo-box shadow-sm">
+    <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center" style="background-color: #0f294a; width: 36px; height: 36px;">
+        <i class="fa-solid fa-hand-holding-dollar fs-6"></i>
+    </div>
+    <span class="fw-bold text-white">SponsorFlow</span>
+</div>
             </div>
 
             <div class="mb-3">

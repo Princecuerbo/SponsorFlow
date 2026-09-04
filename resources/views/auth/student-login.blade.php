@@ -82,13 +82,11 @@
                 <div class="position-absolute rounded-circle" style="width: 450px; height: 450px; background: rgba(255, 255, 255, 0.03); top: -120px; right: -120px; pointer-events: none;"></div>
                 <div></div>
                 <div class="z-1 text-center mx-auto px-4 py-3" style="max-width: 480px;">
-                    <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill mb-4" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(4px);">
-                        <div class="rounded-circle bg-white d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; flex-shrink: 0;">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16" fill="#0f294a">
-                                <path d="M312 96c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 8c-30.9 0-56 25.1-56 56s25.1 56 56 56l32 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-48 0c-13.3 0-24-10.7-24-24c0-13.3-10.7-24-24-24s-24 10.7-24 24c0 30.9 25.1 56 56 56l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8c30.9 0 56-25.1 56-56s-25.1-56-56-56l-32 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l48 0c13.3 0 24 10.7 24 24c0 13.3 10.7 24 24 24s24-10.7 24-24c0-30.9-25.1-56-56-56l0-8zM0 384c0-35.3 28.7-64 64-64l119.7 0c15.6 0 30.3 5.7 41.7 16l103.8 93.4c22.1 19.9 51.1 30.6 80.8 30.6l102 0c35.3 0 64-28.7 64-64s-28.7-64-64-64l-96 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l96 0c61.9 0 112 50.1 112 112s-50.1 112-112 112l-102 0c-42.5 0-83.9-15.3-115.5-43.7L186.3 368 64 368c-8.8 0-16 7.2-16 16s7.2 16 16 16l112 0c13.3 0 24 10.7 24 24s-10.7 24-24 24L64 448c-35.3 0-64-28.7-64-64z"/>
-                            </svg>
+                    <div class="d-inline-flex align-items-center gap-2 mb-4 px-3 py-2 rounded-3" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                        <div class="rounded-2 p-2 text-white d-flex align-items-center justify-content-center" style="background-color: #0f294a;">
+                            <i class="fa-solid fa-hand-holding-dollar fs-6"></i>
                         </div>
-                        <span class="fw-semibold text-white tracking-wide" style="font-size: 0.875rem;">SponsorFlow</span>
+                        <span class="fw-bold text-white fs-6">SponsorFlow</span>
                     </div>
                     <h1 class="display-6 fw-bold mb-2 text-white" style="font-size: 2.25rem; line-height: 1.25;">Welcome to <br><span style="color: #93c5fd;">DOrSU SponsorFlow</span></h1>
                     <p class="text-white-50 small mx-auto mb-0" style="max-width: 400px; line-height: 1.6; font-size: 0.875rem;">Connecting SLE-FHE Students with Financial Assistance, Grants, and Sponsorship Opportunities.</p>
@@ -99,6 +97,14 @@
             <!-- Right Form Column -->
             <div class="col-lg-6 d-flex align-items-center justify-content-center p-4 p-md-5 bg-white">
                 <div class="w-100" style="max-width: 400px;">
+                    <div class="d-block d-lg-none text-center mb-4">
+                        <div class="d-inline-flex align-items-center gap-2 mb-2">
+                            <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center" style="background-color: #0f294a;">
+                                <i class="fa-solid fa-hand-holding-dollar fs-20"></i>
+                            </div>
+                            <span class="fs-4 fw-bold" style="color: #0f294a;">SponsorFlow</span>
+                        </div>
+                    </div>
                     <div class="mb-4 text-center text-lg-start">
                         <h3 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.5rem;">Student Login</h3>
                         <p class="text-secondary small" style="font-size: 0.85rem;">Sign in to access your sponsorship portal and applications.</p>
