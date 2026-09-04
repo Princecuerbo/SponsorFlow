@@ -155,8 +155,18 @@
 
                             <div class="row g-2.5">
                                 <div class="col-md-7">
-                                    <label for="course" class="form-label small fw-semibold text-secondary mb-1">Course / Program *</label>
-                                    <input type="text" id="course" name="course" class="form-control form-control-md bg-light border-1" value="{{ old('course') }}" placeholder="e.g. BS Information Technology" required style="font-size: 0.875rem; border-radius: 8px;">
+                                    <label for="academic_program_id" class="form-label small fw-semibold text-secondary mb-1">Academic Program / Course *</label>
+                                    <select id="academic_program_id" name="academic_program_id" class="form-select form-select-md bg-light border-1 @error('academic_program_id') is-invalid @enderror" required style="font-size: 0.875rem; border-radius: 8px;">
+                                        <option value="" disabled selected>-- Select Your Course/Program --</option>
+                                        @foreach ($programs as $program)
+                                            <option value="{{ $program->program_id }}" @selected(old('academic_program_id') == $program->program_id)>
+                                                {{ $program->code }} - {{ $program->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('academic_program_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="col-md-5">
                                     <label for="birthdate" class="form-label small fw-semibold text-secondary mb-1">Birthdate *</label>

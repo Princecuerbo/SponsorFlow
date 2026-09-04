@@ -15,6 +15,8 @@ class AuthenticationTest extends TestCase
 
     public function test_student_can_register_with_a_dorsu_email(): void
     {
+        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'BS Information Technology']);
+
         $response = $this->post(route('register.store'), [
             'first_name' => 'DORSU',
             'last_name' => 'Student',
@@ -22,7 +24,7 @@ class AuthenticationTest extends TestCase
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
             'student_id_number' => '2026-00001',
-            'course' => 'BS Information Technology',
+            'academic_program_id' => $program->program_id,
             'year_level' => 2,
             'birthdate' => '2005-01-15',
             'barangay' => 'Central',
@@ -33,7 +35,7 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect(route('login'));
         $this->assertGuest();
         $this->assertDatabaseHas('users', ['email' => 'student@dorsu.edu.ph', 'role' => UserRole::Student->value]);
-        $this->assertDatabaseHas('student_profiles', ['student_id_number' => '2026-00001', 'is_sle_fhe_verified' => false]);
+        $this->assertDatabaseHas('student_profiles', ['student_id_number' => '2026-00001', 'is_sle_fhe_verified' => false, 'academic_program_id' => $program->program_id]);
     }
 
     public function test_registration_rejects_non_dorsu_email(): void

@@ -65,8 +65,7 @@
                             <i class="bi bi-person-badge text-primary"></i> Academic Profile Details
                         </h6>
                     </div>
-                    <div class="card-body p-4">
-                        <div class="row g-3">
+                    <div class="card-body p-4">                        <div class="row g-3">
                             <div class="col-12 pb-2 border-bottom">
                                 <span class="text-secondary extra-small text-uppercase d-block mb-1" style="font-size: 0.7rem; letter-spacing: 0.05em;">Full Name</span>
                                 <span class="fw-bold text-dark" style="font-size: 0.925rem;">{{ $user->first_name ?? '' }} {{ $user->middle_name ?? '' }} {{ $user->last_name ?? '' }}</span>
@@ -111,6 +110,67 @@
                                 @endif
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-3 bg-white mt-4">
+                    <div class="card-header bg-white border-bottom pt-3.5 px-4 pb-3">
+                        <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-size: 0.95rem;">
+                            <i class="bi bi-pencil-square text-primary"></i> Update Program &amp; Profile
+                        </h6>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="POST" action="{{ route('student.verification.update') }}" class="row g-3">
+                            @csrf
+                            @method('PUT')
+
+                            <div class="col-12">
+                                <label for="sle_academic_program_id" class="form-label small fw-semibold text-secondary mb-1">Academic Program / Course *</label>
+                                <select id="sle_academic_program_id" name="academic_program_id" class="form-select form-select-md @error('academic_program_id') is-invalid @enderror" required style="font-size: 0.875rem; border-radius: 8px;">
+                                    <option value="" disabled @selected(!$profile?->academic_program_id)>-- Select Your Course/Program --</option>
+                                    @foreach ($programs as $program)
+                                        <option value="{{ $program->program_id }}" @selected((int) old('academic_program_id', $profile?->academic_program_id) === (int) $program->program_id)>
+                                            {{ $program->code }} - {{ $program->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('academic_program_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-6">
+                                <label for="sle_year_level" class="form-label small fw-semibold text-secondary mb-1">Year Level</label>
+                                <input type="number" id="sle_year_level" name="year_level" class="form-control form-control-md" min="1" max="5" value="{{ old('year_level', $profile?->year_level) }}" required style="font-size: 0.875rem; border-radius: 8px;">
+                            </div>
+                            <div class="col-6">
+                                <label for="sle_student_id_number" class="form-label small fw-semibold text-secondary mb-1">Student ID</label>
+                                <input type="text" id="sle_student_id_number" name="student_id_number" class="form-control form-control-md" value="{{ old('student_id_number', $profile?->student_id_number) }}" required style="font-size: 0.875rem; border-radius: 8px;">
+                            </div>
+                            <div class="col-12">
+                                <label for="sle_birthdate" class="form-label small fw-semibold text-secondary mb-1">Birthdate</label>
+                                <input type="date" id="sle_birthdate" name="birthdate" class="form-control form-control-md" value="{{ old('birthdate', optional($profile?->birthdate)->format('Y-m-d')) }}" style="font-size: 0.875rem; border-radius: 8px;">
+                            </div>
+                            <div class="col-12">
+                                <label for="sle_address" class="form-label small fw-semibold text-secondary mb-1">Address</label>
+                                <input type="text" id="sle_address" name="address" class="form-control form-control-md" value="{{ old('address', $profile?->address) }}" required style="font-size: 0.875rem; border-radius: 8px;">
+                            </div>
+                            <div class="col-8">
+                                <label for="sle_barangay" class="form-label small fw-semibold text-secondary mb-1">Barangay</label>
+                                <input type="text" id="sle_barangay" name="barangay" class="form-control form-control-md" value="{{ old('barangay', $profile?->barangay) }}" required style="font-size: 0.875rem; border-radius: 8px;">
+                            </div>
+                            <div class="col-4 d-flex align-items-end">
+                                <div class="form-check mb-1">
+                                    <input class="form-check-input" type="checkbox" id="sle_is_rural" name="is_rural" value="1" @checked((bool) old('is_rural', $profile?->is_rural))>
+                                    <label class="form-check-label small text-secondary fw-medium" for="sle_is_rural">Rural</label>
+                                </div>
+                            </div>
+                            <div class="col-12 pt-1">
+                                <button type="submit" class="btn btn-primary w-100 fw-semibold" style="background-color: #0f294a; border: none; border-radius: 8px; font-size: 0.875rem;">
+                                    <i class="bi bi-save me-1"></i> Save Academic Profile
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

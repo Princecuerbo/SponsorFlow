@@ -13,6 +13,8 @@ class StudentRegistrationTest extends TestCase
 
     public function test_student_can_register_without_checking_is_rural_checkbox(): void
     {
+        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Computer Science']);
+
         $response = $this->post(route('register.store'), [
             'first_name' => 'Juan',
             'last_name' => 'Dela Cruz',
@@ -20,7 +22,7 @@ class StudentRegistrationTest extends TestCase
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
             'student_id_number' => '2024-0006',
-            'course' => 'Computer Science',
+            'academic_program_id' => $program->program_id,
             'year_level' => 2,
             'birthdate' => '2000-01-15',
             'barangay' => 'Saganganan',
@@ -40,6 +42,8 @@ class StudentRegistrationTest extends TestCase
 
     public function test_student_can_register_with_is_rural_checkbox_checked(): void
     {
+        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Business Administration']);
+
         $response = $this->post(route('register.store'), [
             'first_name' => 'Maria',
             'last_name' => 'Santos',
@@ -47,7 +51,7 @@ class StudentRegistrationTest extends TestCase
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
             'student_id_number' => '2024-0002',
-            'course' => 'Business Administration',
+            'academic_program_id' => $program->program_id,
             'year_level' => 3,
             'birthdate' => '1999-06-20',
             'barangay' => 'Rural Barangay',
@@ -105,6 +109,8 @@ class StudentRegistrationTest extends TestCase
 
     public function test_student_registration_succeeds_with_mixed_case_dorsu_email(): void
     {
+        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Bachelor of Arts']);
+
         $response = $this->post(route('register.store'), [
             'first_name' => 'Case',
             'last_name' => 'Test User',
@@ -112,7 +118,7 @@ class StudentRegistrationTest extends TestCase
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
             'student_id_number' => '2024-0005',
-            'course' => 'Arts',
+            'academic_program_id' => $program->program_id,
             'year_level' => 4,
             'birthdate' => '1998-08-12',
             'barangay' => 'Central',

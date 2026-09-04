@@ -19,6 +19,7 @@ class StudentProfile extends Model
         'user_id',
         'student_id_number',
         'course',
+        'academic_program_id',
         'year_level',
         'birthdate',
         'address',
@@ -47,6 +48,11 @@ class StudentProfile extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function academicProgram(): BelongsTo
+    {
+        return $this->belongsTo(AcademicProgram::class, 'academic_program_id', 'program_id');
     }
 
     public function activeSponsorship(): BelongsTo

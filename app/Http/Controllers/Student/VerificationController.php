@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Student\UpdateVerificationRequest;
+use App\Models\AcademicProgram;
 use App\Models\StudentProfile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,9 +20,16 @@ class VerificationController extends Controller
         $user = $this->actor($request);
         $profile = $this->studentProfile($request, required: false);
 
+        $programs = AcademicProgram::query()
+            ->where('is_active', true)
+            ->where('is_undergraduate', true)
+            ->orderBy('name')
+            ->get();
+
         return view('student.sle-verification', [
             'user' => $user,
             'profile' => $profile,
+            'programs' => $programs,
         ]);
     }
 
@@ -29,9 +37,17 @@ class VerificationController extends Controller
     {
         $user = $this->actor($request);
 
+        $data = $request->validated();
+
+        $program = null;
+        if (filled($data['academic_program_id'] ?? null)) {
+            $program = AcademicProgram::query()->find($data['academic_program_id']);
+            $data['course'] = $program?->name;
+        }
+
         $profile = StudentProfile::query()->updateOrCreate(
             ['user_id' => $user->id],
-            $request->validated(),
+            $data,
         );
 
         $sleFheVerified = $profile->syncSleFheFromFixedLists();

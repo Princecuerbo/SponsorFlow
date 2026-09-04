@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
+use App\Models\AcademicProgram;
 use App\Models\StudentProfile;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -20,7 +21,13 @@ class RegisteredUserController extends Controller
 {
     public function create(): View
     {
-        return view('auth.register');
+        $programs = AcademicProgram::query()
+            ->where('is_active', true)
+            ->where('is_undergraduate', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('auth.register', compact('programs'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -32,7 +39,8 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'email', 'max:191', 'regex:/@dorsu\.edu\.ph$/i', 'unique:users,email'],
             'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
             'student_id_number' => ['required', 'string', 'max:50', 'regex:/^\d{4}-\d{4,6}$/', 'unique:student_profiles,student_id_number'],
-            'course' => ['required', 'string', 'max:150'],
+            'academic_program_id' => ['required', 'exists:academic_programs,program_id'],
+            'course' => ['nullable', 'string', 'max:150'],
             'year_level' => ['required', 'integer', 'min:1', 'max:5'],
             'birthdate' => ['required', 'date', 'before:today'],
             'barangay' => ['required', 'string', 'max:150'],
@@ -44,7 +52,10 @@ class RegisteredUserController extends Controller
 
         $isRural = $request->boolean('is_rural');
 
-        $user = DB::transaction(function () use ($validated, $isRural): User {
+        $program = AcademicProgram::query()->findOrFail($validated['academic_program_id']);
+        $course = $program->name;
+
+        $user = DB::transaction(function () use ($validated, $isRural, $course): User {
             $fullName = trim("{$validated['first_name']} " . ($validated['middle_name'] ?? '') . " {$validated['last_name']}");
 
             $user = User::query()->create([
@@ -58,7 +69,8 @@ class RegisteredUserController extends Controller
             StudentProfile::query()->create([
                 'user_id' => $user->id,
                 'student_id_number' => $validated['student_id_number'],
-                'course' => $validated['course'],
+                'academic_program_id' => $validated['academic_program_id'],
+                'course' => $course,
                 'year_level' => $validated['year_level'],
                 'birthdate' => $validated['birthdate'],
                 'barangay' => $validated['barangay'],
