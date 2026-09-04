@@ -5,55 +5,83 @@
 @section('page-title', 'Open Sponsorship Programs')
 
 @section('content')
+    @php
+        $isVerified = (bool) ($profile?->is_sle_fhe_verified ?? false);
+    @endphp
 
-    @unless (auth()->user()->studentProfile?->is_sle_fhe_verified)
-        <div class="alert alert-warning border-0 shadow-sm rounded-3 mb-4">
-            <i class="bi bi-exclamation-triangle-fill me-1"></i>
-            Your SLE-FHE status is still pending verification. Open sponsorship programs will appear after FASSG verifies your
-            record.
-            <a href="{{ route('student.verification.show') }}" class="alert-link">Check status</a>
+    <h4 class="fw-bold text-dark mb-1">Sponsorship Opportunities</h4>
+    <p class="text-muted small mb-3">Browse and apply for available university sponsorship programs.</p>
+
+    @unless ($isVerified)
+        <div class="alert border-0 border-start border-4 border-primary shadow-sm rounded-3 p-3 mb-4 d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2"
+            style="background-color: rgba(15, 41, 66, 0.05); color: #0F2942;">
+            <div class="d-flex align-items-start gap-2">
+                <i class="bi bi-info-circle-fill text-primary mt-1"></i>
+                <span>Your SLE-FHE status is still pending verification. Open sponsorship programs will appear after FASSG
+                    verifies your record.</span>
+            </div>
+            <a href="{{ route('student.verification.show') }}"
+                class="d-block d-md-inline mt-2 mt-md-0 fw-bold text-decoration-underline text-primary p-2">
+                Check status <i class="bi bi-arrow-right"></i>
+            </a>
         </div>
     @endunless
 
-    <form method="GET" action="{{ route('student.programs.index') }}" id="filter-form" class="card sf-card mb-4">
-        <div class="card-body p-3">
-            <div class="row g-2 align-items-center">
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <span class="input-group-text bg-white border-end-0"><i
-                                class="bi bi-search text-secondary"></i></span>
-                        <input type="text" name="q" value="{{ request('q') }}"
-                            class="form-control border-start-0 ps-0" placeholder="Search program or sponsor name…"
-                            oninput="clearTimeout(window.searchTimer); window.searchTimer = setTimeout(() => this.form.submit(), 600)">
+    @if ($isVerified)
+        <form method="GET" action="{{ route('student.programs.index') }}" id="filter-form" class="card sf-card mb-4">
+            <div class="card-body p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0"><i
+                                    class="bi bi-search text-secondary"></i></span>
+                            <input type="text" name="q" value="{{ request('q') }}"
+                                class="form-control border-start-0 ps-0" placeholder="Search program or sponsor name…"
+                                oninput="clearTimeout(window.searchTimer); window.searchTimer = setTimeout(() => this.form.submit(), 600)">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <select name="category" onchange="this.form.submit()" class="form-select">
+                            <option value="">All Categories</option>
+                            @foreach (['Group', 'Individual', 'Employee-Based'] as $cat)
+                                <option value="{{ $cat }}" @selected(request('category') === $cat)>{{ $cat }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ route('student.programs.index') }}" class="btn btn-outline-secondary w-100">Reset</a>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <select name="category" onchange="this.form.submit()" class="form-select">
-                        <option value="">All Categories</option>
-                        @foreach (['Group', 'Individual', 'Employee-Based'] as $cat)
-                            <option value="{{ $cat }}" @selected(request('category') === $cat)>{{ $cat }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <a href="{{ route('student.programs.index') }}" class="btn btn-outline-secondary w-100">Reset</a>
-                </div>
             </div>
-        </div>
-    </form>
+        </form>
+    @endif
 
     @if ($programs->isEmpty())
-        <div class="card sf-card">
-            <div class="sf-empty-state">
-                <i class="bi bi-inbox"></i>
-                <div class="fw-semibold">No open programs match your search</div>
-                <div class="small">Try clearing filters, or check back later — new programs open regularly.</div>
+        @if (!$isVerified)
+            <div class="card border-0 shadow-sm rounded-4 p-5 text-center my-4">
+                <div class="mb-3"><i class="bi bi-lock-fill text-muted display-4"></i></div>
+                <h5 class="fw-bold text-dark">Sponsorship Opportunities Locked</h5>
+                <p class="text-muted max-w-md mx-auto">Programs will become available after FASSG verifies your Student ID
+                    against the institutional masterlist.</p>
+                <div>
+                    <a href="{{ route('student.sle-fhe') }}" class="btn btn-primary px-4"
+                        style="background-color: #0F2942;">View Verification Status</a>
+                </div>
             </div>
-        </div>
+        @else
+            <div class="card sf-card">
+                <div class="sf-empty-state">
+                    <i class="bi bi-inbox"></i>
+                    <div class="fw-semibold">No open programs match your search</div>
+                    <div class="small">Try clearing filters, or check back later — new programs open regularly.</div>
+                </div>
+            </div>
+        @endif
     @else
         <div class="row g-4">
             @foreach ($programs as $program)
-                <div class="col-md-6 col-xl-4">
+                <div class="col-12 col-md-6 col-lg-4">
                     <div class="card sf-card h-100">
                         <div class="card-body p-4 d-flex flex-column min-w-0">
                             <div class="d-flex justify-content-between align-items-start mb-2">
