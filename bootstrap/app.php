@@ -24,6 +24,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'maintenance' => CheckMaintenanceMode::class,
             'student' => EnsurePrivacyConsent::class,
         ]);
+
+        // Add this line to run maintenance mode globally on all web requests
+        $middleware->web(append: [
+            CheckMaintenanceMode::class,
+        ]);
+
         $middleware->redirectUsersTo(function (Request $request): string {
             $user = $request->user();
 

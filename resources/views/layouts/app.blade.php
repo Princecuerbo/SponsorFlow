@@ -340,16 +340,31 @@
                 var stayButton = document.getElementById('stay-logged-in-btn');
                 var logoutForm = document.getElementById('logout-form');
                 var activityEvents = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
-                var warningAfter = 14 * 60 * 1000; // Shows warning at 14 minutes
-                var logoutAfter = 15 * 60 * 1000; // Logs out at 15 minutes
+
+                // ==========================================
+                // DYNAMICALLY FETCH FROM DATABASE SETTINGS:
+                // ==========================================
+                @php
+                    // Get the session timeout minutes from the database, default to 15 if not set
+                    $timeoutMinutes = \App\Models\SystemSetting::where('setting_key', 'session_timeout_minutes')->value('setting_value') ?? 15;
+
+                    // Convert minutes to total milliseconds
+                    $totalMilliseconds = (int) $timeoutMinutes * 60 * 1000;
+
+                    // Trigger the warning modal 15 seconds before the total session time expires
+                    // (Ensures it handles short testing times like 1 minute safely)
+                    $warningDelay = max($totalMilliseconds - 15000, 1000);
+                @endphp
+
+                var warningAfter = {{ $warningDelay }};
+                // ==========================================
+
                 var warningTimer;
-                var logoutTimer;
                 var countdownTimer;
                 var warningVisible = false;
 
                 function clearTimers() {
                     clearTimeout(warningTimer);
-                    clearTimeout(logoutTimer);
                     clearInterval(countdownTimer);
                 }
 
@@ -360,19 +375,41 @@
                 }
 
                 function logoutForInactivity() {
+                    var logoutForm = document.getElementById('logout-form');
+
                     if (logoutForm) {
                         logoutForm.submit();
+                    } else {
+                        var form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = "{{ route('logout') }}";
+
+                        var csrfToken = document.createElement('input');
+                        csrfToken.type = 'hidden';
+                        csrfToken.name = '_token';
+                        csrfToken.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                        form.appendChild(csrfToken);
+                        document.body.appendChild(form);
+                        form.submit();
                     }
                 }
 
                 function showWarning() {
                     warningVisible = true;
                     idleModal.classList.remove('d-none');
-                    var secondsLeft = 15;
+                    var secondsLeft = 15; // 15-second modal countdown
                     countdown.textContent = secondsLeft;
+
+                    clearInterval(countdownTimer);
                     countdownTimer = setInterval(function() {
                         secondsLeft -= 1;
                         countdown.textContent = Math.max(secondsLeft, 0);
+
+                        if (secondsLeft <= 0) {
+                            clearInterval(countdownTimer);
+                            logoutForInactivity();
+                        }
                     }, 1000);
                 }
 
@@ -380,7 +417,6 @@
                     clearTimers();
                     hideWarning();
                     warningTimer = setTimeout(showWarning, warningAfter);
-                    logoutTimer = setTimeout(logoutForInactivity, logoutAfter);
                 }
 
                 activityEvents.forEach(function(eventName) {
