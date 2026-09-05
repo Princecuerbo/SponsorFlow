@@ -10,8 +10,10 @@ use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\FixedList;
+use App\Models\FixedListItem;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -22,12 +24,27 @@ class ReportsController extends Controller
 
     public function index(Request $request): View
     {
+        return view('fassg.reports.index', $this->getReportData($request));
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $data = $this->getReportData($request);
+
+        $pdf = Pdf::loadView('fassg.reports.reports-pdf', $data)
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download('sponsorship-report-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    private function getReportData(Request $request): array
+    {
         $driver = DB::getDriverName();
 
         $dateFormat = match ($driver) {
             'sqlite' => "strftime('%Y-%m', submitted_at)",
             'pgsql'  => "TO_CHAR(submitted_at, 'YYYY-MM')",
-            default  => "DATE_FORMAT(submitted_at, '%Y-%m')", // MySQL / MariaDB
+            default  => "DATE_FORMAT(submitted_at, '%Y-%m')",
         };
 
         $applicantTrends = Application::query()
@@ -45,16 +62,20 @@ class ReportsController extends Controller
             ->all();
 
         $approvedBeneficiaries = Application::query()->approvedBeneficiaries()->count();
+
         $confirmedLists = FixedList::query()
             ->where('status', FixedListStatus::Approved)
             ->whereHas('latestApproval', fn($query) => $query->where('confirmation_status', ConfirmationStatus::Confirmed))
             ->count();
+
         $confirmedListNames = FixedList::query()
             ->where('status', FixedListStatus::Approved)
             ->whereHas('latestApproval', fn($query) => $query->where('confirmation_status', ConfirmationStatus::Confirmed))
             ->withCount('items')
             ->get()
             ->sum('items_count');
+
+        $totalBeneficiaries = $approvedBeneficiaries + $confirmedListNames;
 
         $categoryBreakdown = SponsorshipProgram::query()
             ->select('category', DB::raw('count(*) as programs'))
@@ -77,10 +98,22 @@ class ReportsController extends Controller
             ->pluck('total', 'category')
             ->all();
 
+        // Gather student profiles from both individual applications and confirmed fixed lists
         $applicantProfileIds = Application::query()->pluck('student_profile_id');
 
+        $confirmedFixedListStudentIds = FixedListItem::query()
+            ->whereHas('fixedList', fn($q) => $q->where('status', FixedListStatus::Approved)
+                ->whereHas('latestApproval', fn($sub) => $sub->where('confirmation_status', ConfirmationStatus::Confirmed)))
+            ->pluck('student_id_number');
+
+        $fixedListProfileIds = StudentProfile::query()
+            ->whereIn('student_id_number', $confirmedFixedListStudentIds)
+            ->pluck('id');
+
+        $allProfileIds = $applicantProfileIds->merge($fixedListProfileIds)->unique();
+
         $genderDistribution = StudentProfile::query()
-            ->whereIn('id', $applicantProfileIds)
+            ->whereIn('id', $allProfileIds)
             ->whereNotNull('gender')
             ->select('gender', DB::raw('count(*) as total'))
             ->groupBy('gender')
@@ -88,18 +121,18 @@ class ReportsController extends Controller
             ->all();
 
         $demographics = [
-            'rural' => StudentProfile::query()->whereIn('id', $applicantProfileIds)->where('is_rural', true)->count(),
-            'urban' => StudentProfile::query()->whereIn('id', $applicantProfileIds)->where('is_rural', false)->count(),
-            'sle_fhe_verified' => StudentProfile::query()->whereIn('id', $applicantProfileIds)->where('is_sle_fhe_verified', true)->count(),
+            'rural' => StudentProfile::query()->whereIn('id', $allProfileIds)->where('is_rural', true)->count(),
+            'urban' => StudentProfile::query()->whereIn('id', $allProfileIds)->where('is_rural', false)->count(),
+            'sle_fhe_verified' => StudentProfile::query()->whereIn('id', $allProfileIds)->where('is_sle_fhe_verified', true)->count(),
             'by_year_level' => StudentProfile::query()
-                ->whereIn('id', $applicantProfileIds)
+                ->whereIn('id', $allProfileIds)
                 ->select('year_level', DB::raw('count(*) as total'))
                 ->groupBy('year_level')
                 ->orderBy('year_level')
                 ->pluck('total', 'year_level')
                 ->all(),
             'by_course' => StudentProfile::query()
-                ->whereIn('id', $applicantProfileIds)
+                ->whereIn('id', $allProfileIds)
                 ->select('course', DB::raw('count(*) as total'))
                 ->groupBy('course')
                 ->orderByDesc('total')
@@ -107,7 +140,7 @@ class ReportsController extends Controller
                 ->pluck('total', 'course')
                 ->all(),
             'by_barangay' => StudentProfile::query()
-                ->whereIn('id', $applicantProfileIds)
+                ->whereIn('id', $allProfileIds)
                 ->whereNotNull('barangay')
                 ->select('barangay', DB::raw('count(*) as total'))
                 ->groupBy('barangay')
@@ -118,7 +151,7 @@ class ReportsController extends Controller
         ];
 
         $slotUtilization = SponsorshipProgram::query()
-            ->select('program_name', 'total_slots', 'available_slots')
+            ->select('id', 'program_name', 'slots', 'available_slots')
             ->withCount([
                 'applications as approved_count' => fn($query) => $query->whereIn('status', [
                     ApplicationStatus::Approved,
@@ -127,15 +160,26 @@ class ReportsController extends Controller
             ])
             ->orderBy('program_name')
             ->get()
-            ->map(fn($program): array => [
-                'program_name' => $program->program_name,
-                'total_slots' => (int) $program->total_slots,
-                'filled_slots' => (int) $program->approved_count,
-                'available_slots' => (int) $program->available_slots,
-                'utilization_pct' => (int) $program->total_slots > 0
-                    ? round(((int) $program->approved_count / (int) $program->total_slots) * 100, 1)
-                    : 0,
-            ])
+            ->map(function ($program): array {
+                $fixedListItemsCount = FixedListItem::query()
+                    ->whereHas('fixedList', fn($q) => $q->where('sponsorship_program_id', $program->id)
+                        ->where('status', FixedListStatus::Approved)
+                        ->whereHas('latestApproval', fn($sub) => $sub->where('confirmation_status', ConfirmationStatus::Confirmed)))
+                    ->count();
+
+                $filledSlots = (int) $program->approved_count + $fixedListItemsCount;
+                $totalSlots = (int) $program->slots;
+
+                return [
+                    'program_name' => $program->program_name,
+                    'total_slots' => $totalSlots,
+                    'filled_slots' => $filledSlots,
+                    'available_slots' => (int) $program->available_slots,
+                    'utilization_pct' => $totalSlots > 0
+                        ? round(($filledSlots / $totalSlots) * 100, 1)
+                        : 0,
+                ];
+            })
             ->all();
 
         $programSlots = collect($slotUtilization)->sum('total_slots');
@@ -150,11 +194,11 @@ class ReportsController extends Controller
             ->values()
             ->all();
 
-        return view('fassg.reports.index', [
+        return [
             'user' => $this->actor($request),
             'applicantTrends' => $applicantTrends,
             'applicantCounts' => $this->statusTotals($applicantCounts),
-            'approvedBeneficiaries' => $approvedBeneficiaries,
+            'approvedBeneficiaries' => $totalBeneficiaries,
             'confirmedLists' => $confirmedLists,
             'confirmedListNames' => $confirmedListNames,
             'applicantsByCategory' => $this->categoryTotals($applicantsByCategory),
@@ -165,7 +209,7 @@ class ReportsController extends Controller
                 'slots_filled' => $filledSlots,
                 'slots_total' => $programSlots,
                 'total_applicants' => array_sum($this->statusTotals($applicantCounts)),
-                'confirmed_beneficiaries' => $approvedBeneficiaries,
+                'confirmed_beneficiaries' => $totalBeneficiaries,
                 'rural_pct' => $demographics['rural'] + $demographics['urban'] > 0
                     ? round(($demographics['rural'] / ($demographics['rural'] + $demographics['urban'])) * 100, 1)
                     : 0,
@@ -177,13 +221,9 @@ class ReportsController extends Controller
                 'Rural' => $demographics['rural'],
                 'Urban' => $demographics['urban'],
             ],
-        ]);
+        ];
     }
 
-    /**
-     * @param  array<array-key, int|string>  $counts
-     * @return array<string, int>
-     */
     private function statusTotals(array $counts): array
     {
         $counts = $this->stringifyKeys($counts);
@@ -196,10 +236,6 @@ class ReportsController extends Controller
         return $totals;
     }
 
-    /**
-     * @param  array<array-key, int|string>  $counts
-     * @return array<string, int>
-     */
     private function categoryTotals(array $counts): array
     {
         $counts = $this->stringifyKeys($counts);
@@ -212,10 +248,6 @@ class ReportsController extends Controller
         return $totals;
     }
 
-    /**
-     * @param  array<array-key, int|string>  $counts
-     * @return array<string, int>
-     */
     private function stringifyKeys(array $counts): array
     {
         $normalized = [];

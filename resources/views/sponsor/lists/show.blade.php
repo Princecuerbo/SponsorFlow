@@ -90,18 +90,15 @@
                     <form method="POST" action="{{ route('sponsor.approvals.store', $list) }}"
                         enctype="multipart/form-data">
                         @csrf
-                        <label for="approval_document"
+                        <div onclick="document.getElementById('approval_document').click()"
                             class="d-block border border-2 rounded-3 text-center p-4 bg-light mb-3"
                             style="cursor:pointer; border-style:dashed !important;">
                             <i class="bi bi-cloud-upload fs-3 text-secondary d-block mb-2"></i>
-                            <span class="small fw-semibold d-block">Click to upload signed approval</span>
+                            <span class="small fw-semibold d-block">Click to select and upload signed approval</span>
                             <span class="small text-secondary" id="approvalFileName">PDF, JPG, or PNG</span>
                             <input type="file" name="approval_document" id="approval_document" class="d-none"
-                                accept=".pdf,.jpg,.jpeg,.png"
-                                onchange="document.getElementById('approvalFileName').textContent = this.files[0]?.name || 'PDF, JPG, or PNG'">
-                        </label>
-                        <button type="submit" class="btn btn-navy-primary w-100"><i class="bi bi-upload me-1"></i>Upload
-                            Document</button>
+                                accept=".pdf,.jpg,.jpeg,.png" onchange="this.form.submit()">
+                        </div>
                     </form>
                 </div>
             </div>
@@ -113,11 +110,18 @@
                     <p class="small text-secondary">Confirming finalizes this batch as approved beneficiaries. Accounting
                         will be able to view them for tuition adjustment.</p>
 
+                    @if (!$list->latestApproval?->approval_document_path)
+                        <div class="alert alert-warning small py-2 mb-3">
+                            <i class="bi bi-exclamation-triangle me-1"></i> Please upload and save a signed approval
+                            document above before you can confirm this list.
+                        </div>
+                    @endif
+
                     <form method="POST" action="{{ route('sponsor.approvals.confirm', $list) }}">
                         @csrf
                         @method('PATCH')
                         <button type="submit" class="btn btn-navy-primary w-100 py-2"
-                            {{ $list->status->value === 'Approved' ? 'disabled' : '' }}>
+                            {{ !$list->latestApproval?->approval_document_path || $list->status->value === 'Approved' ? 'disabled' : '' }}>
                             <i class="bi bi-check-circle me-1"></i>
                             {{ $list->status->value === 'Approved' ? 'Already Confirmed' : 'Confirm Final List' }}
                         </button>

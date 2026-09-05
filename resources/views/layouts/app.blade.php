@@ -340,8 +340,8 @@
                 var stayButton = document.getElementById('stay-logged-in-btn');
                 var logoutForm = document.getElementById('logout-form');
                 var activityEvents = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
-                var warningAfter = 45 * 1000;
-                var logoutAfter = 60 * 1000;
+                var warningAfter = 14 * 60 * 1000; // Shows warning at 14 minutes
+                var logoutAfter = 15 * 60 * 1000; // Logs out at 15 minutes
                 var warningTimer;
                 var logoutTimer;
                 var countdownTimer;

@@ -156,6 +156,7 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
             ->name('fixed-lists.items.verify');
 
         Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
+        Route::get('/reports/export-pdf', [ReportsController::class, 'exportPdf'])->name('reports.export-pdf');
         Route::get('/monitoring', [ReportsController::class, 'index'])->name('monitoring.index');
     });
 
@@ -167,7 +168,6 @@ Route::middleware(['auth', 'EnsureUserRole:sponsor'])
         Route::get('/programs', [ReviewController::class, 'programs'])->name('programs.index');
         Route::get('/approvals', [ReviewController::class, 'index'])->name('approvals.index');
         Route::get('/approvals/history', [ReviewController::class, 'history'])->name('approvals.history');
-        // Keep legacy bookmarks on the consolidated queue.
         Route::get('/review', [ReviewController::class, 'index'])->name('review.index');
         Route::get('/lists', [ReviewController::class, 'index'])->name('lists.index');
         Route::get('/lists/{fixedList}', [ReviewController::class, 'show'])->name('lists.show');

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ApplicationStatus;
+use App\Enums\ConfirmationStatus;
+use App\Enums\FixedListStatus;
 use App\Enums\ProgramStatus;
 use App\Models\Application;
+use App\Models\FixedList;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
 use Illuminate\Http\Request;
@@ -114,20 +117,34 @@ class DashboardController extends Controller
                 ->groupBy('status')
                 ->pluck('total', 'status')
                 ->all();
+
             $pendingVerificationCount = StudentProfile::query()
                 ->where('is_sle_fhe_verified', false)
                 ->count()
                 + Application::query()
                 ->where('status', ApplicationStatus::Pending)
                 ->count();
+
             $recentPrograms = SponsorshipProgram::query()
                 ->with('sponsor')
                 ->latest('updated_at')
                 ->limit(5)
                 ->get();
+
             $activeProgramsCount = SponsorshipProgram::query()
                 ->whereIn('status', [ProgramStatus::Open->value, ProgramStatus::Closed->value])
                 ->count();
+
+            $approvedApplicationsCount = Application::query()->approvedBeneficiaries()->count();
+
+            $confirmedFixedListNamesCount = FixedList::query()
+                ->where('status', FixedListStatus::Approved)
+                ->whereHas('latestApproval', fn($q) => $q->where('confirmation_status', ConfirmationStatus::Confirmed))
+                ->withCount('items')
+                ->get()
+                ->sum('items_count');
+
+            $totalConfirmedBeneficiaries = $approvedApplicationsCount + $confirmedFixedListNamesCount;
 
             return view('fassg.dashboard', [
                 'user' => $user,
@@ -144,7 +161,7 @@ class DashboardController extends Controller
                         })
                         ->count(),
                     'active_programs' => $activeProgramsCount,
-                    'confirmed_beneficiaries' => Application::query()->approvedBeneficiaries()->count(),
+                    'confirmed_beneficiaries' => $totalConfirmedBeneficiaries,
                 ],
                 'applicationStatusBreakdown' => collect(ApplicationStatus::cases())
                     ->mapWithKeys(fn(ApplicationStatus $status): array => [$status->value => (int) ($statusCounts[$status->value] ?? 0)])

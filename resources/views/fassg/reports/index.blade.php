@@ -4,6 +4,33 @@
 @section('eyebrow', 'FASSG Office')
 @section('page-title', 'Sponsorship Reports')
 
+@push('styles')
+    <style>
+        @media print {
+
+            .no-print,
+            nav,
+            header,
+            sidebar,
+            .navbar,
+            button {
+                display: none !important;
+            }
+
+            body {
+                background-color: #fff !important;
+                padding: 0 !important;
+            }
+
+            .card,
+            .sf-stat-card {
+                box-shadow: none !important;
+                border: 1px solid #dee2e6 !important;
+            }
+        }
+    </style>
+@endpush
+
 @section('content')
 
     <div class="d-flex align-items-center justify-content-between mb-4 gap-3">
@@ -11,10 +38,17 @@
             <h3 class="fw-bold mb-0">Sponsorship Reports</h3>
             <p class="text-muted small mb-0">Institutional analytics and slot utilization breakdown.</p>
         </div>
-        <button type="button" onclick="window.print()"
-            class="btn btn-outline-secondary fw-semibold d-inline-flex align-items-center gap-2 no-print">
-            <i class="bi bi-printer"></i>Print / Export PDF Summary
-        </button>
+        <div class="d-flex align-items-center gap-2 no-print">
+            <button type="button" onclick="window.print()"
+                class="btn btn-outline-secondary fw-semibold d-inline-flex align-items-center gap-2">
+                <i class="bi bi-printer"></i> Print Report
+            </button>
+            <a href="{{ route('fassg.reports.export-pdf') }}"
+                class="btn fw-semibold d-inline-flex align-items-center gap-2 text-white"
+                style="background-color: #0F2942; border-color: #0F2942;">
+                <i class="bi bi-file-earmark-pdf"></i> Export PDF
+            </a>
+        </div>
     </div>
 
     <div class="row g-3 mb-4">
@@ -37,8 +71,7 @@
             <div class="sf-stat-card p-3">
                 <div class="sf-eyebrow mb-1">Confirmed Beneficiaries</div>
                 <div class="h4 sf-heading mb-1">{{ $report['confirmed_beneficiaries'] ?? 0 }}</div>
-                <div class="small text-secondary">Sponsor-confirmed and finalized</div>
-                <div class="small text-secondary">Approved/Ongoing applications: {{ $approvedBeneficiaries }}</div>
+                <div class="small text-secondary">Approved applications: {{ $approvedBeneficiaries ?? 0 }}</div>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
@@ -105,24 +138,31 @@
                             </thead>
                             <tbody>
                                 @forelse ($slotUtilization ?? [] as $program)
+                                    @php
+                                        $filled = $program['filled_slots'] ?? 0;
+                                        $available = $program['available_slots'] ?? 0;
+                                        $totalSlots =
+                                            $program['total_slots'] > 0
+                                                ? $program['total_slots']
+                                                : $filled + $available;
+                                        $pct = $totalSlots > 0 ? round(($filled / $totalSlots) * 100) : 0;
+                                    @endphp
                                     <tr>
                                         <td>{{ $program['program_name'] }}</td>
                                         <td style="min-width: 220px;">
                                             <div class="d-flex justify-content-between small mb-1">
-                                                <span>{{ $program['utilization_pct'] }}%</span>
+                                                <span>{{ $pct }}%</span>
                                                 <span
-                                                    class="text-secondary">{{ $program['filled_slots'] }}/{{ $program['total_slots'] }}</span>
+                                                    class="text-secondary">{{ $filled }}/{{ $totalSlots }}</span>
                                             </div>
-                                            <div class="progress" role="progressbar"
-                                                aria-valuenow="{{ $program['utilization_pct'] }}" aria-valuemin="0"
-                                                aria-valuemax="100">
-                                                <div class="progress-bar bg-primary"
-                                                    style="width: {{ min(100, $program['utilization_pct']) }}%"></div>
+                                            <div class="progress" style="height: 6px;">
+                                                <div class="progress-bar bg-primary" style="width: {{ min(100, $pct) }}%">
+                                                </div>
                                             </div>
                                         </td>
-                                        <td class="text-end">{{ $program['filled_slots'] }}</td>
-                                        <td class="text-end">{{ $program['available_slots'] }}</td>
-                                        <td class="text-end">{{ $program['total_slots'] }}</td>
+                                        <td class="text-end">{{ $filled }}</td>
+                                        <td class="text-end">{{ $available }}</td>
+                                        <td class="text-end fw-semibold">{{ $totalSlots }}</td>
                                     </tr>
                                 @empty
                                     <tr>
