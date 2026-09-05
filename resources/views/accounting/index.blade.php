@@ -6,6 +6,18 @@
 
 @push('styles')
     <style>
+        .dropdown-item.active-filter {
+            background-color: #ffffff !important;
+            color: var(--sf-navy, #1e3a8a) !important;
+            font-weight: 600;
+        }
+
+        .dropdown-item:hover,
+        .dropdown-item:focus {
+            background-color: rgba(30, 58, 138, 0.08) !important;
+            color: var(--sf-navy, #1e3a8a) !important;
+        }
+
         @media print {
 
             .sf-navbar,
@@ -31,25 +43,31 @@
 
 @section('content')
     <div class="d-flex align-items-center justify-content-between mb-4 accounting-reference gap-3">
-        <div><span class="text-uppercase fw-bold text-muted extra-small tracking-wider d-block mb-1">Tuition Adjustment
-                Reference</span>
+        <div>
+            <span class="text-uppercase fw-bold text-muted extra-small tracking-wider d-block mb-1">
+                Tuition Adjustment Reference
+            </span>
             <h3 class="fw-bold mb-0">Approved Beneficiaries</h3>
             <p class="text-muted small mb-0">Read-only sponsor-confirmed and approved SLE-FHE beneficiary records.</p>
         </div>
-        <div class="d-flex align-items-center gap-2 no-print"><button type="button" onclick="window.print()"
-                class="btn btn-outline-secondary fw-semibold d-inline-flex align-items-center gap-2"><i
-                    class="bi bi-printer"></i>Print Master List</button><a
-                href="{{ route('accounting.beneficiaries.export') }}"
-                class="btn btn-warning fw-semibold d-inline-flex align-items-center gap-2"><i
-                    class="bi bi-download"></i>Export CSV / Excel</a>
-            <div class="sf-stat-card px-3 py-2">
-                <div class="h4 mb-0 sf-heading">{{ number_format($totalApproved) }}</div>
+        <div class="d-flex align-items-center gap-2 no-print">
+            <button type="button" onclick="window.print()"
+                class="btn btn-outline-secondary fw-semibold d-inline-flex align-items-center gap-2">
+                <i class="bi bi-printer"></i> Print Master List
+            </button>
+            <a href="{{ route('accounting.beneficiaries.export') }}"
+                class="btn btn-sf-navy fw-semibold px-3 d-inline-flex align-items-center gap-2 no-print">
+                <i class="bi bi-file-earmark-spreadsheet me-1"></i> Export CSV / Excel
+            </a>
+            <div class="sf-stat-card px-3 py-2 ms-2">
+                <div class="h4 mb-0 sf-heading fw-bold">{{ number_format($totalApproved) }}</div>
                 <div class="small text-secondary">Approved records</div>
             </div>
         </div>
     </div>
 
-    <div class="sf-readonly-banner d-flex align-items-center gap-3 mb-4 no-print"><i class="bi bi-lock fs-5"></i>
+    <div class="sf-readonly-banner d-flex align-items-center gap-3 mb-4 no-print">
+        <i class="bi bi-lock fs-5"></i>
         <div class="small fw-semibold">Accounting access is strictly read-only. Approval, editing, and deletion are handled
             by FASSG and sponsors.</div>
     </div>
@@ -67,9 +85,11 @@
                     </select>
                 </div>
                 <div class="col-md-9">
-                    <div class="input-group"><span class="input-group-text bg-white border-end-0"><i
-                                class="bi bi-search text-secondary"></i></span><input
-                            class="form-control border-start-0 ps-0" type="search" name="q"
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search text-secondary"></i>
+                        </span>
+                        <input class="form-control border-start-0 ps-0" type="search" name="q"
                             value="{{ request('q') }}" placeholder="Search student, ID, course, program, or sponsor"
                             oninput="clearTimeout(window.searchTimer); window.searchTimer = setTimeout(() => this.form.submit(), 600)">
                     </div>
@@ -110,7 +130,8 @@
                             </td>
                             <td>{{ $beneficiary['gwa'] !== null ? number_format((float) $beneficiary['gwa'], 2) : '—' }}
                             </td>
-                            <td>{{ $beneficiary['address'] ?: 'Fixed-list record' }}@if ($beneficiary['rurality'])
+                            <td>{{ $beneficiary['address'] ?: 'Fixed-list record' }}
+                                @if ($beneficiary['rurality'])
                                     <div><span
                                             class="badge {{ $beneficiary['rurality'] === 'Rural' ? 'bg-info-subtle text-info-emphasis' : 'bg-secondary-subtle text-secondary-emphasis' }}">{{ $beneficiary['rurality'] }}</span>
                                     </div>
@@ -121,18 +142,20 @@
                                 @if ($beneficiary['application_id'])
                                     <a href="{{ route('accounting.beneficiaries.show', $beneficiary['application_id']) }}"
                                         class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye me-1"></i>View
-                                    Reference</a>@else<span class="small text-secondary">Fixed list</span>
+                                        Reference</a>
+                                @else
+                                    <span class="small text-secondary">Fixed list</span>
                                 @endif
                             </td>
                         </tr>
-                        @empty
-                            <tr>
-                                <td colspan="9" class="text-center text-secondary py-5"><i
-                                        class="bi bi-inbox fs-2 d-block mb-2"></i>No approved beneficiaries found.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                    @empty
+                        <tr>
+                            <td colspan="9" class="text-center text-secondary py-5"><i
+                                    class="bi bi-inbox fs-2 d-block mb-2"></i>No approved beneficiaries found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
-    @endsection
+    </div>
+@endsection
