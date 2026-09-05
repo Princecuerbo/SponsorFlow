@@ -19,6 +19,7 @@ class StudentProfileFactory extends Factory
             'student_id_number' => fake()->unique()->numerify('2024-#####'),
             'course' => 'Bachelor of Science in Information Technology',
             'year_level' => 3,
+            'gender' => 'Female',
             'birthdate' => '2004-06-15',
             'address' => 'Purok 2, Barangay San Isidro, Mati City, Davao Oriental',
             'barangay' => 'San Isidro',

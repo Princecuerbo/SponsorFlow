@@ -16,6 +16,7 @@
             <i class="bi bi-printer"></i>Print / Export PDF Summary
         </button>
     </div>
+
     <div class="row g-3 mb-4">
         <div class="col-sm-6 col-xl-3">
             <div class="sf-stat-card p-3">
@@ -50,6 +51,92 @@
     </div>
 
     <div class="row g-4">
+        <div class="col-12">
+            <div class="card sf-card">
+                <div class="card-body p-4">
+                    <h2 class="h6 sf-heading mb-3">Monthly Applicant Trends</h2>
+                    <div class="table-responsive">
+                        <table class="table sf-table mb-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th class="text-end">Applications</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($applicantTrends ?? [] as $month => $total)
+                                    <tr>
+                                        <td>
+                                            @if ($month && strlen((string) $month) === 7)
+                                                {{ \Carbon\Carbon::parse($month . '-01')->format('F Y') }}
+                                            @else
+                                                {{ $month }}
+                                            @endif
+                                        </td>
+                                        <td class="text-end fw-semibold">{{ $total }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="2" class="text-secondary text-center py-3">No submitted applications
+                                            yet.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card sf-card">
+                <div class="card-body p-4">
+                    <h2 class="h6 sf-heading mb-3">Slot Utilization by Program</h2>
+                    <div class="table-responsive">
+                        <table class="table sf-table mb-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Program</th>
+                                    <th>Utilization</th>
+                                    <th class="text-end">Filled</th>
+                                    <th class="text-end">Available</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($slotUtilization ?? [] as $program)
+                                    <tr>
+                                        <td>{{ $program['program_name'] }}</td>
+                                        <td style="min-width: 220px;">
+                                            <div class="d-flex justify-content-between small mb-1">
+                                                <span>{{ $program['utilization_pct'] }}%</span>
+                                                <span
+                                                    class="text-secondary">{{ $program['filled_slots'] }}/{{ $program['total_slots'] }}</span>
+                                            </div>
+                                            <div class="progress" role="progressbar"
+                                                aria-valuenow="{{ $program['utilization_pct'] }}" aria-valuemin="0"
+                                                aria-valuemax="100">
+                                                <div class="progress-bar bg-primary"
+                                                    style="width: {{ min(100, $program['utilization_pct']) }}%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="text-end">{{ $program['filled_slots'] }}</td>
+                                        <td class="text-end">{{ $program['available_slots'] }}</td>
+                                        <td class="text-end">{{ $program['total_slots'] }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-secondary text-center py-3">No programs available.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="col-lg-6">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
@@ -99,6 +186,36 @@
                         @forelse ($ruralityDistribution ?? [] as $label => $count)
                             <div class="d-flex justify-content-between small py-1 border-bottom">
                                 <span>{{ $label }}</span><span class="fw-semibold">{{ $count }}</span>
+                            </div>
+                        @empty
+                            <div class="text-secondary small">No data available.</div>
+                        @endforelse
+                    </div>
+                    <div class="mt-4">
+                        <div class="small fw-semibold mb-2">Course</div>
+                        @forelse (($demographics['by_course'] ?? []) as $course => $count)
+                            <div class="d-flex justify-content-between small py-1 border-bottom">
+                                <span>{{ $course }}</span><span class="fw-semibold">{{ $count }}</span>
+                            </div>
+                        @empty
+                            <div class="text-secondary small">No data available.</div>
+                        @endforelse
+                    </div>
+                    <div class="mt-4">
+                        <div class="small fw-semibold mb-2">Year Level</div>
+                        @forelse (($demographics['by_year_level'] ?? []) as $yearLevel => $count)
+                            <div class="d-flex justify-content-between small py-1 border-bottom">
+                                <span>Year {{ $yearLevel }}</span><span class="fw-semibold">{{ $count }}</span>
+                            </div>
+                        @empty
+                            <div class="text-secondary small">No data available.</div>
+                        @endforelse
+                    </div>
+                    <div class="mt-4">
+                        <div class="small fw-semibold mb-2">Barangay / Municipality</div>
+                        @forelse (($demographics['by_barangay'] ?? []) as $barangay => $count)
+                            <div class="d-flex justify-content-between small py-1 border-bottom">
+                                <span>{{ $barangay }}</span><span class="fw-semibold">{{ $count }}</span>
                             </div>
                         @empty
                             <div class="text-secondary small">No data available.</div>

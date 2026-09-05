@@ -22,6 +22,19 @@ class ReportsController extends Controller
 
     public function index(Request $request): View
     {
+        $driver = DB::getDriverName();
+        $dateFormat = $driver === 'sqlite'
+            ? "strftime('%Y-%m', submitted_at)"
+            : "DATE_FORMAT(submitted_at, '%Y-%m')";
+
+        $applicantTrends = Application::query()
+            ->whereNotNull('submitted_at')
+            ->selectRaw("{$dateFormat} as month, COUNT(*) as total")
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total', 'month')
+            ->all();
+
         $applicantCounts = Application::query()
             ->select('applications.status', DB::raw('count(*) as total'))
             ->groupBy('applications.status')
@@ -63,6 +76,14 @@ class ReportsController extends Controller
 
         $applicantProfileIds = Application::query()->pluck('student_profile_id');
 
+        $genderDistribution = StudentProfile::query()
+            ->whereIn('id', $applicantProfileIds)
+            ->whereNotNull('gender')
+            ->select('gender', DB::raw('count(*) as total'))
+            ->groupBy('gender')
+            ->pluck('total', 'gender')
+            ->all();
+
         $demographics = [
             'rural' => StudentProfile::query()->whereIn('id', $applicantProfileIds)->where('is_rural', true)->count(),
             'urban' => StudentProfile::query()->whereIn('id', $applicantProfileIds)->where('is_rural', false)->count(),
@@ -93,7 +114,29 @@ class ReportsController extends Controller
                 ->all(),
         ];
 
-        $programSlots = (int) SponsorshipProgram::query()->sum('available_slots');
+        $slotUtilization = SponsorshipProgram::query()
+            ->select('program_name', 'total_slots', 'available_slots')
+            ->withCount([
+                'applications as approved_count' => fn($query) => $query->whereIn('status', [
+                    ApplicationStatus::Approved,
+                    ApplicationStatus::Ongoing,
+                ]),
+            ])
+            ->orderBy('program_name')
+            ->get()
+            ->map(fn($program): array => [
+                'program_name' => $program->program_name,
+                'total_slots' => (int) $program->total_slots,
+                'filled_slots' => (int) $program->approved_count,
+                'available_slots' => (int) $program->available_slots,
+                'utilization_pct' => (int) $program->total_slots > 0
+                    ? round(((int) $program->approved_count / (int) $program->total_slots) * 100, 1)
+                    : 0,
+            ])
+            ->all();
+
+        $programSlots = collect($slotUtilization)->sum('total_slots');
+        $filledSlots = collect($slotUtilization)->sum('filled_slots');
         $applicantCategoryTotals = $this->categoryTotals($applicantsByCategory);
         $categoryBreakdown = collect($this->categoryTotals($categoryBreakdown))
             ->map(fn(int $programs, string $category): array => [
@@ -106,6 +149,7 @@ class ReportsController extends Controller
 
         return view('fassg.reports.index', [
             'user' => $this->actor($request),
+            'applicantTrends' => $applicantTrends,
             'applicantCounts' => $this->statusTotals($applicantCounts),
             'approvedBeneficiaries' => $approvedBeneficiaries,
             'confirmedLists' => $confirmedLists,
@@ -114,8 +158,8 @@ class ReportsController extends Controller
             'approvedByCategory' => $this->categoryTotals($approvedByCategory),
             'demographics' => $demographics,
             'report' => [
-                'slot_utilization_pct' => $programSlots > 0 ? round(($approvedBeneficiaries / $programSlots) * 100, 1) : 0,
-                'slots_filled' => $approvedBeneficiaries,
+                'slot_utilization_pct' => $programSlots > 0 ? round(($filledSlots / $programSlots) * 100, 1) : 0,
+                'slots_filled' => $filledSlots,
                 'slots_total' => $programSlots,
                 'total_applicants' => array_sum($this->statusTotals($applicantCounts)),
                 'confirmed_beneficiaries' => $approvedBeneficiaries,
@@ -124,7 +168,8 @@ class ReportsController extends Controller
                     : 0,
             ],
             'categoryBreakdown' => $categoryBreakdown,
-            'genderDistribution' => [],
+            'genderDistribution' => $genderDistribution,
+            'slotUtilization' => $slotUtilization,
             'ruralityDistribution' => [
                 'Rural' => $demographics['rural'],
                 'Urban' => $demographics['urban'],

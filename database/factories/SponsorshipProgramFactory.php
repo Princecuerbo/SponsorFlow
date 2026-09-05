@@ -19,6 +19,7 @@ class SponsorshipProgramFactory extends Factory
             'sponsor_id' => Sponsor::factory(),
             'program_name' => fake()->unique()->sentence(3),
             'category' => ProgramCategory::Individual,
+            'total_slots' => 10,
             'available_slots' => 10,
             'status' => ProgramStatus::Open,
             'min_gpa' => 2.50,

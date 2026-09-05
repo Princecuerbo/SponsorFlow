@@ -21,6 +21,7 @@ class StudentProfile extends Model
         'course',
         'academic_program_id',
         'year_level',
+        'gender',
         'birthdate',
         'address',
         'barangay',

@@ -24,6 +24,7 @@ class SponsorshipProgram extends Model
         'sponsor_id',
         'program_name',
         'category',
+        'total_slots',
         'available_slots',
         'status',
         'min_gpa',
@@ -39,6 +40,7 @@ class SponsorshipProgram extends Model
     {
         return [
             'category' => ProgramCategory::class,
+            'total_slots' => 'integer',
             'status' => ProgramStatus::class,
             'available_slots' => 'integer',
             'min_gpa' => 'decimal:2',
