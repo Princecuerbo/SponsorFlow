@@ -19,23 +19,34 @@
 
     <style>
         :root {
-            --sf-navy: #0f294a;
-            --sf-navy-deep: #0a1b30;
-            --sf-slate: #1e293b;
+            --sf-navy: #1e3a8a;
+            --sf-navy-deep: #172554;
+            --sf-slate: #0f172a;
             --sf-gold: #f59e0b;
             --sf-gold-soft: #fef3c7;
-            --sf-bg: #f8f9fa;
+            --sf-bg: #f8fafc;
             --sf-white: #ffffff;
-            --sf-border: #e6e9ee;
+            --sf-border: #e2e8f0;
+            --sf-muted: #64748b;
+            --sf-success: #10b981;
+            --sf-warning: #f59e0b;
+            --sf-danger: #ef4444;
+            --sf-info: #0284c7;
         }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--sf-bg);
-            color: var(--sf-slate);
+            background-color: var(--sf-bg) !important;
+            color: var(--sf-slate) !important;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
-        h1, h2, h3, h4, h5, h6, .sf-heading {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .sf-heading {
             font-family: 'Lexend', 'Inter', sans-serif;
             letter-spacing: -0.01em;
         }
@@ -55,15 +66,24 @@
 
         /* ---- Reusable pieces ---- */
         .sf-card {
-            border: 0;
-            border-radius: 14px;
-            box-shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 1px 12px rgba(15, 23, 42, .04);
+            background-color: #ffffff;
+            border: 1px solid var(--sf-border);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+        }
+
+        .card {
+            background-color: #ffffff;
+            border: 1px solid var(--sf-border);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
         }
 
         .sf-stat-card {
-            border-radius: 14px;
+            background: #ffffff;
             border: 1px solid var(--sf-border);
-            background: var(--sf-white);
+            border-left: 4px solid var(--sf-navy);
+            border-radius: 0.5rem;
         }
 
         .sf-stat-icon {
@@ -77,11 +97,16 @@
         }
 
         .sf-eyebrow {
-            font-size: .72rem;
-            text-transform: uppercase;
-            letter-spacing: .08em;
-            color: #64748b;
+            color: var(--sf-muted);
+            font-size: 0.75rem;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .sf-heading {
+            color: var(--sf-slate);
+            font-weight: 700;
         }
 
         .sf-empty-state {
@@ -207,9 +232,12 @@
         }
 
         @media print {
-            .sf-navbar, .no-print {
+
+            .sf-navbar,
+            .no-print {
                 display: none !important;
             }
+
             .sf-content {
                 padding: 0 !important;
             }
@@ -219,6 +247,22 @@
             .sf-content {
                 padding: 1rem;
             }
+        }
+
+        .btn-sf-navy {
+            --bs-btn-color: #ffffff;
+            --bs-btn-bg: #1e3a8a;
+            --bs-btn-border-color: #1e3a8a;
+            --bs-btn-hover-color: #ffffff;
+            --bs-btn-hover-bg: #172554;
+            --bs-btn-hover-border-color: #172554;
+            --bs-btn-focus-shadow-rgb: 30, 58, 138;
+            --bs-btn-active-color: #ffffff;
+            --bs-btn-active-bg: #172554;
+            --bs-btn-active-border-color: #172554;
+            background-color: #1e3a8a !important;
+            border-color: #1e3a8a !important;
+            color: #ffffff !important;
         }
     </style>
 

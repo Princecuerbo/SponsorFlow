@@ -35,15 +35,12 @@
             </div>
         @endif
 
+        {{-- Main Banner Notification --}}
         @if ($profile?->is_sle_fhe_verified)
             <div class="alert alert-success-subtle border-0 border-start border-4 border-success rounded-3 p-3 mb-4">
-                <div
-                    class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2 mb-2">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-check-circle-fill fs-5 text-success"></i>
-                        <h6 class="fw-bold mb-0 text-success-emphasis">Verification Status: Verified</h6>
-                    </div>
-                    <span class="badge bg-success text-white rounded-pill px-3 py-2">VERIFIED</span>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <i class="bi bi-check-circle-fill fs-5 text-success"></i>
+                    <h6 class="fw-bold mb-0 text-success-emphasis">Verification Status: Verified</h6>
                 </div>
                 <p class="small text-secondary mb-0 ms-md-4">
                     Your SLE-FHE status has been verified. You are eligible to apply for open sponsorship programs.
@@ -51,23 +48,20 @@
             </div>
         @else
             <div class="alert alert-primary-subtle border-0 border-start border-4 border-primary rounded-3 p-3 mb-4">
-                <div
-                    class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2 mb-2">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-clock-history fs-5 text-primary"></i>
-                        <h6 class="fw-bold mb-0 text-primary-emphasis">Verification Status: Pending Review</h6>
-                    </div>
-                    <span class="badge bg-primary text-white rounded-pill px-3 py-2">IN PROGRESS</span>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <i class="bi bi-clock-history fs-5 text-primary"></i>
+                    <h6 class="fw-bold mb-0 text-primary-emphasis">Verification Status: Pending Review</h6>
                 </div>
                 <p class="small text-secondary mb-0 ms-md-4">
-                    Your institutional verification records are currently being evaluated by the FASSG Admin team. Your
-                    Student ID is currently being cross-checked against the FASSG institutional masterlist.
+                    Your records are being evaluated by FASSG. Your Student ID is being cross-checked against the
+                    institutional masterlist.
                 </p>
             </div>
         @endif
 
         <div class="row g-4 align-items-stretch">
 
+            {{-- Academic Profile Details Card --}}
             <div class="col-12 col-lg-5">
                 <div class="card h-100 shadow-sm border-0 rounded-3 bg-white">
                     <div class="card-header bg-white border-bottom-0 pt-3 pb-0">
@@ -95,7 +89,7 @@
                                 <span class="text-secondary extra-small text-uppercase d-block mb-1"
                                     style="font-size: 0.7rem; letter-spacing: 0.05em;">Year Level</span>
                                 <span class="fw-semibold text-dark"
-                                    style="font-size: 0.875rem;">{{ $profile?->year_level ? $profile->year_level . ' Year' : '—' }}</span>
+                                    style="font-size: 0.875rem;">{{ $profile?->year_level ? 'Year ' . $profile->year_level : '—' }}</span>
                             </div>
 
                             <div class="col-6 pb-2 border-bottom">
@@ -111,24 +105,6 @@
                                 <span id="sle-residency-badge" class="badge {{ $isRural ? 'bg-success' : 'bg-secondary' }}">
                                     {{ $isRural ? 'Rural' : 'Urban' }}
                                 </span>
-                            </div>
-
-                            <div class="col-12 pt-1">
-                                <span class="text-secondary extra-small text-uppercase d-block mb-1"
-                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">SLE-FHE Status</span>
-                                @if ($profile?->is_sle_fhe_verified)
-                                    <span
-                                        class="badge bg-success-subtle text-success-emphasis rounded-2 fw-semibold px-2.5 py-1"
-                                        style="font-size: 0.75rem;">
-                                        <i class="bi bi-patch-check-fill me-1"></i> Verified
-                                    </span>
-                                @else
-                                    <span
-                                        class="badge bg-warning-subtle text-warning-emphasis rounded-2 fw-semibold px-2.5 py-1"
-                                        style="font-size: 0.75rem;">
-                                        <i class="bi bi-hourglass-split me-1"></i> Pending
-                                    </span>
-                                @endif
                             </div>
                         </div>
 
@@ -161,6 +137,7 @@
                 </div>
             </div>
 
+            {{-- Institutional Eligibility Status Card --}}
             <div class="col-12 col-lg-7">
                 <div class="card h-100 shadow-sm border-0 rounded-3 bg-white">
                     <div class="card-header bg-white border-bottom pt-3.5 px-4 pb-3">
@@ -179,21 +156,29 @@
                                 <h6 class="fw-bold text-dark mb-1">Masterlist Verification</h6>
                                 @if ($profile?->is_sle_fhe_verified)
                                     <span class="badge bg-success mb-2">Verified</span>
-                                    <p class="text-secondary small mb-0">Your Student ID matches the FASSG masterlist.
-                                        Sponsorship opportunities are available.</p>
+                                    <p class="text-secondary small mb-0">Your profile is active and verified for the current
+                                        academic term.</p>
                                 @else
                                     <span class="badge bg-warning text-dark mb-2">Pending Review</span>
-                                    <p class="text-secondary small mb-0">Your Student ID is awaiting verification against
-                                        the FASSG masterlist.</p>
+                                    <p class="text-secondary small mb-0">Eligibility features and program applications
+                                        remain locked until approved.</p>
                                 @endif
                             </div>
                         </div>
-                        <a @if ($isVerified) href="{{ route('student.programs.index') }}" @endif
-                            class="btn {{ $isVerified ? 'btn-primary' : 'btn-secondary disabled' }} w-100 fw-semibold"
-                            @if (!$isVerified) aria-disabled="true" tabindex="-1" @endif
-                            style="background-color: #0f294a; border: none; border-radius: 8px;">
-                            <i class="bi bi-search me-1"></i> Browse Sponsorship Opportunities
-                        </a>
+
+                        {{-- Action Button --}}
+                        @if ($isVerified)
+                            <a href="{{ route('student.programs.index') }}" class="btn btn-sf-navy w-100 fw-semibold py-2"
+                                style="border-radius: 8px;">
+                                <i class="bi bi-search me-1"></i> Browse Sponsorship Opportunities
+                            </a>
+                        @else
+                            <button type="button" id="btn-pending-modal-trigger"
+                                class="btn btn-outline-secondary w-100 fw-semibold py-2" data-bs-toggle="modal"
+                                data-bs-target="#verificationPendingModal" style="border-radius: 8px;">
+                                <i class="bi bi-lock-fill me-1"></i> Browse Sponsorship Opportunities
+                            </button>
+                        @endif
 
                         <div class="mt-4 pt-3 border-top">
                             <h6 class="fw-bold text-dark mb-3" style="font-size: 0.9rem;">Verification Guidelines</h6>
@@ -201,25 +186,25 @@
                                 <div class="d-flex align-items-start gap-2">
                                     <i class="bi bi-check-circle-fill text-primary mt-1"></i>
                                     <div>
-                                        <div class="small fw-semibold text-dark">FASSG Masterlist Matching</div>
-                                        <p class="small text-secondary mb-0">System automatically verifies your Student ID
-                                            against institutional records.</p>
+                                        <div class="small fw-semibold text-dark">Masterlist Verification</div>
+                                        <p class="small text-secondary mb-0">Automatically checks your Student ID against
+                                            institutional records.</p>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-start gap-2">
                                     <i class="bi bi-check-circle-fill text-primary mt-1"></i>
                                     <div>
-                                        <div class="small fw-semibold text-dark">Profile Updates</div>
-                                        <p class="small text-secondary mb-0">Ensure your birthdate, address, and barangay
-                                            info match your official university profile.</p>
+                                        <div class="small fw-semibold text-dark">Profile Details</div>
+                                        <p class="small text-secondary mb-0">Ensure your birthdate and address match your
+                                            university profile.</p>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-start gap-2">
                                     <i class="bi bi-check-circle-fill text-primary mt-1"></i>
                                     <div>
                                         <div class="small fw-semibold text-dark">Next Steps</div>
-                                        <p class="small text-secondary mb-0">Once verified, open group, individual, and
-                                            employee-based sponsorships will become active in your portal.</p>
+                                        <p class="small text-secondary mb-0">Once verified, available sponsorship
+                                            opportunities will become active in your portal.</p>
                                     </div>
                                 </div>
                             </div>
@@ -227,7 +212,51 @@
                     </div>
                 </div>
             </div>
+
         </div>
 
     </div>
+
+    {{-- Verification Pending Modal --}}
+    @if (!$isVerified)
+        <div class="modal fade" id="verificationPendingModal" tabindex="-1"
+            aria-labelledby="verificationPendingModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow rounded-4">
+                    <div class="modal-body p-4 text-center">
+                        <div class="mb-3 d-inline-flex align-items-center justify-content-center bg-warning-subtle text-warning rounded-circle"
+                            style="width: 60px; height: 60px;">
+                            <i class="bi bi-hourglass-split fs-2"></i>
+                        </div>
+                        <h5 class="fw-bold text-dark mb-2" id="verificationPendingModalLabel">Verification Underway</h5>
+                        <p class="text-secondary small mb-4">
+                            Your student record is currently being cross-checked against the official institutional
+                            masterlist. Sponsorship browsing will unlock automatically as soon as FASSG completes the
+                            review.
+                        </p>
+                        <div class="d-flex flex-column gap-2">
+                            <button type="button" class="btn btn-sf-navy fw-semibold w-100 py-2 rounded-3"
+                                data-bs-dismiss="modal">
+                                Got It, I'll Wait
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var btn = document.getElementById('btn-pending-modal-trigger');
+                if (btn) {
+                    var instance = bootstrap.Tooltip.getInstance(btn);
+                    if (instance) {
+                        instance.dispose();
+                    }
+                    btn.removeAttribute('title');
+                    btn.removeAttribute('data-bs-original-title');
+                }
+            });
+        </script>
+    @endif
 @endsection

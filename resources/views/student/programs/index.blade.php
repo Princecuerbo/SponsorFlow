@@ -34,21 +34,6 @@
     <h4 class="fw-bold text-dark mb-1">Sponsorship Opportunities</h4>
     <p class="text-muted small mb-3">Browse and apply for available university sponsorship programs.</p>
 
-    @unless ($isVerified)
-        <div class="alert border-0 border-start border-4 rounded-3 p-3 mb-4 d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2"
-            style="background-color: rgba(15, 41, 66, 0.05); color: #0F2942; border-color: #0F2942 !important;">
-            <div class="d-flex align-items-start gap-2">
-                <i class="bi bi-info-circle-fill mt-1" style="color: #0F2942;"></i>
-                <span>Your SLE-FHE status is still pending verification. Open sponsorship programs will appear after FASSG
-                    verifies your record.</span>
-            </div>
-            <a href="{{ route('student.verification.show') }}"
-                class="d-block d-md-inline mt-2 mt-md-0 fw-bold text-decoration-underline p-2" style="color: #0F2942;">
-                Check status <i class="bi bi-arrow-right"></i>
-            </a>
-        </div>
-    @endunless
-
     @if ($isVerified)
         <form method="GET" action="{{ route('student.programs.index') }}" id="filter-form" class="card sf-card mb-4">
             <div class="card-body p-3">
@@ -81,13 +66,20 @@
 
     @if ($programs->isEmpty())
         @if (!$isVerified)
+            {{-- Clean Empty State Container --}}
             <div class="card border-0 shadow-sm rounded-4 p-5 text-center my-4">
-                <div class="mb-3"><i class="bi bi-lock-fill text-muted display-4"></i></div>
-                <h5 class="fw-bold text-dark">Sponsorship Opportunities Locked</h5>
-                <p class="text-muted max-w-md mx-auto">Programs will become available after FASSG verifies your Student ID
-                    against the institutional masterlist.</p>
+                <div class="mb-3">
+                    <i class="bi bi-lock-fill text-secondary display-4"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-2">Sponsorship Opportunities Locked</h5>
+                <p class="text-secondary small mb-4 mx-auto" style="max-width: 480px;">
+                    Programs will become available after FASSG verifies your Student ID against the institutional
+                    masterlist.
+                </p>
                 <div>
-                    <a href="{{ route('student.sle-fhe') }}" class="btn btn-navy-primary px-4">View Verification Status</a>
+                    <a href="{{ route('student.sle-fhe') }}" class="btn btn-navy-primary px-4 py-2 fw-semibold rounded-3">
+                        Check Verification Status
+                    </a>
                 </div>
             </div>
         @else

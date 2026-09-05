@@ -6,34 +6,16 @@
 
 @push('styles')
     <style>
-        /* Force Primary Navy Styling on Export Link Button */
-        a[href*="export"],
-        a[href*="export"]:hover,
-        a[href*="export"]:focus,
-        a[href*="export"]:active {
-            background: #0F2942 !important;
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
-            color: #ffffff !important;
-            box-shadow: none !important;
-        }
-
-        a[href*="export"]:hover {
-            background: #0A1E31 !important;
-            background-color: #0A1E31 !important;
-            border-color: #0A1E31 !important;
-        }
-
         .dropdown-item.active-filter {
             background-color: #ffffff !important;
-            color: #0F2942 !important;
+            color: var(--sf-navy, #1e3a8a) !important;
             font-weight: 600;
         }
 
         .dropdown-item:hover,
         .dropdown-item:focus {
-            background-color: rgba(15, 41, 66, 0.08) !important;
-            color: #0F2942 !important;
+            background-color: rgba(30, 58, 138, 0.08) !important;
+            color: var(--sf-navy, #1e3a8a) !important;
         }
 
         .pagination {
@@ -42,18 +24,18 @@
         }
 
         .pagination .page-item.active .page-link {
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
+            background-color: var(--sf-navy, #1e3a8a) !important;
+            border-color: var(--sf-navy, #1e3a8a) !important;
             color: #ffffff !important;
         }
 
         .pagination .page-link {
-            color: #0F2942;
+            color: var(--sf-navy, #1e3a8a);
         }
 
         .pagination .page-link:hover {
-            color: #0A1E31;
-            background-color: rgba(15, 41, 66, 0.08);
+            color: var(--sf-navy-deep, #172554);
+            background-color: rgba(30, 58, 138, 0.08);
         }
 
         @media print {
@@ -92,8 +74,7 @@
                     <i class="bi bi-printer"></i> Print Master List
                 </button>
                 <a href="{{ route('accounting.beneficiaries.export') }}"
-                    class="btn fw-semibold px-3 d-inline-flex align-items-center gap-2 no-print"
-                    style="background-color: #0F2942 !important; color: #ffffff !important; border-color: #0F2942 !important;">
+                    class="btn btn-sf-navy fw-semibold px-3 d-inline-flex align-items-center gap-2 no-print">
                     <i class="bi bi-file-earmark-spreadsheet me-1"></i> Export CSV / Excel
                 </a>
                 <div class="sf-stat-card px-3 py-2 bg-white rounded-3 border shadow-sm ms-2">
@@ -107,7 +88,7 @@
 
         {{-- Notice Banner --}}
         <div class="alert border-0 border-start border-4 rounded-3 p-3 mb-4 no-print d-flex align-items-center gap-2"
-            style="background-color: rgba(15, 41, 66, 0.05); color: #0F2942; border-color: #0F2942 !important;">
+            style="background-color: rgba(30, 58, 138, 0.05); color: #1e3a8a; border-color: #1e3a8a !important;">
             <i class="bi bi-lock-fill fs-5"></i>
             <span class="small fw-semibold">Accounting access is strictly read-only. Approval, editing, and deletion are
                 handled by FASSG and sponsors.</span>
