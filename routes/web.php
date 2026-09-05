@@ -165,6 +165,9 @@ Route::middleware(['auth', 'EnsureUserRole:sponsor'])
     ->group(function () {
         Route::get('/dashboard', [ReviewController::class, 'dashboard'])->name('dashboard');
         Route::get('/programs', [ReviewController::class, 'programs'])->name('programs.index');
+        Route::get('/approvals', [ReviewController::class, 'index'])->name('approvals.index');
+        Route::get('/approvals/history', [ReviewController::class, 'history'])->name('approvals.history');
+        // Keep legacy bookmarks on the consolidated queue.
         Route::get('/review', [ReviewController::class, 'index'])->name('review.index');
         Route::get('/lists', [ReviewController::class, 'index'])->name('lists.index');
         Route::get('/lists/{fixedList}', [ReviewController::class, 'show'])->name('lists.show');
@@ -173,8 +176,6 @@ Route::middleware(['auth', 'EnsureUserRole:sponsor'])
         Route::get('/applicants/{application}/approval-document', [ReviewController::class, 'downloadApprovalDocument'])->name('applicants.approval-document');
         Route::post('/applicants/{application}/confirm', [ReviewController::class, 'confirmApplication'])->name('applicants.confirm');
         Route::post('/applicants/{application}/reject', [ReviewController::class, 'reject'])->name('applicants.reject');
-        Route::get('/approvals', [ReviewController::class, 'approvals'])->name('approvals.index');
-
         Route::post('/lists/{fixedList}/approvals', [ApprovalUploadController::class, 'store'])->name('approvals.store');
         Route::post('/lists/{fixedList}/upload-approval', [ApprovalUploadController::class, 'store'])->name('lists.upload-approval');
         Route::patch('/lists/{fixedList}/confirm', [ApprovalUploadController::class, 'confirm'])->name('approvals.confirm');

@@ -4,16 +4,44 @@
 @section('eyebrow', 'FASSG Office')
 @section('page-title', 'Hybrid Verification Queue')
 
+@push('styles')
+    <style>
+        .btn-navy-primary,
+        a.btn-navy-primary,
+        button.btn-navy-primary {
+            background-color: #0F2942 !important;
+            border-color: #0F2942 !important;
+            color: #ffffff !important;
+            font-weight: 600;
+            box-shadow: none !important;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-navy-primary:hover,
+        .btn-navy-primary:focus,
+        a.btn-navy-primary:hover,
+        a.btn-navy-primary:focus,
+        button.btn-navy-primary:hover,
+        button.btn-navy-primary:focus {
+            background-color: #0A1E31 !important;
+            border-color: #0A1E31 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
-            <p class="text-uppercase small fw-semibold text-success mb-2">Student eligibility</p>
+            <p class="text-uppercase small fw-semibold text-secondary mb-2">Student eligibility</p>
             <h1 class="display-6 fw-bold mb-1">Hybrid Verification Queue</h1>
             <p class="text-secondary mb-0">Review unverified student profiles and pending application submissions.</p>
         </div>
         <div class="d-flex gap-2">
             <span class="badge text-bg-warning text-dark px-3 py-2">{{ $pendingStudents }} student profiles</span>
-            <span class="badge text-bg-primary px-3 py-2">{{ $pendingApplications }} applications</span>
+            <span class="badge text-bg-primary px-3 py-2"
+                style="background-color: #0F2942 !important;">{{ $pendingApplications }} applications</span>
         </div>
     </div>
 
@@ -24,18 +52,23 @@
                     <select name="academic_program_id" class="form-select" onchange="this.form.submit()">
                         <option value="">All academic programs</option>
                         @foreach ($academicPrograms as $academicProgram)
-                            <option value="{{ $academicProgram->program_id }}" @selected((int) request('academic_program_id') === (int) $academicProgram->program_id)>{{ $academicProgram->name }}</option>
+                            <option value="{{ $academicProgram->program_id }}" @selected((int) request('academic_program_id') === (int) $academicProgram->program_id)>
+                                {{ $academicProgram->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-md-7">
                     <div class="input-group">
-                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-secondary"></i></span>
-                        <input type="text" name="q" value="{{ request('q') }}" class="form-control border-start-0 ps-0" placeholder="Search by name, student ID, or course" oninput="clearTimeout(window.searchTimer); window.searchTimer = setTimeout(() => this.form.submit(), 600)">
+                        <span class="input-group-text bg-white border-end-0"><i
+                                class="bi bi-search text-secondary"></i></span>
+                        <input type="text" name="q" value="{{ request('q') }}"
+                            class="form-control border-start-0 ps-0" placeholder="Search by name, student ID, or course"
+                            oninput="clearTimeout(window.searchTimer); window.searchTimer = setTimeout(() => this.form.submit(), 600)">
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <a href="{{ route('fassg.verification.index') }}" class="btn btn-outline-secondary w-100">Reset Search</a>
+                    <a href="{{ route('fassg.verification.index') }}" class="btn btn-outline-secondary w-100">Reset
+                        Search</a>
                 </div>
             </form>
         </div>
@@ -74,7 +107,9 @@
                                     <div class="fw-semibold">{{ $profile->user->name }}</div>
                                     <div class="small text-secondary">{{ $profile->user->email }}</div>
                                 </td>
-                                <td>{{ $profile->course }}<div class="small text-secondary">Year {{ $profile->year_level }}</div></td>
+                                <td>{{ $profile->course }}<div class="small text-secondary">Year
+                                        {{ $profile->year_level }}</div>
+                                </td>
                                 <td>
                                     <div>{{ $profile->barangay ?: 'Not provided' }}</div>
                                     @if ($profile->is_rural)
@@ -85,7 +120,9 @@
                                 </td>
                                 <td>
                                     @if ($application)
-                                        <span class="badge bg-success-subtle text-success-emphasis">{{ $application->documents->count() }} document(s)</span>
+                                        <span
+                                            class="badge bg-success-subtle text-success-emphasis">{{ $application->documents->count() }}
+                                            document(s)</span>
                                     @else
                                         <span class="text-secondary small">Profile registration</span>
                                     @endif
@@ -100,17 +137,24 @@
                                 <td class="text-end pe-4">
                                     @if ($item['type'] === 'student')
                                         <div class="d-flex justify-content-end gap-2">
-                                            <form method="POST" action="{{ route('fassg.verification.students.verify', $profile) }}">
+                                            <form method="POST"
+                                                action="{{ route('fassg.verification.students.verify', $profile) }}">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-check2-circle me-1"></i>Verify &amp; Approve SLE-FHE</button>
+                                                <button type="submit" class="btn btn-sm btn-navy-primary"><i
+                                                        class="bi bi-check2-circle me-1"></i>Verify &amp; Approve
+                                                    SLE-FHE</button>
                                             </form>
-                                            <form method="POST" action="{{ route('fassg.verification.students.reject', $profile) }}">
+                                            <form method="POST"
+                                                action="{{ route('fassg.verification.students.reject', $profile) }}">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-arrow-return-left me-1"></i>Request Fix</button>
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"><i
+                                                        class="bi bi-arrow-return-left me-1"></i>Request Fix</button>
                                             </form>
                                         </div>
                                     @else
-                                        <a href="{{ route('fassg.verification.show', $application) }}" class="btn btn-sm btn-sf-navy">Review Application <i class="bi bi-chevron-right"></i></a>
+                                        <a href="{{ route('fassg.verification.show', $application) }}"
+                                            class="btn btn-sm btn-navy-primary">Review Application <i
+                                                class="bi bi-chevron-right"></i></a>
                                     @endif
                                 </td>
                             </tr>

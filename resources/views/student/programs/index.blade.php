@@ -4,6 +4,28 @@
 @section('eyebrow', 'Student Portal')
 @section('page-title', 'Open Sponsorship Programs')
 
+@push('styles')
+    <style>
+        /* Primary Navy Styling for Apply Now Button */
+        .btn-navy-primary,
+        a.btn-navy-primary {
+            background-color: #0F2942 !important;
+            border-color: #0F2942 !important;
+            color: #ffffff !important;
+            box-shadow: none !important;
+        }
+
+        .btn-navy-primary:hover,
+        .btn-navy-primary:focus,
+        a.btn-navy-primary:hover,
+        a.btn-navy-primary:focus {
+            background-color: #0A1E31 !important;
+            border-color: #0A1E31 !important;
+            color: #ffffff !important;
+        }
+    </style>
+@endpush
+
 @section('content')
     @php
         $isVerified = (bool) ($profile?->is_sle_fhe_verified ?? false);
@@ -13,15 +35,15 @@
     <p class="text-muted small mb-3">Browse and apply for available university sponsorship programs.</p>
 
     @unless ($isVerified)
-        <div class="alert border-0 border-start border-4 border-primary shadow-sm rounded-3 p-3 mb-4 d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2"
-            style="background-color: rgba(15, 41, 66, 0.05); color: #0F2942;">
+        <div class="alert border-0 border-start border-4 rounded-3 p-3 mb-4 d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2"
+            style="background-color: rgba(15, 41, 66, 0.05); color: #0F2942; border-color: #0F2942 !important;">
             <div class="d-flex align-items-start gap-2">
-                <i class="bi bi-info-circle-fill text-primary mt-1"></i>
+                <i class="bi bi-info-circle-fill mt-1" style="color: #0F2942;"></i>
                 <span>Your SLE-FHE status is still pending verification. Open sponsorship programs will appear after FASSG
                     verifies your record.</span>
             </div>
             <a href="{{ route('student.verification.show') }}"
-                class="d-block d-md-inline mt-2 mt-md-0 fw-bold text-decoration-underline text-primary p-2">
+                class="d-block d-md-inline mt-2 mt-md-0 fw-bold text-decoration-underline p-2" style="color: #0F2942;">
                 Check status <i class="bi bi-arrow-right"></i>
             </a>
         </div>
@@ -65,8 +87,7 @@
                 <p class="text-muted max-w-md mx-auto">Programs will become available after FASSG verifies your Student ID
                     against the institutional masterlist.</p>
                 <div>
-                    <a href="{{ route('student.sle-fhe') }}" class="btn btn-primary px-4"
-                        style="background-color: #0F2942;">View Verification Status</a>
+                    <a href="{{ route('student.sle-fhe') }}" class="btn btn-navy-primary px-4">View Verification Status</a>
                 </div>
             </div>
         @else
@@ -85,8 +106,10 @@
                     <div class="card sf-card h-100">
                         <div class="card-body p-4 d-flex flex-column min-w-0">
                             <div class="d-flex justify-content-between align-items-start mb-2">
-                                <span
-                                    class="badge bg-primary-subtle text-primary-emphasis">{{ $program->category->value }}</span>
+                                <span class="badge rounded-2 px-2.5 py-1.5 fw-medium"
+                                    style="background-color: rgba(15, 41, 66, 0.08) !important; color: #0F2942 !important;">
+                                    {{ $program->category->value }}
+                                </span>
                                 <x-status-badge :status="$program->status" />
                             </div>
 
@@ -142,7 +165,7 @@
                                     </button>
                                 @else
                                     <a href="{{ route('student.applications.create', ['sponsorshipProgram' => $program->id]) }}"
-                                        class="btn btn-sf-gold btn-sm w-100">
+                                        class="btn btn-navy-primary btn-sm w-100 fw-semibold">
                                         <i class="bi bi-pencil-square me-1"></i>Apply Now
                                     </a>
                                 @endif
@@ -152,7 +175,5 @@
                 </div>
             @endforeach
         </div>
-
     @endif
-
 @endsection

@@ -10,7 +10,8 @@
 
         {{-- Brand --}}
         <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-decoration-none" href="#">
-            <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center" style="background-color: #0f294a; width: 36px; height: 36px;">
+            <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center"
+                style="background-color: #0f294a; width: 36px; height: 36px;">
                 <i class="fa-solid fa-hand-holding-dollar fs-6"></i>
             </div>
             <span style="color: #0f294a;" class="fs-5 fw-bold">SponsorFlow</span>
@@ -107,20 +108,14 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link sf-topnav-link {{ request()->routeIs('sponsor.lists*') ? 'active' : '' }}"
-                            href="{{ route('sponsor.lists.index') }}">
-                            <i class="bi bi-clipboard-check"></i> Approval Lists
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link sf-topnav-link {{ request()->routeIs('sponsor.applicants*') ? 'active' : '' }}"
-                            href="{{ route('sponsor.applicants.index') }}">
-                            <i class="bi bi-people"></i> Forwarded Applicants
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link sf-topnav-link {{ request()->routeIs('sponsor.approvals*') ? 'active' : '' }}"
+                        <a class="nav-link sf-topnav-link {{ request()->routeIs('sponsor.approvals.index') ? 'active' : '' }}"
                             href="{{ route('sponsor.approvals.index') }}">
+                            <i class="bi bi-inboxes"></i> Approvals Queue
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sf-topnav-link {{ request()->routeIs('sponsor.approvals.history') ? 'active' : '' }}"
+                            href="{{ route('sponsor.approvals.history') }}">
                             <i class="bi bi-clock-history"></i> Approval History
                         </a>
                     </li>
@@ -169,14 +164,14 @@
             <a href="#" class="position-relative text-secondary d-none d-md-inline-flex align-items-center"
                 aria-label="Notifications">
                 <i class="bi bi-bell fs-5"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-white fw-bold"
+                <span
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-white fw-bold"
                     style="font-size: 0.6rem; padding: 0.4em 0.7em;">0</span>
             </a>
 
             {{-- Desktop User Dropdown --}}
             <div class="dropdown d-none d-md-block">
-                <button
-                    class="bg-transparent border-0 p-0 d-flex align-items-center gap-2 text-decoration-none"
+                <button class="bg-transparent border-0 p-0 d-flex align-items-center gap-2 text-decoration-none"
                     type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
                         style="width: 30px; height: 30px; background-color: #0f294a; font-size: 0.8rem;">
@@ -185,7 +180,8 @@
                     <span class="fw-medium text-secondary small d-none d-lg-inline">{{ $firstName }}</span>
                     <i class="bi bi-chevron-down text-secondary" style="font-size: 0.7rem;"></i>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-4 mt-2 p-1.5" style="min-width: 180px;">
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-4 mt-2 p-1.5"
+                    style="min-width: 180px;">
                     @if ($user->isStudent())
                         <li>
                             <a class="dropdown-menu-item sf-dropdown-hover rounded-3 px-3 py-2 d-flex align-items-center gap-2 text-decoration-none small"
@@ -193,7 +189,9 @@
                                 <i class="bi bi-person"></i> My Profile
                             </a>
                         </li>
-                        <li><hr class="dropdown-divider my-1 border-light"></li>
+                        <li>
+                            <hr class="dropdown-divider my-1 border-light">
+                        </li>
                     @endif
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
@@ -311,20 +309,14 @@
                             </a>
                         </li>
                         <li class="mt-1">
-                            <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('sponsor.lists*') ? 'sf-mobile-active' : '' }}"
-                                href="{{ route('sponsor.lists.index') }}" style="font-size: 0.925rem;">
-                                <i class="bi bi-clipboard-check fs-5 text-secondary"></i> Approval Lists
-                            </a>
-                        </li>
-                        <li class="mt-1">
-                            <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('sponsor.applicants*') ? 'sf-mobile-active' : '' }}"
-                                href="{{ route('sponsor.applicants.index') }}" style="font-size: 0.925rem;">
-                                <i class="bi bi-people fs-5 text-secondary"></i> Forwarded Applicants
-                            </a>
-                        </li>
-                        <li class="mt-1">
-                            <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('sponsor.approvals*') ? 'sf-mobile-active' : '' }}"
+                            <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('sponsor.approvals.index') ? 'sf-mobile-active' : '' }}"
                                 href="{{ route('sponsor.approvals.index') }}" style="font-size: 0.925rem;">
+                                <i class="bi bi-inboxes fs-5 text-secondary"></i> Approvals Queue
+                            </a>
+                        </li>
+                        <li class="mt-1">
+                            <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('sponsor.approvals.history') ? 'sf-mobile-active' : '' }}"
+                                href="{{ route('sponsor.approvals.history') }}" style="font-size: 0.925rem;">
                                 <i class="bi bi-clock-history fs-5 text-secondary"></i> Approval History
                             </a>
                         </li>
@@ -364,7 +356,9 @@
                         </li>
                     @endif
 
-                    <li><hr class="dropdown-divider my-2.5 border-light"></li>
+                    <li>
+                        <hr class="dropdown-divider my-2.5 border-light">
+                    </li>
 
                     @if ($user->isStudent())
                         <li>
@@ -374,17 +368,17 @@
                             </a>
                         </li>
                         <li class="mt-1">
-                    @else
+                        @else
                         <li>
                     @endif
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit"
-                                class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-danger fw-medium border-0 bg-transparent w-100 text-start"
-                                style="font-size: 0.925rem;">
-                                <i class="bi bi-box-arrow-right fs-5 text-danger"></i> Sign Out
-                            </button>
-                        </form>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                            class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-danger fw-medium border-0 bg-transparent w-100 text-start"
+                            style="font-size: 0.925rem;">
+                            <i class="bi bi-box-arrow-right fs-5 text-danger"></i> Sign Out
+                        </button>
+                    </form>
                     </li>
                 </ul>
             </div>
@@ -398,6 +392,7 @@
     .sf-navbar .container {
         justify-content: center;
     }
+
     .sf-topnav-link {
         color: #475569 !important;
         font-weight: 500;
@@ -407,24 +402,29 @@
         padding: 0.5rem 0.65rem;
         border-radius: 6px;
     }
+
     .sf-topnav-link:hover {
         background-color: #eef2f6 !important;
         color: #0f294a !important;
         font-weight: 600;
     }
+
     .sf-topnav-link.active {
         background-color: #eef2f6 !important;
         color: #0f294a !important;
         font-weight: 600;
     }
+
     .sf-dropdown-hover {
         color: #334155;
         transition: all 0.15s ease-in-out;
     }
+
     .sf-dropdown-hover:hover {
         background-color: #fef2f2 !important;
         color: #dc2626 !important;
     }
+
     .sf-mobile-active {
         background-color: #ebf3fe !important;
         color: #0f294a !important;

@@ -3,6 +3,7 @@
     @if ($method !== 'POST')
         @method($method)
     @endif
+
     <div class="col-md-6"><label class="form-label" for="sponsor_id">Sponsor</label><select class="form-select"
             id="sponsor_id" name="sponsor_id" required>
             @foreach ($sponsors as $sponsor)
@@ -48,8 +49,8 @@
         @enderror
     </div>
     <div class="col-md-6"><label class="form-label fw-semibold" for="min_gpa">Minimum GPA</label><input
-            class="form-control" id="min_gpa" type="number" step="0.01" min="1" max="5" name="min_gpa"
-            value="{{ old('min_gpa', $program->min_gpa ?? '') }}"></div>
+            class="form-control" id="min_gpa" type="number" step="0.01" min="1" max="5"
+            name="min_gpa" value="{{ old('min_gpa', $program->min_gpa ?? '') }}"></div>
     <div class="col-md-6"><label class="form-label fw-semibold" for="address_requirement">Address
             Requirement</label>
         @php
@@ -60,7 +61,7 @@
             <option value="" @selected($selectedAddress === '')>No preference</option>
             <option value="Rural" @selected($selectedAddress === 'Rural')>Rural only</option>
             <option value="Urban" @selected($selectedAddress === 'Urban')>Urban only</option>
-            @if ($selectedAddress !== '' && ! in_array($selectedAddress, $standardAddressOptions, true))
+            @if ($selectedAddress !== '' && !in_array($selectedAddress, $standardAddressOptions, true))
                 <option value="{{ $selectedAddress }}" selected>{{ $selectedAddress }}</option>
             @endif
         </select>
@@ -74,7 +75,9 @@
             @php
                 $selectedProgramIds = is_array(old('academic_program_ids'))
                     ? old('academic_program_ids')
-                    : ($program->exists ? $program->academicPrograms->pluck('program_id')->toArray() : []);
+                    : ($program->exists
+                        ? $program->academicPrograms->pluck('program_id')->toArray()
+                        : []);
             @endphp
 
             <div class="card p-3 border rounded-3" style="max-height: 250px; overflow-y: auto;">
@@ -84,14 +87,16 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="academic_program_ids[]"
                                     value="{{ $academicProg->program_id }}" id="prog_{{ $academicProg->program_id }}"
-                                    {{ in_array($academicProg->program_id, $selectedProgramIds) ? 'checked' : '' }}>
+                                    {{ in_array($academicProg->program_id, $selectedProgramIds) ? 'checked' : '' }}
+                                    style="cursor: pointer;">
                                 <label class="form-check-label small" for="prog_{{ $academicProg->program_id }}">
                                     <strong>{{ $academicProg->code }}</strong> — {{ $academicProg->name }}
                                 </label>
                             </div>
                         </div>
                     @empty
-                        <div class="col-12 text-muted small">No active academic programs are available. Please add academic
+                        <div class="col-12 text-muted small">No active academic programs are available. Please add
+                            academic
                             programs first.</div>
                     @endforelse
                 </div>
@@ -102,8 +107,12 @@
         </div>
     </div>
     <div class="col-12">
-        <div class="d-flex align-items-center gap-2 mt-4"><button type="submit" class="btn btn-success fw-bold"><i
-                    class="bi bi-check-lg"></i> Save program</button><a href="{{ route('fassg.programs.index') }}"
-                class="btn btn-light border">Cancel</a></div>
+        <div class="d-flex align-items-center gap-2 mt-4">
+            <button type="submit" class="btn fw-bold text-white px-4"
+                style="background-color: #0F2942 !important; border-color: #0F2942 !important;">
+                <i class="bi bi-check-lg me-1"></i> Save program
+            </button>
+            <a href="{{ route('fassg.programs.index') }}" class="btn btn-light border">Cancel</a>
+        </div>
     </div>
 </form>

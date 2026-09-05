@@ -4,29 +4,60 @@
 @section('eyebrow', 'FASSG Office')
 @section('page-title', 'Sponsorship Programs')
 
+@push('styles')
+    <style>
+        /* Primary Navy Styling for Create Program Buttons */
+        .btn-navy-primary,
+        a.btn-navy-primary {
+            background-color: #0F2942 !important;
+            border-color: #0F2942 !important;
+            color: #ffffff !important;
+            box-shadow: none !important;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-navy-primary:hover,
+        .btn-navy-primary:focus,
+        a.btn-navy-primary:hover,
+        a.btn-navy-primary:focus {
+            background-color: #0A1E31 !important;
+            border-color: #0A1E31 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
+        }
+
+        /* Active Filter Pill Tab Accent */
+        .sf-filter-pill-active {
+            background-color: #0F2942 !important;
+            border-color: #0F2942 !important;
+            color: #ffffff !important;
+        }
+    </style>
+@endpush
+
 @section('content')
 
     <div class="d-flex align-items-center justify-content-between mb-4 gap-3">
         <div class="d-flex align-items-center gap-2 p-1 bg-light rounded-3 border no-print" role="group">
             <a href="{{ route('fassg.programs.index') }}"
-                class="btn btn-sm fw-semibold px-3 py-1 rounded-2 {{ !request('status') ? 'btn-primary shadow-sm text-white' : 'text-secondary btn-link text-decoration-none' }}">
+                class="btn btn-sm fw-semibold px-3 py-1 rounded-2 {{ !request('status') ? 'sf-filter-pill-active shadow-sm' : 'text-secondary btn-link text-decoration-none' }}">
                 All
             </a>
             <a href="{{ route('fassg.programs.index', ['status' => \App\Enums\ProgramStatus::Open->value]) }}"
-                class="btn btn-sm fw-semibold px-3 py-1 rounded-2 {{ request('status') === \App\Enums\ProgramStatus::Open->value ? 'btn-primary shadow-sm text-white' : 'text-secondary btn-link text-decoration-none' }}">
+                class="btn btn-sm fw-semibold px-3 py-1 rounded-2 {{ request('status') === \App\Enums\ProgramStatus::Open->value ? 'sf-filter-pill-active shadow-sm' : 'text-secondary btn-link text-decoration-none' }}">
                 Open
             </a>
             <a href="{{ route('fassg.programs.index', ['status' => \App\Enums\ProgramStatus::Closed->value]) }}"
-                class="btn btn-sm fw-semibold px-3 py-1 rounded-2 {{ request('status') === \App\Enums\ProgramStatus::Closed->value ? 'btn-primary shadow-sm text-white' : 'text-secondary btn-link text-decoration-none' }}">
+                class="btn btn-sm fw-semibold px-3 py-1 rounded-2 {{ request('status') === \App\Enums\ProgramStatus::Closed->value ? 'sf-filter-pill-active shadow-sm' : 'text-secondary btn-link text-decoration-none' }}">
                 Closed
             </a>
             <a href="{{ route('fassg.programs.index', ['status' => \App\Enums\ProgramStatus::Expired->value]) }}"
-                class="btn btn-sm fw-semibold px-3 py-1 rounded-2 {{ request('status') === \App\Enums\ProgramStatus::Expired->value ? 'btn-primary shadow-sm text-white' : 'text-secondary btn-link text-decoration-none' }}">
+                class="btn btn-sm fw-semibold px-3 py-1 rounded-2 {{ request('status') === \App\Enums\ProgramStatus::Expired->value ? 'sf-filter-pill-active shadow-sm' : 'text-secondary btn-link text-decoration-none' }}">
                 Expired
             </a>
         </div>
         <a href="{{ route('fassg.programs.create') }}"
-            class="btn btn-warning fw-semibold d-inline-flex align-items-center gap-2">
+            class="btn btn-navy-primary fw-semibold d-inline-flex align-items-center gap-2 px-3">
             <i class="bi bi-plus-lg"></i>Create Program
         </a>
     </div>
@@ -37,7 +68,7 @@
                 <i class="bi bi-briefcase"></i>
                 <div class="fw-semibold">No sponsorship programs yet</div>
                 <div class="small mb-3">Create your first program to start accepting student applications.</div>
-                <a href="{{ route('fassg.programs.create') }}" class="btn btn-sf-navy btn-sm">Create Program</a>
+                <a href="{{ route('fassg.programs.create') }}" class="btn btn-navy-primary btn-sm px-3">Create Program</a>
             </div>
         </div>
     @else
@@ -60,8 +91,11 @@
                             <tr>
                                 <td class="ps-4 fw-semibold">{{ $program->program_name }}</td>
                                 <td class="text-secondary">{{ $program->sponsor->company_organization_name }}</td>
-                                <td><span
-                                        class="badge bg-primary-subtle text-primary-emphasis">{{ $program->category?->value ?? $program->category }}</span>
+                                <td>
+                                    <span class="badge rounded-2 px-2.5 py-1.5 fw-medium"
+                                        style="background-color: rgba(15, 41, 66, 0.08) !important; color: #0F2942 !important;">
+                                        {{ $program->category?->value ?? $program->category }}
+                                    </span>
                                 </td>
                                 <td>{{ $program->available_slots }}</td>
                                 <td>{{ $program->min_gpa ? number_format($program->min_gpa, 2) : '—' }}</td>
@@ -134,7 +168,6 @@
                 </table>
             </div>
         </div>
-
     @endif
 
 @endsection

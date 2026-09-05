@@ -1,12 +1,91 @@
 @extends('layouts.app')
 
-@section('title', 'Sponsor approvals')
+@section('title', 'Sponsor Approvals')
+@section('eyebrow', 'Sponsor Portal')
+@section('page-title', 'Review Beneficiary Lists')
+
+@push('styles')
+    <style>
+        .btn-navy-primary,
+        button.btn-navy-primary {
+            background-color: #0F2942 !important;
+            border-color: #0F2942 !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+
+        .btn-navy-primary:hover,
+        button.btn-navy-primary:hover {
+            background-color: #0A1E31 !important;
+            border-color: #0A1E31 !important;
+            color: #ffffff !important;
+        }
+    </style>
+@endpush
 
 @section('content')
-    <div class="mb-4"><p class="text-uppercase small fw-semibold text-success mb-2">Sponsor portal</p><h1 class="display-6 fw-bold mb-1">Review beneficiary lists</h1><p class="text-secondary mb-0">Review forwarded students and upload signed approval documents.</p></div>
-    @forelse ($lists as $list)
-        <section class="card border-0 shadow-sm rounded-4 mb-4"><div class="card-body p-4"><div class="d-flex flex-wrap justify-content-between gap-3 mb-3"><div><h2 class="h5 fw-bold mb-1">{{ $list->batch_name }}</h2><p class="small text-secondary mb-0">{{ $list->sponsorshipProgram->program_name }} · {{ $list->items_count }} students</p></div><span class="badge rounded-pill text-bg-light">{{ $list->status->value }}</span></div><div class="table-responsive mb-3"><table class="table table-sm align-middle"><thead><tr><th>Student</th><th>ID</th><th>Course</th><th>Year</th><th>SLE-FHE</th></tr></thead><tbody>@foreach ($list->items as $item)<tr><td>{{ $item->student_name }}</td><td>{{ $item->student_id_number }}</td><td>{{ $item->course }}</td><td>{{ $item->year_level }}</td><td><i class="bi {{ $item->is_sle_fhe_verified ? 'bi-check-circle-fill text-success' : 'bi-clock text-warning' }}"></i></td></tr>@endforeach</tbody></table></div><div class="d-flex flex-wrap align-items-end gap-2"><form method="POST" action="{{ route('sponsor.approvals.store', $list) }}" enctype="multipart/form-data" class="d-flex flex-wrap align-items-end gap-2">@csrf<label class="small">Signed approval<input class="form-control form-control-sm" type="file" name="approval_document" accept=".pdf,.jpg,.jpeg,application/pdf,image/jpeg" required></label><button class="btn btn-sm btn-success" type="submit"><i class="bi bi-upload me-1"></i>Upload</button></form><a class="btn btn-sm btn-outline-secondary" href="{{ route('sponsor.lists.show', $list) }}">Open details</a>@if ($list->isForwardedToSponsor())<form method="POST" action="{{ route('sponsor.approvals.confirm', $list) }}">@csrf @method('PATCH')<button class="btn btn-sm btn-outline-success" type="submit">Confirm list</button></form><form method="POST" action="{{ route('sponsor.approvals.reject', $list) }}">@csrf @method('PATCH')<button class="btn btn-sm btn-outline-danger" type="submit">Return to FASSG</button></form>@endif</div></div></section>
-    @empty
-        <div class="bg-white border rounded-4 p-5 text-center"><i class="bi bi-inbox text-secondary fs-1"></i><h2 class="h5 mt-3">No forwarded lists</h2><p class="text-secondary mb-0">FASSG lists will appear here when ready for review.</p></div>
-    @endforelse
+    <div class="mb-4">
+        <h1 class="h3 fw-bold mb-1">Sponsor Review &amp; Document Upload Portal</h1>
+        <p class="text-secondary mb-0">Upload signed endorsement files to confirm beneficiary lists.</p>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3 border-bottom">
+            <h2 class="h5 mb-0 fw-bold">Forwarded Applicant Lists for Approval</h2>
+        </div>
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>List / Program</th>
+                            <th>Total Students</th>
+                            <th>Submitted Status</th>
+                            <th>Upload Confirmation File</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($lists as $list)
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">{{ $list->batch_name }}</div>
+                                    <div class="small text-secondary">{{ $list->sponsorshipProgram->program_name }}</div>
+                                </td>
+                                <td>{{ $list->total_names }} {{ Str::plural('Student', $list->total_names) }}</td>
+                                <td><x-status-badge :status="$list->status" /></td>
+                                <td>
+                                    <form id="upload-form-{{ $list->id }}" method="POST"
+                                        action="{{ route('sponsor.approvals.store', $list) }}"
+                                        enctype="multipart/form-data">
+                                        @csrf
+                                        <input type="file" name="approval_document" class="form-control form-control-sm"
+                                            accept=".pdf,.jpg,.jpeg,.png" required>
+                                    </form>
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <button type="submit" form="upload-form-{{ $list->id }}"
+                                            class="btn btn-navy-primary btn-sm">
+                                            Upload
+                                        </button>
+                                        <a href="{{ route('sponsor.lists.show', $list) }}"
+                                            class="btn btn-outline-secondary btn-sm">
+                                            Review
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center text-secondary py-4">
+                                    No forwarded lists awaiting approval.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 @endsection

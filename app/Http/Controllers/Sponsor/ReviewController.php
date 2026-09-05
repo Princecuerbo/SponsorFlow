@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sponsor;
 
 use App\Enums\ApplicationStatus;
+use App\Enums\ConfirmationStatus;
 use App\Enums\FixedListStatus;
 use App\Enums\ProgramStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
@@ -13,6 +14,7 @@ use App\Models\FixedList;
 use App\Models\Sponsor;
 use App\Models\StudentProfile;
 use App\Models\SponsorshipProgram;
+use App\Models\SponsorApproval;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -51,18 +53,37 @@ class ReviewController extends Controller
     {
         $sponsor = $this->sponsorOrganization($request);
 
-        $lists = FixedList::query()
+        $applicants = Application::query()
+            ->whereHas('sponsorshipProgram', fn($query) => $query
+                ->where('sponsor_id', $sponsor->id)
+                ->where('status', '!=', ProgramStatus::Expired))
+            ->where('status', ApplicationStatus::Verified)
+            ->when($request->filled('course'), fn($query) => $query->whereHas('studentProfile', fn($profileQuery) => $profileQuery->where('course', $request->string('course'))))
+            ->when($request->filled('academic_program_id'), fn($query) => $query->whereHas('studentProfile', fn($profileQuery) => $profileQuery->where('academic_program_id', $request->integer('academic_program_id'))))
+            ->with(['studentProfile.user', 'sponsorshipProgram'])
+            ->latest('submitted_at')
+            ->get();
+
+        $fixedLists = FixedList::query()
             ->whereHas('sponsorshipProgram', fn($query) => $query->where('sponsor_id', $sponsor->id))
-            ->whereIn('status', [FixedListStatus::Submitted, FixedListStatus::Approved, FixedListStatus::Rejected])
-            ->with(['sponsorshipProgram', 'latestApproval', 'items'])
-            ->withCount('items')
+            ->where('status', FixedListStatus::Submitted)
+            ->with(['sponsorshipProgram', 'latestApproval'])
             ->latest()
             ->get();
 
-        return view('sponsor.upload', [
+        $courses = $applicants->pluck('studentProfile.course')->filter()->unique()->values();
+        $academicPrograms = AcademicProgram::query()
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('sponsor.approvals.index', [
             'user' => $this->actor($request),
             'sponsor' => $sponsor,
-            'lists' => $lists,
+            'applicants' => $applicants,
+            'fixedLists' => $fixedLists,
+            'courses' => $courses,
+            'academicPrograms' => $academicPrograms,
         ]);
     }
 
@@ -96,39 +117,7 @@ class ReviewController extends Controller
 
     public function applicants(Request $request): View
     {
-        $sponsor = $this->sponsorOrganization($request);
-
-        $applicants = Application::query()
-            ->whereHas('sponsorshipProgram', fn($query) => $query
-                ->where('sponsor_id', $sponsor->id)
-                ->where('status', '!=', ProgramStatus::Expired))
-            ->where('status', ApplicationStatus::Verified)
-            ->when($request->filled('course'), fn($query) => $query->whereHas('studentProfile', fn($profileQuery) => $profileQuery->where('course', $request->string('course'))))
-            ->when($request->filled('academic_program_id'), fn($query) => $query->whereHas('studentProfile', fn($profileQuery) => $profileQuery->where('academic_program_id', $request->integer('academic_program_id'))))
-            ->with(['studentProfile.user', 'sponsorshipProgram'])
-            ->latest('submitted_at')
-            ->get();
-
-        $fixedLists = FixedList::query()
-            ->whereHas('sponsorshipProgram', fn($query) => $query->where('sponsor_id', $sponsor->id))
-            ->with('sponsorshipProgram')
-            ->latest()
-            ->get();
-
-        $courses = $applicants->pluck('studentProfile.course')->filter()->unique()->values();
-        $academicPrograms = \App\Models\AcademicProgram::query()
-            ->where('is_active', true)
-            ->orderBy('name')
-            ->get();
-
-        return view('sponsor.applicants.index', [
-            'user' => $this->actor($request),
-            'sponsor' => $sponsor,
-            'applicants' => $applicants,
-            'fixedLists' => $fixedLists,
-            'courses' => $courses,
-            'academicPrograms' => $academicPrograms,
-        ]);
+        return $this->index($request);
     }
 
     public function confirmApplication(Request $request, Application $application): RedirectResponse
@@ -246,23 +235,30 @@ class ReviewController extends Controller
 
     public function approvals(Request $request): View
     {
+        return $this->index($request);
+    }
+
+    public function history(Request $request): View
+    {
         $sponsor = $this->sponsorOrganization($request);
 
         $applications = Application::query()
-            ->whereIn('status', [ApplicationStatus::Approved, ApplicationStatus::Ongoing])
             ->whereHas('sponsorshipProgram', fn($query) => $query->where('sponsor_id', $sponsor->id))
+            ->where('status', ApplicationStatus::Approved)
             ->with(['studentProfile.user', 'sponsorshipProgram'])
             ->latest('approved_at')
             ->get();
 
-        $approvals = \App\Models\SponsorApproval::query()
+        $approvals = SponsorApproval::query()
             ->whereHas('sponsorshipProgram', fn($query) => $query->where('sponsor_id', $sponsor->id))
-            ->with(['sponsorshipProgram', 'fixedList'])
+            ->where('confirmation_status', ConfirmationStatus::Confirmed)
+            ->with(['fixedList', 'sponsorshipProgram'])
             ->latest()
             ->get();
 
-        return view('sponsor.approvals.index', [
+        return view('sponsor.approvals.history', [
             'user' => $this->actor($request),
+            'sponsor' => $sponsor,
             'applications' => $applications,
             'approvals' => $approvals,
         ]);

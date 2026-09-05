@@ -4,6 +4,33 @@
 @section('eyebrow', 'FASSG Hybrid Verification')
 @section('page-title', 'Verify Application: ' . $application->studentProfile->user->name)
 
+@push('styles')
+    <style>
+        .btn-navy-primary,
+        a.btn-navy-primary,
+        button.btn-navy-primary {
+            background-color: #0F2942 !important;
+            border-color: #0F2942 !important;
+            color: #ffffff !important;
+            font-weight: 600;
+            box-shadow: none !important;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-navy-primary:hover,
+        .btn-navy-primary:focus,
+        a.btn-navy-primary:hover,
+        a.btn-navy-primary:focus,
+        button.btn-navy-primary:hover,
+        button.btn-navy-primary:focus {
+            background-color: #0A1E31 !important;
+            border-color: #0A1E31 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
+        }
+    </style>
+@endpush
+
 @section('content')
     @php
         $profile = $application->studentProfile;
@@ -18,7 +45,7 @@
             <a href="{{ route('fassg.verification.index') }}" class="btn btn-sm btn-outline-secondary mb-3">
                 <i class="bi bi-arrow-left me-1"></i> Back to Verification Queue
             </a>
-            <p class="text-uppercase small fw-semibold text-success mb-2">FASSG Hybrid Verification</p>
+            <p class="text-uppercase small fw-semibold text-secondary mb-2">FASSG Hybrid Verification</p>
             <h1 class="h2 sf-heading mb-1">Verify Application: {{ $profile->user->name }}</h1>
             <p class="text-secondary mb-0">
                 {{ $program->program_name }} <span class="mx-1">&bull;</span> FASSG Hybrid Verification
@@ -34,7 +61,7 @@
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center gap-2 mb-4">
-                        <div class="sf-stat-icon bg-primary-subtle text-primary p-2 rounded">
+                        <div class="sf-stat-icon p-2 rounded" style="background-color: #e9ecef; color: #0F2942;">
                             <i class="bi bi-person-vcard fs-4"></i>
                         </div>
                         <div>
@@ -79,7 +106,7 @@
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body p-4">
                     <h2 class="h5 sf-heading mb-4">
-                        <i class="bi bi-clipboard-data text-primary me-2"></i> Application Details
+                        <i class="bi bi-clipboard-data me-2" style="color: #0F2942;"></i> Application Details
                     </h2>
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -132,7 +159,7 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
                     <h2 class="h5 sf-heading mb-4">
-                        <i class="bi bi-building-check text-primary me-2"></i> Target Program &amp; Sponsor
+                        <i class="bi bi-building-check me-2" style="color: #0F2942;"></i> Target Program &amp; Sponsor
                     </h2>
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -166,7 +193,7 @@
                             <h2 class="h5 sf-heading mb-1">Supporting Documents</h2>
                             <p class="small text-secondary mb-0">Review each required proof before deciding</p>
                         </div>
-                        <i class="bi bi-file-earmark-check text-primary fs-3"></i>
+                        <i class="bi bi-file-earmark-check fs-3" style="color: #0F2942;"></i>
                     </div>
 
                     @foreach (\App\Enums\DocumentType::requiredForApplication() as $documentType)
@@ -229,7 +256,7 @@
                                 </label>
                             </div>
 
-                            <button type="submit" class="btn btn-success w-100 py-2 shadow-sm fw-semibold">
+                            <button type="submit" class="btn btn-navy-primary w-100 py-2 shadow-sm fw-semibold">
                                 <i class="bi bi-check2-circle me-1"></i> Mark Verified &amp; Approve Application
                             </button>
                         </form>

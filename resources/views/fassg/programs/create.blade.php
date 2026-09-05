@@ -4,6 +4,37 @@
 @section('eyebrow', 'FASSG Office · Programs')
 @section('page-title', 'Create Sponsorship Program')
 
+@push('styles')
+    <style>
+        /* Primary Navy Styling for Create Button */
+        .btn-navy-primary,
+        button.btn-navy-primary {
+            background-color: #0F2942 !important;
+            border-color: #0F2942 !important;
+            color: #ffffff !important;
+            font-weight: 600;
+            box-shadow: none !important;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-navy-primary:hover,
+        .btn-navy-primary:focus,
+        button.btn-navy-primary:hover,
+        button.btn-navy-primary:focus {
+            background-color: #0A1E31 !important;
+            border-color: #0A1E31 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
+        }
+
+        /* Active Checkbox Accent */
+        .form-check-input:checked {
+            background-color: #0F2942 !important;
+            border-color: #0F2942 !important;
+        }
+    </style>
+@endpush
+
 @section('content')
 
     <div class="row justify-content-center">
@@ -112,7 +143,9 @@
                             empty to allow all courses).</p>
 
                         @php
-                            $selectedProgramIds = is_array(old('academic_program_ids')) ? old('academic_program_ids') : [];
+                            $selectedProgramIds = is_array(old('academic_program_ids'))
+                                ? old('academic_program_ids')
+                                : [];
                         @endphp
 
                         <div class="card p-3 border rounded-3" style="max-height: 250px; overflow-y: auto;">
@@ -124,13 +157,15 @@
                                                 value="{{ $academicProg->program_id }}"
                                                 id="prog_{{ $academicProg->program_id }}"
                                                 {{ in_array($academicProg->program_id, $selectedProgramIds) ? 'checked' : '' }}>
-                                            <label class="form-check-label small" for="prog_{{ $academicProg->program_id }}">
+                                            <label class="form-check-label small"
+                                                for="prog_{{ $academicProg->program_id }}">
                                                 <strong>{{ $academicProg->code }}</strong> — {{ $academicProg->name }}
                                             </label>
                                         </div>
                                     </div>
                                 @empty
-                                    <div class="col-12 text-muted small">No active academic programs are available. Please add
+                                    <div class="col-12 text-muted small">No active academic programs are available. Please
+                                        add
                                         academic programs first.</div>
                                 @endforelse
                             </div>
@@ -143,7 +178,7 @@
 
                 <div class="card-footer bg-white border-top p-4 d-flex justify-content-end gap-2">
                     <a href="{{ route('fassg.programs.index') }}" class="btn btn-outline-secondary">Cancel</a>
-                    <button type="submit" class="btn btn-sf-gold"><i class="bi bi-check-lg me-1"></i>Create &amp; Open
+                    <button type="submit" class="btn btn-navy-primary"><i class="bi bi-check-lg me-1"></i>Create &amp; Open
                         Program</button>
                 </div>
             </form>
