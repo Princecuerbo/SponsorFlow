@@ -23,9 +23,12 @@ class ReportsController extends Controller
     public function index(Request $request): View
     {
         $driver = DB::getDriverName();
-        $dateFormat = $driver === 'sqlite'
-            ? "strftime('%Y-%m', submitted_at)"
-            : "DATE_FORMAT(submitted_at, '%Y-%m')";
+
+        $dateFormat = match ($driver) {
+            'sqlite' => "strftime('%Y-%m', submitted_at)",
+            'pgsql'  => "TO_CHAR(submitted_at, 'YYYY-MM')",
+            default  => "DATE_FORMAT(submitted_at, '%Y-%m')", // MySQL / MariaDB
+        };
 
         $applicantTrends = Application::query()
             ->whereNotNull('submitted_at')
