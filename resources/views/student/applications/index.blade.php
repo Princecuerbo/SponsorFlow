@@ -25,7 +25,9 @@
                 <i class="bi bi-file-earmark-text"></i>
                 <div class="fw-semibold">You haven't applied to any programs yet</div>
                 <div class="small mb-3">Browse open sponsorship programs and submit your first application.</div>
-                <a href="{{ route('student.programs.index') }}" class="btn btn-sf-navy btn-sm">Browse Programs</a>
+                <a href="{{ route('student.programs.index') }}"
+                    class="btn btn-sm text-white fw-semibold py-2 px-3 rounded-3 shadow-sm"
+                    style="background-color: #0f294a; border: none; font-size: 0.85rem;">Browse Programs</a>
             </div>
         </div>
     @else

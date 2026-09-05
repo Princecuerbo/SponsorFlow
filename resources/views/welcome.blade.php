@@ -15,32 +15,33 @@
 
     {{-- Navigation Bar --}}
     <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center gap-2">
                 {{-- Brand Logo & Name --}}
-<a href="/" class="flex items-center gap-2.5 text-decoration-none">
-    <!-- Navy Badge with hand-holding-dollar icon -->
-    <div class="w-9 h-9 rounded-xl bg-[#0f294a] flex items-center justify-center text-white shadow-sm flex-shrink-0">
-        <i class="fa-solid fa-hand-holding-dollar text-sm"></i>
-    </div>
-    <!-- Brand Name -->
-    <span class="text-xl font-bold tracking-tight text-[#0f294a]">SponsorFlow</span>
-</a>
+                <a href="/" class="flex items-center gap-2 text-decoration-none min-w-0">
+                    <!-- Navy Badge with hand-holding-dollar icon -->
+                    <div
+                        class="w-9 h-9 rounded-lg bg-[#0f294a] flex items-center justify-center text-white shadow-sm flex-shrink-0">
+                        <i class="fa-solid fa-hand-holding-dollar text-sm"></i>
+                    </div>
+                    <!-- Brand Name -->
+                    <span class="text-lg sm:text-xl font-bold tracking-tight text-[#0f294a] truncate">SponsorFlow</span>
+                </a>
 
                 {{-- Auth Buttons --}}
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
                     @auth
                         <a href="{{ route('dashboard') }}"
-                            class="px-5 py-2 text-sm font-bold text-white bg-[#0f294a] hover:bg-[#0a1b30] rounded-lg shadow transition">
-                            Go to Dashboard &rarr;
+                            class="px-3 sm:px-5 py-2 text-xs sm:text-sm font-bold text-white bg-[#0f294a] hover:bg-[#0a1b30] rounded-lg shadow transition whitespace-nowrap">
+                            Dashboard &rarr;
                         </a>
                     @else
                         <a href="{{ route('login') }}"
-                            class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-[#0f294a] transition">
+                            class="px-2 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-[#0f294a] transition whitespace-nowrap">
                             Log in
                         </a>
                         <a href="{{ route('register') }}"
-                            class="px-5 py-2 text-sm font-bold text-white bg-[#0f294a] hover:bg-[#0a1b30] rounded-lg shadow transition">
+                            class="px-3 sm:px-5 py-2 text-xs sm:text-sm font-bold text-white bg-[#0f294a] hover:bg-[#0a1b30] rounded-lg shadow transition whitespace-nowrap">
                             Apply now
                         </a>
                     @endauth
@@ -50,14 +51,13 @@
     </nav>
 
     {{-- Hero Section --}}
-    <section
-        class="bg-[#0f294a] text-white py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <section class="bg-[#0f294a] text-white py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
             {{-- Left Content --}}
             <div class="lg:col-span-7 space-y-6">
                 <span
-                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-amber-400/10 text-amber-300 border border-amber-400/30">
+                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-white text-slate-900 border border-white/20 shadow-sm">
                     Davao Oriental State University
                 </span>
                 <h1 class="text-4xl sm:text-5xl font-black tracking-tight leading-tight text-white">
@@ -67,13 +67,13 @@
                     One accountable workflow connecting students, FASSG reviewers, sponsors, and Accounting from
                     application to confirmed support.
                 </p>
-                <div class="pt-2 flex flex-wrap gap-4">
+                <div class="pt-2 flex flex-wrap items-center gap-4">
                     <a href="{{ route('register') }}"
-                        class="px-6 py-3 text-sm font-bold text-slate-900 bg-amber-500 hover:bg-amber-600 rounded-xl shadow-lg transition">
-                        ⚡ Verify SLE-FHE status
+                        class="inline-flex items-center justify-center px-6 py-3 text-sm font-bold text-slate-900 bg-white hover:bg-slate-100 rounded-lg shadow-lg transition">
+                        Verify SLE-FHE status
                     </a>
                     <a href="#programs"
-                        class="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-slate-200 hover:text-white bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl transition border border-white/25">
+                        class="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-slate-200 hover:text-white bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-lg transition border border-white/25">
                         Explore programs <i class="bi bi-arrow-down" aria-hidden="true"></i>
                     </a>
                 </div>
@@ -83,8 +83,9 @@
             <div
                 class="lg:col-span-5 bg-white/5 border border-white/15 backdrop-blur-md rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl">
                 <div class="flex gap-4 items-start">
-                    <div class="p-2.5 rounded-xl bg-amber-400/20 text-amber-300 font-bold">
-                        ✓
+                    <div
+                        class="p-2.5 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center w-10 h-10 flex-shrink-0">
+                        <i class="fa-solid fa-check text-base"></i>
                     </div>
                     <div>
                         <h4 class="font-bold text-white text-sm">Built for fair review</h4>
@@ -94,8 +95,9 @@
                 </div>
 
                 <div class="flex gap-4 items-start">
-                    <div class="p-2.5 rounded-xl bg-amber-400/20 text-amber-300 font-bold">
-                        ☍
+                    <div
+                        class="p-2.5 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center w-10 h-10 flex-shrink-0">
+                        <i class="fa-solid fa-network-wired text-base"></i>
                     </div>
                     <div>
                         <h4 class="font-bold text-white text-sm">One connected workflow</h4>
@@ -105,8 +107,9 @@
                 </div>
 
                 <div class="flex gap-4 items-start">
-                    <div class="p-2.5 rounded-xl bg-amber-400/20 text-amber-300 font-bold">
-                        🔒
+                    <div
+                        class="p-2.5 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center w-10 h-10 flex-shrink-0">
+                        <i class="fa-solid fa-user-lock text-base"></i>
                     </div>
                     <div>
                         <h4 class="font-bold text-white text-sm">Role-aware by design</h4>
@@ -166,13 +169,13 @@
     {{-- Sponsorship Category Highlights --}}
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div class="mb-8">
-                <span class="text-xs font-bold uppercase tracking-wider text-[#0f294a]">Program pathways</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-[#0f294a]">Program pathways</span>
             <h2 class="text-2xl font-black text-slate-900 mt-1">Sponsorship categories</h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <article class="bg-white rounded-3 border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
                 <div class="w-11 h-11 mb-5 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                    <i class="bi bi-people-fill text-lg" aria-hidden="true"></i>
+                    <i class="fa-solid fa-people-group text-lg" aria-hidden="true"></i>
                 </div>
                 <h3 class="text-base font-bold text-slate-900 mb-2">Group Sponsorship</h3>
                 <p class="text-sm leading-relaxed text-slate-500">Apply to open programs filtered by academic grades,
@@ -180,7 +183,7 @@
             </article>
             <article class="bg-white rounded-3 border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
                 <div class="w-11 h-11 mb-5 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                    <i class="bi bi-person-heart text-lg" aria-hidden="true"></i>
+                    <i class="fa-solid fa-user text-lg" aria-hidden="true"></i>
                 </div>
                 <h3 class="text-base font-bold text-slate-900 mb-2">Individual Sponsorship</h3>
                 <p class="text-sm leading-relaxed text-slate-500">Recorded and monitored for prospective sponsor
@@ -188,7 +191,7 @@
             </article>
             <article class="bg-white rounded-3 border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
                 <div class="w-11 h-11 mb-5 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                    <i class="bi bi-building-check text-lg" aria-hidden="true"></i>
+                    <i class="fa-solid fa-user-tie text-lg" aria-hidden="true"></i>
                 </div>
                 <h3 class="text-base font-bold text-slate-900 mb-2">Employee-Based Sponsorship</h3>
                 <p class="text-sm leading-relaxed text-slate-500">Qualified grants for dependents of institutional
@@ -198,8 +201,10 @@
     </section>
 
     {{-- Footer --}}
-    <footer class="mt-auto bg-[#0f294a] border-t border-slate-800 text-slate-400 py-8 text-center text-xs font-medium">
-        <p>&copy; {{ date('Y') }} Davao Oriental State University – SponsorFlow. All rights reserved.</p>
+    <footer
+        class="mt-auto bg-[#0f294a] border-t border-slate-800 text-slate-400 py-8 px-4 text-center text-xs font-medium">
+        <p class="max-w-7xl mx-auto">&copy; {{ date('Y') }} Davao Oriental State University – SponsorFlow. All
+            rights reserved.</p>
     </footer>
 
 </body>
