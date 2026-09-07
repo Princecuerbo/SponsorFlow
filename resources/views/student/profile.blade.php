@@ -6,9 +6,9 @@
 
 @php
     $nameParts = preg_split('/\s+/', trim($user->name), -1, PREG_SPLIT_NO_EMPTY) ?: [];
-    $firstName = $nameParts[0] ?? 'N/A';
-    $lastName = count($nameParts) > 1 ? end($nameParts) : 'N/A';
-    $middleName = count($nameParts) > 2 ? implode(' ', array_slice($nameParts, 1, -1)) : 'N/A';
+    $firstName = $profile?->first_name ?: ($nameParts[0] ?? 'N/A');
+    $lastName = $profile?->last_name ?: (count($nameParts) > 1 ? end($nameParts) : 'N/A');
+    $middleName = $profile?->middle_name ?: (count($nameParts) > 2 ? implode(' ', array_slice($nameParts, 1, -1)) : 'N/A');
     $academicYear = now()->year . '-' . (now()->year + 1);
 @endphp
 
@@ -92,6 +92,16 @@
                                     value="{{ $value }}" readonly>
                             </div>
                         @endforeach
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold" for="sex-gender">Sex / Gender</label>
+                            <input id="sex-gender" class="form-control bg-light rounded-3"
+                                value="{{ $profile?->gender ?? 'N/A' }}" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold" for="municipality">Municipality / City</label>
+                            <input id="municipality" class="form-control bg-light rounded-3"
+                                value="{{ $profile?->municipality ?? ($profile?->barangay ?? 'N/A') }}" readonly>
+                        </div>
                     </div>
 
                     <hr class="my-4">

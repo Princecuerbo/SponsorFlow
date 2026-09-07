@@ -18,6 +18,7 @@ class StudentRegistrationTest extends TestCase
         $response = $this->post(route('register.store'), [
             'first_name' => 'Juan',
             'last_name' => 'Dela Cruz',
+            'gender' => 'Male',
             'email' => 'juan.delacruz@dorsu.edu.ph',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
@@ -25,7 +26,7 @@ class StudentRegistrationTest extends TestCase
             'academic_program_id' => $program->program_id,
             'year_level' => 2,
             'birthdate' => '2000-01-15',
-            'barangay' => 'Saganganan',
+            'municipality' => 'Baganga',
             'address' => '123 Main Street, City',
             // Intentionally omit 'is_rural' to test checkbox default
         ]);
@@ -37,6 +38,11 @@ class StudentRegistrationTest extends TestCase
         $profile = StudentProfile::query()->where('user_id', $user->id)->firstOrFail();
 
         $this->assertFalse($profile->is_rural, 'is_rural should default to false when checkbox is not checked');
+        $this->assertSame('Juan', $profile->first_name);
+        $this->assertSame('Dela Cruz', $profile->last_name);
+        $this->assertSame('Male', $profile->gender);
+        $this->assertSame('Baganga', $profile->municipality);
+        $this->assertSame('Baganga', $profile->barangay);
         $this->assertTrue($user->isStudent());
     }
 
@@ -47,6 +53,7 @@ class StudentRegistrationTest extends TestCase
         $response = $this->post(route('register.store'), [
             'first_name' => 'Maria',
             'last_name' => 'Santos',
+            'gender' => 'Female',
             'email' => 'maria.santos@dorsu.edu.ph',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
@@ -54,7 +61,7 @@ class StudentRegistrationTest extends TestCase
             'academic_program_id' => $program->program_id,
             'year_level' => 3,
             'birthdate' => '1999-06-20',
-            'barangay' => 'Rural Barangay',
+            'municipality' => 'Caraga',
             'address' => '456 Provincial Road, Remote Area',
             'is_rural' => '1',
         ]);
@@ -65,6 +72,8 @@ class StudentRegistrationTest extends TestCase
         $profile = StudentProfile::query()->where('user_id', $user->id)->firstOrFail();
 
         $this->assertTrue($profile->is_rural, 'is_rural should be true when checkbox is checked');
+        $this->assertSame('Female', $profile->gender);
+        $this->assertSame('Caraga', $profile->barangay);
     }
 
     public function test_student_registration_fails_with_non_dorsu_email(): void
@@ -78,7 +87,7 @@ class StudentRegistrationTest extends TestCase
             'course' => 'Information Technology',
             'year_level' => 1,
             'birthdate' => '2001-03-10',
-            'barangay' => 'Test Barangay',
+            'municipality' => 'Mati City',
             'address' => '789 Test Street',
             'is_rural' => '0',
         ]);
@@ -100,7 +109,7 @@ class StudentRegistrationTest extends TestCase
             'course' => 'Engineering',
             'year_level' => 2,
             'birthdate' => '2000-11-25',
-            'barangay' => 'Test Barangay 2',
+            'municipality' => 'Mati City',
             'address' => '321 Another Street',
         ]);
 
@@ -114,6 +123,7 @@ class StudentRegistrationTest extends TestCase
         $response = $this->post(route('register.store'), [
             'first_name' => 'Case',
             'last_name' => 'Test User',
+            'gender' => 'Male',
             'email' => 'CaseUser@DORSU.EDU.PH',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
@@ -121,7 +131,7 @@ class StudentRegistrationTest extends TestCase
             'academic_program_id' => $program->program_id,
             'year_level' => 4,
             'birthdate' => '1998-08-12',
-            'barangay' => 'Central',
+            'municipality' => 'Mati City',
             'address' => '654 Central Avenue',
         ]);
 
@@ -142,10 +152,85 @@ class StudentRegistrationTest extends TestCase
             'course' => 'Medicine',
             'year_level' => 1,
             'birthdate' => '2001-12-01',
-            'barangay' => 'Medical District',
+            'municipality' => 'Mati City',
             'address' => '999 Hospital Street',
         ]);
 
         $response->assertSessionHasErrors('student_id_number');
     }
+
+    public function test_student_registration_requires_gender(): void
+    {
+        $response = $this->post(route('register.store'), [
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'email' => 'gender.test@dorsu.edu.ph',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+            'student_id_number' => '2024-0010',
+            'year_level' => 1,
+            'birthdate' => '2001-12-01',
+            'municipality' => 'Mati City',
+            'address' => '123 Test Street',
+        ]);
+
+        $response->assertSessionHasErrors('gender');
+    }
+
+    public function test_student_registration_rejects_invalid_gender(): void
+    {
+        $response = $this->post(route('register.store'), [
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'gender' => 'Other',
+            'email' => 'gender.test2@dorsu.edu.ph',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+            'student_id_number' => '2024-0011',
+            'year_level' => 1,
+            'birthdate' => '2001-12-01',
+            'municipality' => 'Mati City',
+            'address' => '123 Test Street',
+        ]);
+
+        $response->assertSessionHasErrors('gender');
+    }
+
+    public function test_student_registration_requires_municipality(): void
+    {
+        $response = $this->post(route('register.store'), [
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'gender' => 'Male',
+            'email' => 'muni.test@dorsu.edu.ph',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+            'student_id_number' => '2024-0012',
+            'year_level' => 1,
+            'birthdate' => '2001-12-01',
+            'address' => '123 Test Street',
+        ]);
+
+        $response->assertSessionHasErrors('municipality');
+    }
+
+    public function test_student_registration_rejects_invalid_municipality(): void
+    {
+        $response = $this->post(route('register.store'), [
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'gender' => 'Male',
+            'email' => 'muni.test2@dorsu.edu.ph',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+            'student_id_number' => '2024-0013',
+            'year_level' => 1,
+            'birthdate' => '2001-12-01',
+            'municipality' => 'Davao City',
+            'address' => '123 Test Street',
+        ]);
+
+        $response->assertSessionHasErrors('municipality');
+    }
 }
+

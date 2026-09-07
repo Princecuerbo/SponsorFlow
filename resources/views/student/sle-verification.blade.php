@@ -108,28 +108,33 @@
                             </div>
                         </div>
 
-                        <hr class="my-3">
-
                         <div class="row g-3">
-                            <div class="col-12 pb-2 border-bottom">
+                            <div class="col-6 pb-2 border-bottom">
                                 <span class="text-secondary extra-small text-uppercase d-block mb-1"
                                     style="font-size: 0.7rem; letter-spacing: 0.05em;">Birthdate</span>
                                 <span class="fw-semibold text-dark" style="font-size: 0.875rem;">
-                                    {{ $profile?->birthdate ? $profile->birthdate->format('F j, Y') : '—' }}
+                                    {{ $profile?->birthdate ? \Carbon\Carbon::parse($profile->birthdate)->format('F d, Y') : '—' }}
                                 </span>
                             </div>
-                            <div class="col-12 pb-2 border-bottom">
+                            <div class="col-6 pb-2 border-bottom">
+                                <span class="text-secondary extra-small text-uppercase d-block mb-1"
+                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">Sex / Gender</span>
+                                <span class="fw-semibold text-dark" style="font-size: 0.875rem;">
+                                    {{ $profile?->gender ?? 'N/A' }}
+                                </span>
+                            </div>
+                            <div class="col-6">
                                 <span class="text-secondary extra-small text-uppercase d-block mb-1"
                                     style="font-size: 0.7rem; letter-spacing: 0.05em;">Address</span>
                                 <span class="fw-semibold text-dark" style="font-size: 0.875rem;">
                                     {{ $profile?->address ?? '—' }}
                                 </span>
                             </div>
-                            <div class="col-12">
+                            <div class="col-6">
                                 <span class="text-secondary extra-small text-uppercase d-block mb-1"
-                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">Barangay</span>
+                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">Municipality / City</span>
                                 <span class="fw-semibold text-dark" style="font-size: 0.875rem;">
-                                    {{ $profile?->barangay ?? '—' }}
+                                    {{ $profile?->municipality ?? ($profile?->barangay ?? '—') }}
                                 </span>
                             </div>
                         </div>
@@ -159,9 +164,9 @@
                                     <p class="text-secondary small mb-0">Your profile is active and verified for the current
                                         academic term.</p>
                                 @else
-                                    <span class="badge bg-warning text-dark mb-2">Pending Review</span>
-                                    <p class="text-secondary small mb-0">Eligibility features and program applications
-                                        remain locked until approved.</p>
+                                    <span class="badge rounded-pill fw-semibold px-2.5 py-1"
+                                        style="background-color: #fef3c7; color: #b45309; font-size: 0.72rem;">Pending
+                                        Review</span>
                                 @endif
                             </div>
                         </div>
@@ -235,8 +240,8 @@
                             review.
                         </p>
                         <div class="d-flex flex-column gap-2">
-                            <button type="button" class="btn btn-sf-navy fw-semibold w-100 py-2 rounded-3"
-                                data-bs-dismiss="modal">
+                            <button type="button" class="btn fw-semibold w-100 py-2 rounded-3 text-white"
+                                style="background-color: #0f294a; border: none;" data-bs-dismiss="modal">
                                 Got It, I'll Wait
                             </button>
                         </div>

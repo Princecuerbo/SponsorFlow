@@ -18,7 +18,35 @@
             box-shadow: 0 0 0 0.2rem rgba(15, 41, 74, 0.12);
         }
 
-        /* Privacy Modal Styles matching image_8d9864.png */
+        /* Custom Sign In Button Hover Transition */
+        .btn-custom-login {
+            background-color: #ffffff;
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-custom-login:hover {
+            background-color: #0f294a !important;
+            color: #ffffff !important;
+            border-color: #0f294a !important;
+        }
+
+        /* Custom Create Account Button Hover Transition */
+        .btn-custom-outline {
+            background-color: #ffffff;
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-custom-outline:hover {
+            background-color: #0f294a !important;
+            color: #ffffff !important;
+            border-color: #0f294a !important;
+        }
+
+        /* Privacy Modal Styles matching image */
         .privacy-modal-overlay {
             backdrop-filter: blur(6px);
             z-index: 99999;
@@ -161,7 +189,7 @@
                             portal and applications.</p>
                     </div>
 
-                    <!-- AJAX Error Alert Container (Matching image_29.png) -->
+                    <!-- AJAX Error Alert Container -->
                     <div id="login-error-alert" class="alert alert-danger p-2 small mb-3 d-none">
                         These credentials do not match our records.
                     </div>
@@ -206,16 +234,17 @@
                             <a href="#" class="small text-decoration-none fw-semibold"
                                 style="color: #0f294a; font-size: 0.8rem;">Forgot Password?</a>
                         </div>
-                        <!-- AJAX Trigger Button -->
-                        <button type="submit" id="sign-in-btn" class="btn btn-primary w-100 py-2 fw-bold shadow-sm"
-                            style="background-color: #0f294a; border: none; border-radius: 8px;">
+                        <!-- AJAX Trigger Button with Custom Grey/Black Styling & Hover -->
+                        <button type="submit" id="sign-in-btn"
+                            class="btn w-100 py-2 fw-bold shadow-sm btn-custom-login rounded-3"
+                            style="border-radius: 8px; font-size: 0.875rem;">
                             Sign In
                         </button>
                         <div class="text-center mt-4 pt-3">
                             <p class="small text-secondary mb-2" style="font-size: 0.8rem;">Don't have a student account?
                             </p>
                             <a href="{{ route('register') }}"
-                                class="btn btn-outline-secondary w-100 py-2 fw-semibold text-slate-700 border-slate-300 rounded-3 shadow-none"
+                                class="btn w-100 py-2 fw-bold text-dark rounded-3 shadow-none btn-custom-outline"
                                 style="font-size: 0.85rem;">Create Account</a>
                         </div>
                         <!-- Hidden input for token -->
@@ -232,7 +261,7 @@
         </div>
     </div>
 
-    <!-- Data Privacy Modal (kept outside the login grid) -->
+    <!-- Data Privacy Modal -->
     <div id="privacyConsentModal" class="modal fade privacy-modal-overlay d-none" tabindex="-1"
         style="background: rgba(0, 0, 0, 0.6);" aria-labelledby="privacyConsentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg mx-2 mx-sm-auto my-3 my-sm-auto">
@@ -345,7 +374,7 @@
             }
         });
 
-        // 1. Initial Login Attempt (Verifies credentials via AJAX)
+        // Initial Login Attempt (Verifies credentials via AJAX)
         async function attemptLogin(event) {
             event.preventDefault();
             const form = document.getElementById('student-login-form');
@@ -385,7 +414,6 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Store the session ID for the final login step
                     document.getElementById('pending_token_input').value = data.pending_token;
                     const privacyModal = document.getElementById('privacyConsentModal');
                     privacyModal.classList.remove('d-none');
@@ -422,7 +450,7 @@
             btn.style.opacity = isChecked ? '1' : '0.6';
         }
 
-        // 4. Final Login Submission (Modal Continue)
+        // Final Login Submission (Modal Continue)
         async function submitConsentFinal() {
             const checkbox = document.getElementById('privacy-agree-check');
             const alertBox = document.getElementById('login-error-alert');

@@ -20,6 +20,7 @@ class AuthenticationTest extends TestCase
         $response = $this->post(route('register.store'), [
             'first_name' => 'DORSU',
             'last_name' => 'Student',
+            'gender' => 'Male',
             'email' => 'student@dorsu.edu.ph',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
@@ -27,7 +28,7 @@ class AuthenticationTest extends TestCase
             'academic_program_id' => $program->program_id,
             'year_level' => 2,
             'birthdate' => '2005-01-15',
-            'barangay' => 'Central',
+            'municipality' => 'Mati City',
             'address' => 'Davao Oriental',
             'is_rural' => 1,
         ]);
