@@ -69,7 +69,7 @@
     <div class="col-12">
         <div class="mb-4 mt-2">
             <label class="form-label fw-bold">Eligible Courses / Academic Programs</label>
-            <p class="text-muted small mb-2">Select the courses eligible for this scholarship program (leave empty to
+            <p class="text-muted small mb-2">Select the courses eligible for this sponsorship program (leave empty to
                 allow all courses).</p>
 
             @php

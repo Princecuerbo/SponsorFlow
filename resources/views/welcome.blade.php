@@ -122,12 +122,12 @@
         </div>
     </section>
 
-    {{-- Active Scholarship Programs Section --}}
+    {{-- Active Sponsorship Programs Section --}}
     <section id="programs" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="mb-8 border-b border-slate-200 pb-4">
             <div>
                 <span class="text-xs font-bold uppercase tracking-wider text-[#0f294a]">Open Opportunities</span>
-                <h2 class="text-2xl font-black text-slate-900 mt-1">Active scholarship programs</h2>
+                <h2 class="text-2xl font-black text-slate-900 mt-1">Active sponsorship programs</h2>
             </div>
         </div>
 
@@ -159,7 +159,7 @@
             @empty
                 <div
                     class="col-span-full bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-500 text-sm font-medium">
-                    No active scholarship programs are currently listed. Applications open periodically based on sponsor
+                    No active sponsorship programs are currently listed. Applications open periodically based on sponsor
                     availability, available funds, and slots managed by FASSG.
                 </div>
             @endforelse
