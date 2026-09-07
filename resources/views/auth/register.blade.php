@@ -62,8 +62,8 @@
 
         /* Custom Register Submit Button Style Matching Login */
         .btn-custom-register {
-            background-color: #ffffff;
-            color: #0f172a;
+            background-color: #0f294a;
+            color: #ffffffff;
             border: 1px solid #cbd5e1;
             transition: all 0.2s ease-in-out;
         }

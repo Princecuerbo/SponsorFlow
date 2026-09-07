@@ -8,8 +8,9 @@
     <title>@yield('title', 'Dashboard') · SponsorFlow | DORSU</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Lexend:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
         rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -32,12 +33,30 @@
             --sf-warning: #f59e0b;
             --sf-danger: #ef4444;
             --sf-info: #0284c7;
+            /* Typography system */
+            --font-heading: 'Plus Jakarta Sans', 'Lexend', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, monospace;
         }
 
         body {
             background-color: var(--sf-bg) !important;
             color: var(--sf-slate) !important;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: var(--font-body) !important;
+            font-size: 0.875rem;
+        }
+
+        /* Form controls, buttons, selects, tables inherit body font */
+        input,
+        textarea,
+        select,
+        button,
+        .btn,
+        table,
+        .form-control,
+        .form-select {
+            font-family: var(--font-body) !important;
+            font-size: 0.875rem;
         }
 
         h1,
@@ -46,8 +65,10 @@
         h4,
         h5,
         h6,
-        .sf-heading {
-            font-family: 'Lexend', 'Inter', sans-serif;
+        .sf-heading,
+        .modal-title,
+        .nav-brand {
+            font-family: var(--font-heading) !important;
             letter-spacing: -0.01em;
         }
 

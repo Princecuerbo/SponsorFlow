@@ -18,10 +18,21 @@
             box-shadow: 0 0 0 0.2rem rgba(15, 41, 74, 0.12);
         }
 
+        /* Custom Back to Home Button Hover */
+        .btn-back-home {
+            color: #64748b;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-back-home:hover {
+            color: #0f294a !important;
+            transform: translateX(-3px);
+        }
+
         /* Custom Sign In Button Hover Transition */
         .btn-custom-login {
-            background-color: #ffffff;
-            color: #0f172a;
+            background-color: #0f294a;
+            color: #ffffff;
             border: 1px solid #cbd5e1;
             transition: all 0.2s ease-in-out;
         }
@@ -46,96 +57,174 @@
             border-color: #0f294a !important;
         }
 
-        /* Privacy Modal Styles matching image */
+        /* ===== Privacy Modal – Modern Redesign ===== */
         .privacy-modal-overlay {
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             z-index: 99999;
         }
 
         .privacy-modal-card {
             pointer-events: auto;
+            border-radius: 20px !important;
+            overflow: hidden;
         }
 
-        .privacy-modal-card .modal-body {
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-
+        /* Gradient navy header */
         .privacy-card-header {
-            background: #002b66;
-            padding: 1.5rem 1.75rem;
+            background: linear-gradient(135deg, #0f294a 0%, #1e3a8a 100%);
+            padding: 1.75rem 2rem;
             color: #ffffff;
             display: flex;
             align-items: center;
             gap: 1.25rem;
+            position: relative;
+            overflow: hidden;
         }
 
+        /* Decorative geometric circle in header */
+        .privacy-card-header::before {
+            content: '';
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 50%;
+            top: -80px;
+            right: -60px;
+            pointer-events: none;
+        }
+
+        .privacy-card-header::after {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            bottom: -40px;
+            right: 80px;
+            pointer-events: none;
+        }
+
+        /* Glassmorphism shield icon */
         .privacy-header-icon {
-            width: 48px;
-            height: 48px;
-            background: #f59e0b;
-            color: #002b66;
-            border-radius: 12px;
+            width: 54px;
+            height: 54px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 1;
         }
 
-        .privacy-section-box {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
+        .privacy-header-text {
+            position: relative;
+            z-index: 1;
         }
 
-        .privacy-section-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
+        /* Modal body */
+        .privacy-modal-body {
+            background-color: #f8fafc;
+            max-height: 68vh;
+            overflow-y: auto;
+            padding: 1.5rem 2rem;
+        }
+
+        /* Left-bordered accent cards */
+        .privacy-accent-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            border-left: 4px solid;
+            box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
+        }
+
+        .privacy-accent-card.card-primary  { border-color: #3b82f6; }
+        .privacy-accent-card.card-warning  { border-color: #f59e0b; }
+        .privacy-accent-card.card-success  { border-color: #22c55e; }
+
+        /* Consent checkbox card */
+        .privacy-consent-card {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.15rem;
-            flex-shrink: 0;
+            gap: 0.75rem;
         }
 
-        .privacy-section-content {
-            min-width: 0;
+        .privacy-consent-card:hover {
+            border-color: #93c5fd;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .privacy-consent-card.is-checked {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+            background: #eff6ff;
+        }
+
+        .privacy-consent-card input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            cursor: pointer;
+            accent-color: #0f294a;
+        }
+
+        /* Modal footer */
+        .privacy-modal-footer {
+            background: #ffffff;
+            padding: 1rem 2rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        /* Transitions */
+        #privacy-continue-btn {
+            transition: opacity 0.2s ease, background-color 0.2s ease;
         }
 
         @media (min-width: 576px) {
-            .w-sm-auto {
-                width: auto !important;
-            }
+            .w-sm-auto { width: auto !important; }
         }
 
         @media (max-width: 575.98px) {
-            .privacy-modal-card {
-                max-height: calc(100vh - 1.5rem);
-            }
-
-            .privacy-modal-card .modal-body {
+            .privacy-modal-body {
                 max-height: 55vh;
-                overflow-y: auto;
-                padding: 0.75rem !important;
+                padding: 1rem;
             }
-
             .privacy-card-header {
-                padding: 0.75rem;
+                padding: 1rem 1.25rem;
                 gap: 0.75rem;
             }
-
             .privacy-header-icon {
-                width: 36px;
-                height: 36px;
+                width: 42px;
+                height: 42px;
                 font-size: 1.1rem;
             }
-
-            .privacy-modal-copy,
-            .privacy-section-content p,
-            .privacy-section-content ul {
-                font-size: 0.75rem !important;
+            .privacy-modal-footer {
+                padding: 0.75rem 1rem;
+                flex-wrap: wrap;
+            }
+            .privacy-modal-footer .btn {
+                width: 100%;
             }
         }
     </style>
@@ -172,8 +261,17 @@
             </div>
 
             <!-- Right Form Column -->
-            <div class="col-lg-6 d-flex align-items-center justify-content-center p-4 p-md-5 bg-white">
+            <div class="col-lg-6 d-flex align-items-center justify-content-center p-4 p-md-5 bg-white position-relative">
                 <div class="w-100" style="max-width: 400px;">
+                    
+                    <!-- Back to Home Button -->
+                    <div class="mb-4">
+                        <a href="{{ url('/') }}" class="d-inline-flex align-items-center gap-2 text-decoration-none btn-back-home small fw-semibold">
+                            <i class="bi bi-arrow-left"></i>
+                            <span>Back to Home</span>
+                        </a>
+                    </div>
+
                     <div class="d-block d-lg-none text-center mb-4">
                         <div class="d-inline-flex align-items-center gap-2 mb-2">
                             <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center"
@@ -261,96 +359,124 @@
         </div>
     </div>
 
-    <!-- Data Privacy Modal -->
+    <!-- Data Privacy Consent Modal – Modern Redesign -->
     <div id="privacyConsentModal" class="modal fade privacy-modal-overlay d-none" tabindex="-1"
-        style="background: rgba(0, 0, 0, 0.6);" aria-labelledby="privacyConsentModalLabel" aria-hidden="true">
+        style="background: rgba(0, 0, 0, 0.55);" aria-labelledby="privacyConsentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg mx-2 mx-sm-auto my-3 my-sm-auto">
-            <div class="modal-content privacy-modal-card border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-content privacy-modal-card border-0 shadow-lg">
+
+                {{-- ── Header: gradient navy + glassmorphism shield ── --}}
                 <div class="privacy-card-header">
-                    <div class="privacy-header-icon shadow-sm"><i class="bi bi-shield-lock-fill"></i></div>
-                    <div>
-                        <div class="text-uppercase fw-bold text-warning extra-small"
-                            style="font-size: 0.68rem; letter-spacing: 0.08em;">DAVAO ORIENTAL STATE UNIVERSITY</div>
-                        <h5 id="privacyConsentModalLabel" class="fw-bold mb-0 text-white" style="font-size: 1.2rem;">
-                            Student Portal – Data Privacy
-                            Consent</h5>
+                    <div class="privacy-header-icon">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </div>
+                    <div class="privacy-header-text">
+                        <div class="text-uppercase fw-semibold mb-1"
+                            style="font-size: 0.65rem; letter-spacing: 0.1em; color: rgba(255,255,255,0.65);">DAVAO ORIENTAL STATE UNIVERSITY &bull; DATA PRIVACY</div>
+                        <h5 id="privacyConsentModalLabel" class="fw-bold mb-0 text-white" style="font-size: 1.15rem; line-height: 1.3;">
+                            Student Portal &ndash; Data Privacy Consent
+                        </h5>
                     </div>
                 </div>
-                <div class="modal-body p-2 p-sm-4 bg-white">
-                    <p class="privacy-modal-copy text-secondary small mb-3 mb-sm-4"
-                        style="font-size: 0.85rem; line-height: 1.5;">Welcome to the
-                        Davao Oriental State University (DOrSU) Student Portal. Before accessing your personalized
-                        dashboard, please review and consent to the following data privacy terms:</p>
-                    <div class="privacy-section-box p-2 p-sm-3 mb-2 mb-sm-3">
-                        <div class="d-flex gap-2 gap-sm-3 align-items-start">
-                            <div class="privacy-section-icon bg-primary bg-opacity-10 text-primary"><i
-                                    class="bi bi-file-earmark-text"></i></div>
-                            <div class="privacy-section-content">
-                                <h6 class="fw-bold text-dark mb-2" style="font-size: 0.925rem;">Purpose of Data Collection
-                                </h6>
-                                <ul class="list-unstyled mb-0 small text-secondary d-flex flex-column gap-1.5"
-                                    style="font-size: 0.825rem;">
-                                    <li class="d-flex align-items-center gap-2"><i
-                                            class="bi bi-check-circle-fill text-warning"></i> Manage academic records</li>
-                                    <li class="d-flex align-items-center gap-2"><i
-                                            class="bi bi-check-circle-fill text-warning"></i> Provide essential student
-                                        services</li>
-                                    <li class="d-flex align-items-center gap-2"><i
-                                            class="bi bi-check-circle-fill text-warning"></i> Communicate important updates
-                                        and announcements</li>
-                                </ul>
+
+                {{-- ── Body: clean #f8fafc + left-border accent cards ── --}}
+                <div class="privacy-modal-body">
+                    <p class="text-secondary mb-4" style="font-size: 0.875rem; line-height: 1.6;">
+                        Welcome to the DOrSU Student Portal. Before accessing your personalized dashboard,
+                        please review and accept the following data privacy terms in compliance with Philippine law.
+                    </p>
+
+                    {{-- Purpose of Data Collection --}}
+                    <div class="privacy-accent-card card-primary mb-3">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="bi bi-file-earmark-text text-primary fs-5"></i>
+                            <h6 class="fw-bold text-dark mb-0" style="font-size: 0.9rem;">Purpose of Data Collection</h6>
+                        </div>
+                        <ul class="list-unstyled mb-0 d-flex flex-column gap-1" style="font-size: 0.825rem; color: #475569;">
+                            <li class="d-flex align-items-start gap-2">
+                                <i class="bi bi-check-circle-fill text-primary mt-1" style="font-size: 0.75rem; flex-shrink:0;"></i>
+                                Manage academic records and sponsorship eligibility
+                            </li>
+                            <li class="d-flex align-items-start gap-2">
+                                <i class="bi bi-check-circle-fill text-primary mt-1" style="font-size: 0.75rem; flex-shrink:0;"></i>
+                                Provide essential SLE-FHE student services
+                            </li>
+                            <li class="d-flex align-items-start gap-2">
+                                <i class="bi bi-check-circle-fill text-primary mt-1" style="font-size: 0.75rem; flex-shrink:0;"></i>
+                                Communicate important updates and program announcements
+                            </li>
+                        </ul>
+                    </div>
+
+                    {{-- Data Protection Commitment --}}
+                    <div class="privacy-accent-card card-warning mb-3">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="bi bi-shield-check text-warning fs-5"></i>
+                            <h6 class="fw-bold text-dark mb-0" style="font-size: 0.9rem;">Data Protection Commitment</h6>
+                        </div>
+                        <p class="mb-0" style="font-size: 0.825rem; color: #475569; line-height: 1.55;">
+                            DOrSU protects your personal information and processes it in accordance with the
+                            <strong>Data Privacy Act of 2012 (Republic Act No. 10173)</strong>.
+                            Your data is used solely for legitimate university and student-service purposes and
+                            is never sold to third parties.
+                        </p>
+                    </div>
+
+                    {{-- Your Rights as a Data Subject --}}
+                    <div class="privacy-accent-card card-success mb-4">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="bi bi-person-check-fill text-success fs-5"></i>
+                            <h6 class="fw-bold text-dark mb-0" style="font-size: 0.9rem;">Your Rights as a Data Subject</h6>
+                        </div>
+                        <ul class="list-unstyled mb-0 d-flex flex-column gap-1" style="font-size: 0.825rem; color: #475569;">
+                            <li class="d-flex align-items-start gap-2">
+                                <i class="bi bi-check-circle-fill text-success mt-1" style="font-size: 0.75rem; flex-shrink:0;"></i>
+                                Access and obtain a copy of your personal data
+                            </li>
+                            <li class="d-flex align-items-start gap-2">
+                                <i class="bi bi-check-circle-fill text-success mt-1" style="font-size: 0.75rem; flex-shrink:0;"></i>
+                                Correct any inaccuracies in your records
+                            </li>
+                            <li class="d-flex align-items-start gap-2">
+                                <i class="bi bi-check-circle-fill text-success mt-1" style="font-size: 0.75rem; flex-shrink:0;"></i>
+                                Withdraw consent, subject to applicable legal limitations
+                            </li>
+                        </ul>
+                    </div>
+
+                    {{-- Interactive Consent Checkbox Card --}}
+                    <label for="privacy-agree-check" class="privacy-consent-card" id="privacy-consent-card-wrapper">
+                        <input class="form-check-input" type="checkbox"
+                            id="privacy-agree-check"
+                            onchange="toggleContinueBtn()"
+                            style="cursor: pointer;">
+                        <div>
+                            <div class="fw-semibold text-dark" style="font-size: 0.875rem; line-height: 1.4;">
+                                I have read and agree to the data privacy terms above.
+                            </div>
+                            <div class="text-secondary" style="font-size: 0.78rem; margin-top: 2px;">
+                                By checking this box you consent to the collection and processing of your personal data
+                                as described in this notice.
                             </div>
                         </div>
-                    </div>
-                    <div class="privacy-section-box p-2 p-sm-3 mb-2 mb-sm-3">
-                        <div class="d-flex gap-2 gap-sm-3 align-items-start">
-                            <div class="privacy-section-icon bg-warning bg-opacity-10 text-warning"><i
-                                    class="bi bi-shield-check"></i></div>
-                            <div class="privacy-section-content">
-                                <h6 class="fw-bold text-dark mb-1" style="font-size: 0.925rem;">Data Privacy Commitment
-                                </h6>
-                                <p class="mb-0 text-secondary small" style="font-size: 0.825rem; line-height: 1.5;">DOrSU
-                                    protects your personal information and processes it in accordance with the Data Privacy
-                                    Act of 2012 (Republic Act No. 10173). Your information will be used only for legitimate
-                                    university and student-service purposes.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="privacy-section-box p-2 p-sm-3 mb-0">
-                        <div class="d-flex gap-2 gap-sm-3 align-items-start">
-                            <div class="privacy-section-icon bg-success bg-opacity-10 text-success"><i
-                                    class="bi bi-hand-thumbs-up"></i></div>
-                            <div class="privacy-section-content">
-                                <h6 class="fw-bold text-dark mb-2" style="font-size: 0.925rem;">Under the Data Privacy
-                                    Act, you have the right to:</h6>
-                                <ul class="list-unstyled mb-0 small text-secondary d-flex flex-column gap-1.5"
-                                    style="font-size: 0.825rem;">
-                                    <li class="d-flex align-items-center gap-2"><i
-                                            class="bi bi-check-circle-fill text-success"></i> Access personal data</li>
-                                    <li class="d-flex align-items-center gap-2"><i
-                                            class="bi bi-check-circle-fill text-success"></i> Correct inaccuracies</li>
-                                    <li class="d-flex align-items-center gap-2"><i
-                                            class="bi bi-check-circle-fill text-success"></i> Withdraw consent subject to
-                                        legal limitations</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    </label>
                 </div>
-                <div
-                    class="p-2 p-sm-3 bg-light border-top d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3">
+
+                {{-- ── Footer ── --}}
+                <div class="privacy-modal-footer">
                     <button type="button"
-                        class="btn btn-outline-secondary btn-sm px-3 fw-semibold w-100 w-sm-auto order-2 order-sm-0"
-                        onclick="closePrivacyModal()"><i class="bi bi-x-lg me-1"></i> Cancel</button>
-                    <div class="form-check m-0 order-first order-sm-0"><input class="form-check-input" type="checkbox"
-                            id="privacy-agree-check" onchange="toggleContinueBtn()" style="cursor: pointer;"><label
-                            class="form-check-label small fw-semibold text-dark" for="privacy-agree-check"
-                            style="cursor: pointer; font-size: 0.825rem;">I agree to the Data Privacy Terms</label></div>
+                        class="btn btn-outline-danger btn-sm px-4 fw-semibold"
+                        onclick="closePrivacyModal()">
+                        <i class="bi bi-x-lg me-1"></i> Cancel
+                    </button>
                     <button type="button" id="privacy-continue-btn"
-                        class="btn btn-sm px-4 fw-bold text-white w-100 w-sm-auto" disabled onclick="submitConsentFinal()"
-                        style="background-color: #0f294a; border-radius: 8px;"><i class="bi bi-check2 me-1"></i>
-                        Continue</button>
+                        class="btn btn-sm px-5 fw-bold text-white" disabled
+                        onclick="submitConsentFinal()"
+                        style="background-color: #0f294a; border-radius: 8px; opacity: 0.55;">
+                        <i class="bi bi-check2-circle me-1"></i> Continue
+                    </button>
                 </div>
+
             </div>
         </div>
     </div>
@@ -446,8 +572,12 @@
         function toggleContinueBtn() {
             const isChecked = document.getElementById('privacy-agree-check').checked;
             const btn = document.getElementById('privacy-continue-btn');
+            const card = document.getElementById('privacy-consent-card-wrapper');
             btn.disabled = !isChecked;
-            btn.style.opacity = isChecked ? '1' : '0.6';
+            btn.style.opacity = isChecked ? '1' : '0.55';
+            if (card) {
+                card.classList.toggle('is-checked', isChecked);
+            }
         }
 
         // Final Login Submission (Modal Continue)
