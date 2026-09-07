@@ -223,7 +223,3 @@ Route::middleware(['auth', 'EnsureUserRole:admin'])
         Route::get('/backups/{backup}/download', [BackupController::class, 'download'])->name('backups.download');
         Route::post('/backup', [BackupController::class, 'run'])->name('backup.run');
     });
-Route::get('/run-migrations-secret-123', function () {
-    \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-    return 'Migrations executed successfully!<br><pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
-});
