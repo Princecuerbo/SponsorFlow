@@ -11,7 +11,7 @@ class StudentRegistrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_student_can_register_without_checking_is_rural_checkbox(): void
+    public function test_student_can_register_auto_classifying_rural_for_provincial_address(): void
     {
         $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Computer Science']);
 
@@ -24,11 +24,15 @@ class StudentRegistrationTest extends TestCase
             'password_confirmation' => 'Password123!',
             'student_id_number' => '2024-0006',
             'academic_program_id' => $program->program_id,
+            'campus' => 'Baganga Campus',
+            'contact_number' => '09123456789',
             'year_level' => 2,
             'birthdate' => '2000-01-15',
+            'province' => 'Davao Oriental',
             'municipality' => 'Baganga',
-            'address' => '123 Main Street, City',
-            // Intentionally omit 'is_rural' to test checkbox default
+            'barangay' => 'Lambajon',
+            'home_address' => '123 Main Street',
+            // Intentionally omit 'is_rural' — it is now auto-computed
         ]);
 
         $response->assertRedirect(route('login'));
@@ -37,18 +41,21 @@ class StudentRegistrationTest extends TestCase
         $user = User::query()->where('email', 'juan.delacruz@dorsu.edu.ph')->firstOrFail();
         $profile = StudentProfile::query()->where('user_id', $user->id)->firstOrFail();
 
-        $this->assertFalse($profile->is_rural, 'is_rural should default to false when checkbox is not checked');
+        $this->assertTrue($profile->is_rural, 'Baganga is a provincial municipality so it should default to rural');
         $this->assertSame('Juan', $profile->first_name);
         $this->assertSame('Dela Cruz', $profile->last_name);
         $this->assertSame('Male', $profile->gender);
+        $this->assertSame('Davao Oriental', $profile->province);
         $this->assertSame('Baganga', $profile->municipality);
-        $this->assertSame('Baganga', $profile->barangay);
+        $this->assertSame('Lambajon', $profile->barangay);
+        $this->assertSame('123 Main Street', $profile->home_address);
+        $this->assertSame('123 Main Street, Brgy. Lambajon, Baganga, Davao Oriental', $profile->full_address);
         $this->assertTrue($user->isStudent());
     }
 
-    public function test_student_can_register_with_is_rural_checkbox_checked(): void
+    public function test_student_registration_auto_classifies_urban_for_huc_city(): void
     {
-        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Business Administration']);
+        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Computer Science']);
 
         $response = $this->post(route('register.store'), [
             'first_name' => 'Maria',
@@ -59,11 +66,14 @@ class StudentRegistrationTest extends TestCase
             'password_confirmation' => 'Password123!',
             'student_id_number' => '2024-0002',
             'academic_program_id' => $program->program_id,
+            'campus' => 'Main Campus (City of Mati)',
+            'contact_number' => '09123456789',
             'year_level' => 3,
             'birthdate' => '1999-06-20',
-            'municipality' => 'Caraga',
-            'address' => '456 Provincial Road, Remote Area',
-            'is_rural' => '1',
+            'province' => 'Davao del Sur',
+            'municipality' => 'Davao City',
+            'barangay' => 'Buhangin',
+            'home_address' => '456 Roxas Ave',
         ]);
 
         $response->assertRedirect(route('login'));
@@ -71,9 +81,9 @@ class StudentRegistrationTest extends TestCase
         $user = User::query()->where('email', 'maria.santos@dorsu.edu.ph')->firstOrFail();
         $profile = StudentProfile::query()->where('user_id', $user->id)->firstOrFail();
 
-        $this->assertTrue($profile->is_rural, 'is_rural should be true when checkbox is checked');
+        $this->assertFalse($profile->is_rural, 'Davao City is a highly urbanized city');
         $this->assertSame('Female', $profile->gender);
-        $this->assertSame('Caraga', $profile->barangay);
+        $this->assertSame('Davao City', $profile->municipality);
     }
 
     public function test_student_registration_fails_with_non_dorsu_email(): void
@@ -129,10 +139,14 @@ class StudentRegistrationTest extends TestCase
             'password_confirmation' => 'Password123!',
             'student_id_number' => '2024-0005',
             'academic_program_id' => $program->program_id,
+            'campus' => 'Main Campus (City of Mati)',
+            'contact_number' => '09123456789',
             'year_level' => 4,
             'birthdate' => '1998-08-12',
+            'province' => 'Davao Oriental',
             'municipality' => 'Mati City',
-            'address' => '654 Central Avenue',
+            'barangay' => 'Dahican',
+            'home_address' => '654 Central Avenue',
         ]);
 
         $response->assertRedirect(route('login'));
@@ -208,29 +222,42 @@ class StudentRegistrationTest extends TestCase
             'student_id_number' => '2024-0012',
             'year_level' => 1,
             'birthdate' => '2001-12-01',
-            'address' => '123 Test Street',
+            'province' => 'Davao Oriental',
+            'barangay' => 'Lambajon',
+            'home_address' => '123 Test Street',
         ]);
 
         $response->assertSessionHasErrors('municipality');
     }
 
-    public function test_student_registration_rejects_invalid_municipality(): void
+    public function test_student_registration_accepts_any_philippine_municipality(): void
     {
+        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Computer Science']);
+
         $response = $this->post(route('register.store'), [
             'first_name' => 'Test',
             'last_name' => 'User',
             'gender' => 'Male',
-            'email' => 'muni.test2@dorsu.edu.ph',
+            'email' => 'muni.accept@dorsu.edu.ph',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
             'student_id_number' => '2024-0013',
+            'academic_program_id' => $program->program_id,
+            'campus' => 'Main Campus (City of Mati)',
+            'contact_number' => '09123456789',
             'year_level' => 1,
             'birthdate' => '2001-12-01',
-            'municipality' => 'Davao City',
-            'address' => '123 Test Street',
+            'province' => 'Metro Manila',
+            'municipality' => 'Quezon City',
+            'barangay' => 'Diliman',
+            'home_address' => '123 Test Street',
         ]);
 
-        $response->assertSessionHasErrors('municipality');
+        $response->assertRedirect(route('login'));
+
+        $profile = StudentProfile::query()->where('student_id_number', '2024-0013')->firstOrFail();
+        $this->assertSame('Quezon City', $profile->municipality);
+        $this->assertFalse($profile->is_rural, 'Metro Manila should be classified as urban');
     }
 }
 

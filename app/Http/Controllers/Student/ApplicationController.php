@@ -12,6 +12,7 @@ use App\Models\Application;
 use App\Models\FixedListItem;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -58,15 +59,49 @@ class ApplicationController extends Controller
         ]);
     }
 
-    public function create(Request $request, string $id): View
+    public function checkEligibility(Request $request, SponsorshipProgram $sponsorshipProgram): JsonResponse
+    {
+        $profile = $this->studentProfile($request, required: false);
+
+        if ($profile === null || ! $profile->is_sle_fhe_verified) {
+            return response()->json([
+                'is_eligible' => false,
+                'reasons' => ['Complete SLE-FHE verification before applying.'],
+            ]);
+        }
+
+        $eligibility = $sponsorshipProgram->checkEligibility($profile);
+
+        return response()->json([
+            'is_eligible' => $eligibility['is_eligible'],
+            'reasons' => $eligibility['reasons'],
+        ]);
+    }
+
+    public function create(Request $request, string $id): View|RedirectResponse
     {
         $program = SponsorshipProgram::with('academicPrograms')->findOrFail($id);
         $profile = $this->studentProfile($request);
 
-        abort_unless($profile->is_sle_fhe_verified, 403, 'Complete SLE-FHE verification before applying.');
-        abort_unless($program->isOpen() && $program->available_slots > 0, 403, 'This sponsorship program is not accepting applications.');
-        abort_unless(! $this->hasBlockingApplication($profile), 403, 'You already have an active or pending sponsorship application.');
-        abort_unless($this->courseIsAllowed($profile->course, $program->target_course, $program, $profile), 403, 'Your course is not eligible for this program.');
+        if (! $profile->is_sle_fhe_verified) {
+            return redirect()
+                ->route('student.verification.show')
+                ->withErrors(['application' => 'Complete SLE-FHE verification before applying.']);
+        }
+
+        if ($this->hasBlockingApplication($profile)) {
+            return redirect()
+                ->route('student.programs.index')
+                ->with('error', 'You already have an active or pending sponsorship application.');
+        }
+
+        $eligibility = $program->checkEligibility($profile);
+
+        if (! $eligibility['is_eligible']) {
+            return redirect()
+                ->route('student.programs.index')
+                ->with('error', $eligibility['reasons'][0]);
+        }
 
         $program->load('sponsor');
 
@@ -168,10 +203,12 @@ class ApplicationController extends Controller
 
         $program = SponsorshipProgram::query()->findOrFail($request->integer('sponsorship_program_id'));
 
-        if ($program->available_slots <= 0) {
-            return back()
-                ->withErrors(['application' => 'This program has reached maximum capacity and is no longer accepting applications.'])
-                ->withInput();
+        $eligibility = $program->checkEligibility($profile);
+
+        if (! $eligibility['is_eligible']) {
+            return redirect()
+                ->route('student.programs.index')
+                ->with('error', $eligibility['reasons'][0]);
         }
 
         $existingActiveApplication = $profile->applications()
@@ -209,15 +246,49 @@ class ApplicationController extends Controller
                     'gpa_submitted' => $request->input('current_gpa', $request->input('gpa_submitted')),
                     'address_submitted' => $request->input('current_address', $request->input('address_submitted')),
                     'is_rural_submitted' => $request->boolean('is_rural_submitted'),
+                    'employee_name' => $request->input('employee_name'),
+                    'employee_id_number' => $request->input('employee_id_number'),
+                    'employee_relationship' => $request->input('employee_relationship'),
                     'status' => ApplicationStatus::Pending,
                     'submitted_at' => now(),
                 ]);
 
-                $uploads = [
-                    DocumentType::CertificateOfGrades->value => $request->file('grade_slip') ?? $request->file('certificate_of_grades'),
-                    DocumentType::ProofOfResidence->value => $request->file('proof_of_residence'),
-                    DocumentType::BarangayCertificate->value => $request->file('barangay_certification') ?? $request->file('barangay_cert'),
+                $requiredDocuments = (array) ($program->required_documents ?? []);
+
+                $uploadFields = [
+                    'Report Card / Certificate of Grades' => [
+                        'grade_slip' => DocumentType::CertificateOfGrades,
+                        'certificate_of_grades' => DocumentType::CertificateOfGrades,
+                    ],
+                    'Certificate of Indigency' => [
+                        'indigency_doc' => DocumentType::CertificateOfIndigency,
+                    ],
+                    'Certificate of Registration (COR)' => [
+                        'cor_doc' => DocumentType::CertificateOfRegistration,
+                    ],
+                    'Proof of Residence / Barangay Cert' => [
+                        'proof_of_residence' => DocumentType::ProofOfResidence,
+                        'barangay_certification' => DocumentType::BarangayCertificate,
+                        'barangay_cert' => DocumentType::BarangayCertificate,
+                    ],
+                    'Employee ID / Proof of Kinship' => [
+                        'employee_id_doc' => DocumentType::EmployeeProofOfKinship,
+                    ],
                 ];
+
+                $uploads = [];
+                foreach ($uploadFields as $label => $fields) {
+                    if (! in_array($label, $requiredDocuments, true)) {
+                        continue;
+                    }
+
+                    foreach ($fields as $field => $type) {
+                        if ($request->hasFile($field)) {
+                            $uploads[$type->value] = $request->file($field);
+                            break;
+                        }
+                    }
+                }
 
                 foreach ($uploads as $type => $file) {
                     $path = $file->store('applications/documents', 'local');
@@ -269,31 +340,6 @@ class ApplicationController extends Controller
     private function assertOwnsApplication(int $studentProfileId, Application $application): void
     {
         abort_unless((int) $application->student_profile_id === $studentProfileId, 403, 'You are not authorized to access this application.');
-    }
-
-    private function courseIsAllowed(?string $studentCourse, ?string $targetCourse, ?SponsorshipProgram $program = null, ?StudentProfile $profile = null): bool
-    {
-        if ($program && $program->academicPrograms()->exists()) {
-            $allowed = $program->academicPrograms;
-            if ($profile && $profile->academic_program_id && $allowed->contains('program_id', $profile->academic_program_id)) {
-                return true;
-            }
-            $studentCourseName = trim((string) $studentCourse);
-            foreach ($allowed as $ap) {
-                if (strcasecmp(trim($ap->code), $studentCourseName) === 0 || strcasecmp(trim($ap->name), $studentCourseName) === 0) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        if (! filled($targetCourse)) {
-            return true;
-        }
-
-        $allowedCourses = array_map('trim', explode(',', $targetCourse));
-
-        return in_array(trim((string) $studentCourse), $allowedCourses, true);
     }
 
     private function hasBlockingApplication($profile): bool

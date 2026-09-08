@@ -60,7 +60,7 @@
                         <div class="col-md-4">
                             <label class="form-label small text-secondary">Category <span
                                     class="text-danger">*</span></label>
-                            <select name="category" class="form-select @error('category') is-invalid @enderror" required>
+                            <select name="category" id="category" class="form-select @error('category') is-invalid @enderror" required>
                                 <option value="">Select…</option>
                                 @foreach (['Group', 'Individual', 'Employee-Based'] as $cat)
                                     <option value="{{ $cat }}" @selected(old('category') === $cat)>{{ $cat }}
@@ -70,6 +70,25 @@
                             @error('category')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+                        </div>
+
+                        <div class="col-12" id="employeeRelativeBlock" style="display: none;">
+                            <div class="form-check py-1">
+                                <input class="form-check-input" type="checkbox"
+                                    name="requires_relative_verification" value="1" id="requires_relative_verification">
+                                <label class="form-check-label" for="requires_relative_verification">
+                                    Requires Institutional Relative Employee Verification
+                                </label>
+                                <small class="d-block text-muted">Students must be verified as institutional relative
+                                    employees of the sponsoring organization.</small>
+                            </div>
+                        </div>
+                        <div class="col-12" id="individualAdvisoryBlock" style="display: none;">
+                            <div class="alert alert-warning py-2 px-3 mb-0 small">
+                                <i class="bi bi-info-circle me-1"></i>
+                                For Individual programs, eligibility filtering rules are advisory — the sponsor directly
+                                matches applicants for final selection.
+                            </div>
                         </div>
 
                         <div class="col-md-6">
@@ -88,13 +107,26 @@
                             @enderror
                         </div>
                         <div class="col-md-6">
+                            <label class="form-label small text-secondary">Total Slots <span
+                                    class="text-danger">*</span></label>
+                            <input type="number" min="1" name="total_slots" id="total_slots"
+                                value="{{ old('total_slots') }}"
+                                class="form-control @error('total_slots') is-invalid @enderror" required>
+                            @error('total_slots')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
                             <label class="form-label small text-secondary">Available Slots <span
                                     class="text-danger">*</span></label>
-                            <input type="number" min="1" name="available_slots" value="{{ old('available_slots') }}"
-                                class="form-control @error('available_slots') is-invalid @enderror" required>
+                            <input type="number" min="0" name="available_slots" id="available_slots"
+                                value="{{ old('available_slots', 0) }}"
+                                class="form-control @error('available_slots') is-invalid @enderror" readonly required>
                             @error('available_slots')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+                            <small class="text-muted">Set automatically to match total slots when opening a new
+                                program.</small>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-bold" for="end_date">End Date (Optional)</label>
@@ -138,6 +170,90 @@
                     </div>
 
                     <div class="mt-4">
+                        <label class="form-label fw-bold">Eligible Year Levels</label>
+                        <p class="text-muted small mb-2">Leave all unchecked to allow all year levels.</p>
+                        @php
+                            $selectedYearLevels = is_array(old('eligible_year_levels')) ? old('eligible_year_levels') : [];
+                        @endphp
+                        <div class="d-flex flex-wrap gap-3">
+                            @foreach ([1, 2, 3, 4] as $yr)
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox"
+                                        name="eligible_year_levels[]"
+                                        value="{{ $yr }}"
+                                        id="yr_create_{{ $yr }}"
+                                        {{ in_array((string) $yr, array_map('strval', $selectedYearLevels)) ? 'checked' : '' }}>
+                                    <label class="form-check-label small" for="yr_create_{{ $yr }}">Year {{ $yr }}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                        @error('eligible_year_levels')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    @php
+                        $campusOptions = [
+                            'Main Campus (City of Mati)',
+                            'Baganga Campus',
+                            'Banaybanay Campus',
+                            'Cateel Campus',
+                            'San Isidro Campus',
+                            'Tarragona Campus',
+                        ];
+                        $documentOptions = [
+                            'Report Card / Certificate of Grades',
+                            'Certificate of Indigency',
+                            'Certificate of Registration (COR)',
+                            'Proof of Residence / Barangay Cert',
+                            'Employee ID / Proof of Kinship',
+                        ];
+                        $selectedCampuses = is_array(old('eligible_campuses')) ? old('eligible_campuses') : [];
+                        $selectedDocuments = is_array(old('required_documents')) ? old('required_documents') : [];
+                    @endphp
+
+                    <div class="mt-4">
+                        <label class="form-label fw-bold">Eligible Campuses</label>
+                        <p class="text-muted small mb-2">Leave all unchecked to allow students from all campuses.</p>
+                        <div class="d-flex flex-wrap gap-3">
+                            @foreach ($campusOptions as $campus)
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="eligible_campuses[]"
+                                        value="{{ $campus }}" id="campus_create_{{ $loop->index }}"
+                                        {{ in_array($campus, $selectedCampuses) ? 'checked' : '' }}>
+                                    <label class="form-check-label small" for="campus_create_{{ $loop->index }}">
+                                        {{ $campus }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                        @error('eligible_campuses')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="form-label fw-bold">Required Documents Checklist</label>
+                        <p class="text-muted small mb-2">Select the supporting documents applicants must submit for
+                            this program (leave all unchecked if none are required).</p>
+                        <div class="d-flex flex-wrap gap-3">
+                            @foreach ($documentOptions as $doc)
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="required_documents[]"
+                                        value="{{ $doc }}" id="doc_create_{{ $loop->index }}"
+                                        {{ in_array($doc, $selectedDocuments) ? 'checked' : '' }}>
+                                    <label class="form-check-label small" for="doc_create_{{ $loop->index }}">
+                                        {{ $doc }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                        @error('required_documents')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mt-4">
                         <label class="form-label fw-bold">Eligible Courses / Academic Programs</label>
                         <p class="text-muted small mb-2">Select the courses eligible for this sponsorship program (leave
                             empty to allow all courses).</p>
@@ -147,6 +263,15 @@
                                 ? old('academic_program_ids')
                                 : [];
                         @endphp
+
+                        <div class="d-flex gap-2 mb-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-select-all-courses>
+                                Select All
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-clear-all-courses>
+                                Clear All
+                            </button>
+                        </div>
 
                         <div class="card p-3 border rounded-3" style="max-height: 250px; overflow-y: auto;">
                             <div class="row g-2">
@@ -182,6 +307,43 @@
                         Program</button>
                 </div>
             </form>
+
+            @push('scripts')
+                <script>
+                    const categorySelect = document.getElementById('category');
+                    const employeeRelativeBlock = document.getElementById('employeeRelativeBlock');
+                    const individualAdvisoryBlock = document.getElementById('individualAdvisoryBlock');
+
+                    const syncCategoryGuidance = () => {
+                        const value = categorySelect ? categorySelect.value : '';
+                        if (employeeRelativeBlock) employeeRelativeBlock.style.display = value === 'Employee-Based' ? 'block' : 'none';
+                        if (individualAdvisoryBlock) individualAdvisoryBlock.style.display = value === 'Individual' ? 'block' : 'none';
+                    };
+
+                    if (categorySelect) {
+                        categorySelect.addEventListener('change', syncCategoryGuidance);
+                        syncCategoryGuidance();
+                    }
+
+                    const totalSlotsInput = document.getElementById('total_slots');
+                    const availableSlotsInput = document.getElementById('available_slots');
+
+                    const syncSlots = () => {
+                        availableSlotsInput.value = totalSlotsInput.value;
+                    };
+
+                    totalSlotsInput.addEventListener('input', syncSlots);
+                    document.querySelector('form').addEventListener('submit', syncSlots);
+
+                    const courseCheckboxes = () => document.querySelectorAll('input[name="academic_program_ids[]"]');
+                    document.querySelectorAll('[data-select-all-courses]').forEach((btn) => {
+                        btn.addEventListener('click', () => courseCheckboxes().forEach((cb) => { cb.checked = true; }));
+                    });
+                    document.querySelectorAll('[data-clear-all-courses]').forEach((btn) => {
+                        btn.addEventListener('click', () => courseCheckboxes().forEach((cb) => { cb.checked = false; }));
+                    });
+                </script>
+            @endpush
         </div>
     </div>
 

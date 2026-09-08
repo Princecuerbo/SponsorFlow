@@ -51,15 +51,40 @@
     @php
         $eligibleCourses = $program->academicPrograms ?? collect();
 
+        $requiresInstitutionalVerification = $program->category?->value === 'Employee-Based'
+            || (bool) $program->requires_relative_verification;
+
         $addressReqLower = strtolower((string) ($program->address_requirement ?? ''));
-        $programRequiresUrban = str_contains($addressReqLower, 'urban');
         $programRequiresRural = str_contains($addressReqLower, 'rural');
+        $programRequiresUrban = str_contains($addressReqLower, 'urban');
+        $hasAddressRequirement = $programRequiresRural || $programRequiresUrban;
 
-        $urbanMunicipalities = ['Mati City', 'Mati', 'Matiao'];
+        $profileIsRural = (bool) $profile->is_rural;
         $profileMunicipality = trim((string) ($profile->municipality ?? ''));
-        $profileIsUrban = ! $profile->is_rural || in_array($profileMunicipality, $urbanMunicipalities, true);
 
-        $residencyMismatch = ($programRequiresRural && $profileIsUrban) || ($programRequiresUrban && ! $profileIsUrban);
+        $residencyMismatch = $hasAddressRequirement
+            && (($programRequiresRural && ! $profileIsRural)
+                || ($programRequiresUrban && $profileIsRural));
+
+        $allowedCampuses = (array) ($program->eligible_campuses ?? []);
+        $allowedCampusesNote = $allowedCampuses ? ' (' . implode(', ', $allowedCampuses) . ')' : '';
+        $campusRestricted = $allowedCampuses !== []
+            && ! in_array($profile->campus, $allowedCampuses, true);
+        $submissionLocked = $residencyMismatch || $campusRestricted;
+
+        $requiredDocuments = (array) ($program->required_documents ?? []);
+        $documentFieldMap = [
+            'Report Card / Certificate of Grades' => ['field' => 'grade_slip', 'label' => 'Grade Slip / TOR', 'icon' => 'bi-mortarboard'],
+            'Certificate of Indigency' => ['field' => 'indigency_doc', 'label' => 'Certificate of Indigency', 'icon' => 'bi-file-earmark-medical'],
+            'Certificate of Registration (COR)' => ['field' => 'cor_doc', 'label' => 'COR', 'icon' => 'bi-file-earmark-text'],
+            'Proof of Residence / Barangay Cert' => ['field' => 'proof_of_residence', 'label' => 'Barangay / Residency Cert', 'icon' => 'bi-house-door'],
+            'Employee ID / Proof of Kinship' => ['field' => 'employee_id_doc', 'label' => 'Employee ID / Proof of Kinship', 'icon' => 'bi-person-badge'],
+        ];
+        $docsToUpload = array_filter(
+            $documentFieldMap,
+            fn ($cfg, $label) => in_array($label, $requiredDocuments, true),
+            ARRAY_FILTER_USE_BOTH,
+        );
     @endphp
 
     @if ($profile->hasActiveSponsorship())
@@ -80,14 +105,14 @@
                 <div>
                     <p class="fw-semibold mb-1" style="color:#92400e;">Residency Classification Notice</p>
                     <p class="small mb-0" style="color:#78350f;">
-                        @if ($programRequiresUrban && ! $profileIsUrban)
+                        @if ($programRequiresUrban && $profileIsRural)
                             This program is intended for <strong>Urban</strong> residents, but your profile address is classified as <strong>Rural</strong>.
                             Applying for Urban-specific grants requires a valid urban address or certification.
-                        @else
+                        @elseif ($programRequiresRural && ! $profileIsRural)
                             This program is intended for <strong>Rural</strong> residents, but your profile address is currently classified as <strong>Urban</strong>@if ($profileMunicipality) ({{ $profileMunicipality }})@endif.
                             Applying for Rural-specific grants requires a valid rural address or Barangay certification.
                         @endif
-                        The <em>residency</em> toggle and form submission have been locked accordingly.
+                        Form submission has been locked accordingly.
                         If your address has changed, please
                         <a href="{{ route('student.verification.show') }}" class="alert-link fw-semibold">update your profile</a>
                         before applying.
@@ -96,12 +121,34 @@
             </div>
         @endif
 
+        {{-- ─── Campus Restriction Warning ─────────────────────────────────────── --}}
+        @if ($campusRestricted)
+            <div class="alert border-0 rounded-3 shadow-sm d-flex gap-3 align-items-start mb-4"
+                 id="campus-restriction-alert"
+                 role="alert"
+                 style="background: linear-gradient(135deg,#fff7ed 0%,#fef3c7 100%); border-left: 4px solid #f59e0b !important;">
+                <i class="bi bi-geo-alt-fill fs-4 flex-shrink-0" style="color:#d97706;margin-top:2px;"></i>
+                <div>
+                    <p class="fw-semibold mb-1" style="color:#92400e;">Notice: This program is restricted to specific
+                        campuses.</p>
+                    <p class="small mb-0" style="color:#78350f;">
+                        Your registered campus
+                        (<strong>{{ $profile->campus ?? 'Not Assigned' }}</strong>) is not in this program's eligible
+                        campus list{{ $allowedCampusesNote }}. Form submission
+                        has been locked accordingly. If you have transferred campuses, please
+                        <a href="{{ route('student.verification.show') }}" class="alert-link fw-semibold">update your
+                            profile</a> before applying.
+                    </p>
+                </div>
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('student.applications.store') }}" enctype="multipart/form-data" class="row g-4"
               data-address-requirement="{{ $program->address_requirement }}"
               data-profile-is-rural="{{ $profile->is_rural ? '1' : '0' }}"
-              data-profile-is-urban="{{ $profileIsUrban ? '1' : '0' }}"
               data-residency-mismatch="{{ $residencyMismatch ? '1' : '0' }}"
-              @if ($residencyMismatch) onsubmit="return false;" @endif>
+              data-campus-restricted="{{ $campusRestricted ? '1' : '0' }}"
+              @if ($submissionLocked) onsubmit="return false;" @endif>
             @csrf
             <input type="hidden" name="sponsorship_program_id" value="{{ $program->id }}">
 
@@ -149,6 +196,11 @@
                                 <input type="text" class="form-control" value="{{ $profile->course }}" disabled>
                             </div>
                             <div class="col-sm-6">
+                                <label class="form-label small text-secondary">Campus</label>
+                                <input type="text" class="form-control" value="{{ $profile->campus ?? 'Not Assigned' }}"
+                                    disabled>
+                            </div>
+                            <div class="col-sm-6">
                                 <label class="form-label small text-secondary">SLE-FHE Status</label>
                                 <div class="pt-2"><x-status-badge status="Verified" /></div>
                             </div>
@@ -183,29 +235,31 @@
                                 <label for="current_address" class="form-label small text-secondary">Current Address <span
                                         class="text-danger">*</span></label>
                                 <input type="text" name="current_address" id="current_address"
-                                    value="{{ old('current_address', old('address_submitted', $profile->address)) }}"
+                                    value="{{ old('current_address', old('address_submitted', $profile->full_address)) }}"
                                     class="form-control @error('current_address') is-invalid @enderror" required>
                                 @error('current_address')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-12">
-                                <div class="form-check form-switch align-items-center gap-2" id="rural-toggle-wrapper">
-                                    <input class="form-check-input" type="checkbox" role="switch" name="is_rural_submitted"
-                                        id="is_rural_submitted" value="1"
-                                        {{ old('is_rural_submitted', $programRequiresUrban ? false : $profile->is_rural) ? 'checked' : '' }}
-                                        @if ($residencyMismatch) disabled @endif>
-                                    <label class="form-check-label small" for="is_rural_submitted">
-                                        I confirm the address above is classified as a <strong>rural</strong> residence
-                                    </label>
-                                    @if ($residencyMismatch)
-                                        <span class="badge ms-2 d-inline-flex align-items-center gap-1"
-                                              style="background:#fef3c7;color:#92400e;font-size:0.7rem;font-weight:600;border:1px solid #f59e0b;">
-                                            <i class="bi bi-lock-fill" style="font-size:0.65rem;"></i>
-                                            Locked — {{ $profileIsUrban ? 'Urban profile' : 'Rural profile' }}
+                                @if ($hasAddressRequirement)
+                                    <div id="residency-verified-block" class="d-flex flex-wrap align-items-center gap-2">
+                                        <span class="badge border rounded-3 d-inline-flex align-items-center gap-2"
+                                              style="background:#f0fdf4;color:#166534;font-size:0.75rem;font-weight:600;border-color:#86efac !important;">
+                                            <i class="bi bi-patch-check-fill text-success" style="font-size:0.8rem;"></i>
+                                            Verified Residence: <strong>{{ $profileIsRural ? 'Rural' : 'Urban' }}</strong>
                                         </span>
-                                    @endif
-                                </div>
+                                        @if ($residencyMismatch)
+                                            <span class="badge rounded-3 d-inline-flex align-items-center gap-2"
+                                                  style="background:#fef2f2;color:#b91c1c;font-size:0.75rem;font-weight:600;border:1px solid #fca5a5;">
+                                                <i class="bi bi-exclamation-triangle-fill" style="font-size:0.75rem;"></i>
+                                                Residence requirement mismatch (Requires: {{ $program->address_requirement }})
+                                            </span>
+                                        @endif
+                                    </div>
+                                @endif
+                                <input type="hidden" name="is_rural_submitted"
+                                       value="{{ $profileIsRural ? '1' : '0' }}">
                                 @error('is_rural_submitted')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
@@ -213,6 +267,63 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Section 3: Institutional Employee Verification --}}
+                @if ($requiresInstitutionalVerification)
+                    <div class="card sf-card mb-4">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <span class="badge rounded-circle sf-step-badge">
+                                    <i class="bi bi-person-badge fs-6"></i>
+                                </span>
+                                <h2 class="h6 sf-heading mb-0">Institutional Employee Verification</h2>
+                            </div>
+                            <p class="small text-secondary mb-3">This program requires verification of an immediate
+                                relative who is an employee of the institution.</p>
+
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label for="employee_name" class="form-label small text-secondary">Relative Employee
+                                        Name <span class="text-danger">*</span></label>
+                                    <input type="text" name="employee_name" id="employee_name" required
+                                        placeholder="e.g., Juan Dela Cruz"
+                                        value="{{ old('employee_name') }}"
+                                        class="form-control @error('employee_name') is-invalid @enderror">
+                                    @error('employee_name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="employee_id_number" class="form-label small text-secondary">Employee ID
+                                        Number <span class="text-danger">*</span></label>
+                                    <input type="text" name="employee_id_number" id="employee_id_number" required
+                                        placeholder="e.g., EMP-2024-0012"
+                                        value="{{ old('employee_id_number') }}"
+                                        class="form-control @error('employee_id_number') is-invalid @enderror">
+                                    @error('employee_id_number')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="employee_relationship" class="form-label small text-secondary">Relationship
+                                        to Employee <span class="text-danger">*</span></label>
+                                    <select name="employee_relationship" id="employee_relationship" required
+                                        class="form-select @error('employee_relationship') is-invalid @enderror">
+                                        <option value="">Select relationship…</option>
+                                        @foreach (['Parent', 'Spouse', 'Sibling', 'Guardian'] as $rel)
+                                            <option value="{{ $rel }}" @selected(old('employee_relationship') === $rel)>
+                                                {{ $rel }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('employee_relationship')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
                 {{-- Section 3: Document uploads --}}
                 <div class="card sf-card">
@@ -223,36 +334,35 @@
                         </div>
                         <p class="small text-secondary mb-3">Accepted formats: PDF, JPG, PNG · Max 5MB each.</p>
 
-                        @php
-                            $docs = [
-                                'grade_slip' => ['Grade Slip', 'bi-mortarboard'],
-                                'proof_of_residence' => ['Proof of Residence', 'bi-house-door'],
-                                'barangay_certification' => ['Barangay Certification', 'bi-file-earmark-check'],
-                            ];
-                        @endphp
-
-                        <div class="row g-3">
-                            @foreach ($docs as $field => [$label, $icon])
-                                <div class="col-md-4">
-                                    <label class="form-label small text-secondary d-block">{{ $label }} <span
-                                            class="text-danger">*</span></label>
-                                    <label for="{{ $field }}"
-                                        class="d-block border border-2 border-dashed rounded-3 text-center p-4 bg-light"
-                                        style="cursor:pointer; border-style:dashed !important;">
-                                        <i class="bi {{ $icon }} fs-3 text-secondary d-block mb-2"></i>
-                                        <span class="small fw-semibold d-block">Click to upload</span>
-                                        <span class="small text-secondary" data-filename-for="{{ $field }}">or drag
-                                            file here</span>
-                                        <input type="file" name="{{ $field }}" id="{{ $field }}"
-                                            class="d-none" accept=".pdf,.jpg,.jpeg,.png"
-                                            onchange="updateSelectedFile(this)">
-                                    </label>
-                                    @error($field)
-                                        <div class="text-danger small mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            @endforeach
-                        </div>
+                        @if ($docsToUpload === [])
+                            <div class="alert alert-secondary border-0 rounded-3 mb-0">
+                                <i class="bi bi-info-circle me-1"></i>
+                                No supporting documents are required for this program.
+                            </div>
+                        @else
+                            <div class="row g-3">
+                                @foreach ($docsToUpload as $cfg)
+                                    <div class="col-md-4">
+                                        <label class="form-label small text-secondary d-block">{{ $cfg['label'] }} upload
+                                            <span class="text-danger">*</span></label>
+                                        <label for="{{ $cfg['field'] }}"
+                                            class="d-block border border-2 border-dashed rounded-3 text-center p-4 bg-light"
+                                            style="cursor:pointer; border-style:dashed !important;">
+                                            <i class="bi {{ $cfg['icon'] }} fs-3 text-secondary d-block mb-2"></i>
+                                            <span class="small fw-semibold d-block">Click to upload</span>
+                                            <span class="small text-secondary" data-filename-for="{{ $cfg['field'] }}">or drag
+                                                file here</span>
+                                            <input type="file" name="{{ $cfg['field'] }}" id="{{ $cfg['field'] }}"
+                                                class="d-none" accept=".pdf,.jpg,.jpeg,.png"
+                                                onchange="updateSelectedFile(this)">
+                                        </label>
+                                        @error($cfg['field'])
+                                            <div class="text-danger small mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -278,10 +388,15 @@
                         </ul>
 
                         <button type="submit" class="btn btn-navy-submit w-100 mb-2 py-2"
-                            @if ($residencyMismatch) disabled style="opacity: 0.55; cursor: not-allowed;" title="Submission locked due to residency mismatch" @endif>
+                            @if ($submissionLocked) disabled style="opacity: 0.55; cursor: not-allowed;" title="Submission locked due to eligibility requirements" @endif>
                             <i class="bi bi-send me-1"></i> Submit Application
                         </button>
-                        @if ($residencyMismatch)
+                        @if ($campusRestricted)
+                            <div class="small text-danger mb-2 fw-semibold">
+                                <i class="bi bi-lock-fill me-1"></i>
+                                Form submission is locked because this program is restricted to specific campuses.
+                            </div>
+                        @elseif ($residencyMismatch)
                             <div class="small text-danger mb-2 fw-semibold">
                                 <i class="bi bi-lock-fill me-1"></i>
                                 Form submission is locked due to residency requirements.
@@ -331,40 +446,8 @@
                         });
                     });
 
-                    /* ── Bidirectional residency toggle & submission enforcement ─────── */
-                    const form              = document.querySelector('form[data-address-requirement]');
-                    const ruralToggle       = document.getElementById('is_rural_submitted');
-                    const residencyMismatch = form?.dataset.residencyMismatch === '1';
-
-                    if (form && ruralToggle) {
-                        const submitBtn = form.querySelector('button[type="submit"]');
-
-                        if (residencyMismatch) {
-                            ruralToggle.checked  = false;
-                            ruralToggle.disabled = true;
-                            if (submitBtn) {
-                                submitBtn.disabled = true;
-                                submitBtn.style.opacity = '0.55';
-                                submitBtn.style.cursor = 'not-allowed';
-                            }
-
-                            form.addEventListener('submit', function (e) {
-                                e.preventDefault();
-                                return false;
-                            });
-
-                            /* Ensure unchecked disabled checkbox submits as 0 */
-                            let hiddenFallback = document.getElementById('is_rural_submitted_hidden');
-                            if (!hiddenFallback) {
-                                hiddenFallback = document.createElement('input');
-                                hiddenFallback.type  = 'hidden';
-                                hiddenFallback.name  = 'is_rural_submitted';
-                                hiddenFallback.id    = 'is_rural_submitted_hidden';
-                                hiddenFallback.value = '0';
-                                ruralToggle.parentElement.appendChild(hiddenFallback);
-                            }
-                        }
-                    }
+                    /* ── Residency mismatch & submission are enforced server-side and in
+                       Blade (disabled submit button, onsubmit guard). ──────────────── */
                 })();
             </script>
         @endpush

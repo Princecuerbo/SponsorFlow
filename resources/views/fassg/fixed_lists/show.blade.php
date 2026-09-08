@@ -78,23 +78,33 @@
                             <form method="POST" action="{{ route('fassg.fixed-lists.items.store', $list) }}"
                                 class="row g-2">
                                 @csrf
-                                <div class="col-md-3">
+                                <div class="col-md-8">
                                     <input type="text" name="student_name" class="form-control form-control-sm"
-                                        placeholder="Full Name" required>
+                                        placeholder="Full Name" required value="{{ old('student_name') }}">
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <input type="text" name="student_id_number" class="form-control form-control-sm"
-                                        placeholder="Student ID" required>
+                                        placeholder="Student ID" required value="{{ old('student_id_number') }}">
                                 </div>
                                 <div class="col-md-3">
                                     <input type="text" name="course" class="form-control form-control-sm"
-                                        placeholder="Course" required>
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="number" name="year_level" class="form-control form-control-sm"
-                                        placeholder="Year" min="1" max="5" required>
+                                        placeholder="Course" required value="{{ old('course') }}">
                                 </div>
                                 <div class="col-md-1">
+                                    <input type="number" name="year_level" class="form-control form-control-sm"
+                                        placeholder="Year" min="1" max="5" required value="{{ old('year_level') }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <select name="campus" class="form-select form-select-sm" required>
+                                        @foreach (['Main Campus (City of Mati)', 'Baganga Campus', 'Banaybanay Campus', 'Cateel Campus', 'San Isidro Campus', 'Tarragona Campus'] as $campusOption)
+                                            <option value="{{ $campusOption }}"
+                                                {{ old('campus', 'Main Campus (City of Mati)') === $campusOption ? 'selected' : '' }}>
+                                                {{ $campusOption }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
                                     <button type="submit" class="btn btn-navy-primary btn-sm w-100">Add</button>
                                 </div>
                             </form>
@@ -114,6 +124,7 @@
                                 <th class="ps-4">Student Name</th>
                                 <th>Student ID</th>
                                 <th>Course &amp; Year</th>
+                                <th>Campus</th>
                                 <th>SLE-FHE Status</th>
                                 <th class="text-end pe-4">Action</th>
                             </tr>
@@ -124,6 +135,7 @@
                                     <td class="ps-4 fw-semibold">{{ $item->student_name }}</td>
                                     <td class="sf-mono">{{ $item->student_id_number ?: 'N/A' }}</td>
                                     <td>{{ $item->course }} {{ $item->year_level ? "Year {$item->year_level}" : '' }}</td>
+                                    <td>{{ $item->campus ?: 'N/A' }}</td>
                                     <td>
                                         <span
                                             class="badge {{ $item->is_sle_fhe_verified ? 'bg-success-subtle text-success-emphasis border border-success-subtle' : 'bg-warning-subtle text-warning-emphasis border border-warning-subtle' }}">
@@ -143,7 +155,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center text-secondary py-4">No students encoded in this
+                                    <td colspan="6" class="text-center text-secondary py-4">No students encoded in this
                                         batch yet.</td>
                                 </tr>
                             @endforelse
@@ -160,7 +172,8 @@
                         <h3 class="h6 fw-bold mb-2"><i class="bi bi-file-earmark-spreadsheet me-1"></i>Import CSV / Excel
                         </h3>
                         <p class="text-secondary small mb-3">Expected columns: <code>student_name</code>,
-                            <code>student_id_number</code>, <code>course</code>, <code>year_level</code>
+                            <code>student_id_number</code>, <code>course</code>, <code>year_level</code>,
+                            <code>campus</code>
                         </p>
                         <form method="POST" action="{{ route('fassg.fixed-lists.import', $list) }}"
                             enctype="multipart/form-data">

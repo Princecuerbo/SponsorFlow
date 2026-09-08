@@ -25,7 +25,7 @@
                         </div>
                         <div class="col-md-6"><label class="form-label" for="address_submitted">Address for this
                                 application</label><input class="form-control" id="address_submitted"
-                                name="address_submitted" value="{{ old('address_submitted', $profile?->address) }}"
+                                name="address_submitted" value="{{ old('address_submitted', $profile?->full_address) }}"
                                 required></div>
                         <div class="col-12">
                             <div class="form-check"><input class="form-check-input" id="is_rural_submitted" type="checkbox"

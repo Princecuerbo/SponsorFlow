@@ -23,7 +23,7 @@ class ReportsTest extends TestCase
             'program_name' => 'Analytics Grant',
             'category' => ProgramCategory::Individual,
             'total_slots' => 10,
-            'available_slots' => 8,
+            'available_slots' => 9,
         ]);
         $profile = StudentProfile::factory()->create([
             'gender' => 'Female',
@@ -61,12 +61,14 @@ class ReportsTest extends TestCase
                 'Female' => 1,
                 'Male' => 1,
             ])
-            ->assertViewHas('slotUtilization', function (array $utilization) use ($program): bool {
-                return $utilization[0]['program_name'] === $program->program_name
-                    && $utilization[0]['total_slots'] === 10
-                    && $utilization[0]['filled_slots'] === 1
-                    && $utilization[0]['available_slots'] === 8
-                    && $utilization[0]['utilization_pct'] === 10.0;
+            ->assertViewHas('slotUtilization', function ($utilization) use ($program): bool {
+                $first = $utilization->first();
+
+                return $first->program_name === $program->program_name
+                    && (int) $first->total_slots === 10
+                    && $first->filled_slots === 1
+                    && (int) $first->available_slots === 9
+                    && $first->utilization === 10;
             })
             ->assertViewHas('demographics', function (array $demographics): bool {
                 return $demographics['by_course']['Information Technology'] === 1

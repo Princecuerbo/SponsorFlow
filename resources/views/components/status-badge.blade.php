@@ -3,28 +3,31 @@
 @php
     $label = $status instanceof \BackedEnum ? $status->value : (string) $status;
     $map = [
-        'Approved' => ['bg-emerald-100 text-emerald-800', 'bi-check-circle'],
-        'Active' => ['bg-emerald-100 text-emerald-800', 'bi-check-circle'],
-        'Verified' => ['bg-emerald-100 text-emerald-800', 'bi-patch-check'],
-        'Completed' => ['bg-emerald-100 text-emerald-800', 'bi-check2-circle'],
-        'Pending' => ['bg-amber-100 text-amber-800', 'bi-hourglass-split'],
-        'Under Review' => ['bg-amber-100 text-amber-800', 'bi-search'],
-        'Submitted' => ['bg-amber-100 text-amber-800', 'bi-send'],
-        'Rejected' => ['bg-rose-100 text-rose-800', 'bi-x-circle'],
-        'Declined' => ['bg-rose-100 text-rose-800', 'bi-x-circle'],
-        'Inactive' => ['bg-rose-100 text-rose-800', 'bi-slash-circle'],
-        'Forwarded' => ['bg-sky-100 text-sky-800', 'bi-arrow-right-circle'],
-        'In Progress' => ['bg-sky-100 text-sky-800', 'bi-arrow-repeat'],
-        'Open' => ['bg-emerald-50 text-emerald-700', 'bi-check-circle-fill'],
-        'Closed' => ['bg-slate-100 text-slate-700', 'bi-slash-circle'],
-        'Expired' => ['bg-amber-50 text-amber-700', 'bi-clock-history'],
-        'Ongoing' => ['bg-emerald-100 text-emerald-800', 'bi-arrow-repeat'],
+        'Approved' => ['bg-success-subtle text-success border border-success-subtle', 'bi-check-circle'],
+        'Active' => ['bg-success-subtle text-success border border-success-subtle', 'bi-check-circle'],
+        'Verified' => ['bg-success-subtle text-success border border-success-subtle', 'bi-patch-check'],
+        'Completed' => ['bg-success-subtle text-success border border-success-subtle', 'bi-check2-circle'],
+        'Pending' => ['bg-warning-subtle text-warning-emphasis border border-warning-subtle', 'bi-hourglass-split'],
+        'Under Review' => ['bg-warning-subtle text-warning-emphasis border border-warning-subtle', 'bi-search'],
+        'Submitted' => ['bg-warning-subtle text-warning-emphasis border border-warning-subtle', 'bi-send'],
+        'Draft' => ['bg-warning-subtle text-warning-emphasis border border-warning-subtle', 'bi-pencil'],
+        'Eligible' => ['bg-success-subtle text-success border border-success-subtle', 'bi-patch-check'],
+        'Ineligible' => ['bg-danger-subtle text-danger border border-danger-subtle', 'bi-x-circle'],
+        'Rejected' => ['bg-danger-subtle text-danger border border-danger-subtle', 'bi-x-circle'],
+        'Declined' => ['bg-danger-subtle text-danger border border-danger-subtle', 'bi-x-circle'],
+        'Inactive' => ['bg-danger-subtle text-danger border border-danger-subtle', 'bi-slash-circle'],
+        'Forwarded' => ['bg-info-subtle text-info-emphasis border border-info-subtle', 'bi-arrow-right-circle'],
+        'In Progress' => ['bg-info-subtle text-info-emphasis border border-info-subtle', 'bi-arrow-repeat'],
+        'Open' => ['bg-success-subtle text-success border border-success-subtle', 'bi-check-circle-fill'],
+        'Closed' => ['bg-secondary-subtle text-secondary border border-secondary-subtle', 'bi-slash-circle'],
+        'Expired' => ['bg-danger-subtle text-danger border border-danger-subtle', 'bi-clock-history'],
+        'Ongoing' => ['bg-success-subtle text-success border border-success-subtle', 'bi-arrow-repeat'],
     ];
 
-    [$colors, $icon] = $map[$label] ?? ['bg-slate-100 text-slate-700', 'bi-question-circle'];
+    [$colors, $icon] = $map[$label] ?? ['bg-secondary-subtle text-secondary border border-secondary-subtle', 'bi-question-circle'];
 @endphp
 
 <span
-    {{ $attributes->merge(['class' => "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold $colors"]) }}>
-    <i class="bi {{ $icon }}"></i>{{ $label }}
+    {{ $attributes->merge(['class' => "badge px-2 py-1 fw-medium $colors"]) }}>
+    <i class="bi {{ $icon }} me-1"></i>{{ $label }}
 </span>

@@ -9,7 +9,8 @@
     <div class="container d-flex align-items-center justify-content-center gap-4 py-2">
 
         {{-- Brand --}}
-        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-decoration-none" href="#">
+        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-decoration-none"
+            href="{{ auth()->check() ? route(auth()->user()->homeRoute()) : url('/') }}">
             <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center"
                 style="background-color: #0f294a; width: 36px; height: 36px;">
                 <i class="fa-solid fa-hand-holding-dollar fs-6"></i>

@@ -102,4 +102,88 @@
             @endforeach
         </div>
     @endif
+
+    <div class="modal fade" id="eligibilityModal" tabindex="-1" aria-labelledby="eligibilityModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-danger" id="eligibilityModalLabel">
+                        <i class="bi bi-exclamation-octagon-fill me-2"></i>Ineligible for Sponsorship
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    <p class="small text-secondary mb-3">This program does not match your current student profile. Please
+                        review the following requirements before applying:</p>
+                    <ul id="eligibility-reasons-list" class="list-unstyled mb-4"></ul>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="{{ route('student.programs.index') }}" class="btn btn-navy-primary">
+                        <i class="bi bi-grid-fill me-1"></i>View Other Opportunities
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('scripts')
+    <script>
+        (function () {
+            'use strict';
+
+            const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (ch) => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;',
+            }[ch]));
+
+            const reasonsList = document.getElementById('eligibility-reasons-list');
+
+            document.addEventListener('click', function (event) {
+                const button = event.target.closest('.apply-now-btn');
+                if (!button) return;
+
+                event.preventDefault();
+
+                const applyUrl = button.dataset.applyUrl;
+                const checkUrl = button.dataset.checkUrl;
+
+                if (!checkUrl) {
+                    window.location.href = applyUrl;
+                    return;
+                }
+
+                fetch(checkUrl, { headers: { 'Accept': 'application/json' } })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.is_eligible) {
+                            window.location.href = applyUrl;
+                            return;
+                        }
+
+                        const reasons = Array.isArray(data.reasons) ? data.reasons : [];
+                        reasonsList.innerHTML = reasons
+                            .map((reason) => `
+                                <li class="d-flex align-items-start gap-2 mb-2">
+                                    <i class="bi bi-x-octagon-fill text-danger fs-6 mt-1"></i>
+                                    <span class="small">${escapeHtml(reason)}</span>
+                                </li>
+                            `)
+                            .join('');
+
+                        const modalEl = document.getElementById('eligibilityModal');
+                        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                        modal.show();
+                    })
+                    .catch(() => {
+                        window.location.href = applyUrl;
+                    });
+            });
+        })();
+    </script>
+@endpush

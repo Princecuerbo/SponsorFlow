@@ -21,6 +21,7 @@ class StoreFixedListItemRequest extends FormRequest
             'student_id_number' => ['required', 'string', 'max:50', 'regex:/^\d{4}-\d{4,6}$/'],
             'course' => ['required', 'string', 'max:150'],
             'year_level' => ['required', 'integer', 'min:1', 'max:5'],
+            'campus' => ['required', 'string', 'max:150'],
         ];
     }
 }

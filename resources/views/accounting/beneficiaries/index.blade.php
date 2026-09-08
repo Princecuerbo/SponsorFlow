@@ -97,49 +97,62 @@
         {{-- Filter Toolbar & Table Container Card --}}
         <div class="card sf-card border-0 shadow-sm rounded-3 overflow-hidden mb-4">
             <div class="card-header bg-white border-bottom p-3 no-print">
-                <form id="beneficiaryFilterForm" method="GET" action="{{ route('accounting.beneficiaries.index') }}"
-                    class="row g-2 align-items-center">
-                    {{-- Custom Program Filter Dropdown --}}
-                    <div class="col-md-3">
-                        <div class="dropdown program-filter-dropdown">
-                            <button type="button"
-                                class="form-select bg-white text-start d-flex align-items-center justify-content-between"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <span>
-                                    @if (request('academic_program_id') && isset($academicPrograms))
-                                        {{ $academicPrograms->firstWhere('program_id', request('academic_program_id'))->name ?? 'All academic programs' }}
-                                    @else
-                                        All academic programs
-                                    @endif
-                                </span>
-                            </button>
-                            <ul class="dropdown-menu shadow-sm border w-100 mt-1 p-1">
-                                <li>
+<form id="beneficiaryFilterForm" method="GET" action="{{ route('accounting.beneficiaries.index') }}"
+                            class="row g-2 align-items-center">
+                            {{-- Sponsorship Program Filter Dropdown --}}
+                            <div class="col-md-3">
+                                <div class="dropdown program-filter-dropdown">
                                     <button type="button"
-                                        class="dropdown-item rounded py-2 {{ !request('academic_program_id') ? 'active-filter' : '' }}"
-                                        onclick="setProgramFilter('', 'All academic programs')">
-                                        All academic programs
+                                        class="form-select bg-white text-start d-flex align-items-center justify-content-between"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span>
+                                            @if (request('sponsorship_program_id') && isset($programs))
+                                                {{ $programs->firstWhere('id', (int) request('sponsorship_program_id'))->name ?? 'All Sponsorship Programs' }}
+                                            @else
+                                                All Sponsorship Programs
+                                            @endif
+                                        </span>
                                     </button>
-                                </li>
-                                @if (isset($academicPrograms))
-                                    @foreach ($academicPrograms as $academicProgram)
+                                    <ul class="dropdown-menu shadow-sm border w-100 mt-1 p-1">
                                         <li>
                                             <button type="button"
-                                                class="dropdown-item rounded py-2 {{ (int) request('academic_program_id') === (int) $academicProgram->program_id ? 'active-filter' : '' }}"
-                                                onclick="setProgramFilter('{{ $academicProgram->program_id }}', '{{ $academicProgram->name }}')">
-                                                {{ $academicProgram->name }}
+                                                class="dropdown-item rounded py-2 {{ !request('sponsorship_program_id') ? 'active-filter' : '' }}"
+                                                onclick="setProgramFilter('', 'All Sponsorship Programs')">
+                                                All Sponsorship Programs
                                             </button>
                                         </li>
-                                    @endforeach
-                                @endif
-                            </ul>
-                            <input type="hidden" name="academic_program_id" id="academicProgramInput"
-                                value="{{ request('academic_program_id') }}">
-                        </div>
-                    </div>
+                                        @if (isset($programs))
+                                            @foreach ($programs as $program)
+                                                <li>
+                                                    <button type="button"
+                                                        class="dropdown-item rounded py-2 {{ (int) request('sponsorship_program_id') === (int) $program->id ? 'active-filter' : '' }}"
+                                                        onclick="setProgramFilter('{{ $program->id }}', '{{ $program->name }}')">
+                                                        {{ $program->name }}
+                                                    </button>
+                                                </li>
+                                            @endforeach
+                                        @endif
+                                    </ul>
+                                    <input type="hidden" name="sponsorship_program_id" id="sponsorshipProgramInput"
+                                        value="{{ request('sponsorship_program_id') }}">
+                                </div>
+                            </div>
 
-                    {{-- Search Input --}}
-                    <div class="col-md-8">
+                            {{-- Academic Course Filter Select --}}
+                            <div class="col-md-3">
+                                <select name="academic_program_id" class="form-select" onchange="this.form.submit()">
+                                    <option value="">All Academic Courses</option>
+                                    @foreach ($academicPrograms ?? [] as $academicProgram)
+                                        <option value="{{ $academicProgram->program_id }}"
+                                            @selected((int) request('academic_program_id') === (int) $academicProgram->program_id)>
+                                            {{ $academicProgram->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            {{-- Search Input --}}
+                            <div class="col-md-5">
                         <div class="input-group">
                             <span class="input-group-text bg-white border-end-0"><i
                                     class="bi bi-search text-secondary"></i></span>
@@ -164,6 +177,7 @@
                             <th class="ps-4">Student ID Number</th>
                             <th>Full Name</th>
                             <th>Course & Year</th>
+                            <th>Campus</th>
                             <th>Program & Category</th>
                             <th>Sponsor / Organization</th>
                             <th>GWA / GPA</th>
@@ -186,6 +200,9 @@
                                     @if (isset($beneficiary['year_level']))
                                         <div class="small text-secondary">Year {{ $beneficiary['year_level'] }}</div>
                                     @endif
+                                </td>
+                                <td>
+                                    {{ $beneficiary['campus'] ?: 'N/A' }}
                                 </td>
                                 <td>
                                     {{ $beneficiary['program'] ?? '—' }}
@@ -229,7 +246,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="text-center text-secondary py-5">
+                                <td colspan="10" class="text-center text-secondary py-5">
                                     <i class="bi bi-inbox display-6 d-block mb-2 opacity-50"></i>
                                     <div class="fw-semibold text-dark">No approved beneficiaries found.</div>
                                     <div class="small text-muted">This list populates automatically once sponsors confirm
@@ -259,7 +276,7 @@
 
     <script>
         function setProgramFilter(value, label) {
-            document.getElementById('academicProgramInput').value = value;
+            document.getElementById('sponsorshipProgramInput').value = value;
             document.getElementById('beneficiaryFilterForm').submit();
         }
     </script>

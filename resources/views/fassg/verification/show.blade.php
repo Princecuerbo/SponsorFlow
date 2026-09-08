@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('title', 'Review Application')
-@section('eyebrow', 'FASSG Hybrid Verification')
-@section('page-title', 'Verify Application: ' . $application->studentProfile->user->name)
+@section('eyebrow', 'FASSG Office · Verification')
+@section('page-title', 'Review Application: ' . $application->studentProfile->user->name)
 
 @push('styles')
     <style>
@@ -28,266 +28,566 @@
             color: #ffffff !important;
             box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
         }
+
+        .btn-approve {
+            background: linear-gradient(135deg, #1a7a4a 0%, #145f39 100%) !important;
+            border-color: #1a7a4a !important;
+            color: #fff !important;
+            font-weight: 700;
+            box-shadow: 0 2px 6px rgba(26, 122, 74, 0.25);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-approve:hover {
+            background: linear-gradient(135deg, #145f39 0%, #0f4a2c 100%) !important;
+            box-shadow: 0 4px 14px rgba(26, 122, 74, 0.35) !important;
+            color: #fff !important;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            color: #6c757d;
+            margin-bottom: 0.2rem;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .action-card {
+            position: sticky;
+            top: 5.5rem;
+        }
+
+        .doc-row:not(:last-child) {
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 0.85rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .stat-highlight {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+        }
     </style>
 @endpush
 
 @section('content')
     @php
-        $profile = $application->studentProfile;
-        $program = $application->sponsorshipProgram;
-        $status = $application->status->value;
-        $isPending = $status === 'Pending';
-        $meetsGpa = $program->min_gpa === null || (float) $application->gpa_submitted <= (float) $program->min_gpa;
+        $profile    = $application->studentProfile;
+        $program    = $application->sponsorshipProgram;
+        $status     = $application->status->value;
+        $isPending  = $application->status === \App\Enums\ApplicationStatus::Pending;
+        $isVerified = $application->status === \App\Enums\ApplicationStatus::Verified;
+        $canAct     = $isPending || $isVerified;
+
+        $meetsGpa = $program->min_gpa === null
+            || (float) $application->gpa_submitted <= (float) $program->min_gpa;
+
+        // Year level eligibility check
+        $allowedYearLevels   = $program->eligible_year_levels ?? [];
+        $studentYearLevel    = $profile->year_level;
+        $yearLevelRestricted = ! empty($allowedYearLevels);
+        $yearLevelMeets      = ! $yearLevelRestricted
+            || ($studentYearLevel !== null && in_array((string) $studentYearLevel, array_map('strval', $allowedYearLevels), true));
     @endphp
 
+    {{-- Page Header --}}
     <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
         <div>
             <a href="{{ route('fassg.verification.index') }}" class="btn btn-sm btn-outline-secondary mb-3">
-                <i class="bi bi-arrow-left me-1"></i> Back to Verification Queue
+                <i class="bi bi-arrow-left me-1"></i> Back to Review Queue
             </a>
-            <p class="text-uppercase small fw-semibold text-secondary mb-2">FASSG Hybrid Verification</p>
-            <h1 class="h2 sf-heading mb-1">Verify Application: {{ $profile->user->name }}</h1>
+            <p class="text-uppercase small fw-semibold text-secondary mb-1">FASSG Office · Verification &amp; Review</p>
+            <h1 class="h2 sf-heading mb-1">{{ $profile->user->name }}</h1>
             <p class="text-secondary mb-0">
-                {{ $program->program_name }} <span class="mx-1">&bull;</span> FASSG Hybrid Verification
+                {{ $program->program_name }}
+                <span class="mx-1">&bull;</span>
+                {{ $program->sponsor->company_organization_name }}
             </p>
         </div>
-        <x-status-badge :status="$application->status" />
+        <div class="d-flex align-items-center gap-2">
+            <x-status-badge :status="$application->status" />
+        </div>
     </div>
 
+    {{-- Flash / Error Messages --}}
+    @if (session('status'))
+        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-check-circle me-2"></i>{{ session('status') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <ul class="mb-0 ps-3">
+                @foreach ($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    {{-- Eligibility Warnings --}}
+    @if (! empty($eligibilityErrors))
+        <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
+            <strong><i class="bi bi-exclamation-triangle me-1"></i> Eligibility criteria notice:</strong>
+            <ul class="mb-0 mt-2 ps-3">
+                @foreach ($eligibilityErrors as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
     <div class="row g-4">
-        <!-- Left Column: Student Details, Application Info & Sponsor Program -->
+        {{-- ── Left column: Applicant Summary & Program Info ──────────── --}}
         <div class="col-xl-7">
-            <!-- Student Overview Card -->
+
+            {{-- Applicant Profile Summary --}}
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body p-4">
-                    <div class="d-flex align-items-center gap-2 mb-4">
-                        <div class="sf-stat-icon p-2 rounded" style="background-color: #e9ecef; color: #0F2942;">
-                            <i class="bi bi-person-vcard fs-4"></i>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="p-2 rounded" style="background-color:#e9ecef; color:#0F2942;">
+                                <i class="bi bi-person-badge fs-4"></i>
+                            </div>
+                            <div>
+                                <h2 class="h5 sf-heading mb-0">Applicant Profile Summary</h2>
+                                <p class="small text-secondary mb-0">Key verification details &amp; demographics</p>
+                            </div>
                         </div>
-                        <div>
-                            <h2 class="h5 sf-heading mb-0">Student Overview</h2>
-                            <p class="small text-secondary mb-0">Applicant identity and eligibility profile</p>
+                        <span class="badge bg-light text-dark border">
+                            <i class="bi bi-clock me-1"></i> Submitted {{ $application->submitted_at?->diffForHumans() ?? 'recently' }}
+                        </span>
+                    </div>
+
+                    {{-- Highlight Stats Row --}}
+                    <div class="row g-3 mb-4">
+                        {{-- Student ID --}}
+                        <div class="col-sm-6 col-md-4">
+                            <div class="stat-highlight">
+                                <div class="detail-label"><i class="bi bi-card-heading me-1"></i> Student ID</div>
+                                <div class="detail-value sf-mono fs-6">{{ $profile->student_id_number ?: 'Not specified' }}</div>
+                            </div>
+                        </div>
+                        {{-- Submitted GPA --}}
+                        <div class="col-sm-6 col-md-4">
+                            <div class="stat-highlight">
+                                <div class="detail-label"><i class="bi bi-award me-1"></i> Submitted GPA / GWA</div>
+                                <div class="detail-value fs-6 d-flex align-items-center gap-1">
+                                    {{ number_format($application->gpa_submitted, 2) }}
+                                    @if ($program->min_gpa !== null)
+                                        @if ($meetsGpa)
+                                            <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle ms-1" style="font-size: 0.7rem;">
+                                                Meets Min
+                                            </span>
+                                        @else
+                                            <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle ms-1" style="font-size: 0.7rem;">
+                                                Below Min
+                                            </span>
+                                        @endif
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        {{-- Year Level --}}
+                        <div class="col-sm-6 col-md-4">
+                            <div class="stat-highlight">
+                                <div class="detail-label"><i class="bi bi-mortarboard me-1"></i> Year Level</div>
+                                <div class="detail-value fs-6 d-flex align-items-center gap-1">
+                                    Year {{ $profile->year_level ?? '—' }}
+                                    @if ($yearLevelRestricted)
+                                        @if ($yearLevelMeets)
+                                            <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle ms-1" style="font-size: 0.7rem;">
+                                                Eligible
+                                            </span>
+                                        @else
+                                            <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle ms-1" style="font-size: 0.7rem;">
+                                                Ineligible
+                                            </span>
+                                        @endif
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        {{-- Gender --}}
+                        <div class="col-sm-6 col-md-4">
+                            <div class="stat-highlight">
+                                <div class="detail-label"><i class="bi bi-gender-ambiguous me-1"></i> Gender</div>
+                                <div class="detail-value fs-6">{{ $profile->gender ?: 'Not specified' }}</div>
+                            </div>
+                        </div>
+                        {{-- Residence / Area --}}
+                        <div class="col-sm-12 col-md-8">
+                            <div class="stat-highlight">
+                                <div class="detail-label"><i class="bi bi-geo-alt me-1"></i> Residence &amp; Barangay</div>
+                                <div class="detail-value fs-6 text-truncate d-flex align-items-center gap-2">
+                                    <span class="text-truncate">{{ $application->address_submitted ?: ($profile->barangay ?: 'Address not provided') }}</span>
+                                    @if ($application->is_rural_submitted)
+                                        <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle flex-shrink-0" style="font-size: 0.7rem;">
+                                            <i class="bi bi-tree me-1"></i>Rural
+                                        </span>
+                                    @else
+                                        <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle flex-shrink-0" style="font-size: 0.7rem;">
+                                            <i class="bi bi-building me-1"></i>Urban
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    {{-- Additional Profile Details --}}
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <div class="small text-secondary">Full Name</div>
-                            <div class="fw-semibold">{{ $profile->user->name }}</div>
+                            <div class="detail-label">Full Name</div>
+                            <div class="detail-value">{{ $profile->user->name }}</div>
+                            <div class="small text-secondary">{{ $profile->user->email }}</div>
                         </div>
                         <div class="col-md-6">
-                            <div class="small text-secondary">Student ID Number</div>
-                            <div class="sf-mono fw-bold">{{ $profile->student_id_number }}</div>
+                            <div class="detail-label">Course / Degree</div>
+                            <div class="detail-value">{{ $profile->course ?: '—' }}</div>
                         </div>
                         <div class="col-md-6">
-                            <div class="small text-secondary">Course &amp; Year</div>
-                            <div>{{ $profile->course }} · Year {{ $profile->year_level }}</div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="small text-secondary">SLE-FHE Verification</div>
+                            <div class="detail-label">SLE-FHE Free Higher Education Status</div>
                             <div>
                                 @if ($profile->is_sle_fhe_verified)
-                                    <span
-                                        class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-2 py-1">
-                                        <i class="bi bi-patch-check me-1"></i> Verified
+                                    <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-2 py-1">
+                                        <i class="bi bi-patch-check me-1"></i> SLE-FHE Verified
                                     </span>
                                 @else
-                                    <span
-                                        class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2 py-1">
-                                        <i class="bi bi-hourglass-split me-1"></i> Pending
+                                    <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2 py-1">
+                                        <i class="bi bi-hourglass-split me-1"></i> SLE-FHE Pending
                                     </span>
                                 @endif
                             </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-label">Complete Address on Application</div>
+                            <div class="small text-dark">{{ $application->address_submitted ?: 'Same as student profile' }}</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Application Details Card -->
+            {{-- Target Program Details --}}
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body p-4">
-                    <h2 class="h5 sf-heading mb-4">
-                        <i class="bi bi-clipboard-data me-2" style="color: #0F2942;"></i> Application Details
+                    <h2 class="h5 sf-heading mb-3">
+                        <i class="bi bi-building-check me-2" style="color:#0F2942;"></i>Target Program &amp; Slots
                     </h2>
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <div class="small text-secondary">Submitted GWA / GPA</div>
-                            <div class="fw-semibold">
-                                {{ number_format($application->gpa_submitted, 2) }}
-                                @if ($program->min_gpa !== null)
-                                    <span
-                                        class="badge {{ $meetsGpa ? 'bg-success-subtle text-success-emphasis border border-success-subtle' : 'bg-danger-subtle text-danger-emphasis border border-danger-subtle' }} ms-1">
-                                        {{ $meetsGpa ? 'Meets minimum' : 'Below minimum' }}
-                                    </span>
+                            <div class="detail-label">Program Name</div>
+                            <div class="detail-value">{{ $program->program_name }}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-label">Sponsoring Organization</div>
+                            <div class="detail-value">{{ $program->sponsor->company_organization_name }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="detail-label">Category</div>
+                            <div>
+                                <span class="badge rounded-2 fw-medium"
+                                    style="background-color: rgba(15,41,66,0.08); color:#0F2942;">
+                                    {{ $program->category->value }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="detail-label">Available Slots</div>
+                            <div class="fw-bold {{ $program->available_slots <= 0 ? 'text-danger' : 'text-success' }}">
+                                {{ $program->available_slots }} remaining
+                                @if ($program->available_slots <= 0)
+                                    <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle ms-1">Full</span>
                                 @endif
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="small text-secondary">Minimum Required GPA</div>
+                        <div class="col-md-4">
+                            <div class="detail-label">Target Year Levels</div>
                             <div>
-                                {{ $program->min_gpa !== null ? number_format($program->min_gpa, 2) . ' or better' : 'No minimum specified' }}
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="small text-secondary">Complete Address</div>
-                            <div class="fw-semibold">{{ $application->address_submitted }}</div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="small text-secondary">Barangay</div>
-                            <div>{{ $profile->barangay ?: 'Not provided' }}</div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="small text-secondary">Rural Classification</div>
-                            <div>
-                                @if ($application->is_rural_submitted)
-                                    <span
-                                        class="badge bg-info-subtle text-info-emphasis border border-info-subtle px-2 py-1">
-                                        <i class="bi bi-tree me-1"></i> Rural
-                                    </span>
+                                @if (! empty($allowedYearLevels))
+                                    {{ implode(', ', array_map(fn($y) => "Year {$y}", (array) $allowedYearLevels)) }}
                                 @else
-                                    <span
-                                        class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle px-2 py-1">
-                                        <i class="bi bi-building me-1"></i> Urban
-                                    </span>
+                                    <span class="text-success fw-semibold">All Year Levels</span>
                                 @endif
                             </div>
                         </div>
+                        @if ($program->min_gpa)
+                            <div class="col-md-4">
+                                <div class="detail-label">Min. GPA Required</div>
+                                <div>{{ number_format($program->min_gpa, 2) }} or better</div>
+                            </div>
+                        @endif
+                        @if ($program->address_requirement)
+                            <div class="col-md-8">
+                                <div class="detail-label">Address Requirement</div>
+                                <div>{{ $program->address_requirement }}</div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
 
-            <!-- Target Program Card -->
+            {{-- Application History / Timeline --}}
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <h2 class="h5 sf-heading mb-4">
-                        <i class="bi bi-building-check me-2" style="color: #0F2942;"></i> Target Program &amp; Sponsor
+                    <h2 class="h6 sf-heading mb-3 text-secondary text-uppercase">
+                        <i class="bi bi-clock-history me-2"></i>Review Timeline &amp; Notes
                     </h2>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="small text-secondary">Program Title</div>
-                            <div class="fw-semibold">{{ $program->program_name }}</div>
+                    <div class="row g-3 small">
+                        <div class="col-md-4">
+                            <div class="detail-label">Submitted</div>
+                            <div>{{ $application->submitted_at?->format('M d, Y · h:i A') ?? '—' }}</div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="small text-secondary">Sponsor</div>
-                            <div class="fw-semibold">{{ $program->sponsor->company_organization_name }}</div>
+                        <div class="col-md-4">
+                            <div class="detail-label">Verified At</div>
+                            <div>{{ $application->verified_at?->format('M d, Y · h:i A') ?? 'Not yet verified' }}</div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="small text-secondary">Category</div>
-                            <div>{{ $program->category->value }}</div>
+                        <div class="col-md-4">
+                            <div class="detail-label">Approved At</div>
+                            <div>{{ $application->approved_at?->format('M d, Y · h:i A') ?? 'Not yet approved' }}</div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="small text-secondary">Available Slots</div>
-                            <div>{{ $program->available_slots }}</div>
-                        </div>
+                        @if ($application->rejection_reason)
+                            <div class="col-12 mt-2">
+                                <div class="detail-label text-danger">Rejection Reason</div>
+                                <div class="alert alert-danger border border-danger-subtle rounded-2 p-2 mb-0 text-danger-emphasis">
+                                    <i class="bi bi-info-circle me-1"></i> {{ $application->rejection_reason }}
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Right Column: Documents Preview & Actions -->
+        {{-- ── Right column: Supporting Documents & Decision Controls ─── --}}
         <div class="col-xl-5">
-            <!-- Supporting Documents Card -->
+
+            {{-- Supporting Documents Section --}}
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body p-4">
-                    <div class="d-flex align-items-center justify-content-between gap-2 mb-4">
+                    <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
                         <div>
                             <h2 class="h5 sf-heading mb-1">Supporting Documents</h2>
-                            <p class="small text-secondary mb-0">Review each required proof before deciding</p>
+                            <p class="small text-secondary mb-0">Grade Slip, Proof of Residence &amp; Barangay Certification</p>
                         </div>
-                        <i class="bi bi-file-earmark-check fs-3" style="color: #0F2942;"></i>
+                        <i class="bi bi-file-earmark-check fs-3" style="color:#0F2942;"></i>
                     </div>
 
-                    @foreach (\App\Enums\DocumentType::requiredForApplication() as $documentType)
+                    @php
+                        $requiredDocs = \App\Enums\DocumentType::requiredForApplication();
+                    @endphp
+
+                    @foreach ($requiredDocs as $documentType)
                         @php
                             $document = $application->documents->first(
-                                fn($item) => ($item->document_type instanceof \BackedEnum
+                                fn ($item) => ($item->document_type instanceof \BackedEnum
                                     ? $item->document_type->value
                                     : (string) $item->document_type) === $documentType->value,
                             );
+                            $docModalId = 'docPreviewModal_' . $documentType->value;
                         @endphp
-                        <div class="d-flex align-items-center gap-3 {{ !$loop->last ? 'border-bottom pb-3 mb-3' : '' }}">
-                            <div class="sf-stat-icon bg-danger-subtle text-danger p-2 rounded">
-                                <i class="bi bi-file-earmark-pdf fs-4"></i>
-                            </div>
-                            <div class="flex-grow-1 min-w-0">
-                                <div class="fw-semibold small">{{ $documentType->label() }}</div>
-                                <div class="small text-secondary text-truncate">
-                                    {{ $document?->file_name ?? 'Not uploaded' }}
+                        <div class="doc-row">
+                            <div class="d-flex align-items-center gap-3 mb-2">
+                                <div class="p-2 rounded {{ $document ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }}">
+                                    <i class="bi {{ $document ? 'bi-file-earmark-check' : 'bi-file-earmark-x' }} fs-4"></i>
                                 </div>
+                                <div class="flex-grow-1 min-w-0">
+                                    <div class="fw-semibold small">{{ $documentType->label() }}</div>
+                                    <div class="small text-secondary text-truncate">
+                                        {{ $document?->file_name ?? 'Not uploaded yet' }}
+                                    </div>
+                                </div>
+                                @if ($document)
+                                    <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">
+                                        Uploaded
+                                    </span>
+                                @else
+                                    <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle">
+                                        Missing
+                                    </span>
+                                @endif
                             </div>
+
                             @if ($document)
-                                <a href="{{ route('fassg.applications.documents.show', [$application, $document]) }}"
-                                    target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary flex-shrink-0">
-                                    <i class="bi bi-eye me-1"></i> View Document
-                                </a>
-                            @else
-                                <span
-                                    class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle flex-shrink-0">Missing</span>
+                                <div class="d-flex gap-2 ms-5 ps-1">
+                                    {{-- Inline Preview Modal Button --}}
+                                    <button type="button" class="btn btn-sm btn-outline-primary py-1 px-2"
+                                        data-bs-toggle="modal" data-bs-target="#{{ $docModalId }}">
+                                        <i class="bi bi-eye me-1"></i> Preview
+                                    </button>
+                                    {{-- Open / View Button --}}
+                                    <a href="{{ route('fassg.verification.documents.show', [$application, $document]) }}"
+                                        target="_blank" rel="noopener"
+                                        class="btn btn-sm btn-outline-secondary py-1 px-2">
+                                        <i class="bi bi-box-arrow-up-right me-1"></i> Open Tab
+                                    </a>
+                                </div>
+
+                                {{-- Inline Document Preview Modal --}}
+                                <div class="modal fade" id="{{ $docModalId }}" tabindex="-1" aria-labelledby="{{ $docModalId }}Label" aria-hidden="true">
+                                    <div class="modal-dialog modal-xl modal-dialog-centered">
+                                        <div class="modal-content border-0 shadow">
+                                            <div class="modal-header" style="background:#0F2942; color:#fff;">
+                                                <h5 class="modal-title h6 mb-0 text-white" id="{{ $docModalId }}Label">
+                                                    <i class="bi bi-file-earmark-text me-2"></i>{{ $documentType->label() }} — {{ $document->file_name }}
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body p-0" style="background: #f1f3f5; min-height: 70vh;">
+                                                <iframe src="{{ route('fassg.verification.documents.show', [$application, $document]) }}"
+                                                    style="width: 100%; height: 75vh; border: none;"
+                                                    title="{{ $documentType->label() }}">
+                                                </iframe>
+                                            </div>
+                                            <div class="modal-footer d-flex justify-content-between">
+                                                <span class="small text-secondary">
+                                                    Applicant: <strong>{{ $profile->user->name }}</strong> ({{ $profile->student_id_number }})
+                                                </span>
+                                                <div class="d-flex gap-2">
+                                                    <a href="{{ route('fassg.verification.documents.show', [$application, $document]) }}"
+                                                        target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">
+                                                        <i class="bi bi-box-arrow-up-right me-1"></i> Open in New Tab
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             @endif
                         </div>
                     @endforeach
                 </div>
             </div>
 
-            <!-- Verification Action Box -->
-            <div class="card border-0 shadow-sm bg-light position-sticky" style="top:5.5rem;">
+            {{-- Decision Controls --}}
+            <div class="card border-0 shadow-sm bg-light action-card">
                 <div class="card-body p-4">
-                    <h2 class="h5 sf-heading mb-1">Verification Actions</h2>
-                    <p class="small text-secondary mb-4">Confirm the evidence before advancing this application.</p>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h2 class="h5 sf-heading mb-0">Decision Controls</h2>
+                            <p class="small text-secondary mb-0">Review decision and slot reservation</p>
+                        </div>
+                        <span class="badge {{ $program->available_slots > 0 ? 'bg-success-subtle text-success-emphasis' : 'bg-danger-subtle text-danger-emphasis' }} border px-2 py-1">
+                            {{ $program->available_slots }} slot{{ $program->available_slots !== 1 ? 's' : '' }} left
+                        </span>
+                    </div>
 
-                    @if ($isPending)
-                        <!-- Approve Form -->
-                        <form method="POST" action="{{ route('fassg.verification.verify', $application) }}">
-                            @csrf
-                            @method('PATCH')
+                    @if ($canAct)
+                        {{-- ── 1. APPROVE & RESERVE SLOT ACTION ── --}}
+                        <div class="mb-4">
+                            @if ($program->available_slots > 0)
+                                <form method="POST" action="{{ route('fassg.verification.approve', $application) }}"
+                                    onsubmit="return confirm('Confirm approval: This will approve {{ addslashes($profile->user->name) }} and decrement 1 available slot from {{ addslashes($program->program_name) }}. Continue?');">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="btn btn-approve w-100 py-2 mb-2 d-flex align-items-center justify-content-center gap-2">
+                                        <i class="bi bi-check2-circle fs-5"></i>
+                                        <span>Approve &amp; Reserve Slot</span>
+                                    </button>
+                                </form>
+                                <p class="small text-muted mb-0">
+                                    <i class="bi bi-shield-check me-1 text-success"></i>
+                                    Decrements available slots from <strong>{{ $program->available_slots }}</strong> to <strong>{{ $program->available_slots - 1 }}</strong> upon confirmation.
+                                </p>
+                            @else
+                                <div class="alert alert-danger small mb-0">
+                                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                                    <strong>Program Slots Exhausted:</strong> There are no available slots remaining on this program. New approvals are blocked until more slots are allocated.
+                                </div>
+                            @endif
+                        </div>
 
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" role="switch" id="grades_verified"
-                                    name="grades_verified" value="1" required>
-                                <label class="form-check-label small fw-semibold text-dark" for="grades_verified">
-                                    Grade slip matches submitted GWA
-                                </label>
+                        {{-- Intermediate verification option if currently pending --}}
+                        @if ($isPending)
+                            <div class="p-3 bg-white border rounded-3 mb-4">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="small fw-semibold text-dark">
+                                        <i class="bi bi-patch-check me-1" style="color:#0F2942;"></i> Mark as Verified Only
+                                    </span>
+                                    <span class="badge text-bg-light border">Step-by-step</span>
+                                </div>
+                                <p class="small text-secondary mb-3">
+                                    If you want to formally verify submitted documents without reserving a slot yet:
+                                </p>
+                                <form method="POST" action="{{ route('fassg.verification.verify', $application) }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="btn btn-sm btn-navy-primary w-100">
+                                        <i class="bi bi-patch-check me-1"></i> Mark Documents Verified
+                                    </button>
+                                </form>
                             </div>
+                        @endif
 
-                            <div class="form-check form-switch mb-4">
-                                <input class="form-check-input" type="checkbox" role="switch" id="address_verified"
-                                    name="address_verified" value="1" required>
-                                <label class="form-check-label small fw-semibold text-dark" for="address_verified">
-                                    Proof of residence and barangay certificate match the given address
-                                </label>
-                            </div>
+                        <hr class="my-3">
 
-                            <button type="submit" class="btn btn-navy-primary w-100 py-2 shadow-sm fw-semibold">
-                                <i class="bi bi-check2-circle me-1"></i> Mark Verified &amp; Approve Application
-                            </button>
-                        </form>
-
-                        <hr class="my-4">
-
-                        <!-- Reject Form -->
-                        <form method="POST" action="{{ route('fassg.verification.reject', $application) }}">
-                            @csrf
-                            @method('PATCH')
-
-                            <div class="mb-3">
-                                <label class="form-label small fw-semibold" for="reason">Reason for Rejection</label>
-                                <input type="text" class="form-control" id="reason" name="reason"
-                                    placeholder="Describe what needs correction" required>
-                            </div>
-
-                            <button type="submit" class="btn btn-outline-danger w-100 fw-semibold">
+                        {{-- ── 2. REJECT APPLICATION ACTION (Mandatory Reason) ── --}}
+                        <div>
+                            <h3 class="h6 fw-bold text-danger mb-2">
                                 <i class="bi bi-x-circle me-1"></i> Reject Application
-                            </button>
-                        </form>
+                            </h3>
+                            <p class="small text-secondary mb-3">
+                                Provide a mandatory explanation so the student understands why their application was rejected.
+                            </p>
+
+                            <form method="POST" action="{{ route('fassg.verification.reject', $application) }}"
+                                onsubmit="return confirm('Are you sure you want to reject this application? This action cannot be undone.');">
+                                @csrf
+                                @method('PATCH')
+
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold text-dark" for="reason">
+                                        Rejection Reason <span class="text-danger">*</span>
+                                    </label>
+                                    <textarea class="form-control" id="reason" name="reason" rows="3"
+                                        placeholder="Enter the specific reason for rejecting this application (e.g., Incomplete grade slip, does not meet residency requirement, or year level mismatch)..."
+                                        required maxlength="500">{{ old('reason') }}</textarea>
+                                    <div class="form-text small text-secondary">
+                                        Mandatory. The student will be notified of this reason.
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-outline-danger w-100 fw-semibold">
+                                    <i class="bi bi-x-octagon me-1"></i> Reject Application
+                                </button>
+                            </form>
+                        </div>
+
                     @else
-                        <div class="alert alert-secondary mb-0">
-                            <i class="bi bi-info-circle me-1"></i> This application is already
-                            <strong>{{ $status }}</strong> and no longer accepts FASSG decisions.
+                        {{-- Application Already Finalized --}}
+                        <div class="alert {{ $application->status === \App\Enums\ApplicationStatus::Approved ? 'alert-success' : 'alert-secondary' }} mb-0">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <i class="bi {{ $application->status === \App\Enums\ApplicationStatus::Approved ? 'bi-check-circle-fill text-success' : 'bi-info-circle' }} fs-5"></i>
+                                <strong>Status: {{ $status }}</strong>
+                            </div>
+                            <p class="small mb-0">
+                                This application is marked as <strong>{{ $status }}</strong> and no further review decisions can be submitted.
+                            </p>
                         </div>
                     @endif
 
                     <div class="small text-secondary mt-4 pt-3 border-top">
-                        <i class="bi bi-shield-check me-1"></i> FASSG verification advances the application for sponsor
-                        review. Final beneficiary confirmation remains with the sponsor.
+                        <i class="bi bi-info-circle me-1"></i>
+                        Approving reserves the program slot and registers the student for beneficiary processing.
                     </div>
                 </div>
             </div>

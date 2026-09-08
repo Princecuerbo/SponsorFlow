@@ -139,24 +139,21 @@
                             <tbody>
                                 @forelse ($slotUtilization ?? [] as $program)
                                     @php
-                                        $filled = $program['filled_slots'] ?? 0;
-                                        $available = $program['available_slots'] ?? 0;
-                                        $totalSlots =
-                                            $program['total_slots'] > 0
-                                                ? $program['total_slots']
-                                                : $filled + $available;
-                                        $pct = $totalSlots > 0 ? round(($filled / $totalSlots) * 100) : 0;
+                                        $filled = $program->filled_slots;
+                                        $available = $program->available_slots;
+                                        $totalSlots = $program->total_slots;
                                     @endphp
                                     <tr>
-                                        <td>{{ $program['program_name'] }}</td>
+                                        <td>{{ $program->program_name }}</td>
                                         <td style="min-width: 220px;">
                                             <div class="d-flex justify-content-between small mb-1">
-                                                <span>{{ $pct }}%</span>
+                                                <span>{{ $program->utilization }}%</span>
                                                 <span
-                                                    class="text-secondary">{{ $filled }}/{{ $totalSlots }}</span>
+                                                    class="text-secondary">{{ $program->filled_slots }}/{{ $program->total_slots }}</span>
                                             </div>
                                             <div class="progress" style="height: 6px;">
-                                                <div class="progress-bar bg-primary" style="width: {{ min(100, $pct) }}%">
+                                                <div class="progress-bar bg-primary"
+                                                    style="width: {{ min(100, $program->utilization) }}%">
                                                 </div>
                                             </div>
                                         </td>
@@ -213,12 +210,38 @@
                     <h2 class="h6 sf-heading mb-3">Demographic Distribution</h2>
                     <div class="mb-4">
                         <div class="small fw-semibold mb-2">Gender</div>
-                        @forelse ($genderDistribution ?? [] as $label => $count)
+                        @php
+                            $genderDistribution = $genderDistribution ?? $demographics['by_gender'] ?? [];
+                            $maleCount = (int) ($genderDistribution['Male'] ?? $genderDistribution['male'] ?? 0);
+                            $femaleCount = (int) ($genderDistribution['Female'] ?? $genderDistribution['female'] ?? 0);
+                            $genderKnown = $maleCount > 0 || $femaleCount > 0 || (is_array($genderDistribution) && count($genderDistribution) > 0);
+                        @endphp
+                        @if ($genderKnown)
                             <div class="d-flex justify-content-between small py-1 border-bottom">
-                                <span>{{ $label }}</span><span class="fw-semibold">{{ $count }}</span>
+                                <span>Male</span><span class="fw-semibold">{{ $maleCount }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between small py-1 border-bottom">
+                                <span>Female</span><span class="fw-semibold">{{ $femaleCount }}</span>
+                            </div>
+                            @foreach ($genderDistribution as $label => $count)
+                                @if (! in_array(strtolower((string) $label), ['male', 'female'], true))
+                                    <div class="d-flex justify-content-between small py-1 border-bottom">
+                                        <span>{{ $label }}</span><span class="fw-semibold">{{ $count }}</span>
+                                    </div>
+                                @endif
+                            @endforeach
+                        @else
+                            <div class="text-secondary small">No data available.</div>
+                        @endif
+                    </div>
+                    <div class="mb-4">
+                        <div class="small fw-semibold mb-2">Campus</div>
+                        @forelse ($campusDistribution ?? $demographics['by_campus'] ?? [] as $campus => $count)
+                            <div class="d-flex justify-content-between small py-1 border-bottom">
+                                <span>{{ $campus }}</span><span class="fw-semibold">{{ $count }}</span>
                             </div>
                         @empty
-                            <div class="text-secondary small">Not tracked.</div>
+                            <div class="text-secondary small">No data available.</div>
                         @endforelse
                     </div>
                     <div>

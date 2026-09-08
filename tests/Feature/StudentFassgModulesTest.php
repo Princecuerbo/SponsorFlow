@@ -556,6 +556,7 @@ class StudentFassgModulesTest extends TestCase
             'student_id_number' => '2024-00111',
             'course' => $profile->course,
             'year_level' => 3,
+            'campus' => 'Main Campus (City of Mati)',
         ]);
 
         $item = FixedListItem::query()->first();

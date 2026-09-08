@@ -61,6 +61,32 @@
                         @endif
                     </span>
                 </li>
+                @php
+                    $eligibleYearLevels = $program->eligible_year_levels ?? [];
+                @endphp
+                <li class="d-flex justify-content-between gap-3 py-1 border-bottom">
+                    <span class="text-secondary">Target year level</span>
+                    <span class="fw-semibold text-end text-break">
+                        @if (!empty($eligibleYearLevels))
+                            {{ implode(', ', array_map(fn($y) => "Year {$y}", (array) $eligibleYearLevels)) }}
+                        @else
+                            <span class="text-success fw-semibold">All Year Levels</span>
+                        @endif
+                    </span>
+                </li>
+                @php
+                    $eligibleCampuses = $program->eligible_campuses ?? [];
+                @endphp
+                <li class="d-flex justify-content-between gap-3 py-1 border-bottom">
+                    <span class="text-secondary">Target campus</span>
+                    <span class="fw-semibold text-end text-break">
+                        @if (!empty($eligibleCampuses))
+                            {{ implode(', ', (array) $eligibleCampuses) }}
+                        @else
+                            <span class="text-success fw-medium">All Campuses Allowed</span>
+                        @endif
+                    </span>
+                </li>
                 @if ($program->address_requirement)
                     <li class="d-flex justify-content-between gap-3 py-1">
                         <span class="text-secondary">Address requirement</span>
@@ -91,7 +117,9 @@
                     </button>
                 @else
                     <a href="{{ route('student.applications.create', ['sponsorshipProgram' => $program->id]) }}"
-                        class="btn btn-navy-primary btn-sm w-100 fw-semibold">
+                        class="btn btn-navy-primary btn-sm w-100 fw-semibold apply-now-btn"
+                        data-check-url="{{ route('api.programs.check-eligibility', ['sponsorshipProgram' => $program->id]) }}"
+                        data-apply-url="{{ route('student.applications.create', ['sponsorshipProgram' => $program->id]) }}">
                         <i class="bi bi-pencil-square me-1"></i>Apply Now
                     </a>
                 @endif

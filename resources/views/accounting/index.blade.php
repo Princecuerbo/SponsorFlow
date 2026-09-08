@@ -75,16 +75,25 @@
     <div class="card sf-card mb-4 no-print">
         <div class="card-body p-3">
             <form method="GET" action="{{ route('accounting.beneficiaries.index') }}" class="row g-2">
+<div class="col-md-3">
+                    <select name="sponsorship_program_id" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Sponsorship Programs</option>
+                        @foreach ($programs as $program)
+                            <option value="{{ $program->id }}" @selected((int) request('sponsorship_program_id') === (int) $program->id)>
+                                {{ $program->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="col-md-3">
                     <select name="academic_program_id" class="form-select" onchange="this.form.submit()">
-                        <option value="">All academic programs</option>
+                        <option value="">All Academic Courses</option>
                         @foreach ($academicPrograms as $academicProgram)
                             <option value="{{ $academicProgram->program_id }}" @selected((int) request('academic_program_id') === (int) $academicProgram->program_id)>
                                 {{ $academicProgram->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-6">
                     <div class="input-group">
                         <span class="input-group-text bg-white border-end-0">
                             <i class="bi bi-search text-secondary"></i>
@@ -106,6 +115,7 @@
                         <th class="ps-4">Student ID Number</th>
                         <th>Full Name</th>
                         <th>Course &amp; Year</th>
+                        <th>Campus</th>
                         <th>Program &amp; Category</th>
                         <th>Sponsor / Organization</th>
                         <th>GWA / GPA</th>
@@ -122,6 +132,7 @@
                             <td>{{ $beneficiary['course'] }}<div class="small text-secondary">Year
                                     {{ $beneficiary['year_level'] }}</div>
                             </td>
+                            <td>{{ $beneficiary['campus'] ?: 'N/A' }}</td>
                             <td>{{ $beneficiary['program'] }}<div class="small text-secondary">
                                     {{ $beneficiary['category'] }}</div>
                             </td>
@@ -150,7 +161,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="text-center text-secondary py-5"><i
+                            <td colspan="10" class="text-center text-secondary py-5"><i
                                     class="bi bi-inbox fs-2 d-block mb-2"></i>No approved beneficiaries found.</td>
                         </tr>
                     @endforelse

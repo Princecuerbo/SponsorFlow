@@ -20,6 +20,7 @@ class FixedListItem extends Model
         'student_id_number',
         'course',
         'year_level',
+        'campus',
         'is_sle_fhe_verified',
         'status',
     ];

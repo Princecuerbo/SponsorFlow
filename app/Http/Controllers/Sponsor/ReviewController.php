@@ -53,13 +53,38 @@ class ReviewController extends Controller
     {
         $sponsor = $this->sponsorOrganization($request);
 
-        $applicants = Application::query()
+        $baseApplicants = Application::query()
             ->whereHas('sponsorshipProgram', fn($query) => $query
                 ->where('sponsor_id', $sponsor->id)
                 ->where('status', '!=', ProgramStatus::Expired))
-            ->where('status', ApplicationStatus::Verified)
+            ->where('status', ApplicationStatus::Verified);
+
+        // Dropdown options always come from master reference data so they are never
+        // emptied out by an active filter (an empty result set still shows all options).
+        $courses = AcademicProgram::query()
+            ->where('is_active', true)
+            ->orderBy('code')
+            ->get()
+            ->mapWithKeys(fn ($ap) => [$ap->name => "{$ap->code} — {$ap->name}"])
+            ->all();
+
+        $campuses = [
+            'Main Campus (City of Mati)',
+            'Baganga Campus',
+            'Banaybanay Campus',
+            'Cateel Campus',
+            'San Isidro Campus',
+            'Tarragona Campus',
+        ];
+
+        $programs = $sponsor->sponsorshipPrograms()
+            ->orderBy('program_name')
+            ->get(['id', 'program_name']);
+
+        $applicants = (clone $baseApplicants)
+            ->when($request->filled('sponsorship_program_id'), fn($query) => $query->where('sponsorship_program_id', $request->integer('sponsorship_program_id')))
             ->when($request->filled('course'), fn($query) => $query->whereHas('studentProfile', fn($profileQuery) => $profileQuery->where('course', $request->string('course'))))
-            ->when($request->filled('academic_program_id'), fn($query) => $query->whereHas('studentProfile', fn($profileQuery) => $profileQuery->where('academic_program_id', $request->integer('academic_program_id'))))
+            ->when($request->filled('campus'), fn($query) => $query->whereHas('studentProfile', fn($profileQuery) => $profileQuery->where('campus', $request->string('campus'))))
             ->with(['studentProfile.user', 'sponsorshipProgram'])
             ->latest('submitted_at')
             ->get();
@@ -71,19 +96,14 @@ class ReviewController extends Controller
             ->latest()
             ->get();
 
-        $courses = $applicants->pluck('studentProfile.course')->filter()->unique()->values();
-        $academicPrograms = AcademicProgram::query()
-            ->where('is_active', true)
-            ->orderBy('name')
-            ->get();
-
         return view('sponsor.approvals.index', [
             'user' => $this->actor($request),
             'sponsor' => $sponsor,
             'applicants' => $applicants,
             'fixedLists' => $fixedLists,
             'courses' => $courses,
-            'academicPrograms' => $academicPrograms,
+            'campuses' => $campuses,
+            'programs' => $programs,
         ]);
     }
 

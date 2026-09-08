@@ -89,7 +89,15 @@
                     <tbody>
                         @foreach ($programs as $program)
                             <tr>
-                                <td class="ps-4 fw-semibold">{{ $program->program_name }}</td>
+                                <td class="ps-4 fw-semibold">
+                                    <div>{{ $program->program_name }}</div>
+                                    @if ($program->requires_relative_verification)
+                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle mt-1"
+                                            style="font-weight: 500;">
+                                            <i class="bi bi-person-badge me-1"></i>Relative worker verification
+                                        </span>
+                                    @endif
+                                </td>
                                 <td class="text-secondary">{{ $program->sponsor->company_organization_name }}</td>
                                 <td>
                                     <span class="badge rounded-2 px-2.5 py-1.5 fw-medium"
@@ -97,7 +105,11 @@
                                         {{ $program->category?->value ?? $program->category }}
                                     </span>
                                 </td>
-                                <td>{{ $program->available_slots }}</td>
+                                <td>
+                                    <span class="fw-semibold">{{ $program->available_slots }}</span>
+                                    <span class="text-secondary">/</span>
+                                    <span class="text-secondary">{{ $program->total_slots }}</span>
+                                </td>
                                 <td>{{ $program->min_gpa ? number_format($program->min_gpa, 2) : '—' }}</td>
                                 <td>
                                     @php
@@ -116,7 +128,7 @@
                                         </span>
                                     @elseif($statusLower === 'expired')
                                         <span
-                                            class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2 py-1">
+                                            class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">
                                             <i class="bi bi-clock-history me-1"></i> Expired
                                         </span>
                                     @else
@@ -131,7 +143,7 @@
                                         <form method="POST" action="{{ route('fassg.programs.toggle-status', $program) }}"
                                             class="d-inline">
                                             @csrf @method('PATCH')
-                                            <button type="submit" class="btn btn-sm btn-outline-secondary"
+                                            <button type="submit" class="btn btn-sm btn-outline-warning"
                                                 data-bs-toggle="tooltip" title="Close this program">
                                                 <i class="bi bi-lock"></i>
                                             </button>
@@ -141,7 +153,7 @@
                                             class="d-inline">
                                             @csrf @method('PATCH')
                                             <button type="submit" class="btn btn-sm btn-outline-success"
-                                                data-bs-toggle="tooltip" title="Reopen Program">
+                                                data-bs-toggle="tooltip" title="Reopen this program">
                                                 <i class="bi bi-unlock"></i>
                                             </button>
                                         </form>
@@ -158,7 +170,8 @@
                                         </form>
                                     @endif
                                     <a href="{{ route('fassg.programs.edit', $program) }}"
-                                        class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="Edit">
+                                        class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip"
+                                        title="Edit program criteria">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                 </td>

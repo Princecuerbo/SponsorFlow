@@ -79,8 +79,15 @@ class ProgramManagementController extends Controller
 
     public function store(StoreSponsorshipProgramRequest $request): RedirectResponse
     {
+        $slots = (int) $request->validated('total_slots');
+
         $program = SponsorshipProgram::query()->create([
             ...$request->validated(),
+            'total_slots' => $slots,
+            'available_slots' => $slots,
+            'requires_relative_verification' => $request->boolean('requires_relative_verification'),
+            'eligible_campuses' => $request->validated('eligible_campuses') ?? [],
+            'required_documents' => $request->validated('required_documents') ?? [],
             'status' => ProgramStatus::Open,
         ]);
 
@@ -98,6 +105,9 @@ class ProgramManagementController extends Controller
         return view('fassg.programs.edit', [
             'user' => $this->actor($request),
             'program' => $sponsorshipProgram,
+            'approvedCount' => $sponsorshipProgram->applications()
+                ->where('status', ApplicationStatus::Approved)
+                ->count(),
             'sponsors' => $this->availableSponsors(),
             'academicPrograms' => $this->availableAcademicPrograms(),
         ]);
@@ -119,6 +129,15 @@ class ProgramManagementController extends Controller
             } elseif ($shouldExpire) {
                 $attributes['status'] = ProgramStatus::Expired;
             }
+
+            $attributes['requires_relative_verification'] = $request->boolean('requires_relative_verification');
+            $attributes['eligible_campuses'] = $request->validated('eligible_campuses') ?? [];
+            $attributes['required_documents'] = $request->validated('required_documents') ?? [];
+
+            $approvedCount = $sponsorshipProgram->applications()
+                ->where('status', ApplicationStatus::Approved)
+                ->count();
+            $attributes['available_slots'] = max(0, (int) $attributes['total_slots'] - $approvedCount);
 
             $sponsorshipProgram->update($attributes);
 

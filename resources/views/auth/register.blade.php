@@ -207,7 +207,25 @@
                                 </div>
                             </div>
 
-                            <!-- Row 3: Passwords -->
+                            <!-- Row 3: Contact Number -->
+                            <div class="row g-2.5 mb-3">
+                                <div class="col-md-6">
+                                    <label for="contact_number"
+                                        class="form-label small fw-semibold text-secondary mb-1">Contact Number *</label>
+                                    <input type="tel" id="contact_number" name="contact_number"
+                                        class="form-control form-control-md bg-light border-1 @error('contact_number') is-invalid @enderror"
+                                        value="{{ old('contact_number') }}" placeholder="09123456789" required
+                                        pattern="09[0-9]{9}" maxlength="11" inputmode="numeric" autocomplete="tel"
+                                        data-mask-contact-number title="Format: 09123456789"
+                                        style="font-size: 0.875rem; border-radius: 8px;">
+                                    <div class="form-text" style="font-size: 0.75rem;">Format: 09123456789</div>
+                                    @error('contact_number')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- Row 4: Passwords -->
                             <div class="row g-2.5">
                                 <div class="col-md-6">
                                     <label for="password" class="form-label small fw-semibold text-secondary mb-1">Password
@@ -246,14 +264,38 @@
                             </div>
 
                             <div class="row g-2.5 mb-3">
-                                <div class="col-md-8">
+                                <div class="col-md-4">
                                     <label for="student_id_number"
                                         class="form-label small fw-semibold text-secondary mb-1">Student ID Number
                                         *</label>
                                     <input type="text" id="student_id_number" name="student_id_number"
-                                        class="form-control form-control-md bg-light border-1"
-                                        value="{{ old('student_id_number') }}" placeholder="2024-00001" required
+                                        class="form-control form-control-md bg-light border-1 @error('student_id_number') is-invalid @enderror"
+                                        value="{{ old('student_id_number') }}" placeholder="2024-0001" required
+                                        pattern="[0-9]{4}-[0-9]{4}" maxlength="10" inputmode="numeric"
+                                        autocomplete="off" data-mask-student-id
+                                        title="Format: 2024-0001 (4 digits, hyphen, 4 digits)"
                                         style="font-size: 0.875rem; border-radius: 8px;">
+                                    <div class="form-text" style="font-size: 0.75rem;">Format: 2024-0001</div>
+                                    @error('student_id_number')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="campus"
+                                        class="form-label small fw-semibold text-secondary mb-1">Campus *</label>
+                                    <select id="campus" name="campus"
+                                        class="form-select form-select-md bg-light border-1 @error('campus') is-invalid @enderror"
+                                        required style="font-size: 0.875rem; border-radius: 8px;">
+                                        <option value="" disabled selected>-- Select Campus --</option>
+                                        @foreach (['Main Campus (City of Mati)', 'Baganga Campus', 'Banaybanay Campus', 'Cateel Campus', 'San Isidro Campus', 'Tarragona Campus'] as $campusOption)
+                                            <option value="{{ $campusOption }}" @selected(old('campus') === $campusOption)>
+                                                {{ $campusOption }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('campus')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="col-md-4">
                                     <label for="year_level" class="form-label small fw-semibold text-secondary mb-1">Year
@@ -310,46 +352,76 @@
 
                             <div class="row g-2.5 mb-3">
                                 <div class="col-md-6">
+                                    <label for="province"
+                                        class="form-label small fw-semibold text-secondary mb-1">Province *</label>
+                                    <select id="province" name="province"
+                                        class="form-select form-select-md bg-light border-1 @error('province') is-invalid @enderror"
+                                        required style="font-size: 0.875rem; border-radius: 8px;">
+                                        <option value="" disabled selected>-- Select Province --</option>
+                                    </select>
+                                    @error('province')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
                                     <label for="municipality"
                                         class="form-label small fw-semibold text-secondary mb-1">Municipality / City *</label>
                                     <select id="municipality" name="municipality"
                                         class="form-select form-select-md bg-light border-1 @error('municipality') is-invalid @enderror"
                                         required style="font-size: 0.875rem; border-radius: 8px;">
                                         <option value="" disabled selected>-- Select Municipality / City --</option>
-                                        <option value="Mati City" @selected(old('municipality') == 'Mati City')>Mati City (Capital)</option>
-                                        <option value="Baganga" @selected(old('municipality') == 'Baganga')>Baganga</option>
-                                        <option value="Banaybanay" @selected(old('municipality') == 'Banaybanay')>Banaybanay</option>
-                                        <option value="Boston" @selected(old('municipality') == 'Boston')>Boston</option>
-                                        <option value="Caraga" @selected(old('municipality') == 'Caraga')>Caraga</option>
-                                        <option value="Cateel" @selected(old('municipality') == 'Cateel')>Cateel</option>
-                                        <option value="Governor Generoso" @selected(old('municipality') == 'Governor Generoso')>Governor Generoso</option>
-                                        <option value="Lupon" @selected(old('municipality') == 'Lupon')>Lupon</option>
-                                        <option value="Manay" @selected(old('municipality') == 'Manay')>Manay</option>
-                                        <option value="San Isidro" @selected(old('municipality') == 'San Isidro')>San Isidro</option>
-                                        <option value="Tarragona" @selected(old('municipality') == 'Tarragona')>Tarragona</option>
                                     </select>
                                     @error('municipality')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+                            </div>
+
+                            <div class="row g-2.5 mb-3">
                                 <div class="col-md-6">
-                                    <label for="address" class="form-label small fw-semibold text-secondary mb-1">Home
-                                        Address *</label>
-                                    <input type="text" id="address" name="address"
-                                        class="form-control form-control-md bg-light border-1"
-                                        value="{{ old('address') }}" placeholder="Barangay / Street / Purok" required
+                                    <label for="barangay"
+                                        class="form-label small fw-semibold text-secondary mb-1">Barangay *</label>
+                                    <input type="text" id="barangay" name="barangay"
+                                        class="form-control form-control-md bg-light border-1 @error('barangay') is-invalid @enderror"
+                                        value="{{ old('barangay') }}" placeholder="Barangay" required
                                         style="font-size: 0.875rem; border-radius: 8px;">
+                                    @error('barangay')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="home_address"
+                                        class="form-label small fw-semibold text-secondary mb-1">Street / Purok / House
+                                        No. *</label>
+                                    <input type="text" id="home_address" name="home_address"
+                                        class="form-control form-control-md bg-light border-1 @error('home_address') is-invalid @enderror"
+                                        value="{{ old('home_address') }}" placeholder="Street / Purok / House No."
+                                        required style="font-size: 0.875rem; border-radius: 8px;">
+                                    @error('home_address')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
-                            <div class="form-check m-0">
-                                <input class="form-check-input" type="checkbox" id="is_rural" name="is_rural"
-                                    value="1" @checked(old('is_rural')) style="cursor: pointer;">
-                                <label class="form-check-label small text-secondary fw-medium" for="is_rural"
-                                    style="cursor: pointer; font-size: 0.825rem;">
-                                    I reside in a rural barangay
-                                </label>
+                            <div class="small text-secondary d-flex align-items-center gap-1"
+                                style="font-size: 0.8rem;">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                Your residence is automatically classified as rural or urban for FASSG eligibility.
                             </div>
+                        </div>
+
+                        <!-- Data Privacy Act Consent -->
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="privacy_consent" name="privacy_consent"
+                                value="1" @checked(old('privacy_consent')) required style="cursor: pointer;">
+                            <label class="form-check-label small text-secondary fw-medium" for="privacy_consent"
+                                style="cursor: pointer; font-size: 0.825rem;">
+                                I certify that all information provided is accurate and consent to FASSG verifying my
+                                SLE-FHE records under the Data Privacy Act.
+                            </label>
+                            @error('privacy_consent')
+                                <div class="text-danger small mt-1">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <!-- Register Submit Button -->
@@ -403,6 +475,87 @@
 
             setupPasswordToggle('password-toggle', 'password');
             setupPasswordToggle('password-confirm-toggle', 'password_confirmation');
+
+            // Strict Student ID masking: allow up to 4 digits, auto-insert hyphen, then up to 4 digits
+            document.querySelectorAll('[data-mask-student-id]').forEach(function (input) {
+                const maskStudentId = function () {
+                    const digits = input.value.replace(/\D/g, '').slice(0, 8);
+                    input.value = digits.length > 4
+                        ? digits.slice(0, 4) + '-' + digits.slice(4)
+                        : digits;
+                };
+                input.addEventListener('input', maskStudentId);
+            });
+
+            // Contact number masking: strip to the first 11 digits (09123456789)
+            document.querySelectorAll('[data-mask-contact-number]').forEach(function (input) {
+                input.addEventListener('input', function () {
+                    input.value = input.value.replace(/\D/g, '').slice(0, 11);
+                });
+            });
+
+            // Province -> Municipality address chain (from localaddress lookup API)
+            const provinceSelect = document.getElementById('province');
+            const municipalitySelect = document.getElementById('municipality');
+            if (provinceSelect && municipalitySelect) {
+                const DEFAULT_PROVINCE = 'Davao Oriental';
+                const OLD_PROVINCE = @json(old('province'));
+                const OLD_MUNICIPALITY = @json(old('municipality'));
+                const ENDPOINT = @json(route('api.address.lookup'));
+
+                const fetchJSON = function (url) {
+                    return fetch(url, { headers: { 'Accept': 'application/json' } })
+                        .then(function (res) {
+                            if (!res.ok) throw new Error('HTTP ' + res.status);
+                            return res.json();
+                        });
+                };
+
+                const loadMunicipalities = function () {
+                    const province = provinceSelect.value;
+                    municipalitySelect.innerHTML = '<option value="" disabled selected>-- Select Municipality / City --</option>';
+                    municipalitySelect.disabled = province ? false : true;
+                    if (!province) return;
+                    return fetchJSON(ENDPOINT + '?type=municipalities&province=' + encodeURIComponent(province))
+                        .then(function (cities) {
+                            cities.forEach(function (city) {
+                                const opt = document.createElement('option');
+                                opt.value = city;
+                                opt.textContent = city;
+                                municipalitySelect.appendChild(opt);
+                            });
+                            if (OLD_MUNICIPALITY && cities.indexOf(OLD_MUNICIPALITY) !== -1) {
+                                municipalitySelect.value = OLD_MUNICIPALITY;
+                            }
+                        });
+                };
+
+                const loadProvinces = function () {
+                    return fetchJSON(ENDPOINT + '?type=provinces')
+                        .then(function (provinces) {
+                            provinces.forEach(function (p) {
+                                const opt = document.createElement('option');
+                                opt.value = p;
+                                opt.textContent = p;
+                                provinceSelect.appendChild(opt);
+                            });
+                            provinceSelect.value = OLD_PROVINCE && provinces.indexOf(OLD_PROVINCE) !== -1
+                                ? OLD_PROVINCE
+                                : (provinces.indexOf(DEFAULT_PROVINCE) !== -1 ? DEFAULT_PROVINCE : provinces[0] || '');
+                            return loadMunicipalities();
+                        })
+                        .catch(function () {
+                            /* leave selects empty; native 'required' will block submission */
+                        });
+                };
+
+                provinceSelect.addEventListener('change', function () {
+                    municipalitySelect.disabled = true;
+                    loadMunicipalities();
+                });
+
+                loadProvinces();
+            }
         });
     </script>
 @endpush

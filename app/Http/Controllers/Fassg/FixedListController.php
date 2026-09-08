@@ -151,6 +151,7 @@ class FixedListController extends Controller
             'student_id_number' => ['required', 'string', 'max:50'],
             'course' => ['required', 'string', 'max:150'],
             'year_level' => ['required', 'integer', 'min:1', 'max:5'],
+            'campus' => ['required', 'string', 'max:150'],
         ]);
 
         $fixedList = FixedList::query()->findOrFail($validated['fixed_list_id']);
@@ -306,6 +307,9 @@ class FixedListController extends Controller
                     'student_name' => trim((string) ($record['student_name'] ?? $record['name'] ?? 'Unknown')),
                     'course' => trim((string) ($record['course'] ?? 'Unspecified')),
                     'year_level' => (int) ($record['year_level'] ?? $record['year'] ?? 1),
+                    'campus' => blank($record['campus'] ?? null)
+                        ? null
+                        : trim((string) $record['campus']),
                     'is_sle_fhe_verified' => false,
                     'status' => FixedListItemStatus::Pending,
                 ],

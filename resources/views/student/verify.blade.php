@@ -52,7 +52,7 @@
                         <dd class="col-sm-8 py-2 mb-0 border-top">Year {{ $profile->year_level }}</dd>
 
                         <dt class="col-sm-4 text-secondary fw-normal small py-2 border-top">Address</dt>
-                        <dd class="col-sm-8 py-2 mb-0 border-top">{{ $profile->address ?? '—' }}</dd>
+                        <dd class="col-sm-8 py-2 mb-0 border-top">{{ $profile->full_address ?? '—' }}</dd>
 
                         <dt class="col-sm-4 text-secondary fw-normal small py-2 border-top">Barangay</dt>
                         <dd class="col-sm-8 py-2 mb-0 border-top">{{ $profile->barangay ?? '—' }}</dd>

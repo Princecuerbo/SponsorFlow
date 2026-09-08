@@ -19,6 +19,7 @@
         @include('fassg.programs._form', [
             'action' => route('fassg.programs.update', $program),
             'method' => 'PUT',
+            'approvedCount' => $approvedCount ?? 0,
         ])
     </div>
 @endsection

@@ -69,24 +69,32 @@
         <div class="card-body p-3">
             <form method="GET" action="{{ route('sponsor.approvals.index') }}" class="row g-2">
                 <div class="col-md-4">
-                    <select name="academic_program_id" class="form-select" onchange="this.form.submit()">
-                        <option value="">All academic programs</option>
-                        @foreach ($academicPrograms as $academicProgram)
-                            <option value="{{ $academicProgram->program_id }}" @selected((int) request('academic_program_id') === (int) $academicProgram->program_id)>
-                                {{ $academicProgram->name }}
+                    <select name="sponsorship_program_id" class="form-select" onchange="this.form.submit()">
+                        <option value="">All sponsorship programs</option>
+                        @foreach ($programs as $program)
+                            <option value="{{ $program->id }}" @selected((int) request('sponsorship_program_id') === (int) $program->id)>
+                                {{ $program->program_name }}
                             </option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-md-3">
                     <select name="course" class="form-select" onchange="this.form.submit()">
-                        <option value="">All courses</option>
-                        @foreach ($courses as $course)
-                            <option value="{{ $course }}" @selected(request('course') === $course)>{{ $course }}</option>
+                        <option value="">All academic courses</option>
+                        @foreach ($courses as $courseValue => $courseLabel)
+                            <option value="{{ $courseValue }}" @selected(request('course') === $courseValue)>{{ $courseLabel }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-md-3">
+                    <select name="campus" class="form-select" onchange="this.form.submit()">
+                        <option value="">All campuses</option>
+                        @foreach ($campuses as $campus)
+                            <option value="{{ $campus }}" @selected(request('campus') === $campus)>{{ $campus }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
                     <a href="{{ route('sponsor.approvals.index') }}" class="btn btn-outline-secondary w-100">Clear
                         filters</a>
                 </div>

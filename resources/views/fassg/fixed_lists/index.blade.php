@@ -29,19 +29,6 @@
             box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
         }
 
-        .btn-outline-navy {
-            color: #0F2942 !important;
-            border-color: #0F2942 !important;
-            background-color: transparent !important;
-        }
-
-        .btn-outline-navy:hover,
-        .btn-outline-navy:focus {
-            color: #ffffff !important;
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
-        }
-
         .badge-info-custom {
             background-color: #e0f2fe !important;
             color: #0369a1 !important;
@@ -109,15 +96,15 @@
                                     </span>
                                 @endif
 
-                                <a href="{{ route('fassg.fixed-lists.show', $list) }}" class="btn btn-outline-navy btn-sm"
-                                    title="View and manage fixed list" aria-label="View and manage fixed list">
+                                <a href="{{ route('fassg.fixed-lists.show', $list) }}" class="btn btn-outline-primary btn-sm"
+                                    title="View &amp; Manage Fixed List" aria-label="View &amp; Manage Fixed List">
                                     <i class="bi bi-eye"></i>
                                 </a>
 
                                 @if (in_array($list->status, [\App\Enums\FixedListStatus::Draft, \App\Enums\FixedListStatus::Rejected], true))
                                     <a href="{{ route('fassg.fixed-lists.edit', $list) }}"
-                                        class="btn btn-outline-secondary btn-sm" title="Rename fixed list"
-                                        aria-label="Rename fixed list">
+                                        class="btn btn-outline-secondary btn-sm" title="Rename Fixed List"
+                                        aria-label="Rename Fixed List">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <form method="POST" action="{{ route('fassg.fixed-lists.destroy', $list) }}"
@@ -125,7 +112,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger btn-sm"
-                                            title="Delete fixed list" aria-label="Delete fixed list">
+                                            title="Delete Fixed List" aria-label="Delete Fixed List">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>

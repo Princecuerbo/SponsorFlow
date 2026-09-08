@@ -306,6 +306,11 @@
             border-color: #1e3a8a !important;
             color: #ffffff !important;
         }
+    /* Hide native browser password reveal toggle in Edge/IE */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear {
+            display: none !important;
+        }
     </style>
 
     @stack('styles')

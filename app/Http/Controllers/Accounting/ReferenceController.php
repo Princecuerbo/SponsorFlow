@@ -43,6 +43,10 @@ class ReferenceController extends Controller
             'user' => $this->actor($request),
             'beneficiaries' => $beneficiaries,
             'totalApproved' => count($beneficiaries),
+            'programs' => SponsorshipProgram::query()
+                ->select(['id', 'program_name as name'])
+                ->orderBy('program_name')
+                ->get(),
             'academicPrograms' => \App\Models\AcademicProgram::query()
                 ->where('is_active', true)
                 ->orderBy('name')
@@ -122,6 +126,7 @@ class ReferenceController extends Controller
                 'category',
                 'sponsor',
                 'gwa',
+                'campus',
                 'address',
                 'rurality',
                 'billing_contact',
@@ -141,6 +146,7 @@ class ReferenceController extends Controller
                     $this->sanitizeCsvValue($row['category']),
                     $this->sanitizeCsvValue($row['sponsor']),
                     $this->sanitizeCsvValue($row['gwa']),
+                    $this->sanitizeCsvValue($row['campus']),
                     $this->sanitizeCsvValue($row['address']),
                     $this->sanitizeCsvValue($row['rurality']),
                     $this->sanitizeCsvValue($row['billing_contact']),
@@ -182,11 +188,13 @@ class ReferenceController extends Controller
     private function beneficiaryRows(Request $request): array
     {
         $search = $request->string('q')->trim()->toString();
+        $sponsorshipProgramId = $request->integer('sponsorship_program_id', 0);
         $academicProgramId = $request->integer('academic_program_id', 0);
 
         $approvedApplications = Application::query()
             ->approvedBeneficiaries()
             ->with(['studentProfile.user', 'sponsorshipProgram.sponsor'])
+            ->when($sponsorshipProgramId > 0, fn($query) => $query->where('sponsorship_program_id', $sponsorshipProgramId))
             ->when($academicProgramId > 0, fn($query) => $query->whereHas('studentProfile', fn($profileQuery) => $profileQuery->where('academic_program_id', $academicProgramId)))
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($query) use ($search): void {
@@ -213,6 +221,7 @@ class ReferenceController extends Controller
                     'student_name' => $profile->user->name,
                     'course' => $profile->course,
                     'year_level' => $profile->year_level,
+                    'campus' => $profile->campus,
                     'program' => $program->program_name,
                     'category' => $program->category->value,
                     'sponsor' => $program->sponsor->company_organization_name,
@@ -232,9 +241,12 @@ class ReferenceController extends Controller
 
         $confirmedItems = FixedListItem::query()
             ->where('is_sle_fhe_verified', true)
-            ->whereHas('fixedList', function ($query) use ($academicProgramId): void {
+            ->whereHas('fixedList', function ($query) use ($academicProgramId, $sponsorshipProgramId): void {
                 $query->where('status', FixedListStatus::Approved)
                     ->whereHas('latestApproval', fn($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed));
+                if ($sponsorshipProgramId > 0) {
+                    $query->where('sponsorship_program_id', $sponsorshipProgramId);
+                }
                 if ($academicProgramId > 0) {
                     $query->whereHas('sponsorshipProgram', fn($programQuery) => $programQuery->whereHas('academicPrograms', fn($programFilter) => $programFilter->where('academic_programs.program_id', $academicProgramId)));
                 }
@@ -258,6 +270,7 @@ class ReferenceController extends Controller
                     'student_name' => $item->student_name,
                     'course' => $item->course,
                     'year_level' => $item->year_level,
+                    'campus' => $item->campus,
                     'program' => $program->program_name,
                     'category' => $program->category->value,
                     'sponsor' => $program->sponsor->company_organization_name,

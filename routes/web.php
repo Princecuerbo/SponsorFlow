@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\AuditLogController as AdminAuditLogController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Api\AddressLookupController;
 use App\Http\Controllers\Accounting\DashboardController as AccountingDashboardController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\LogoutController;
@@ -42,6 +43,12 @@ Route::get('/', function () {
 
     return view('welcome', compact('programs'));
 })->name('landing');
+
+Route::get('/api/address/lookup', AddressLookupController::class)->name('api.address.lookup');
+
+Route::middleware(['auth', 'EnsureUserRole:student'])
+    ->get('/api/programs/{sponsorshipProgram}/check-eligibility', [StudentApplicationController::class, 'checkEligibility'])
+    ->name('api.programs.check-eligibility');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [StudentLoginController::class, 'showLoginForm'])->name('login');
@@ -124,10 +131,13 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
         Route::get('/verification/{application}', [FassgVerificationController::class, 'show'])->name('verification.show');
         Route::get('/applications/{application}/documents/{document}', [FassgVerificationController::class, 'viewDocument'])
             ->name('applications.documents.show');
+        Route::get('/verification/{application}/documents/{document}', [FassgVerificationController::class, 'viewDocument'])
+            ->name('verification.documents.show');
         Route::patch('/applications/{application}/verify', [ApplicantVerificationController::class, 'verify'])->name('applications.verify');
         Route::patch('/applications/{application}/reject', [ApplicantVerificationController::class, 'reject'])->name('applications.reject');
         Route::post('/verification/{application}/update', [ApplicantVerificationController::class, 'updateStatus'])->name('verification.update');
         Route::patch('/verification/{application}/verify', [FassgVerificationController::class, 'verify'])->name('verification.verify');
+        Route::patch('/verification/{application}/approve', [FassgVerificationController::class, 'approve'])->name('verification.approve');
         Route::patch('/verification/{application}/reject', [FassgVerificationController::class, 'reject'])->name('verification.reject');
         Route::patch('/verification/{application}/request-revision', [ApplicantVerificationController::class, 'reject'])->name('verification.request-revision');
         Route::get('/applications/{application}/documents/{applicationDocument}', [ApplicantVerificationController::class, 'downloadDocument'])

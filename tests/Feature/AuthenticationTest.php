@@ -26,17 +26,28 @@ class AuthenticationTest extends TestCase
             'password_confirmation' => 'Password123!',
             'student_id_number' => '2026-00001',
             'academic_program_id' => $program->program_id,
+            'campus' => 'Main Campus (City of Mati)',
+            'contact_number' => '09123456789',
             'year_level' => 2,
             'birthdate' => '2005-01-15',
+            'province' => 'Davao Oriental',
             'municipality' => 'Mati City',
-            'address' => 'Davao Oriental',
-            'is_rural' => 1,
+            'barangay' => 'Central',
+            'home_address' => '123 Rizal St',
         ]);
 
         $response->assertRedirect(route('login'));
         $this->assertGuest();
         $this->assertDatabaseHas('users', ['email' => 'student@dorsu.edu.ph', 'role' => UserRole::Student->value]);
         $this->assertDatabaseHas('student_profiles', ['student_id_number' => '2026-00001', 'is_sle_fhe_verified' => false, 'academic_program_id' => $program->program_id]);
+
+        $profile = StudentProfile::query()->where('student_id_number', '2026-00001')->firstOrFail();
+        $this->assertSame('Davao Oriental', $profile->province);
+        $this->assertSame('Mati City', $profile->municipality);
+        $this->assertSame('Central', $profile->barangay);
+        $this->assertSame('123 Rizal St', $profile->home_address);
+        $this->assertFalse($profile->is_rural, 'Mati City + Central barangay should be classified as urban');
+        $this->assertSame('123 Rizal St, Brgy. Central, Mati City, Davao Oriental', $profile->full_address);
     }
 
     public function test_registration_rejects_non_dorsu_email(): void

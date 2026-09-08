@@ -157,16 +157,11 @@
         </thead>
         <tbody>
             @forelse ($slotUtilization ?? [] as $program)
-                @php
-                    $filled = $program['filled_slots'] ?? 0;
-                    $available = $program['available_slots'] ?? 0;
-                    $totalSlots = ($program['total_slots'] ?? 0) > 0 ? $program['total_slots'] : $filled + $available;
-                @endphp
                 <tr>
-                    <td>{{ $program['program_name'] ?? 'N/A' }}</td>
-                    <td class="text-end">{{ $filled }}</td>
-                    <td class="text-end">{{ $available }}</td>
-                    <td class="text-end">{{ $totalSlots }}</td>
+                    <td>{{ $program->program_name ?? 'N/A' }}</td>
+                    <td class="text-end">{{ $program->filled_slots }}</td>
+                    <td class="text-end">{{ $program->available_slots }}</td>
+                    <td class="text-end">{{ $program->total_slots }}</td>
                 </tr>
             @empty
                 <tr>
@@ -218,14 +213,38 @@
                         <tr>
                             <td colspan="2" style="background-color: #eee; font-weight: bold;">Gender</td>
                         </tr>
-                        @forelse ($genderDistribution ?? [] as $label => $count)
+                        @php
+                            $genderDistribution = $genderDistribution ?? $demographics['by_gender'] ?? [];
+                            $maleCount = (int) ($genderDistribution['Male'] ?? $genderDistribution['male'] ?? 0);
+                            $femaleCount = (int) ($genderDistribution['Female'] ?? $genderDistribution['female'] ?? 0);
+                        @endphp
+                        @if ($maleCount > 0 || $femaleCount > 0)
+                            <tr>
+                                <td>Male</td>
+                                <td class="text-end">{{ $maleCount }}</td>
+                            </tr>
+                            <tr>
+                                <td>Female</td>
+                                <td class="text-end">{{ $femaleCount }}</td>
+                            </tr>
+                        @else
+                            <tr>
+                                <td colspan="2" style="text-align: center; color: #777;">No data available.</td>
+                            </tr>
+                        @endif
+
+                        <!-- Campus -->
+                        <tr>
+                            <td colspan="2" style="background-color: #eee; font-weight: bold;">Campus</td>
+                        </tr>
+                        @forelse ($campusDistribution ?? $demographics['by_campus'] ?? [] as $label => $count)
                             <tr>
                                 <td>{{ $label }}</td>
                                 <td class="text-end">{{ $count }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="2" style="text-align: center; color: #777;">Not tracked.</td>
+                                <td colspan="2" style="text-align: center; color: #777;">No data available.</td>
                             </tr>
                         @endforelse
 

@@ -106,6 +106,13 @@
                                     {{ $isRural ? 'Rural' : 'Urban' }}
                                 </span>
                             </div>
+
+                            <div class="col-6 pb-2 border-bottom">
+                                <span class="text-secondary extra-small text-uppercase d-block mb-1"
+                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">Campus</span>
+                                <span class="fw-semibold text-dark"
+                                    style="font-size: 0.875rem;">{{ $profile?->campus ?? 'Not Assigned' }}</span>
+                            </div>
                         </div>
 
                         <div class="row g-3">
@@ -127,7 +134,7 @@
                                 <span class="text-secondary extra-small text-uppercase d-block mb-1"
                                     style="font-size: 0.7rem; letter-spacing: 0.05em;">Address</span>
                                 <span class="fw-semibold text-dark" style="font-size: 0.875rem;">
-                                    {{ $profile?->address ?? '—' }}
+                                    {{ $profile?->full_address ?? '—' }}
                                 </span>
                             </div>
                             <div class="col-6">

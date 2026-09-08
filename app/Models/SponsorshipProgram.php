@@ -30,6 +30,10 @@ class SponsorshipProgram extends Model
         'min_gpa',
         'target_course',
         'address_requirement',
+        'requires_relative_verification',
+        'eligible_year_levels',
+        'eligible_campuses',
+        'required_documents',
         'end_date',
     ];
 
@@ -44,6 +48,10 @@ class SponsorshipProgram extends Model
             'status' => ProgramStatus::class,
             'available_slots' => 'integer',
             'min_gpa' => 'decimal:2',
+            'requires_relative_verification' => 'boolean',
+            'eligible_year_levels' => 'array',
+            'eligible_campuses' => 'array',
+            'required_documents' => 'array',
             'end_date' => 'date',
         ];
     }
@@ -94,6 +102,24 @@ class SponsorshipProgram extends Model
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class);
+    }
+
+    public function getFilledSlotsAttribute(): int
+    {
+        if (array_key_exists('approved_count', $this->attributes)) {
+            return max(0, (int) $this->attributes['approved_count']);
+        }
+
+        return (int) $this->applications()
+            ->where('status', ApplicationStatus::Approved)
+            ->count();
+    }
+
+    public function getUtilizationAttribute(): int
+    {
+        return $this->total_slots > 0
+            ? (int) round(($this->filled_slots / (int) $this->total_slots) * 100)
+            : 0;
     }
 
     public function hasActiveApplicationForStudent(int $studentProfileId): bool
@@ -189,6 +215,100 @@ class SponsorshipProgram extends Model
     }
 
     /**
+     * Check a student profile against this program's course, year level,
+     * campus, and address/residency requirements without any submitted data.
+     *
+     * @return array{is_eligible: bool, reasons: list<string>}
+     */
+    public function checkEligibility(StudentProfile $profile): array
+    {
+        $reasons = [];
+
+        if (! $this->isOpen()) {
+            $reasons[] = 'This sponsorship program is not open for applications.';
+        }
+
+        if ($this->available_slots < 1) {
+            $reasons[] = 'This sponsorship program has no remaining slots.';
+        }
+
+        if (! $this->courseIsEligibleFor($profile)) {
+            $reasons[] = 'Your course is not eligible for this program.';
+        }
+
+        if (! empty($this->eligible_year_levels) && $profile->year_level !== null) {
+            $allowedLevels = array_map('strval', $this->eligible_year_levels);
+
+            if (! in_array((string) $profile->year_level, $allowedLevels, true)) {
+                $formatted = implode(', ', array_map(fn ($y) => "Year {$y}", $allowedLevels));
+                $reasons[] = "This program is only open to: {$formatted}. Your year level does not qualify.";
+            }
+        }
+
+        $eligibleCampuses = (array) ($this->eligible_campuses ?? []);
+
+        if ($eligibleCampuses !== [] && ! in_array($profile->campus, $eligibleCampuses, true)) {
+            $reasons[] = 'Your registered campus (' . ($profile->campus ?? 'Not Assigned') . ') is not eligible for this sponsorship program.';
+        }
+
+        if (filled($this->address_requirement)) {
+            $requirement = strtolower((string) $this->address_requirement);
+            $isRural = (bool) $profile->is_rural;
+
+            if (str_contains($requirement, 'rural') && ! $isRural) {
+                $reasons[] = 'This program requires rural residency.';
+            }
+
+            if (str_contains($requirement, 'urban') && $isRural) {
+                $reasons[] = 'This program requires urban residency.';
+            }
+
+            $location = strtolower(trim((string) $profile->full_address . ' ' . $profile->barangay));
+
+            if (str_contains($requirement, 'davao oriental') && ! str_contains($location, 'davao oriental')) {
+                $reasons[] = 'Your address does not meet the program location requirement.';
+            }
+        }
+
+        return [
+            'is_eligible' => $reasons === [],
+            'reasons' => $reasons,
+        ];
+    }
+
+    /**
+     * Whether the student's course / degree program qualifies for this program.
+     */
+    private function courseIsEligibleFor(StudentProfile $profile): bool
+    {
+        $academicPrograms = $this->academicPrograms;
+
+        if ($academicPrograms->isNotEmpty()) {
+            if ($profile->academic_program_id !== null && $academicPrograms->contains('program_id', $profile->academic_program_id)) {
+                return true;
+            }
+
+            $studentCourse = trim((string) $profile->course);
+
+            foreach ($academicPrograms as $academicProgram) {
+                if (strcasecmp(trim($academicProgram->code), $studentCourse) === 0 || strcasecmp(trim($academicProgram->name), $studentCourse) === 0) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        if (! filled($this->target_course)) {
+            return true;
+        }
+
+        $allowedCourses = array_map('trim', explode(',', (string) $this->target_course));
+
+        return in_array(trim((string) $profile->course), $allowedCourses, true);
+    }
+
+    /**
      * GWA uses the Philippine scale (1.00 is highest). A lower submitted GWA is better.
      *
      * @return list<string>
@@ -213,30 +333,8 @@ class SponsorshipProgram extends Model
             $errors[] = "Submitted GWA must be {$this->min_gpa} or better.";
         }
 
-        if ($this->academicPrograms()->exists()) {
-            $allowedPrograms = $this->academicPrograms;
-            $isMatch = false;
-            if ($profile->academic_program_id && $allowedPrograms->contains('program_id', $profile->academic_program_id)) {
-                $isMatch = true;
-            } else {
-                $studentCourse = trim((string) $profile->course);
-                foreach ($allowedPrograms as $ap) {
-                    if (strcasecmp(trim($ap->code), $studentCourse) === 0 || strcasecmp(trim($ap->name), $studentCourse) === 0) {
-                        $isMatch = true;
-                        break;
-                    }
-                }
-            }
-
-            if (! $isMatch) {
-                $errors[] = 'Your course is not eligible for this program.';
-            }
-        } elseif (filled($this->target_course)) {
-            $allowedCourses = array_map('trim', explode(',', (string) $this->target_course));
-
-            if (! in_array(trim((string) $profile->course), $allowedCourses, true)) {
-                $errors[] = 'Your course is not eligible for this program.';
-            }
+        if (! $this->courseIsEligibleFor($profile)) {
+            $errors[] = 'Your course is not eligible for this program.';
         }
 
         if (filled($this->address_requirement)) {
@@ -254,6 +352,14 @@ class SponsorshipProgram extends Model
 
             if (str_contains($requirement, 'davao oriental') && ! str_contains($location, 'davao oriental')) {
                 $errors[] = 'Your address does not meet the program location requirement.';
+            }
+        }
+
+        if (! empty($this->eligible_year_levels) && $profile->year_level !== null) {
+            $allowedLevels = array_map('strval', $this->eligible_year_levels);
+            if (! in_array((string) $profile->year_level, $allowedLevels, true)) {
+                $formatted = implode(', ', array_map(fn ($y) => "Year {$y}", $allowedLevels));
+                $errors[] = "This program is only open to: {$formatted}. Your year level does not qualify.";
             }
         }
 

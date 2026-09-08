@@ -94,6 +94,10 @@
                         <dd class="col-sm-8 py-2 mb-0 border-top">
                             {{ $application->address_submitted ?? ($application->current_address ?? 'N/A') }}</dd>
 
+                        <dt class="col-sm-4 small text-secondary fw-normal py-2 border-top">Campus Submitted</dt>
+                        <dd class="col-sm-8 py-2 mb-0 border-top">
+                            {{ $application->studentProfile?->campus ?? 'Not Assigned' }}</dd>
+
                         <dt class="col-sm-4 small text-secondary fw-normal py-2 border-top">Rurality Confirmed</dt>
                         <dd class="col-sm-8 py-2 mb-0 border-top">
                             {{ $application->is_rural_submitted ?? $application->is_rural ? 'Yes — Rural' : 'No — Urban' }}
@@ -118,7 +122,9 @@
                                     </div>
                                     <div class="min-w-0 flex-grow-1">
                                         <div class="fw-bold text-dark text-truncate small">
-                                            {{ \Illuminate\Support\Str::headline(is_object($doc->document_type) && property_exists($doc->document_type, 'value') ? $doc->document_type->value : (string) $doc->document_type) }}
+                                            {{ $doc->document_type instanceof \App\Enums\DocumentType
+                                                ? $doc->document_type->label()
+                                                : \Illuminate\Support\Str::headline(str_replace('_', ' ', (string) ($doc->document_type ?? 'Document'))) }}
                                         </div>
                                         <div class="text-muted small text-truncate" style="max-width: 180px;">
                                             {{ !empty($doc->file_name) ? $doc->file_name : (!empty($doc->file_path) ? basename($doc->file_path) : 'No file recorded') }}

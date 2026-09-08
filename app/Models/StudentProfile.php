@@ -23,11 +23,14 @@ class StudentProfile extends Model
         'last_name',
         'course',
         'academic_program_id',
+        'campus',
+        'contact_number',
         'year_level',
         'gender',
         'birthdate',
         'municipality',
-        'address',
+        'province',
+        'home_address',
         'barangay',
         'is_rural',
         'is_sle_fhe_verified',
@@ -53,6 +56,11 @@ class StudentProfile extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getFullAddressAttribute(): string
+    {
+        return "{$this->home_address}, Brgy. {$this->barangay}, {$this->municipality}, {$this->province}";
     }
 
     public function academicProgram(): BelongsTo
