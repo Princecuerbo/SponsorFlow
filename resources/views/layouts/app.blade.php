@@ -169,6 +169,27 @@
             color: #fff;
         }
 
+        .btn-outline-danger {
+            color: #dc3545;
+            border-color: #dc3545;
+            transition: all 0.15s ease-in-out;
+        }
+
+        .btn-outline-danger:hover,
+        .btn-outline-danger:focus,
+        .btn-outline-danger:active,
+        .btn-outline-danger.active {
+            background-color: #dc3545 !important;
+            border-color: #dc3545 !important;
+            color: #ffffff !important;
+        }
+
+        .btn-outline-danger:hover i,
+        .btn-outline-danger:focus i,
+        .btn-outline-danger:active i {
+            color: #ffffff !important;
+        }
+
         .sf-idle-modal {
             position: fixed;
             inset: 0;

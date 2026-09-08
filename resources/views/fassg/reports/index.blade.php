@@ -253,9 +253,9 @@
                     </div>
                     <div class="mt-4">
                         <div class="small fw-semibold mb-2">Barangay / Municipality</div>
-                        @forelse (($demographics['by_barangay'] ?? []) as $barangay => $count)
+                        @forelse (($demographics['by_municipality'] ?? $demographics['by_barangay'] ?? $municipalityDistribution ?? []) as $municipality => $count)
                             <div class="d-flex justify-content-between small py-1 border-bottom">
-                                <span>{{ $barangay }}</span><span class="fw-semibold">{{ $count }}</span>
+                                <span>{{ $municipality }}</span><span class="fw-semibold">{{ $count }}</span>
                             </div>
                         @empty
                             <div class="text-secondary small">No data available.</div>

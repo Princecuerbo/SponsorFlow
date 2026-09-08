@@ -177,7 +177,7 @@
                 </div>
 
                 <div class="card-footer bg-white border-top p-4 d-flex justify-content-end gap-2">
-                    <a href="{{ route('fassg.programs.index') }}" class="btn btn-outline-secondary">Cancel</a>
+                    <a href="{{ route('fassg.programs.index') }}" class="btn btn-outline-danger"><i class="bi bi-x-lg me-1"></i> Cancel</a>
                     <button type="submit" class="btn btn-navy-primary"><i class="bi bi-check-lg me-1"></i>Create &amp; Open
                         Program</button>
                 </div>

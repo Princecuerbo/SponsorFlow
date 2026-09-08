@@ -231,6 +231,8 @@
                             </div>
                         </div>
                         <div class="modal-footer" style="border-top: 1px solid #e2e8f0;">
+                            <button type="button" class="btn btn-outline-danger px-3"
+                                data-bs-dismiss="modal"><i class="bi bi-x-lg me-1"></i> Cancel</button>
                             <button class="btn fw-semibold" type="submit"
                                 style="background-color: #0f294a; color: #fff; border: none; border-radius: 8px; padding: 0.6rem 1.25rem;">
                                 Save changes
@@ -327,8 +329,8 @@
                         </div>
                     </div>
                     <div class="modal-footer border-top bg-light-subtle py-2.5 px-3">
-                        <button type="button" class="btn btn-outline-secondary px-3"
-                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-outline-danger px-3"
+                            data-bs-dismiss="modal"><i class="bi bi-x-lg me-1"></i> Cancel</button>
                         <button type="submit" class="btn text-white px-4 fw-semibold"
                             style="background-color: #0F2942;">Create account</button>
                     </div>

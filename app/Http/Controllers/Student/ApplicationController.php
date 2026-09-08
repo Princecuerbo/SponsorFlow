@@ -11,6 +11,7 @@ use App\Http\Requests\Student\StoreApplicationRequest;
 use App\Models\Application;
 use App\Models\FixedListItem;
 use App\Models\SponsorshipProgram;
+use App\Models\StudentProfile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +29,7 @@ class ApplicationController extends Controller
         $profile = $this->studentProfile($request, required: false);
 
         if ($profile?->is_sle_fhe_verified) {
-            $query = SponsorshipProgram::query()->open()->with('sponsor');
+            $query = SponsorshipProgram::query()->open()->with(['sponsor', 'academicPrograms']);
 
             if ($request->filled('q')) {
                 $search = $request->input('q');
@@ -57,18 +58,32 @@ class ApplicationController extends Controller
         ]);
     }
 
-    public function create(Request $request, SponsorshipProgram $sponsorshipProgram): View
+    public function create(Request $request, string $id): View
     {
+        $program = SponsorshipProgram::with('academicPrograms')->findOrFail($id);
         $profile = $this->studentProfile($request);
+
         abort_unless($profile->is_sle_fhe_verified, 403, 'Complete SLE-FHE verification before applying.');
-        abort_unless($sponsorshipProgram->isOpen() && $sponsorshipProgram->available_slots > 0, 403, 'This sponsorship program is not accepting applications.');
+        abort_unless($program->isOpen() && $program->available_slots > 0, 403, 'This sponsorship program is not accepting applications.');
         abort_unless(! $this->hasBlockingApplication($profile), 403, 'You already have an active or pending sponsorship application.');
-        abort_unless($this->courseIsAllowed($profile->course, $sponsorshipProgram->target_course), 403, 'Your course is not eligible for this program.');
+        abort_unless($this->courseIsAllowed($profile->course, $program->target_course, $program, $profile), 403, 'Your course is not eligible for this program.');
+
+        $program->load('sponsor');
+
+        $urbanMunicipalities = ['Mati City', 'Mati', 'Matiao'];
+        $profileMunicipality = trim((string) ($profile->municipality ?? ''));
+        $profileIsUrban = ! $profile->is_rural
+            || in_array($profileMunicipality, $urbanMunicipalities, true);
+
+        $programRequiresRural = filled($program->address_requirement)
+            && str_contains(strtolower($program->address_requirement), 'rural');
 
         return view('student.applications.create', [
             'user' => $this->actor($request),
             'profile' => $profile,
-            'program' => $sponsorshipProgram,
+            'program' => $program,
+            'profileIsUrban' => $profileIsUrban,
+            'programRequiresRural' => $programRequiresRural,
         ]);
     }
 
@@ -256,8 +271,22 @@ class ApplicationController extends Controller
         abort_unless((int) $application->student_profile_id === $studentProfileId, 403, 'You are not authorized to access this application.');
     }
 
-    private function courseIsAllowed(?string $studentCourse, ?string $targetCourse): bool
+    private function courseIsAllowed(?string $studentCourse, ?string $targetCourse, ?SponsorshipProgram $program = null, ?StudentProfile $profile = null): bool
     {
+        if ($program && $program->academicPrograms()->exists()) {
+            $allowed = $program->academicPrograms;
+            if ($profile && $profile->academic_program_id && $allowed->contains('program_id', $profile->academic_program_id)) {
+                return true;
+            }
+            $studentCourseName = trim((string) $studentCourse);
+            foreach ($allowed as $ap) {
+                if (strcasecmp(trim($ap->code), $studentCourseName) === 0 || strcasecmp(trim($ap->name), $studentCourseName) === 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         if (! filled($targetCourse)) {
             return true;
         }

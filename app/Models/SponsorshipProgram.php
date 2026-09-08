@@ -63,6 +63,34 @@ class SponsorshipProgram extends Model
         )->withTimestamps();
     }
 
+    public function courses(): BelongsToMany
+    {
+        return $this->academicPrograms();
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection<int, string>
+     */
+    public function getEligibleCoursesAttribute(): \Illuminate\Support\Collection
+    {
+        $programs = $this->relationLoaded('courses')
+            ? $this->courses
+            : ($this->relationLoaded('academicPrograms') ? $this->academicPrograms : $this->academicPrograms);
+
+        if ($programs && $programs->isNotEmpty()) {
+            return $programs->map(fn ($p) => $p->name ?: $p->code)->values();
+        }
+
+        if (filled($this->target_course)) {
+            return collect(explode(',', (string) $this->target_course))
+                ->map(fn ($c) => trim($c))
+                ->filter()
+                ->values();
+        }
+
+        return collect();
+    }
+
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class);
@@ -185,7 +213,25 @@ class SponsorshipProgram extends Model
             $errors[] = "Submitted GWA must be {$this->min_gpa} or better.";
         }
 
-        if (filled($this->target_course)) {
+        if ($this->academicPrograms()->exists()) {
+            $allowedPrograms = $this->academicPrograms;
+            $isMatch = false;
+            if ($profile->academic_program_id && $allowedPrograms->contains('program_id', $profile->academic_program_id)) {
+                $isMatch = true;
+            } else {
+                $studentCourse = trim((string) $profile->course);
+                foreach ($allowedPrograms as $ap) {
+                    if (strcasecmp(trim($ap->code), $studentCourse) === 0 || strcasecmp(trim($ap->name), $studentCourse) === 0) {
+                        $isMatch = true;
+                        break;
+                    }
+                }
+            }
+
+            if (! $isMatch) {
+                $errors[] = 'Your course is not eligible for this program.';
+            }
+        } elseif (filled($this->target_course)) {
             $allowedCourses = array_map('trim', explode(',', (string) $this->target_course));
 
             if (! in_array(trim((string) $profile->course), $allowedCourses, true)) {
@@ -198,6 +244,10 @@ class SponsorshipProgram extends Model
 
             if (str_contains($requirement, 'rural') && ! $isRural) {
                 $errors[] = 'This program requires rural residency.';
+            }
+
+            if (str_contains($requirement, 'urban') && $isRural) {
+                $errors[] = 'This program requires urban residency.';
             }
 
             $location = strtolower(trim($address . ' ' . $profile->barangay));

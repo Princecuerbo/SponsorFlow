@@ -60,7 +60,7 @@
                         </div>
 
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="{{ $backUrl }}" class="btn btn-outline-secondary">Cancel</a>
+                            <a href="{{ $backUrl }}" class="btn btn-outline-danger"><i class="bi bi-x-lg me-1"></i> Cancel</a>
                             <button type="submit" class="btn btn-navy-primary"><i class="bi bi-check2 me-1"></i>Save
                                 Name</button>
                         </div>

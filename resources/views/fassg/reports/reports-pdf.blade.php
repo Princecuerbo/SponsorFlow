@@ -279,7 +279,7 @@
                             <td colspan="2" style="background-color: #eee; font-weight: bold;">Barangay /
                                 Municipality</td>
                         </tr>
-                        @forelse ($demographics['by_barangay'] ?? [] as $label => $count)
+                        @forelse (($demographics['by_municipality'] ?? $demographics['by_barangay'] ?? $municipalityDistribution ?? []) as $label => $count)
                             <tr>
                                 <td>{{ $label }}</td>
                                 <td class="text-end">{{ $count }}</td>

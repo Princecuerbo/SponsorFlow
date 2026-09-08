@@ -120,6 +120,58 @@ class ReportsController extends Controller
             ->pluck('total', 'gender')
             ->all();
 
+        $byMunicipality = StudentProfile::query()
+            ->whereIn('id', $allProfileIds)
+            ->get(['id', 'municipality', 'barangay', 'address'])
+            ->map(function (StudentProfile $profile): string {
+                $municipality = trim((string) ($profile->municipality ?? ''));
+                if ($municipality !== '') {
+                    return $municipality;
+                }
+
+                $barangay = trim((string) ($profile->barangay ?? ''));
+                if ($barangay !== '') {
+                    return $barangay;
+                }
+
+                $address = trim((string) ($profile->address ?? ''));
+                if ($address !== '') {
+                    $knownMunicipalities = [
+                        'Mati City',
+                        'Baganga',
+                        'Banaybanay',
+                        'Boston',
+                        'Caraga',
+                        'Cateel',
+                        'Governor Generoso',
+                        'Lupon',
+                        'Manay',
+                        'San Isidro',
+                        'Tarragona',
+                    ];
+
+                    foreach ($knownMunicipalities as $known) {
+                        if (stripos($address, $known) !== false) {
+                            return $known;
+                        }
+                    }
+
+                    if (preg_match('/(?:Barangay|Brgy\.?)\s+([^,]+)/i', $address, $matches)) {
+                        $parsed = trim($matches[1]);
+                        if ($parsed !== '') {
+                            return $parsed;
+                        }
+                    }
+                }
+
+                return 'Unspecified';
+            })
+            ->filter()
+            ->countBy()
+            ->sortDesc()
+            ->take(10)
+            ->all();
+
         $demographics = [
             'rural' => StudentProfile::query()->whereIn('id', $allProfileIds)->where('is_rural', true)->count(),
             'urban' => StudentProfile::query()->whereIn('id', $allProfileIds)->where('is_rural', false)->count(),
@@ -139,19 +191,12 @@ class ReportsController extends Controller
                 ->limit(10)
                 ->pluck('total', 'course')
                 ->all(),
-            'by_barangay' => StudentProfile::query()
-                ->whereIn('id', $allProfileIds)
-                ->whereNotNull('barangay')
-                ->select('barangay', DB::raw('count(*) as total'))
-                ->groupBy('barangay')
-                ->orderByDesc('total')
-                ->limit(10)
-                ->pluck('total', 'barangay')
-                ->all(),
+            'by_barangay' => $byMunicipality,
+            'by_municipality' => $byMunicipality,
         ];
 
         $slotUtilization = SponsorshipProgram::query()
-            ->select('id', 'program_name', 'slots', 'available_slots')
+            ->select('id', 'program_name', 'total_slots', 'available_slots')
             ->withCount([
                 'applications as approved_count' => fn($query) => $query->whereIn('status', [
                     ApplicationStatus::Approved,
@@ -168,7 +213,7 @@ class ReportsController extends Controller
                     ->count();
 
                 $filledSlots = (int) $program->approved_count + $fixedListItemsCount;
-                $totalSlots = (int) $program->slots;
+                $totalSlots  = (int) $program->total_slots;
 
                 return [
                     'program_name' => $program->program_name,
@@ -182,7 +227,7 @@ class ReportsController extends Controller
             })
             ->all();
 
-        $programSlots = collect($slotUtilization)->sum('total_slots');
+        $programSlots = (int) SponsorshipProgram::sum('slots');
         $filledSlots = collect($slotUtilization)->sum('filled_slots');
         $applicantCategoryTotals = $this->categoryTotals($applicantsByCategory);
         $categoryBreakdown = collect($this->categoryTotals($categoryBreakdown))
@@ -221,6 +266,7 @@ class ReportsController extends Controller
                 'Rural' => $demographics['rural'],
                 'Urban' => $demographics['urban'],
             ],
+            'municipalityDistribution' => $byMunicipality,
         ];
     }
 

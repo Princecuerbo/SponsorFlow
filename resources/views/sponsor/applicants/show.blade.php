@@ -117,8 +117,8 @@
                                                 placeholder="Add a reason for declining this application."></textarea>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-outline-danger"
+                                                data-bs-dismiss="modal"><i class="bi bi-x-lg me-1"></i> Cancel</button>
                                             <button type="submit" class="btn btn-danger"><i
                                                     class="bi bi-x-circle me-1"></i>Decline Applicant</button>
                                         </div>

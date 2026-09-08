@@ -112,7 +112,7 @@
                 style="background-color: #0F2942 !important; border-color: #0F2942 !important;">
                 <i class="bi bi-check-lg me-1"></i> Save program
             </button>
-            <a href="{{ route('fassg.programs.index') }}" class="btn btn-light border">Cancel</a>
+            <a href="{{ route('fassg.programs.index') }}" class="btn btn-outline-danger"><i class="bi bi-x-lg me-1"></i> Cancel</a>
         </div>
     </div>
 </form>

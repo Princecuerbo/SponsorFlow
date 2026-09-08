@@ -214,7 +214,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal"><i class="bi bi-x-lg me-1"></i> Cancel</button>
                         <button type="submit" class="btn btn-navy-primary"><i class="bi bi-upload me-1"></i>Create
                             Batch</button>
                     </div>
