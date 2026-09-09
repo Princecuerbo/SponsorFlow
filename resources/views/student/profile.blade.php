@@ -156,29 +156,95 @@
                         @csrf
                         @method('PUT')
                         <div class="col-12">
-                            <label class="form-label text-muted small fw-bold" for="current-password">CURRENT
+                            <label class="form-label text-muted small fw-bold" for="current_password">CURRENT
                                 PASSWORD</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="bi bi-key-fill text-muted"></i></span>
-                                <input id="current-password" class="form-control rounded-end-3" type="password"
-                                    name="current_password" autocomplete="current-password" required>
+                            <div class="relative position-relative">
+                                <input 
+                                    type="password" 
+                                    id="current_password" 
+                                    name="current_password" 
+                                    autocomplete="current-password"
+                                    required
+                                    class="form-control w-full pr-10 border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                    style="padding-right: 2.75rem;"
+                                >
+                                <button 
+                                    type="button" 
+                                    onclick="togglePasswordVisibility('current_password', this)" 
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 focus:outline-none position-absolute top-0 bottom-0 end-0 d-flex align-items-center pe-3 border-0 bg-transparent"
+                                    aria-label="Toggle current password visibility"
+                                >
+                                    <!-- Eye Icon SVG (Visible State) -->
+                                    <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 1.25rem; height: 1.25rem;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    <!-- Eye Off Icon SVG (Hidden State) -->
+                                    <svg class="w-5 h-5 eye-off-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 1.25rem; height: 1.25rem;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.025 10.025 0 0110.122 3.937 9.97 9.97 0 011.563 3.029C20.268 14.057 16.478 17 12 17c-.975 0-1.921-.14-2.812-.4M3 3l18 18" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label text-muted small fw-bold" for="new-password">NEW PASSWORD</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="bi bi-lock text-muted"></i></span>
-                                <input id="new-password" class="form-control rounded-end-3" type="password"
-                                    name="password" autocomplete="new-password" required>
+                            <label class="form-label text-muted small fw-bold" for="new_password">NEW PASSWORD</label>
+                            <div class="relative position-relative">
+                                <input 
+                                    type="password" 
+                                    id="new_password" 
+                                    name="new_password" 
+                                    autocomplete="new-password"
+                                    required
+                                    class="form-control w-full pr-10 border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                    style="padding-right: 2.75rem;"
+                                >
+                                <button 
+                                    type="button" 
+                                    onclick="togglePasswordVisibility('new_password', this)" 
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 focus:outline-none position-absolute top-0 bottom-0 end-0 d-flex align-items-center pe-3 border-0 bg-transparent"
+                                    aria-label="Toggle new password visibility"
+                                >
+                                    <!-- Eye Icon SVG (Visible State) -->
+                                    <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 1.25rem; height: 1.25rem;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    <!-- Eye Off Icon SVG (Hidden State) -->
+                                    <svg class="w-5 h-5 eye-off-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 1.25rem; height: 1.25rem;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.025 10.025 0 0110.122 3.937 9.97 9.97 0 011.563 3.029C20.268 14.057 16.478 17 12 17c-.975 0-1.921-.14-2.812-.4M3 3l18 18" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label text-muted small fw-bold" for="confirm-password">CONFIRM
+                            <label class="form-label text-muted small fw-bold" for="new_password_confirmation">CONFIRM
                                 PASSWORD</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="bi bi-lock-fill text-muted"></i></span>
-                                <input id="confirm-password" class="form-control rounded-end-3" type="password"
-                                    name="password_confirmation" autocomplete="new-password" required>
+                            <div class="relative position-relative">
+                                <input 
+                                    type="password" 
+                                    id="new_password_confirmation" 
+                                    name="new_password_confirmation" 
+                                    autocomplete="new-password"
+                                    required
+                                    class="form-control w-full pr-10 border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                    style="padding-right: 2.75rem;"
+                                >
+                                <button 
+                                    type="button" 
+                                    onclick="togglePasswordVisibility('new_password_confirmation', this)" 
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 focus:outline-none position-absolute top-0 bottom-0 end-0 d-flex align-items-center pe-3 border-0 bg-transparent"
+                                    aria-label="Toggle confirm password visibility"
+                                >
+                                    <!-- Eye Icon SVG (Visible State) -->
+                                    <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 1.25rem; height: 1.25rem;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    <!-- Eye Off Icon SVG (Hidden State) -->
+                                    <svg class="w-5 h-5 eye-off-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 1.25rem; height: 1.25rem;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.025 10.025 0 0110.122 3.937 9.97 9.97 0 011.563 3.029C20.268 14.057 16.478 17 12 17c-.975 0-1.921-.14-2.812-.4M3 3l18 18" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                         <div class="col-12">
@@ -206,3 +272,23 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            const eyeIcon = btn.querySelector('.eye-icon');
+            const eyeOffIcon = btn.querySelector('.eye-off-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.classList.add('hidden');
+                eyeOffIcon.classList.remove('hidden');
+            } else {
+                input.type = 'password';
+                eyeIcon.classList.remove('hidden');
+                eyeOffIcon.classList.add('hidden');
+            }
+        }
+    </script>
+@endpush

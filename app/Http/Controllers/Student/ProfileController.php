@@ -21,6 +21,14 @@ class ProfileController extends Controller
 
     public function updatePassword(Request $request): RedirectResponse
     {
+        if ($request->has('new_password') && !$request->has('password')) {
+            $request->merge(['password' => $request->input('new_password')]);
+        }
+
+        if ($request->has('new_password_confirmation') && !$request->has('password_confirmation')) {
+            $request->merge(['password_confirmation' => $request->input('new_password_confirmation')]);
+        }
+
         $validated = $request->validate([
             'current_password' => ['required', 'current_password'],
             'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],

@@ -326,6 +326,7 @@
         .border-indigo-200 { border-color: #c7d2fe !important; }
 
         .rounded-full { border-radius: 9999px !important; }
+        .hidden { display: none !important; }
     </style>
 
     @stack('styles')
@@ -496,6 +497,8 @@
             });
         </script>
     @endauth
+
+    @stack('scripts')
 </body>
 
 </html>
