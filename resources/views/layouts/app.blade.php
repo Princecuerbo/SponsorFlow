@@ -326,22 +326,9 @@
         .border-indigo-200 { border-color: #c7d2fe !important; }
 
         .rounded-full { border-radius: 9999px !important; }
-        .hidden { display: none !important; }
 
-        /* Positioning & sizing utilities matching login page */
-        .relative { position: relative !important; }
-        .absolute { position: absolute !important; }
-        .inset-y-0 { top: 0 !important; bottom: 0 !important; }
-        .right-0 { right: 0 !important; }
-        .flex { display: flex !important; }
-        .items-center { align-items: center !important; }
-        .pr-3\.5 { padding-right: 0.875rem !important; }
-        .pr-12 { padding-right: 3rem !important; }
-        .text-slate-400 { color: #94a3b8 !important; }
-        .text-slate-400:hover, .hover\:text-slate-600:hover { color: #475569 !important; }
-        .h-5 { height: 1.25rem !important; }
-        .w-5 { width: 1.25rem !important; }
-        button.absolute { background: transparent; border: 0; }
+        /* Utility: match Tailwind pointer-events-none */
+        .pointer-events-none { pointer-events: none !important; }
     </style>
 
     @stack('styles')

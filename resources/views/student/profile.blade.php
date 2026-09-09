@@ -155,85 +155,106 @@
                     <form method="POST" action="{{ route('student.profile.password.update') }}" class="row g-3">
                         @csrf
                         @method('PUT')
+                        {{-- Current Password --}}
                         <div class="col-12">
-                            <label class="form-label text-muted small fw-bold" for="current_password">CURRENT
-                                PASSWORD</label>
-                            <div class="relative">
-                                <input 
-                                    type="password" 
-                                    id="current_password" 
-                                    name="current_password" 
+                            <label class="form-label text-muted small fw-bold" for="current_password">CURRENT PASSWORD</label>
+                            <div class="position-relative mt-1">
+                                <div class="position-absolute top-50 translate-middle-y ps-3 pointer-events-none text-muted" style="left: 0;">
+                                    <svg class="" style="width:1.1rem;height:1.1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                                    </svg>
+                                </div>
+                                <input
+                                    type="password"
+                                    id="current_password"
+                                    name="current_password"
                                     autocomplete="current-password"
                                     required
-                                    placeholder="Current password"
-                                    class="w-full rounded-xl border border-slate-300 px-4 py-3 pr-12 text-sm outline-none transition focus:border-[#002B66] focus:ring-2 focus:ring-[#002B66]/20 form-control"
+                                    class="form-control rounded-3"
+                                    style="padding-left: 2.5rem; padding-right: 2.75rem; background-color: #f9fafb; border-color: #e5e7eb; transition: all .15s ease;"
+                                    onfocus="this.style.backgroundColor='#fff';this.style.borderColor='#6366f1';this.style.boxShadow='0 0 0 3px rgba(99,102,241,.15)'"
+                                    onblur="this.style.backgroundColor='#f9fafb';this.style.borderColor='#e5e7eb';this.style.boxShadow='none'"
                                 >
-                                <button 
-                                    type="button" 
-                                    onclick="togglePasswordVisibility('current_password', this)" 
-                                    class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 transition hover:text-slate-600"
+                                <button
+                                    type="button"
+                                    onclick="togglePasswordVisibility('current_password', this)"
+                                    class="position-absolute top-50 translate-middle-y end-0 pe-3 border-0 bg-transparent text-secondary d-flex align-items-center"
+                                    style="cursor:pointer;"
                                     aria-label="Toggle password visibility"
                                 >
-                                    <svg class="show-icon h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
-                                        <circle cx="12" cy="12" r="3" />
+                                    <svg class="eye-icon" style="width:1.1rem;height:1.1rem;pointer-events:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
+
+                        {{-- New Password --}}
                         <div class="col-md-6">
                             <label class="form-label text-muted small fw-bold" for="new_password">NEW PASSWORD</label>
-                            <div class="relative">
-                                <input 
-                                    type="password" 
-                                    id="new_password" 
-                                    name="new_password" 
+                            <div class="position-relative mt-1">
+                                <div class="position-absolute top-50 translate-middle-y ps-3 pointer-events-none text-muted" style="left: 0;">
+                                    <svg style="width:1.1rem;height:1.1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                </div>
+                                <input
+                                    type="password"
+                                    id="new_password"
+                                    name="password"
                                     autocomplete="new-password"
                                     required
-                                    placeholder="New password"
-                                    class="w-full rounded-xl border border-slate-300 px-4 py-3 pr-12 text-sm outline-none transition focus:border-[#002B66] focus:ring-2 focus:ring-[#002B66]/20 form-control"
+                                    class="form-control rounded-3"
+                                    style="padding-left: 2.5rem; padding-right: 2.75rem; background-color: #f9fafb; border-color: #e5e7eb; transition: all .15s ease;"
+                                    onfocus="this.style.backgroundColor='#fff';this.style.borderColor='#6366f1';this.style.boxShadow='0 0 0 3px rgba(99,102,241,.15)'"
+                                    onblur="this.style.backgroundColor='#f9fafb';this.style.borderColor='#e5e7eb';this.style.boxShadow='none'"
                                 >
-                                <button 
-                                    type="button" 
-                                    onclick="togglePasswordVisibility('new_password', this)" 
-                                    class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 transition hover:text-slate-600"
+                                <button
+                                    type="button"
+                                    onclick="togglePasswordVisibility('new_password', this)"
+                                    class="position-absolute top-50 translate-middle-y end-0 pe-3 border-0 bg-transparent text-secondary d-flex align-items-center"
+                                    style="cursor:pointer;"
                                     aria-label="Toggle password visibility"
                                 >
-                                    <svg class="show-icon h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
-                                        <circle cx="12" cy="12" r="3" />
+                                    <svg class="eye-icon" style="width:1.1rem;height:1.1rem;pointer-events:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
+
+                        {{-- Confirm Password --}}
                         <div class="col-md-6">
-                            <label class="form-label text-muted small fw-bold" for="confirm_password">CONFIRM
-                                PASSWORD</label>
-                            <div class="relative">
-                                <input 
-                                    type="password" 
-                                    id="confirm_password" 
-                                    name="confirm_password" 
+                            <label class="form-label text-muted small fw-bold" for="new_password_confirmation">CONFIRM PASSWORD</label>
+                            <div class="position-relative mt-1">
+                                <div class="position-absolute top-50 translate-middle-y ps-3 pointer-events-none text-muted" style="left: 0;">
+                                    <svg style="width:1.1rem;height:1.1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                </div>
+                                <input
+                                    type="password"
+                                    id="new_password_confirmation"
+                                    name="password_confirmation"
                                     autocomplete="new-password"
                                     required
-                                    placeholder="Confirm password"
-                                    class="w-full rounded-xl border border-slate-300 px-4 py-3 pr-12 text-sm outline-none transition focus:border-[#002B66] focus:ring-2 focus:ring-[#002B66]/20 form-control"
+                                    class="form-control rounded-3"
+                                    style="padding-left: 2.5rem; padding-right: 2.75rem; background-color: #f9fafb; border-color: #e5e7eb; transition: all .15s ease;"
+                                    onfocus="this.style.backgroundColor='#fff';this.style.borderColor='#6366f1';this.style.boxShadow='0 0 0 3px rgba(99,102,241,.15)'"
+                                    onblur="this.style.backgroundColor='#f9fafb';this.style.borderColor='#e5e7eb';this.style.boxShadow='none'"
                                 >
-                                <button 
-                                    type="button" 
-                                    onclick="togglePasswordVisibility('confirm_password', this)" 
-                                    class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 transition hover:text-slate-600"
+                                <button
+                                    type="button"
+                                    onclick="togglePasswordVisibility('new_password_confirmation', this)"
+                                    class="position-absolute top-50 translate-middle-y end-0 pe-3 border-0 bg-transparent text-secondary d-flex align-items-center"
+                                    style="cursor:pointer;"
                                     aria-label="Toggle password visibility"
                                 >
-                                    <svg class="show-icon h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
-                                        <circle cx="12" cy="12" r="3" />
+                                    <svg class="eye-icon" style="width:1.1rem;height:1.1rem;pointer-events:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
                                 </button>
                             </div>
@@ -265,16 +286,20 @@
 @endsection
 
 @push('scripts')
-    <script>
-        function togglePasswordVisibility(inputId, toggleButton) {
-            const passwordInput = document.getElementById(inputId) 
-                || (inputId === 'confirm_password' ? document.getElementById('new_password_confirmation') : null)
-                || (inputId === 'new_password_confirmation' ? document.getElementById('confirm_password') : null);
-            if (passwordInput && toggleButton) {
-                const isPassword = passwordInput.type === 'password';
-                passwordInput.type = isPassword ? 'text' : 'password';
-                toggleButton.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
-            }
+<script>
+    function togglePasswordVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        if (isPassword) {
+            btn.classList.add('text-indigo-600');
+            btn.classList.remove('text-secondary');
+        } else {
+            btn.classList.remove('text-indigo-600');
+            btn.classList.add('text-secondary');
         }
-    </script>
+    }
+    window.togglePasswordVisibility = togglePasswordVisibility;
+</script>
 @endpush
