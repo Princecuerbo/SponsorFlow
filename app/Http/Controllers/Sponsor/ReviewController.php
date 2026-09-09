@@ -269,9 +269,18 @@ class ReviewController extends Controller
     {
         $sponsor = $this->sponsorOrganization($request);
 
+        // Approved applications remain in history even if the parent program
+        // expired (cascadeExpiredApplications() reflags them to Expired, but
+        // approved_at still identifies them as previously finalized approvals).
         $applications = Application::query()
             ->whereHas('sponsorshipProgram', fn($query) => $query->where('sponsor_id', $sponsor->id))
-            ->where('status', ApplicationStatus::Approved)
+            ->where(function ($query): void {
+                $query->where('status', ApplicationStatus::Approved)
+                    ->orWhere(function ($query): void {
+                        $query->where('status', ApplicationStatus::Expired)
+                            ->whereNotNull('approved_at');
+                    });
+            })
             ->with(['studentProfile.user', 'sponsorshipProgram'])
             ->latest('approved_at')
             ->get();
