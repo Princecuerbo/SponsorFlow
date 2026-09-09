@@ -1662,7 +1662,7 @@ class LocalAddressSeeder extends Seeder
         DB::table('localaddress')->truncate();
         Schema::enableForeignKeyConstraints();
 
-        foreach (array_chunk($addresses, 200) as $chunk) {
+        foreach (array_chunk($addresses, 100) as $chunk) {
             DB::table('localaddress')->insert(array_map(
                 static fn (array $row): array => $row + ['created_at' => $now, 'updated_at' => $now],
                 $chunk,

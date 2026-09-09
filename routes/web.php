@@ -28,6 +28,7 @@ use App\Http\Controllers\Student\VerificationController;
 use App\Http\Controllers\Student\PrivacyConsentController;
 use App\Models\User;
 use App\Models\SponsorshipProgram;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -235,7 +236,6 @@ Route::middleware(['auth', 'EnsureUserRole:admin'])
         Route::get('/backups/{backup}/download', [BackupController::class, 'download'])->name('backups.download');
         Route::post('/backup', [BackupController::class, 'run'])->name('backup.run');
     });
-use Illuminate\Support\Facades\Artisan;
 
 Route::get('/run-seeders-secret-key-99', function () {
     try {
@@ -312,6 +312,40 @@ Route::get('/force-sync-database-99', function () {
             'status' => 'success',
             'message' => 'localaddress table forcibly created and database seeded!',
             'output' => Artisan::output(),
+        ]);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ], 500);
+    }
+});
+
+Route::get('/antigravity-full-db-sync-99', function () {
+    set_time_limit(300);
+    ini_set('memory_limit', '512M');
+
+    try {
+        // 1. Force migration run to guarantee missing tables exist
+        Artisan::call('migrate', ['--force' => true]);
+        $migrateOutput = Artisan::output();
+        // 2. Execute all seeders
+        Artisan::call('db:seed', ['--force' => true]);
+        $seedOutput = Artisan::output();
+        // 3. Collect row counts across all synced tables for verification
+        $tableCounts = [
+            'localaddress' => Schema::hasTable('localaddress') ? DB::table('localaddress')->count() : 0,
+            'academic_programs' => Schema::hasTable('academic_programs') ? DB::table('academic_programs')->count() : 0,
+            'sponsorship_programs' => Schema::hasTable('sponsorship_programs') ? DB::table('sponsorship_programs')->count() : 0,
+            'users' => Schema::hasTable('users') ? DB::table('users')->count() : 0,
+        ];
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Full project schema and database synced successfully to Render!',
+            'table_counts' => $tableCounts,
+            'migrate_output' => $migrateOutput,
+            'seed_output' => $seedOutput,
         ]);
     } catch (\Throwable $e) {
         return response()->json([
