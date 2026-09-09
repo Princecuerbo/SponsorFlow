@@ -34,10 +34,10 @@ class VerificationController extends Controller
         $statusFilter     = $request->string('status')->trim()->toString();
 
         $pendingSleFheCount = StudentProfile::where('is_sle_fhe_verified', false)->count();
-        $pendingAppCount = Application::where('status', 'Pending')->count();
 
-        // Total pending items in queue
-        $pendingCount = $pendingSleFheCount + $pendingAppCount;
+        $pendingAppCount = Application::where('status', 'Pending')
+            ->whereHas('studentProfile', fn ($q) => $q->where('is_sle_fhe_verified', true))
+            ->count();
 
         $includeProfiles = in_array($statusFilter, ['', 'Pending', 'pending_sle_fhe'], true);
 
@@ -74,7 +74,8 @@ class VerificationController extends Controller
             ->when($category !== '', fn ($q) => $q->whereHas(
                 'sponsorshipProgram',
                 fn ($pq) => $pq->where('category', $category)
-            ));
+            ))
+            ->whereHas('studentProfile', fn ($pq) => $pq->where('is_sle_fhe_verified', true));
 
         $applications = $statusFilter === 'pending_sle_fhe'
             ? collect()
@@ -103,7 +104,7 @@ class VerificationController extends Controller
             ->get();
 
         $statusCounts = [
-            'pending'      => $pendingCount,
+            'pending'      => $pendingAppCount,
             'verified'     => (clone $baseQuery)->where('status', ApplicationStatus::Verified)->count(),
             'approved'     => (clone $baseQuery)->where('status', ApplicationStatus::Approved)->count(),
             'rejected'     => (clone $baseQuery)->where('status', ApplicationStatus::Rejected)->count(),
@@ -117,7 +118,6 @@ class VerificationController extends Controller
             'pendingApplications' => $applications->count(),
             'pendingSleFheCount'  => $pendingSleFheCount,
             'pendingAppCount'     => $pendingAppCount,
-            'pendingCount'        => $pendingCount,
             'academicPrograms'    => $academicPrograms,
             'programs'            => $programs,
             'categories'          => ProgramCategory::cases(),

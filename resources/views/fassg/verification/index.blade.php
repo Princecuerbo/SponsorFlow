@@ -104,7 +104,7 @@
                 <span>{{ $pendingSleFheCount ?? 0 }} Pending SLE-FHE</span>
             </div>
             <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #fffbebf5; color: #b45309; border: 1px solid #fde68a;">
-                <i class="bi bi-hourglass-split"></i> {{ $statusCounts['pending'] }} pending
+                <i class="bi bi-hourglass-split"></i> {{ $statusCounts['pending'] }} pending applications
             </span>
             <span class="stat-pill bg-cyan-50 text-cyan-700 border border-cyan-200 rounded-full" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #ecfeff; color: #0e7490; border: 1px solid #a5f3fc;">
                 <i class="bi bi-patch-check"></i> {{ $statusCounts['verified'] }} verified
