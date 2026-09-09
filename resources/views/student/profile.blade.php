@@ -167,16 +167,17 @@
                                     required
                                     placeholder="Current password"
                                     class="w-full rounded-xl border border-slate-300 px-4 py-3 pr-12 text-sm outline-none transition focus:border-[#002B66] focus:ring-2 focus:ring-[#002B66]/20 form-control"
-                                    style="padding-right: 3rem;"
                                 >
                                 <button 
                                     type="button" 
                                     onclick="togglePasswordVisibility('current_password', this)" 
-                                    class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 transition hover:text-slate-600 border-0 bg-transparent"
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 transition hover:text-slate-600"
                                     aria-label="Toggle password visibility"
                                 >
-                                    <svg class="show-icon h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style="width: 1.25rem; height: 1.25rem;">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
+                                    <svg class="show-icon h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
                                         <circle cx="12" cy="12" r="3" />
                                     </svg>
                                 </button>
@@ -193,16 +194,17 @@
                                     required
                                     placeholder="New password"
                                     class="w-full rounded-xl border border-slate-300 px-4 py-3 pr-12 text-sm outline-none transition focus:border-[#002B66] focus:ring-2 focus:ring-[#002B66]/20 form-control"
-                                    style="padding-right: 3rem;"
                                 >
                                 <button 
                                     type="button" 
                                     onclick="togglePasswordVisibility('new_password', this)" 
-                                    class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 transition hover:text-slate-600 border-0 bg-transparent"
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 transition hover:text-slate-600"
                                     aria-label="Toggle password visibility"
                                 >
-                                    <svg class="show-icon h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style="width: 1.25rem; height: 1.25rem;">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
+                                    <svg class="show-icon h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
                                         <circle cx="12" cy="12" r="3" />
                                     </svg>
                                 </button>
@@ -220,16 +222,17 @@
                                     required
                                     placeholder="Confirm password"
                                     class="w-full rounded-xl border border-slate-300 px-4 py-3 pr-12 text-sm outline-none transition focus:border-[#002B66] focus:ring-2 focus:ring-[#002B66]/20 form-control"
-                                    style="padding-right: 3rem;"
                                 >
                                 <button 
                                     type="button" 
                                     onclick="togglePasswordVisibility('confirm_password', this)" 
-                                    class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 transition hover:text-slate-600 border-0 bg-transparent"
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 transition hover:text-slate-600"
                                     aria-label="Toggle password visibility"
                                 >
-                                    <svg class="show-icon h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style="width: 1.25rem; height: 1.25rem;">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
+                                    <svg class="show-icon h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
                                         <circle cx="12" cy="12" r="3" />
                                     </svg>
                                 </button>
