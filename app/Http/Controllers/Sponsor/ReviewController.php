@@ -15,6 +15,7 @@ use App\Models\Sponsor;
 use App\Models\StudentProfile;
 use App\Models\SponsorshipProgram;
 use App\Models\SponsorApproval;
+use App\Notifications\ApplicationStatusUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -208,6 +209,12 @@ class ReviewController extends Controller
         }
 
         $this->audit($request, 'sponsor.application.confirmed', 'applications');
+
+        $studentUser = $application->studentProfile->user ?? null;
+
+        if ($studentUser !== null) {
+            $studentUser->notify(new ApplicationStatusUpdated($application, ApplicationStatus::Approved));
+        }
 
         return redirect()->route('sponsor.applicants.index')->with('status', 'Application confirmed and forwarded to Accounting.');
     }

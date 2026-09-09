@@ -13,7 +13,7 @@ class ApplicationStatusUpdated extends Notification
 
     public function __construct(
         public readonly Application $application,
-        public readonly ApplicationStatus $status,
+        public readonly ApplicationStatus|string $status,
     ) {
     }
 
@@ -31,14 +31,23 @@ class ApplicationStatusUpdated extends Notification
     public function toDatabase(object $notifiable): array
     {
         $programName = $this->application->sponsorshipProgram->program_name ?? 'sponsorship program';
+        $statusValue = $this->status instanceof ApplicationStatus
+            ? $this->status->value
+            : (string) $this->status;
+
+        $message = match ($statusValue) {
+            'Sponsor Reviewed' => "Your application for {$programName} has been reviewed by the sponsor.",
+            'Approved' => "Congratulations! Your application for {$programName} has been Approved.",
+            default => "Your application for {$programName} is now {$statusValue}.",
+        };
 
         return [
             'icon'           => 'patch-check',
             'title'          => 'Application status updated',
-            'message'        => "Your application for {$programName} is now {$this->status->value}.",
+            'message'        => $message,
             'url'            => route('student.applications.show', $this->application),
             'application_id' => $this->application->id,
-            'status'         => $this->status->value,
+            'status'         => $statusValue,
         ];
     }
 }

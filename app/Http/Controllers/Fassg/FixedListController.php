@@ -4,14 +4,17 @@ namespace App\Http\Controllers\Fassg;
 
 use App\Enums\FixedListItemStatus;
 use App\Enums\FixedListStatus;
+use App\Enums\ApplicationStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Fassg\ImportFixedListRequest;
 use App\Http\Requests\Fassg\StoreFixedListItemRequest;
 use App\Http\Requests\Fassg\StoreFixedListRequest;
+use App\Models\Application;
 use App\Models\FixedList;
 use App\Models\FixedListItem;
 use App\Models\SponsorshipProgram;
+use App\Notifications\ApplicationStatusUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -207,6 +210,8 @@ class FixedListController extends Controller
         $this->refreshTotalNames($fixedList);
         $this->audit($request, 'fassg.fixed_list.submitted', 'fixed_lists');
 
+        $this->notifyShortlistedStudents($fixedList);
+
         return back()->with('status', 'Fixed list submitted for sponsor confirmation.');
     }
 
@@ -317,5 +322,36 @@ class FixedListController extends Controller
         }
 
         $this->refreshTotalNames($fixedList);
+    }
+
+    /**
+     * Notify the students on a shortlist that their application has been
+     * forwarded to the sponsor for review.
+     */
+    private function notifyShortlistedStudents(FixedList $fixedList): void
+    {
+        $studentIds = $fixedList->items()
+            ->where('is_sle_fhe_verified', true)
+            ->pluck('student_id_number')
+            ->filter();
+
+        if ($studentIds->isEmpty()) {
+            return;
+        }
+
+        $applications = Application::query()
+            ->where('sponsorship_program_id', $fixedList->sponsorship_program_id)
+            ->whereHas('studentProfile', fn ($query) => $query->whereIn('student_id_number', $studentIds))
+            ->where('status', ApplicationStatus::Pending)
+            ->with('studentProfile.user')
+            ->get();
+
+        foreach ($applications as $application) {
+            $studentUser = $application->studentProfile->user ?? null;
+
+            if ($studentUser !== null) {
+                $studentUser->notify(new ApplicationStatusUpdated($application, 'Sponsor Reviewed'));
+            }
+        }
     }
 }

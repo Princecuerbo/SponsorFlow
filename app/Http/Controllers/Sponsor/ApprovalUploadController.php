@@ -14,6 +14,7 @@ use App\Models\Sponsor;
 use App\Models\SponsorApproval;
 use App\Models\StudentProfile;
 use App\Models\SponsorshipProgram;
+use App\Notifications\ApplicationStatusUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -181,6 +182,12 @@ class ApprovalUploadController extends Controller
                 ]);
                 $profile->update(['active_sponsorship_id' => null]);
                 break;
+            }
+
+            $studentUser = $application->studentProfile->user ?? null;
+
+            if ($studentUser !== null) {
+                $studentUser->notify(new ApplicationStatusUpdated($application, ApplicationStatus::Approved));
             }
         }
     }
