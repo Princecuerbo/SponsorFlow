@@ -244,7 +244,12 @@ class ProgramManagementController extends Controller
 
     public function open(Request $request, SponsorshipProgram $sponsorshipProgram): RedirectResponse
     {
-        $sponsorshipProgram->update(['status' => ProgramStatus::Open]);
+        $newAvailableSlots = max(0, (int) $sponsorshipProgram->total_slots - $sponsorshipProgram->filled_slots);
+
+        $sponsorshipProgram->update([
+            'status' => ProgramStatus::Open,
+            'available_slots' => $newAvailableSlots,
+        ]);
 
         $this->audit($request, 'fassg.program.opened', 'sponsorship_programs');
 
@@ -255,11 +260,16 @@ class ProgramManagementController extends Controller
 
     public function reopen(Request $request, SponsorshipProgram $sponsorshipProgram): RedirectResponse
     {
-        if ($sponsorshipProgram->available_slots <= 0) {
+        $newAvailableSlots = max(0, (int) $sponsorshipProgram->total_slots - $sponsorshipProgram->filled_slots);
+
+        if ($newAvailableSlots <= 0) {
             return back()->with('error', 'Cannot reopen a program with 0 available slots. Please edit available slots first.');
         }
 
-        $sponsorshipProgram->update(['status' => ProgramStatus::Open]);
+        $sponsorshipProgram->update([
+            'status' => ProgramStatus::Open,
+            'available_slots' => $newAvailableSlots,
+        ]);
 
         $this->audit($request, 'fassg.program.reopened', 'sponsorship_programs');
 

@@ -51,11 +51,15 @@ class ApplicationController extends Controller
             $programs = collect();
         }
 
+        $hasActiveGrant = $profile ? Application::where('student_profile_id', $profile->id)
+            ->whereIn('status', [ApplicationStatus::Approved, ApplicationStatus::Ongoing])
+            ->exists() : false;
+
         return view('student.programs.index', [
             'user' => $this->actor($request),
             'profile' => $profile,
             'programs' => $programs,
-            'hasActiveSponsorship' => $profile?->hasActiveSponsorship() ?? false,
+            'hasActiveSponsorship' => $hasActiveGrant,
         ]);
     }
 
@@ -96,22 +100,26 @@ class ApplicationController extends Controller
                 ->with('error', 'The application deadline for this program has passed.');
         }
 
+        // Check for strictly active grants
         $hasActiveGrant = Application::where('student_profile_id', $student->id)
-            ->where(function ($q) {
-                $q->whereIn('status', ['Approved', 'Ongoing'])
-                  ->orWhere(fn($sub) => $sub->where('status', 'Expired')->whereNotNull('approved_at'));
-            })->exists();
-
-        if ($hasActiveGrant) {
-            return back()->with('error', 'You already have an active/approved sponsorship record.');
-        }
-
-        $alreadyApplied = Application::where('student_profile_id', $student->id)
-            ->where('sponsorship_program_id', $program->id)
+            ->whereIn('status', [ApplicationStatus::Approved, ApplicationStatus::Ongoing])
             ->exists();
 
-        if ($alreadyApplied) {
-            return back()->with('error', 'You have already applied to this sponsorship program.');
+        if ($hasActiveGrant) {
+            return back()->with('error', 'You already have an active sponsorship. New applications are disabled until your current grant expires.');
+        }
+
+        $alreadyAppliedToProgram = Application::where('student_profile_id', $student->id)
+            ->where('sponsorship_program_id', $program->id)
+            ->whereIn('status', [
+                ApplicationStatus::Pending,
+                ApplicationStatus::Verified,
+                ApplicationStatus::Approved,
+                ApplicationStatus::Ongoing,
+            ])->exists();
+
+        if ($alreadyAppliedToProgram) {
+            return back()->with('error', 'You have an active or pending application for this program.');
         }
 
         if ($this->hasBlockingApplication($profile)) {
@@ -211,14 +219,13 @@ class ApplicationController extends Controller
                 ->withErrors(['application' => 'Complete SLE-FHE verification before applying.']);
         }
 
+        // Check for strictly active grants
         $hasActiveGrant = Application::where('student_profile_id', $student->id)
-            ->where(function ($q) {
-                $q->whereIn('status', ['Approved', 'Ongoing'])
-                  ->orWhere(fn($sub) => $sub->where('status', 'Expired')->whereNotNull('approved_at'));
-            })->exists();
+            ->whereIn('status', [ApplicationStatus::Approved, ApplicationStatus::Ongoing])
+            ->exists();
 
         if ($hasActiveGrant) {
-            return back()->with('error', 'You already have an active/approved sponsorship record.');
+            return back()->with('error', 'You already have an active sponsorship. New applications are disabled until your current grant expires.');
         }
 
         if ($this->hasBlockingApplication($profile)) {
@@ -245,12 +252,17 @@ class ApplicationController extends Controller
                 ->withInput();
         }
 
-        $alreadyApplied = Application::where('student_profile_id', $student->id)
+        $alreadyAppliedToProgram = Application::where('student_profile_id', $student->id)
             ->where('sponsorship_program_id', $program->id)
-            ->exists();
+            ->whereIn('status', [
+                ApplicationStatus::Pending,
+                ApplicationStatus::Verified,
+                ApplicationStatus::Approved,
+                ApplicationStatus::Ongoing,
+            ])->exists();
 
-        if ($alreadyApplied) {
-            return back()->with('error', 'You have already applied to this sponsorship program.');
+        if ($alreadyAppliedToProgram) {
+            return back()->with('error', 'You have an active or pending application for this program.');
         }
 
         $eligibility = $program->checkEligibility($profile);

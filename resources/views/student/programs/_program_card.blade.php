@@ -25,6 +25,9 @@
 
     $deadline = $program->application_deadline;
     $isApplicationClosed = $program->isApplicationClosed();
+    $hasActiveGrant = $profile ? $profile->applications()
+        ->whereIn('status', [\App\Enums\ApplicationStatus::Approved, \App\Enums\ApplicationStatus::Ongoing])
+        ->exists() : false;
 @endphp
 
 <div class="col-12 col-md-6 col-lg-4">
@@ -114,7 +117,7 @@
                     <button type="button" class="btn btn-outline-secondary btn-sm w-100" disabled>
                         <i class="bi bi-lock me-1"></i>No Slots Available
                     </button>
-                @elseif ($hasActiveSponsorship)
+                @elseif ($hasActiveGrant)
                     <button type="button" class="btn btn-outline-secondary btn-sm w-100" disabled
                         title="You already have an active approved sponsorship.">
                         <i class="bi bi-lock me-1"></i>Active Sponsorship Lock
