@@ -321,37 +321,3 @@ Route::get('/force-sync-database-99', function () {
         ], 500);
     }
 });
-
-Route::get('/antigravity-full-db-sync-99', function () {
-    set_time_limit(300);
-    ini_set('memory_limit', '512M');
-
-    try {
-        // 1. Run all migrations safely
-        Artisan::call('migrate', ['--force' => true]);
-        $migrateOutput = Artisan::output();
-        // 2. Run database seeders
-        Artisan::call('db:seed', ['--force' => true]);
-        $seedOutput = Artisan::output();
-        // 3. Output table counts for verification
-        $tableCounts = [
-            'localaddress' => Schema::hasTable('localaddress') ? DB::table('localaddress')->count() : 0,
-            'academic_programs' => Schema::hasTable('academic_programs') ? DB::table('academic_programs')->count() : 0,
-            'sponsorship_programs' => Schema::hasTable('sponsorship_programs') ? DB::table('sponsorship_programs')->count() : 0,
-            'users' => Schema::hasTable('users') ? DB::table('users')->count() : 0,
-        ];
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Render database fully synchronized with phpMyAdmin!',
-            'table_counts' => $tableCounts,
-            'migrate_output' => $migrateOutput,
-            'seed_output' => $seedOutput,
-        ]);
-    } catch (\Throwable $e) {
-        return response()->json([
-            'status' => 'error',
-            'message' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
-        ], 500);
-    }
-});
