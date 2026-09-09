@@ -327,13 +327,13 @@ Route::get('/antigravity-full-db-sync-99', function () {
     ini_set('memory_limit', '512M');
 
     try {
-        // 1. Force migration run to guarantee missing tables exist
+        // 1. Run all migrations safely
         Artisan::call('migrate', ['--force' => true]);
         $migrateOutput = Artisan::output();
-        // 2. Execute all seeders
+        // 2. Run database seeders
         Artisan::call('db:seed', ['--force' => true]);
         $seedOutput = Artisan::output();
-        // 3. Collect row counts across all synced tables for verification
+        // 3. Output table counts for verification
         $tableCounts = [
             'localaddress' => Schema::hasTable('localaddress') ? DB::table('localaddress')->count() : 0,
             'academic_programs' => Schema::hasTable('academic_programs') ? DB::table('academic_programs')->count() : 0,
@@ -342,7 +342,7 @@ Route::get('/antigravity-full-db-sync-99', function () {
         ];
         return response()->json([
             'status' => 'success',
-            'message' => 'Full project schema and database synced successfully to Render!',
+            'message' => 'Render database fully synchronized with phpMyAdmin!',
             'table_counts' => $tableCounts,
             'migrate_output' => $migrateOutput,
             'seed_output' => $seedOutput,
