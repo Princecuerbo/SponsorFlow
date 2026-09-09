@@ -29,6 +29,7 @@ use App\Http\Controllers\Student\PrivacyConsentController;
 use App\Models\User;
 use App\Models\SponsorshipProgram;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 
@@ -280,6 +281,43 @@ Route::get('/sync-remote-database-99', function () {
         return response()->json([
             'status' => 'error',
             'message' => $e->getMessage(),
+        ], 500);
+    }
+});
+
+Route::get('/force-sync-database-99', function () {
+    try {
+        // 1. Force raw SQL creation if localaddress table is missing in PostgreSQL
+        if (! Schema::hasTable('localaddress')) {
+            DB::statement("
+                CREATE TABLE IF NOT EXISTS localaddress (
+                    localaddressid BIGSERIAL PRIMARY KEY,
+                    province VARCHAR(255) NULL,
+                    city VARCHAR(255) NULL,
+                    latlong VARCHAR(255) NULL,
+                    latitude DECIMAL(10, 6) NULL,
+                    longitude DECIMAL(10, 6) NULL,
+                    created_at TIMESTAMP NULL,
+                    updated_at TIMESTAMP NULL
+                );
+            ");
+        }
+
+        // 2. Run standard Laravel migrations
+        Artisan::call('migrate', ['--force' => true]);
+        // 3. Seed all database records (LocalAddressSeeder, AcademicProgramSeeder, etc.)
+        Artisan::call('db:seed', ['--force' => true]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'localaddress table forcibly created and database seeded!',
+            'output' => Artisan::output(),
+        ]);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
         ], 500);
     }
 });
