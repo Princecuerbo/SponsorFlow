@@ -43,6 +43,22 @@
             font-size: 0.8rem;
             font-weight: 600;
         }
+
+        .bg-amber-50 {
+            background-color: #fffbeb !important;
+        }
+
+        .text-amber-700 {
+            color: #b45309 !important;
+        }
+
+        .border-amber-200 {
+            border-color: #fde68a !important;
+        }
+
+        .rounded-full {
+            border-radius: 9999px !important;
+        }
     </style>
 @endpush
 
@@ -55,6 +71,10 @@
             <p class="text-secondary mb-0">Review unverified student profiles and submitted applications.</p>
         </div>
         <div class="d-flex flex-wrap gap-2">
+            <div class="px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-sm font-medium flex items-center gap-1.5" style="display: inline-flex; align-items: center; gap: 0.375rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #fffbeb; color: #b45309; border: 1px solid #fde68a;">
+                <span>⏳</span>
+                <span>{{ $pendingSleFheCount ?? 0 }} Pending SLE-FHE</span>
+            </div>
             <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #fffbebf5; color: #b45309; border: 1px solid #fde68a;">
                 <i class="bi bi-hourglass-split"></i> {{ $statusCounts['pending'] }} pending
             </span>
@@ -116,6 +136,7 @@
                     <label class="form-label small text-secondary fw-semibold mb-1">Status</label>
                     <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
                         <option value="">All statuses</option>
+                        <option value="pending_sle_fhe" @selected(request('status') === 'pending_sle_fhe')>Pending SLE-FHE</option>
                         <option value="Pending"  @selected(request('status') === 'Pending')>Pending</option>
                         <option value="Verified" @selected(request('status') === 'Verified')>Verified</option>
                         <option value="Approved" @selected(request('status') === 'Approved')>Approved</option>

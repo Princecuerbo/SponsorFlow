@@ -23,22 +23,7 @@ class ApplicantVerificationController extends Controller
 
     public function index(Request $request): View
     {
-        $status = $request->string('status')->toString();
-
-        $applications = Application::query()
-            ->with(['studentProfile.user', 'sponsorshipProgram', 'documents'])
-            ->when(
-                $status !== '' && ApplicationStatus::tryFrom($status),
-                fn ($query) => $query->where('status', $status),
-            )
-            ->latest('submitted_at')
-            ->get();
-
-        return view('fassg.verification.index', [
-            'user' => $this->actor($request),
-            'applications' => $applications,
-            'status' => $status,
-        ]);
+        return app(VerificationController::class)->index($request);
     }
 
     public function show(Request $request, Application $application): View

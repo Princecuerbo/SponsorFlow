@@ -33,20 +33,30 @@ class VerificationController extends Controller
         $category         = $request->string('category')->trim()->toString();
         $statusFilter     = $request->string('status')->trim()->toString();
 
-        // Student profiles (unverified SLE-FHE) — not affected by application filters
-        $profiles = StudentProfile::query()
-            ->with(['user', 'applications.documents'])
-            ->where('is_sle_fhe_verified', false)
-            ->when($search !== '', function ($query) use ($search): void {
-                $query->where(function ($query) use ($search): void {
-                    $query->where('student_id_number', 'like', "%{$search}%")
-                        ->orWhere('course', 'like', "%{$search}%")
-                        ->orWhereHas('user', fn ($uq) => $uq->where('name', 'like', "%{$search}%"));
-                });
-            })
-            ->when($academicProgramId > 0, fn ($q) => $q->where('academic_program_id', $academicProgramId))
-            ->latest()
-            ->get();
+        $pendingSleFheCount = StudentProfile::where('is_sle_fhe_verified', false)->count();
+        $pendingAppCount = Application::where('status', 'Pending')->count();
+
+        // Total pending items in queue
+        $pendingCount = $pendingSleFheCount + $pendingAppCount;
+
+        $includeProfiles = in_array($statusFilter, ['', 'Pending', 'pending_sle_fhe'], true);
+
+        // Student profiles (unverified SLE-FHE) — included when All, Pending, or Pending SLE-FHE is selected
+        $profiles = $includeProfiles
+            ? StudentProfile::query()
+                ->with(['user', 'applications.documents'])
+                ->where('is_sle_fhe_verified', false)
+                ->when($search !== '', function ($query) use ($search): void {
+                    $query->where(function ($query) use ($search): void {
+                        $query->where('student_id_number', 'like', "%{$search}%")
+                            ->orWhere('course', 'like', "%{$search}%")
+                            ->orWhereHas('user', fn ($uq) => $uq->where('name', 'like', "%{$search}%"));
+                    });
+                })
+                ->when($academicProgramId > 0, fn ($q) => $q->where('academic_program_id', $academicProgramId))
+                ->latest()
+                ->get()
+            : collect();
 
         $baseQuery = Application::query()
             ->with(['studentProfile.user', 'sponsorshipProgram.sponsor', 'documents'])
@@ -66,13 +76,15 @@ class VerificationController extends Controller
                 fn ($pq) => $pq->where('category', $category)
             ));
 
-        $applications = (clone $baseQuery)
-            ->when(
-                $statusFilter !== '' && ApplicationStatus::tryFrom($statusFilter),
-                fn ($q) => $q->where('status', $statusFilter)
-            )
-            ->latest('submitted_at')
-            ->get();
+        $applications = $statusFilter === 'pending_sle_fhe'
+            ? collect()
+            : (clone $baseQuery)
+                ->when(
+                    $statusFilter !== '' && ApplicationStatus::tryFrom($statusFilter),
+                    fn ($q) => $q->where('status', $statusFilter)
+                )
+                ->latest('submitted_at')
+                ->get();
 
         $verificationItems = $profiles->map(
             fn (StudentProfile $profile): array => ['type' => 'student', 'profile' => $profile, 'application' => null],
@@ -91,7 +103,7 @@ class VerificationController extends Controller
             ->get();
 
         $statusCounts = [
-            'pending'      => (clone $baseQuery)->where('status', ApplicationStatus::Pending)->count(),
+            'pending'      => $pendingCount,
             'verified'     => (clone $baseQuery)->where('status', ApplicationStatus::Verified)->count(),
             'approved'     => (clone $baseQuery)->where('status', ApplicationStatus::Approved)->count(),
             'rejected'     => (clone $baseQuery)->where('status', ApplicationStatus::Rejected)->count(),
@@ -99,14 +111,17 @@ class VerificationController extends Controller
         ];
 
         return view('fassg.verification.index', [
-            'user'              => $this->actor($request),
-            'verificationItems' => $verificationItems,
-            'pendingStudents'   => $profiles->count(),
+            'user'                => $this->actor($request),
+            'verificationItems'   => $verificationItems,
+            'pendingStudents'     => $profiles->count(),
             'pendingApplications' => $applications->count(),
-            'academicPrograms'  => $academicPrograms,
-            'programs'          => $programs,
-            'categories'        => ProgramCategory::cases(),
-            'statusCounts'      => $statusCounts,
+            'pendingSleFheCount'  => $pendingSleFheCount,
+            'pendingAppCount'     => $pendingAppCount,
+            'pendingCount'        => $pendingCount,
+            'academicPrograms'    => $academicPrograms,
+            'programs'            => $programs,
+            'categories'          => ProgramCategory::cases(),
+            'statusCounts'        => $statusCounts,
         ]);
     }
 
