@@ -234,14 +234,23 @@ Route::middleware(['auth', 'EnsureUserRole:admin'])
         Route::get('/backups/{backup}/download', [BackupController::class, 'download'])->name('backups.download');
         Route::post('/backup', [BackupController::class, 'run'])->name('backup.run');
     });
+use Illuminate\Support\Facades\Artisan;
+
 Route::get('/run-seeders-secret-key-99', function () {
     try {
-        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+        // Step 1: Run pending migrations (creates localaddress table)
+        Artisan::call('migrate', ['--force' => true]);
+        $migrateOutput = Artisan::output();
+
+        // Step 2: Seed the database (populates localaddress and other tables)
+        Artisan::call('db:seed', ['--force' => true]);
+        $seedOutput = Artisan::output();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'All database seeders executed successfully!',
-            'output' => \Illuminate\Support\Facades\Artisan::output(),
+            'message' => 'Database successfully migrated and seeded!',
+            'migrate_output' => $migrateOutput,
+            'seed_output' => $seedOutput,
         ]);
     } catch (\Throwable $e) {
         return response()->json([
