@@ -169,7 +169,7 @@ class ApprovalUploadController extends Controller
             }
 
             $application->update([
-                'status' => ApplicationStatus::Approved,
+                'status' => ApplicationStatus::Ongoing,
                 'approved_at' => now(),
             ]);
 
@@ -187,7 +187,7 @@ class ApprovalUploadController extends Controller
             $studentUser = $application->studentProfile->user ?? null;
 
             if ($studentUser !== null) {
-                $studentUser->notify(new ApplicationStatusUpdated($application, ApplicationStatus::Approved));
+                $studentUser->notify(new ApplicationStatusUpdated($application, ApplicationStatus::Ongoing));
             }
         }
     }

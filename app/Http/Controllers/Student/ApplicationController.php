@@ -82,6 +82,7 @@ class ApplicationController extends Controller
     {
         $program = SponsorshipProgram::with('academicPrograms')->findOrFail($id);
         $profile = $this->studentProfile($request);
+        $student = $profile;
 
         if (! $profile->is_sle_fhe_verified) {
             return redirect()
@@ -93,6 +94,24 @@ class ApplicationController extends Controller
             return redirect()
                 ->route('student.programs.index')
                 ->with('error', 'The application deadline for this program has passed.');
+        }
+
+        $hasActiveGrant = Application::where('student_profile_id', $student->id)
+            ->where(function ($q) {
+                $q->whereIn('status', ['Approved', 'Ongoing'])
+                  ->orWhere(fn($sub) => $sub->where('status', 'Expired')->whereNotNull('approved_at'));
+            })->exists();
+
+        if ($hasActiveGrant) {
+            return back()->with('error', 'You already have an active/approved sponsorship record.');
+        }
+
+        $alreadyApplied = Application::where('student_profile_id', $student->id)
+            ->where('sponsorship_program_id', $program->id)
+            ->exists();
+
+        if ($alreadyApplied) {
+            return back()->with('error', 'You have already applied to this sponsorship program.');
         }
 
         if ($this->hasBlockingApplication($profile)) {
@@ -184,11 +203,22 @@ class ApplicationController extends Controller
     public function store(StoreApplicationRequest $request): RedirectResponse
     {
         $profile = $this->studentProfile($request);
+        $student = $profile;
 
         if (! $profile->is_sle_fhe_verified) {
             return redirect()
                 ->route('student.verification.show')
                 ->withErrors(['application' => 'Complete SLE-FHE verification before applying.']);
+        }
+
+        $hasActiveGrant = Application::where('student_profile_id', $student->id)
+            ->where(function ($q) {
+                $q->whereIn('status', ['Approved', 'Ongoing'])
+                  ->orWhere(fn($sub) => $sub->where('status', 'Expired')->whereNotNull('approved_at'));
+            })->exists();
+
+        if ($hasActiveGrant) {
+            return back()->with('error', 'You already have an active/approved sponsorship record.');
         }
 
         if ($this->hasBlockingApplication($profile)) {
@@ -215,30 +245,20 @@ class ApplicationController extends Controller
                 ->withInput();
         }
 
+        $alreadyApplied = Application::where('student_profile_id', $student->id)
+            ->where('sponsorship_program_id', $program->id)
+            ->exists();
+
+        if ($alreadyApplied) {
+            return back()->with('error', 'You have already applied to this sponsorship program.');
+        }
+
         $eligibility = $program->checkEligibility($profile);
 
         if (! $eligibility['is_eligible']) {
             return redirect()
                 ->route('student.programs.index')
                 ->with('error', $eligibility['reasons'][0]);
-        }
-
-        $existingActiveApplication = $profile->applications()
-            ->where('sponsorship_program_id', $program->id)
-            ->whereIn('status', [
-                'submitted',
-                ApplicationStatus::Pending,
-                ApplicationStatus::Verified,
-                ApplicationStatus::Approved,
-                ApplicationStatus::Ongoing,
-                ApplicationStatus::ResubmissionRequested,
-            ])
-            ->exists();
-
-        if ($existingActiveApplication) {
-            return back()
-                ->withErrors(['application' => 'You already have an active application for this sponsorship program.'])
-                ->withInput();
         }
 
         $eligibilityErrors = $program->eligibilityErrors(

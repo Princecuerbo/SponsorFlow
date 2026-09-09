@@ -41,9 +41,13 @@ class VerificationController extends Controller
             ->whereHas('studentProfile', fn ($q) => $q->where('is_sle_fhe_verified', true))
             ->count();
 
-        $includeProfiles = in_array($statusFilter, ['', 'Pending', 'pending_sle_fhe'], true);
+        $isPendingSleFhe = in_array(strtolower($statusFilter), ['pending_sle_fhe', 'pending sle-fhe'], true);
+        $isAllStatuses   = $statusFilter === '';
 
-        // Student profiles (unverified SLE-FHE) — included when All, Pending, or Pending SLE-FHE is selected
+        // Student profiles awaiting SLE-FHE verification are included only when 'Pending SLE-FHE' or 'All statuses' is selected.
+        // Selecting 'Pending' strictly queries applications without mixing profile records.
+        $includeProfiles = $isPendingSleFhe || ($isAllStatuses && $request->integer('page', 1) <= 1);
+
         $profiles = $includeProfiles
             ? StudentProfile::query()
                 ->with(['user', 'applications.documents'])
@@ -79,15 +83,23 @@ class VerificationController extends Controller
             ))
             ->whereHas('studentProfile', fn ($pq) => $pq->where('is_sle_fhe_verified', true));
 
-        $applications = $statusFilter === 'pending_sle_fhe'
+        $actionableStatuses = [
+            ApplicationStatus::Pending,
+            ApplicationStatus::Verified,
+            ApplicationStatus::ResubmissionRequested,
+        ];
+
+        // When Status Filter = 'Pending SLE-FHE', only unverified student profiles are returned (no applications).
+        $applications = $isPendingSleFhe
             ? collect()
             : (clone $baseQuery)
+                ->whereIn('status', $actionableStatuses)
                 ->when(
-                    $statusFilter !== '' && ApplicationStatus::tryFrom($statusFilter),
+                    $statusFilter !== '' && in_array(ApplicationStatus::tryFrom($statusFilter), $actionableStatuses, true),
                     fn ($q) => $q->where('status', $statusFilter)
                 )
-                ->latest('submitted_at')
-                ->get();
+                ->latest()
+                ->paginate(15);
 
         $verificationItems = $profiles->map(
             fn (StudentProfile $profile): array => ['type' => 'student', 'profile' => $profile, 'application' => null],
@@ -117,13 +129,14 @@ class VerificationController extends Controller
             'user'                => $this->actor($request),
             'verificationItems'   => $verificationItems,
             'pendingStudents'     => $profiles->count(),
-            'pendingApplications' => $applications->count(),
+            'pendingApplications' => method_exists($applications, 'total') ? $applications->total() : $applications->count(),
             'pendingSleFheCount'  => $pendingSleFheCount,
             'pendingAppCount'     => $pendingAppCount,
             'academicPrograms'    => $academicPrograms,
             'programs'            => $programs,
             'categories'          => ProgramCategory::cases(),
             'statusCounts'        => $statusCounts,
+            'applications'        => $applications,
         ]);
     }
 

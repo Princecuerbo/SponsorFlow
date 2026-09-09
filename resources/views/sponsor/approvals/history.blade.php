@@ -65,7 +65,7 @@
                                         {{ $application->studentProfile->student_id_number }}</div>
                                 </td>
                                 <td>{{ $application->sponsorshipProgram->program_name }}</td>
-                                <td><span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200">Approved</span></td>
+                                <td><x-status-badge :status="$application->status" /></td>
                                 <td>{{ $application->approved_at?->format('M d, Y') ?? ($application->updated_at?->format('M d, Y') ?? '—') }}
                                 </td>
                                 <td class="text-end pe-4">

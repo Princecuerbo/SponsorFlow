@@ -114,8 +114,14 @@ class SponsorshipProgram extends Model
         }
 
         return (int) $this->applications()
-            ->where('status', ApplicationStatus::Approved)
-            ->count();
+            ->previouslyApprovedBeneficiaries()
+            ->distinct('student_profile_id')
+            ->count('student_profile_id');
+    }
+
+    public function getAvailableSlotsAttribute(): int
+    {
+        return max(0, (int) $this->total_slots - $this->filled_slots);
     }
 
     public function getUtilizationAttribute(): int
@@ -213,13 +219,19 @@ class SponsorshipProgram extends Model
 
     public function decrementAvailableSlot(): bool
     {
-        if ($this->available_slots <= 0) {
+        // Use the raw DB column for the guard — the dynamic accessor already
+        // reflects the just-saved Ongoing application, so checking it here
+        // would give a false "no slots" result.
+        $rawAvailable = (int) $this->attributes['available_slots'];
+
+        if ($rawAvailable <= 0) {
             return false;
         }
 
         $this->decrement('available_slots');
         $this->refresh();
 
+        // After decrement, use the live accessor to decide if the program is now full.
         if ($this->available_slots <= 0) {
             $this->update(['status' => ProgramStatus::Closed]);
         }

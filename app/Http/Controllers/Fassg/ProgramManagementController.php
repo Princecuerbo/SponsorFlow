@@ -145,8 +145,9 @@ class ProgramManagementController extends Controller
             $attributes['required_documents'] = $request->validated('required_documents') ?? [];
 
             $approvedCount = $sponsorshipProgram->applications()
-                ->where('status', ApplicationStatus::Approved)
-                ->count();
+                ->previouslyApprovedBeneficiaries()
+                ->distinct('student_profile_id')
+                ->count('student_profile_id');
             $attributes['available_slots'] = max(0, (int) $attributes['total_slots'] - $approvedCount);
 
             $academicProgramIds = array_values(array_map('intval', $request->input('academic_program_ids', []) ?: []));

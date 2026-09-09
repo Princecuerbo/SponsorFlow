@@ -44,7 +44,7 @@ class ReviewController extends Controller
             'listsPendingReview' => $pendingReviewCount,
             'uploadedApprovals' => Application::query()
                 ->whereHas('sponsorshipProgram', fn($query) => $query->where('sponsor_id', $sponsor?->id))
-                ->where('status', ApplicationStatus::Approved)
+                ->whereIn('status', [ApplicationStatus::Approved, ApplicationStatus::Ongoing])
                 ->whereNotNull('sponsor_approval_path')
                 ->count(),
         ]);
@@ -171,7 +171,7 @@ class ReviewController extends Controller
             }
 
             $application->update([
-                'status' => ApplicationStatus::Approved,
+                'status' => ApplicationStatus::Ongoing,
                 'approved_at' => now(),
                 'sponsor_approval_path' => $path,
             ]);
@@ -213,7 +213,7 @@ class ReviewController extends Controller
         $studentUser = $application->studentProfile->user ?? null;
 
         if ($studentUser !== null) {
-            $studentUser->notify(new ApplicationStatusUpdated($application, ApplicationStatus::Approved));
+            $studentUser->notify(new ApplicationStatusUpdated($application, ApplicationStatus::Ongoing));
         }
 
         return redirect()->route('sponsor.applicants.index')->with('status', 'Application confirmed and forwarded to Accounting.');
@@ -268,25 +268,27 @@ class ReviewController extends Controller
     public function history(Request $request): View
     {
         $sponsor = $this->sponsorOrganization($request);
+        $sponsorId = $sponsor->id;
 
         // Approved applications remain in history even if the parent program
         // expired (cascadeExpiredApplications() reflags them to Expired, but
         // approved_at still identifies them as previously finalized approvals).
-        $applications = Application::query()
-            ->whereHas('sponsorshipProgram', fn($query) => $query->where('sponsor_id', $sponsor->id))
-            ->where(function ($query): void {
-                $query->where('status', ApplicationStatus::Approved)
-                    ->orWhere(function ($query): void {
-                        $query->where('status', ApplicationStatus::Expired)
-                            ->whereNotNull('approved_at');
-                    });
+        $approvedApplications = Application::where(function ($query): void {
+            $query->whereIn('status', ['Approved', 'Ongoing'])
+                ->orWhere(function ($q): void {
+                    $q->where('status', 'Expired')
+                        ->whereNotNull('approved_at');
+                });
+        })
+            ->whereHas('sponsorshipProgram', function ($query) use ($sponsorId): void {
+                $query->where('sponsor_id', $sponsorId);
             })
             ->with(['studentProfile.user', 'sponsorshipProgram'])
             ->latest('approved_at')
             ->get();
 
         $approvals = SponsorApproval::query()
-            ->whereHas('sponsorshipProgram', fn($query) => $query->where('sponsor_id', $sponsor->id))
+            ->whereHas('sponsorshipProgram', fn($query) => $query->where('sponsor_id', $sponsorId))
             ->where('confirmation_status', ConfirmationStatus::Confirmed)
             ->with(['fixedList', 'sponsorshipProgram'])
             ->latest()
@@ -295,7 +297,8 @@ class ReviewController extends Controller
         return view('sponsor.approvals.history', [
             'user' => $this->actor($request),
             'sponsor' => $sponsor,
-            'applications' => $applications,
+            'applications' => $approvedApplications,
+            'approvedApplications' => $approvedApplications,
             'approvals' => $approvals,
         ]);
     }

@@ -61,7 +61,10 @@ class ReportsController extends Controller
             ->pluck('total', 'status')
             ->all();
 
-        $approvedBeneficiaries = Application::query()->previouslyApprovedBeneficiaries()->count();
+        $approvedBeneficiaries = Application::query()
+            ->previouslyApprovedBeneficiaries()
+            ->distinct('student_profile_id')
+            ->count('student_profile_id');
 
         $confirmedLists = FixedList::query()
             ->where('status', FixedListStatus::Approved)
@@ -210,21 +213,22 @@ class ReportsController extends Controller
 
         $slotUtilization = SponsorshipProgram::query()
             ->select('id', 'program_name', 'total_slots', 'available_slots')
-            ->withCount(['applications as approved_count' => fn ($q) => $q->previouslyApprovedBeneficiaries()])
             ->orderBy('program_name')
             ->get()
             ->map(function (SponsorshipProgram $program): SponsorshipProgram {
-                $filled = (int) $program->approved_count;
+                $filledSlots = $program->applications()
+                    ->previouslyApprovedBeneficiaries()
+                    ->distinct('student_profile_id')
+                    ->count('student_profile_id');
 
-                $program->setAttribute('available_slots', max(0, (int) $program->total_slots - $filled));
+                $program->setAttribute('approved_count', $filledSlots);
+                $program->setAttribute('available_slots', max(0, (int) $program->total_slots - $filledSlots));
 
                 return $program;
             });
 
         $programSlots = (int) SponsorshipProgram::sum('total_slots');
-        $filledSlots = (int) Application::query()
-            ->previouslyApprovedBeneficiaries()
-            ->count();
+        $filledSlots = (int) $slotUtilization->sum(fn (SponsorshipProgram $program): int => (int) $program->approved_count);
         $applicantCategoryTotals = $this->categoryTotals($applicantsByCategory);
         $categoryBreakdown = collect($this->categoryTotals($categoryBreakdown))
             ->map(fn(int $programs, string $category): array => [

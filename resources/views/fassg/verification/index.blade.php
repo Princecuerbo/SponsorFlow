@@ -332,5 +332,11 @@
                 </table>
             </div>
         </div>
+
+        @if (isset($applications) && method_exists($applications, 'hasPages') && $applications->hasPages())
+            <div class="mt-3 d-flex justify-content-end">
+                {{ $applications->withQueryString()->links() }}
+            </div>
+        @endif
     @endif
 @endsection

@@ -114,7 +114,7 @@ class DashboardController extends Controller
 
             $statusCounts = Application::query()
                 ->select('status')
-                ->selectRaw('count(*) as total')
+                ->selectRaw('count(distinct student_profile_id) as total')
                 ->groupBy('status')
                 ->pluck('total', 'status')
                 ->all();
@@ -136,7 +136,9 @@ class DashboardController extends Controller
                 ->whereIn('status', [ProgramStatus::Open->value, ProgramStatus::Closed->value])
                 ->count();
 
-            $approvedApplicationsCount = Application::query()->approvedBeneficiaries()->count();
+            $confirmedBeneficiaries = Application::previouslyApprovedBeneficiaries()
+                ->distinct('student_profile_id')
+                ->count('student_profile_id');
 
             $confirmedFixedListNamesCount = FixedList::query()
                 ->where('status', FixedListStatus::Approved)
@@ -145,12 +147,12 @@ class DashboardController extends Controller
                 ->get()
                 ->sum('items_count');
 
-            $totalConfirmedBeneficiaries = $approvedApplicationsCount + $confirmedFixedListNamesCount;
+            $totalConfirmedBeneficiaries = $confirmedBeneficiaries + $confirmedFixedListNamesCount;
 
             return view('fassg.dashboard', [
                 'user' => $user,
                 'stats' => [
-                    'total_applicants' => Application::query()->count(),
+                    'total_applicants' => Application::distinct('student_profile_id')->count('student_profile_id'),
                     'verified_sle_fhe' => StudentProfile::query()
                         ->where(function ($query): void {
                             $query->where('is_sle_fhe_verified', true)
@@ -165,7 +167,18 @@ class DashboardController extends Controller
                     'confirmed_beneficiaries' => $totalConfirmedBeneficiaries,
                 ],
                 'applicationStatusBreakdown' => collect(ApplicationStatus::cases())
-                    ->mapWithKeys(fn(ApplicationStatus $status): array => [$status->value => (int) ($statusCounts[$status->value] ?? 0)])
+                    ->mapWithKeys(function (ApplicationStatus $status) use ($statusCounts): array {
+                        $count = match ($status) {
+                            ApplicationStatus::Expired => Application::query()
+                                ->where('status', ApplicationStatus::Expired)
+                                ->whereNull('approved_at')
+                                ->distinct('student_profile_id')
+                                ->count('student_profile_id'),
+                            default => (int) ($statusCounts[$status->value] ?? 0),
+                        };
+
+                        return [$status->value => $count];
+                    })
                     ->all(),
                 'pendingVerificationCount' => $pendingVerificationCount,
                 'recentPrograms' => $recentPrograms,
