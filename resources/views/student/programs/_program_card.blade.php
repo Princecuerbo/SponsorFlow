@@ -22,6 +22,9 @@
         }
         return trim((string) $c);
     })->filter()->values();
+
+    $deadline = $program->application_deadline;
+    $isApplicationClosed = $program->isApplicationClosed();
 @endphp
 
 <div class="col-12 col-md-6 col-lg-4">
@@ -94,6 +97,12 @@
                             class="fw-semibold text-end text-break">{{ $program->address_requirement }}</span>
                     </li>
                 @endif
+                @if ($deadline)
+                    <li class="d-flex justify-content-between gap-3 py-1 border-bottom">
+                        <span class="text-secondary">📅 Application Deadline</span>
+                        <span class="fw-semibold text-end">{{ $deadline->format('M j, Y') }}</span>
+                    </li>
+                @endif
             </ul>
 
             <div class="mt-auto pt-3">
@@ -115,6 +124,13 @@
                         title="Applications are unavailable for this program.">
                         <i class="bi bi-lock me-1"></i>Applications Unavailable
                     </button>
+                @elseif ($isApplicationClosed)
+                    <div class="text-center py-2">
+                        <span class="badge rounded-2 px-3 py-2 fw-semibold"
+                            style="background-color: rgba(108, 117, 125, 0.12) !important; color: #6c757d !important;">
+                            <i class="bi bi-calendar-x me-1"></i>Applications Closed
+                        </span>
+                    </div>
                 @else
                     <a href="{{ route('student.applications.create', ['sponsorshipProgram' => $program->id]) }}"
                         class="btn btn-navy-primary btn-sm w-100 fw-semibold apply-now-btn"

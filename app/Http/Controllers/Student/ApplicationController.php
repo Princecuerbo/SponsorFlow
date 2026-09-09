@@ -89,6 +89,12 @@ class ApplicationController extends Controller
                 ->withErrors(['application' => 'Complete SLE-FHE verification before applying.']);
         }
 
+        if ($program->isApplicationClosed()) {
+            return redirect()
+                ->route('student.programs.index')
+                ->with('error', 'The application deadline for this program has passed.');
+        }
+
         if ($this->hasBlockingApplication($profile)) {
             return redirect()
                 ->route('student.programs.index')
@@ -202,6 +208,12 @@ class ApplicationController extends Controller
         }
 
         $program = SponsorshipProgram::query()->findOrFail($request->integer('sponsorship_program_id'));
+
+        if ($program->isApplicationClosed()) {
+            return back()
+                ->withErrors(['application' => 'The application deadline for this program has passed.'])
+                ->withInput();
+        }
 
         $eligibility = $program->checkEligibility($profile);
 

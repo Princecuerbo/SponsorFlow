@@ -91,6 +91,18 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
+    <div class="col-md-6"><label class="form-label fw-bold" for="application_deadline">Application Deadline
+            (Optional)</label><input
+            class="form-control @error('application_deadline') is-invalid @enderror" id="application_deadline"
+            type="date" name="application_deadline"
+            value="{{ old('application_deadline', $program->application_deadline?->format('Y-m-d') ?? '') }}"><small
+            class="text-muted">Students cannot submit new applications past this date. The program remains active for
+            FASSG/Sponsor
+            review.</small>
+        @error('application_deadline')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
     <div class="col-md-6"><label class="form-label fw-semibold" for="min_gpa">Minimum GPA</label><input
             class="form-control" id="min_gpa" type="number" step="0.01" min="1" max="5"
             name="min_gpa" value="{{ old('min_gpa', $program->min_gpa ?? '') }}"></div>

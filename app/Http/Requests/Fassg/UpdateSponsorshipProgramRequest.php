@@ -26,6 +26,11 @@ class UpdateSponsorshipProgramRequest extends FormRequest
             'total_slots' => ['required', 'integer', 'min:0', 'max:1000'],
             'status' => ['required', Rule::enum(\App\Enums\ProgramStatus::class)],
             'end_date' => ['nullable', 'date'],
+            'application_deadline' => [
+                'nullable',
+                'date',
+                Rule::when($this->filled('end_date'), ['before_or_equal:end_date']),
+            ],
             'min_gpa' => ['nullable', 'numeric', 'min:1', 'max:5'],
             'target_course' => ['nullable', 'string', 'max:150'],
             'address_requirement' => ['nullable', 'string', 'max:255'],

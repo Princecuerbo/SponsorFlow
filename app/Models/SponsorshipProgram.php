@@ -36,6 +36,7 @@ class SponsorshipProgram extends Model
         'eligible_campuses',
         'required_documents',
         'end_date',
+        'application_deadline',
     ];
 
     /**
@@ -54,6 +55,7 @@ class SponsorshipProgram extends Model
             'eligible_campuses' => 'array',
             'required_documents' => 'array',
             'end_date' => 'date',
+            'application_deadline' => 'date',
         ];
     }
 
@@ -202,6 +204,11 @@ class SponsorshipProgram extends Model
     public function isOpen(): bool
     {
         return $this->status === ProgramStatus::Open;
+    }
+
+    public function isApplicationClosed(): bool
+    {
+        return $this->application_deadline && now()->gt($this->application_deadline->endOfDay());
     }
 
     public function decrementAvailableSlot(): bool
