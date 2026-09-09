@@ -162,13 +162,15 @@
         {{-- Notification Bell + User Profile (inline, left-aligned) --}}
         <div class="d-flex align-items-center gap-3 flex-shrink-0">
 
-            <a href="#" class="position-relative text-secondary d-none d-md-inline-flex align-items-center"
-                aria-label="Notifications">
-                <i class="bi bi-bell fs-5"></i>
-                <span
-                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-white fw-bold"
-                    style="font-size: 0.6rem; padding: 0.4em 0.7em;">0</span>
-            </a>
+            @if ($user->isStudent())
+                <a href="#" class="position-relative text-secondary d-none d-md-inline-flex align-items-center"
+                    aria-label="Notifications">
+                    <i class="bi bi-bell fs-5"></i>
+                    <span
+                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-white fw-bold"
+                        style="font-size: 0.6rem; padding: 0.4em 0.7em;">0</span>
+                </a>
+            @endif
 
             {{-- Desktop User Dropdown --}}
             <div class="dropdown d-none d-md-block">
