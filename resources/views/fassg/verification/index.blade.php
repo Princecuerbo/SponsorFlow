@@ -55,20 +55,20 @@
             <p class="text-secondary mb-0">Review unverified student profiles and submitted applications.</p>
         </div>
         <div class="d-flex flex-wrap gap-2">
-            <span class="stat-pill bg-secondary-subtle text-secondary border border-secondary-subtle">
-                <i class="bi bi-person-check"></i> {{ $pendingStudents }} profile{{ $pendingStudents !== 1 ? 's' : '' }}
-            </span>
-            <span class="stat-pill bg-warning-subtle text-warning-emphasis border border-warning-subtle">
+            <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #fffbebf5; color: #b45309; border: 1px solid #fde68a;">
                 <i class="bi bi-hourglass-split"></i> {{ $statusCounts['pending'] }} pending
             </span>
-            <span class="stat-pill bg-info-subtle text-info-emphasis border border-info-subtle">
+            <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #ecfeff; color: #0e7490; border: 1px solid #a5f3fc;">
                 <i class="bi bi-patch-check"></i> {{ $statusCounts['verified'] }} verified
             </span>
-            <span class="stat-pill bg-success-subtle text-success border border-success-subtle">
+            <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
                 <i class="bi bi-award"></i> {{ $statusCounts['approved'] }} approved
             </span>
-            <span class="stat-pill bg-danger-subtle text-danger border border-danger-subtle">
+            <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #fff1f2; color: #be123c; border: 1px solid #fecdd3;">
                 <i class="bi bi-x-circle"></i> {{ $statusCounts['rejected'] }} rejected
+            </span>
+            <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #fff7ed; color: #c2410c; border: 1px solid #ffedd5;">
+                <i class="bi bi-arrow-counterclockwise"></i> {{ $statusCounts['resubmission'] }} resubmission
             </span>
         </div>
     </div>
@@ -77,23 +77,6 @@
     @if (session('status'))
         <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
             <i class="bi bi-check-circle me-2"></i>{{ session('status') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-            <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-    @if ($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            <ul class="mb-0 ps-3">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
@@ -137,6 +120,7 @@
                         <option value="Verified" @selected(request('status') === 'Verified')>Verified</option>
                         <option value="Approved" @selected(request('status') === 'Approved')>Approved</option>
                         <option value="Rejected" @selected(request('status') === 'Rejected')>Rejected</option>
+                        <option value="Resubmission Requested" @selected(request('status') === 'Resubmission Requested')>Resubmission Requested</option>
                     </select>
                 </div>
 
@@ -243,9 +227,9 @@
                                 {{-- Documents --}}
                                 <td>
                                     @if ($application)
-                                        @php $docCount = $application->documents->count(); @endphp
-                                        <span class="badge {{ $docCount >= 3 ? 'bg-success-subtle text-success-emphasis' : 'bg-warning-subtle text-warning-emphasis' }}">
-                                            {{ $docCount }}/3 docs
+                                        @php $docCounts = $application->documentStatusCounts(); @endphp
+                                        <span class="badge {{ $docCounts['uploaded'] >= $docCounts['required'] ? 'bg-success-subtle text-success-emphasis' : 'bg-warning-subtle text-warning-emphasis' }}">
+                                            {{ $docCounts['uploaded'] }}/{{ $docCounts['required'] }} docs
                                         </span>
                                     @else
                                         <span class="text-secondary small">Profile registration</span>

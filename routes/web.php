@@ -102,6 +102,7 @@ Route::middleware(['web', 'auth', 'EnsureUserRole:student'])
         Route::get('/apply/{sponsorshipProgram}', [StudentApplicationController::class, 'create'])->name('apply');
         Route::post('/applications', [StudentApplicationController::class, 'store'])->name('applications.store');
         Route::get('/applications/{application}', [StudentApplicationController::class, 'show'])->name('applications.show');
+        Route::post('/applications/{application}/resubmit', [StudentApplicationController::class, 'resubmit'])->name('applications.resubmit');
         Route::get('/applications/{application}/documents/{documentType}', [StudentApplicationController::class, 'downloadDocument'])
             ->name('applications.documents.download');
     });
@@ -136,9 +137,9 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
         Route::patch('/applications/{application}/verify', [ApplicantVerificationController::class, 'verify'])->name('applications.verify');
         Route::patch('/applications/{application}/reject', [ApplicantVerificationController::class, 'reject'])->name('applications.reject');
         Route::post('/verification/{application}/update', [ApplicantVerificationController::class, 'updateStatus'])->name('verification.update');
-        Route::patch('/verification/{application}/verify', [FassgVerificationController::class, 'verify'])->name('verification.verify');
         Route::patch('/verification/{application}/approve', [FassgVerificationController::class, 'approve'])->name('verification.approve');
         Route::patch('/verification/{application}/reject', [FassgVerificationController::class, 'reject'])->name('verification.reject');
+        Route::patch('/verification/{application}/request-resubmission', [FassgVerificationController::class, 'requestResubmission'])->name('verification.request-resubmission');
         Route::patch('/verification/{application}/request-revision', [ApplicantVerificationController::class, 'reject'])->name('verification.request-revision');
         Route::get('/applications/{application}/documents/{applicationDocument}', [ApplicantVerificationController::class, 'downloadDocument'])
             ->name('applications.documents.download');

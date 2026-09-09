@@ -22,6 +22,7 @@
         'Closed' => ['bg-secondary-subtle text-secondary border border-secondary-subtle', 'bi-slash-circle'],
         'Expired' => ['bg-danger-subtle text-danger border border-danger-subtle', 'bi-clock-history'],
         'Ongoing' => ['bg-success-subtle text-success border border-success-subtle', 'bi-arrow-repeat'],
+        'Resubmission Requested' => ['bg-warning-subtle text-warning-emphasis border border-warning-subtle', 'bi-arrow-counterclockwise'],
     ];
 
     [$colors, $icon] = $map[$label] ?? ['bg-secondary-subtle text-secondary border border-secondary-subtle', 'bi-question-circle'];

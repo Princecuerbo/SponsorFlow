@@ -6,7 +6,7 @@ use App\Enums\DocumentType;
 use App\Models\Application;
 use Illuminate\Foundation\Http\FormRequest;
 
-class VerifyApplicationRequest extends FormRequest
+class ApproveApplicationRequest extends FormRequest
 {
     public function authorize(): bool
     {

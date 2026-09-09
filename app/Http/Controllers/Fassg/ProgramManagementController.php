@@ -80,18 +80,24 @@ class ProgramManagementController extends Controller
     public function store(StoreSponsorshipProgramRequest $request): RedirectResponse
     {
         $slots = (int) $request->validated('total_slots');
+        $academicProgramIds = array_values(array_map('intval', $request->input('academic_program_ids', []) ?: []));
 
-        $program = SponsorshipProgram::query()->create([
-            ...$request->validated(),
-            'total_slots' => $slots,
-            'available_slots' => $slots,
-            'requires_relative_verification' => $request->boolean('requires_relative_verification'),
-            'eligible_campuses' => $request->validated('eligible_campuses') ?? [],
-            'required_documents' => $request->validated('required_documents') ?? [],
-            'status' => ProgramStatus::Open,
-        ]);
+        $program = DB::transaction(function () use ($request, $slots, $academicProgramIds): SponsorshipProgram {
+            $program = SponsorshipProgram::query()->create([
+                ...$request->validated(),
+                'total_slots' => $slots,
+                'available_slots' => $slots,
+                'target_course' => $this->resolveTargetCourse($academicProgramIds),
+                'requires_relative_verification' => $request->boolean('requires_relative_verification'),
+                'eligible_campuses' => $request->validated('eligible_campuses') ?? [],
+                'required_documents' => $request->validated('required_documents') ?? [],
+                'status' => ProgramStatus::Open,
+            ]);
 
-        $program->academicPrograms()->sync($request->input('academic_program_ids', []));
+            $program->academicPrograms()->sync($academicProgramIds);
+
+            return $program;
+        });
 
         $this->audit($request, 'fassg.program.created', 'sponsorship_programs');
 
@@ -139,9 +145,13 @@ class ProgramManagementController extends Controller
                 ->count();
             $attributes['available_slots'] = max(0, (int) $attributes['total_slots'] - $approvedCount);
 
+            $academicProgramIds = array_values(array_map('intval', $request->input('academic_program_ids', []) ?: []));
+            unset($attributes['academic_program_ids']);
+            $attributes['target_course'] = $this->resolveTargetCourse($academicProgramIds);
+
             $sponsorshipProgram->update($attributes);
 
-            $sponsorshipProgram->academicPrograms()->sync($request->input('academic_program_ids', []));
+            $sponsorshipProgram->academicPrograms()->sync($academicProgramIds);
 
             if ($shouldExpire) {
                 $applicationIds = $sponsorshipProgram->applications()
@@ -170,8 +180,29 @@ class ProgramManagementController extends Controller
             ->with('status', "Program {$sponsorshipProgram->program_name} was updated.");
     }
 
+    /**
+     * Derive the legacy free-text course target from the selected academic programs.
+     *
+     * Exactly one selected course -> its full program name stored in target_course;
+     * none or multiple selections -> null, so eligibility resolves through the
+     * program_academic_program pivot instead of the free-text fallback.
+     *
+     * @param list<int> $academicProgramIds
+     */
+    private function resolveTargetCourse(array $academicProgramIds): ?string
+    {
+        if (count($academicProgramIds) !== 1) {
+            return null;
+        }
+
+        return AcademicProgram::query()
+            ->where('program_id', $academicProgramIds[0])
+            ->value('name');
+    }
+
     private function availableSponsors()
-    {        User::query()
+    {
+        User::query()
             ->where('role', UserRole::Sponsor)
             ->each(function (User $user): void {
                 Sponsor::query()->updateOrCreate(

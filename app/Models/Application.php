@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\ProgramStatus;
+use App\Enums\DocumentType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +34,8 @@ class Application extends Model
         'approved_at',
         'sponsor_approval_path',
         'rejection_reason',
+        'resubmission_notes',
+        'requested_documents',
     ];
 
     /**
@@ -44,6 +47,7 @@ class Application extends Model
             'gpa_submitted' => 'decimal:2',
             'is_rural_submitted' => 'boolean',
             'status' => ApplicationStatus::class,
+            'requested_documents' => 'array',
             'submitted_at' => 'datetime',
             'verified_at' => 'datetime',
             'approved_at' => 'datetime',
@@ -74,6 +78,30 @@ class Application extends Model
     public function documents(): HasMany
     {
         return $this->hasMany(ApplicationDocument::class);
+    }
+
+    /**
+     * Program-required document groups vs. how many are satisfied by uploaded
+     * documents. Mirrors the canonical grouping used by the FASSG verification
+     * detail view (Proof of Residence / Barangay Certificate are one slot).
+     *
+     * @return array{required: int, uploaded: int}
+     */
+    public function documentStatusCounts(): array
+    {
+        $required = $this->sponsorshipProgram?->requiredDocumentCanonicalValues() ?? [];
+
+        $uploaded = $this->documents
+            ->pluck('document_type')
+            ->map(fn ($type): string => DocumentType::canonicalValue($type))
+            ->unique()
+            ->values()
+            ->all();
+
+        return [
+            'required' => count($required),
+            'uploaded' => count(array_intersect($required, $uploaded)),
+        ];
     }
 
     public function activeForStudent(): HasOne

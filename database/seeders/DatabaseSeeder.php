@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             LocalAddressSeeder::class,
             AcademicProgramSeeder::class,
             RoleAndUserSeeder::class,
+            SponsorshipProgramSeeder::class,
         ]);
     }
 }

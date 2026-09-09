@@ -14,22 +14,42 @@
 
         $status = $statusValue;
         $terminal = in_array($statusValue, ['Rejected', 'Expired'], true);
+        $resubmissionRequested = $statusValue === 'Resubmission Requested';
 
         $isStep1Complete = in_array(
             $statusValue,
-            ['Pending', 'Verified', 'FASSG Verified', 'Sponsor Reviewed', 'Approved', 'Confirmed'],
+            ['Pending', 'Verified', 'FASSG Verified', 'Sponsor Reviewed', 'Approved', 'Confirmed', 'Ongoing'],
             true,
         );
-        $isStep2Complete = in_array(
-            $statusValue,
-            ['Verified', 'FASSG Verified', 'Sponsor Reviewed', 'Approved', 'Confirmed'],
-            true,
-        );
+        $isStep2Complete = $application->verified_at !== null;
         $isStep3Complete = in_array($statusValue, ['Sponsor Reviewed', 'Approved', 'Confirmed'], true);
-        $isStep4Complete = in_array($statusValue, ['Approved', 'Confirmed', 'Final Approval'], true);
+        $isStep4Complete = in_array($statusValue, ['Approved', 'Confirmed', 'Final Approval'], true)
+            && $application->approved_at !== null;
 
         $completedSteps = [$isStep1Complete, $isStep2Complete, $isStep3Complete, $isStep4Complete];
     @endphp
+
+    {{-- Resubmission Requested Banner --}}
+    @if ($resubmissionRequested)
+        <div class="alert alert-warning alert-dismissible fade show mb-4 border border-warning-subtle shadow-sm" role="alert">
+            <div class="d-flex align-items-start gap-3">
+                <i class="bi bi-exclamation-triangle-fill fs-4 flex-shrink-0"></i>
+                <div class="flex-grow-1">
+                    <div class="fw-bold mb-1">Document Resubmission Requested</div>
+                    <p class="small mb-0">
+                        The FASSG office has asked you to replace or provide a clearer copy of one or more documents before this application can continue being reviewed.
+                    </p>
+                    @if ($application->resubmission_notes)
+                        <div class="mt-2 p-2 bg-white border rounded-3">
+                            <span class="fw-semibold small">FASSG note:</span>
+                            <span class="small">{{ $application->resubmission_notes }}</span>
+                        </div>
+                    @endif
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
     <div class="row g-4">
         <div class="col-lg-8">
@@ -60,7 +80,7 @@
                         <div class="position-absolute top-50 start-0 end-0 translate-middle-y"
                             style="height:2px; background:#e6e9ee; z-index:0;"></div>
                         @foreach ($steps as $i => $step)
-                            @php($stepComplete = $completedSteps[$i])
+                            @php $stepComplete = $completedSteps[$i]; @endphp
                             <div class="text-center position-relative" style="z-index:1; flex:1;">
                                 <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center
                                     {{ !$terminal && $stepComplete ? 'bg-sf-navy text-white' : 'bg-white border' }}"
@@ -148,6 +168,100 @@
                     </div>
                 </div>
             </div>
+
+            {{-- Re-upload Corrected Documents (Resubmission) --}}
+            @if ($resubmissionRequested)
+                @php
+                    $upDocCanons = $application->sponsorshipProgram?->requiredDocumentCanonicalValues() ?? [];
+                    $upDocsList = $application->documents->values();
+                    $requestedCanons = array_values((array) $application->requested_documents);
+                    $resubGroups = [];
+                    $resubCovered = [];
+
+                    foreach ($upDocCanons as $canon) {
+                        $label = $canon;
+                        foreach (\App\Enums\DocumentType::cases() as $type) {
+                            if (\App\Enums\DocumentType::canonicalValue($type) === $canon) {
+                                $label = $type->label();
+                                break;
+                            }
+                        }
+                        $resubGroups[] = [
+                            'canon' => $canon,
+                            'label' => $label,
+                            'document' => $upDocsList->first(
+                                fn ($doc) => \App\Enums\DocumentType::canonicalValue($doc->document_type) === $canon,
+                            ),
+                        ];
+                        $resubCovered[] = $canon;
+                    }
+
+                    foreach ($upDocsList as $extraDoc) {
+                        $canon = \App\Enums\DocumentType::canonicalValue($extraDoc->document_type);
+                        if (in_array($canon, $resubCovered, true)) {
+                            continue;
+                        }
+                        $resubCovered[] = $canon;
+                        $resubGroups[] = [
+                            'canon' => $canon,
+                            'label' => $extraDoc->document_type instanceof \BackedEnum
+                                ? $extraDoc->document_type->label()
+                                : (string) $extraDoc->document_type,
+                            'document' => $extraDoc,
+                        ];
+                    }
+                @endphp
+
+                <div class="card sf-card mb-4 border-warning border-2">
+                    <div class="card-header bg-white border-bottom py-3 px-3 px-sm-4">
+                        <h3 class="h6 mb-0 fw-bold text-dark">
+                            <i class="bi bi-arrow-counterclockwise text-warning me-2"></i>Re-upload Corrected Documents
+                        </h3>
+                    </div>
+                    <div class="card-body p-3 p-sm-4">
+                        <p class="small text-secondary mb-3">
+                            Select an updated file below. Only documents you attach a new file for will be replaced. Once you resubmit, your application goes back under review by the FASSG office.
+                        </p>
+                        <form method="POST" action="{{ route('student.applications.resubmit', $application) }}" enctype="multipart/form-data">
+                            @csrf
+                            <div class="d-flex flex-column gap-3">
+                                @foreach ($resubGroups as $group)
+                                    @php($groupActionRequired = in_array($group['canon'], $requestedCanons, true))
+                                    <div class="border rounded-3 p-3 bg-light {{ $groupActionRequired ? 'border-warning border-2' : '' }}">
+                                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+                                            <span class="fw-semibold small">{{ $group['label'] }}</span>
+                                            @if ($groupActionRequired)
+                                                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle">
+                                                    <i class="bi bi-exclamation-triangle-fill me-1"></i>Action Required: Re-upload Needed
+                                                </span>
+                                            @endif
+                                            @if ($group['document'])
+                                                <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">
+                                                    Uploaded
+                                                </span>
+                                            @else
+                                                <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle">
+                                                    Missing
+                                                </span>
+                                            @endif
+                                        </div>
+                                        @if ($group['document'])
+                                            <div class="small text-secondary text-truncate mb-1">{{ $group['document']->file_name }}</div>
+                                        @endif
+                                        <input type="file" class="form-control form-control-sm"
+                                            name="documents[{{ $group['canon'] }}]"
+                                            accept=".pdf,.jpg,.jpeg,.png"
+                                            aria-label="Replace {{ $group['label'] }}">
+                                    </div>
+                                @endforeach
+                            </div>
+                            <button type="submit" class="btn btn-warning w-100 fw-semibold text-dark mt-3">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i> Resubmit Corrected Documents
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endif
         </div>
 
         {{-- Right Side Program Box --}}

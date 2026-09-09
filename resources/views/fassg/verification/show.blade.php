@@ -83,9 +83,14 @@
         $profile    = $application->studentProfile;
         $program    = $application->sponsorshipProgram;
         $status     = $application->status->value;
-        $isPending  = $application->status === \App\Enums\ApplicationStatus::Pending;
-        $isVerified = $application->status === \App\Enums\ApplicationStatus::Verified;
-        $canAct     = $isPending || $isVerified;
+        $canAct     = in_array($application->status, [
+            \App\Enums\ApplicationStatus::Pending,
+            \App\Enums\ApplicationStatus::ResubmissionRequested,
+        ], true);
+        $isSettledVerified = in_array($application->status, [
+            \App\Enums\ApplicationStatus::Verified,
+            \App\Enums\ApplicationStatus::Approved,
+        ], true);
 
         $meetsGpa = $program->min_gpa === null
             || (float) $application->gpa_submitted <= (float) $program->min_gpa;
@@ -121,23 +126,6 @@
     @if (session('status'))
         <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
             <i class="bi bi-check-circle me-2"></i>{{ session('status') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-            <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-    @if ($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            <ul class="mb-0 ps-3">
-                @foreach ($errors->all() as $err)
-                    <li>{{ $err }}</li>
-                @endforeach
-            </ul>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
@@ -265,7 +253,7 @@
                             <div class="detail-value">{{ $profile->course ?: '—' }}</div>
                         </div>
                         <div class="col-md-6">
-                            <div class="detail-label">SLE-FHE Free Higher Education Status</div>
+                            <div class="detail-label">SLE-FHE Status</div>
                             <div>
                                 @if ($profile->is_sle_fhe_verified)
                                     <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-2 py-1">
@@ -386,23 +374,73 @@
                     <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
                         <div>
                             <h2 class="h5 sf-heading mb-1">Supporting Documents</h2>
-                            <p class="small text-secondary mb-0">Grade Slip, Proof of Residence &amp; Barangay Certification</p>
+                            <p class="small text-secondary mb-0">Documents required for this program &amp; uploaded by the applicant</p>
                         </div>
                         <i class="bi bi-file-earmark-check fs-3" style="color:#0F2942;"></i>
                     </div>
 
                     @php
-                        $requiredDocs = \App\Enums\DocumentType::requiredForApplication();
+                        $allDocs = $application->documents->values();
+                        $programLabels = array_values(array_filter(array_map(
+                            'strval',
+                            (array) ($program->required_documents ?? []),
+                        )));
+                        $requiredTypes = [];
+                        foreach ($programLabels as $label) {
+                            foreach (\App\Enums\DocumentType::typesForLabel($label) as $type) {
+                                $requiredTypes[] = $type;
+                            }
+                        }
+                        if ($requiredTypes === []) {
+                            $requiredTypes = \App\Enums\DocumentType::requiredForApplication();
+                        }
+
+                        $docGroups = [];
+                        $covered = [];
+                        foreach ($requiredTypes as $requiredType) {
+                            $canon = \App\Enums\DocumentType::canonicalValue($requiredType);
+                            if (in_array($canon, $covered, true)) {
+                                continue;
+                            }
+                            $covered[] = $canon;
+
+                            $displayLabel = $requiredType->label();
+                            foreach ($programLabels as $label) {
+                                foreach (\App\Enums\DocumentType::typesForLabel($label) as $labelType) {
+                                    if (\App\Enums\DocumentType::canonicalValue($labelType) === $canon) {
+                                        $displayLabel = $label;
+                                        break 2;
+                                    }
+                                }
+                            }
+
+                            $docGroups[] = [
+                                'label' => $displayLabel,
+                                'document' => $allDocs->first(
+                                    fn ($item) => \App\Enums\DocumentType::canonicalValue($item->document_type) === $canon,
+                                ),
+                            ];
+                        }
+
+                        foreach ($allDocs as $extraDoc) {
+                            $canon = \App\Enums\DocumentType::canonicalValue($extraDoc->document_type);
+                            if (in_array($canon, $covered, true)) {
+                                continue;
+                            }
+                            $covered[] = $canon;
+                            $docGroups[] = [
+                                'label' => $extraDoc->document_type instanceof \BackedEnum
+                                    ? $extraDoc->document_type->label()
+                                    : \Illuminate\Support\Str::headline(str_replace('_', ' ', (string) $extraDoc->document_type)),
+                                'document' => $extraDoc,
+                            ];
+                        }
                     @endphp
 
-                    @foreach ($requiredDocs as $documentType)
+                    @foreach ($docGroups as $docGroup)
                         @php
-                            $document = $application->documents->first(
-                                fn ($item) => ($item->document_type instanceof \BackedEnum
-                                    ? $item->document_type->value
-                                    : (string) $item->document_type) === $documentType->value,
-                            );
-                            $docModalId = 'docPreviewModal_' . $documentType->value;
+                            $document = $docGroup['document'];
+                            $docModalId = 'docPreviewModal_' . \Illuminate\Support\Str::slug($docGroup['label']);
                         @endphp
                         <div class="doc-row">
                             <div class="d-flex align-items-center gap-3 mb-2">
@@ -410,7 +448,7 @@
                                     <i class="bi {{ $document ? 'bi-file-earmark-check' : 'bi-file-earmark-x' }} fs-4"></i>
                                 </div>
                                 <div class="flex-grow-1 min-w-0">
-                                    <div class="fw-semibold small">{{ $documentType->label() }}</div>
+                                    <div class="fw-semibold small">{{ $docGroup['label'] }}</div>
                                     <div class="small text-secondary text-truncate">
                                         {{ $document?->file_name ?? 'Not uploaded yet' }}
                                     </div>
@@ -447,14 +485,14 @@
                                         <div class="modal-content border-0 shadow">
                                             <div class="modal-header" style="background:#0F2942; color:#fff;">
                                                 <h5 class="modal-title h6 mb-0 text-white" id="{{ $docModalId }}Label">
-                                                    <i class="bi bi-file-earmark-text me-2"></i>{{ $documentType->label() }} — {{ $document->file_name }}
+                                                    <i class="bi bi-file-earmark-text me-2"></i>{{ $docGroup['label'] }} — {{ $document->file_name }}
                                                 </h5>
                                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body p-0" style="background: #f1f3f5; min-height: 70vh;">
                                                 <iframe src="{{ route('fassg.verification.documents.show', [$application, $document]) }}"
                                                     style="width: 100%; height: 75vh; border: none;"
-                                                    title="{{ $documentType->label() }}">
+                                                    title="{{ $docGroup['label'] }}">
                                                 </iframe>
                                             </div>
                                             <div class="modal-footer d-flex justify-content-between">
@@ -492,51 +530,60 @@
                     </div>
 
                     @if ($canAct)
-                        {{-- ── 1. APPROVE & RESERVE SLOT ACTION ── --}}
+                        {{-- ── 1. VERIFY & FORWARD TO SPONSOR ACTION ── --}}
                         <div class="mb-4">
-                            @if ($program->available_slots > 0)
-                                <form method="POST" action="{{ route('fassg.verification.approve', $application) }}"
-                                    onsubmit="return confirm('Confirm approval: This will approve {{ addslashes($profile->user->name) }} and decrement 1 available slot from {{ addslashes($program->program_name) }}. Continue?');">
+                            <form method="POST" action="{{ route('fassg.verification.approve', $application) }}"
+                                onsubmit="return confirm('Confirm verification: This will verify {{ addslashes($profile->user->name) }} and forward the application to {{ addslashes($program->program_name) }} for sponsor review. Continue?');">
                                     @csrf
                                     @method('PATCH')
+                                    @php
+                                        $attCanon = static fn ($type) => \App\Enums\DocumentType::canonicalValue($type);
+                                        $attAllTypes = array_values(array_unique(array_merge(
+                                            $program->requiredDocumentCanonicalValues(),
+                                            $application->documents->map(fn ($d) => $attCanon($d->document_type))->all(),
+                                        )));
+                                        $needsCorAttest = in_array(\App\Enums\DocumentType::CertificateOfRegistration->value, $attAllTypes, true);
+                                        $needsKinshipAttest = in_array(\App\Enums\DocumentType::EmployeeProofOfKinship->value, $attAllTypes, true);
+                                    @endphp
+                                    <div class="p-3 bg-white border rounded-3 mb-3">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <i class="bi bi-patch-check" style="color:#0F2942;"></i>
+                                            <span class="small fw-semibold text-dark">Verification Attestation</span>
+                                        </div>
+                                        <p class="small text-secondary mb-2">
+                                            Check each box to confirm you have reviewed the corresponding document.
+                                        </p>
+                                        <label class="d-flex align-items-start gap-2 small mb-2">
+                                            <input type="checkbox" class="form-check-input mt-1" name="confirm_gwa" value="1" required>
+                                            <span>Confirm that the grade slip matches the submitted GWA.</span>
+                                        </label>
+                                        <label class="d-flex align-items-start gap-2 small mb-2">
+                                            <input type="checkbox" class="form-check-input mt-1" name="confirm_address" value="1" required>
+                                            <span>Confirm that the proof of residence and barangay certificate match the submitted address.</span>
+                                        </label>
+                                        @if ($needsCorAttest)
+                                            <label class="d-flex align-items-start gap-2 small mb-2">
+                                                <input type="checkbox" class="form-check-input mt-1" name="confirm_cor" value="1" required>
+                                                <span>Confirm that the Certificate of Registration (COR) matches current enrollment.</span>
+                                            </label>
+                                        @endif
+                                        @if ($needsKinshipAttest)
+                                            <label class="d-flex align-items-start gap-2 small mb-2">
+                                                <input type="checkbox" class="form-check-input mt-1" name="confirm_kinship" value="1" required>
+                                                <span>Confirm that the Employee ID / Proof of Kinship matches the submitted employee dependency details.</span>
+                                            </label>
+                                        @endif
+                                    </div>
                                     <button type="submit" class="btn btn-approve w-100 py-2 mb-2 d-flex align-items-center justify-content-center gap-2">
                                         <i class="bi bi-check2-circle fs-5"></i>
-                                        <span>Approve &amp; Reserve Slot</span>
+                                        <span>Verify &amp; Forward to Sponsor</span>
                                     </button>
                                 </form>
                                 <p class="small text-muted mb-0">
                                     <i class="bi bi-shield-check me-1 text-success"></i>
-                                    Decrements available slots from <strong>{{ $program->available_slots }}</strong> to <strong>{{ $program->available_slots - 1 }}</strong> upon confirmation.
+                                    Verifies the application and forwards it to the Sponsor Review queue for final approval. Slot reservation happens when the sponsor approves.
                                 </p>
-                            @else
-                                <div class="alert alert-danger small mb-0">
-                                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                                    <strong>Program Slots Exhausted:</strong> There are no available slots remaining on this program. New approvals are blocked until more slots are allocated.
-                                </div>
-                            @endif
                         </div>
-
-                        {{-- Intermediate verification option if currently pending --}}
-                        @if ($isPending)
-                            <div class="p-3 bg-white border rounded-3 mb-4">
-                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <span class="small fw-semibold text-dark">
-                                        <i class="bi bi-patch-check me-1" style="color:#0F2942;"></i> Mark as Verified Only
-                                    </span>
-                                    <span class="badge text-bg-light border">Step-by-step</span>
-                                </div>
-                                <p class="small text-secondary mb-3">
-                                    If you want to formally verify submitted documents without reserving a slot yet:
-                                </p>
-                                <form method="POST" action="{{ route('fassg.verification.verify', $application) }}">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="btn btn-sm btn-navy-primary w-100">
-                                        <i class="bi bi-patch-check me-1"></i> Mark Documents Verified
-                                    </button>
-                                </form>
-                            </div>
-                        @endif
 
                         <hr class="my-3">
 
@@ -572,6 +619,93 @@
                             </form>
                         </div>
 
+                        <hr class="my-3">
+
+                        {{-- ── 3. REQUEST DOCUMENT RESUBMISSION ACTION ── --}}
+                        <div>
+                            <h3 class="h6 fw-bold mb-2" style="color:#9a6b00;">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i> Request Document Resubmission
+                            </h3>
+                            <p class="small text-secondary mb-3">
+                                Ask the student to upload a corrected or clearer copy of a document. A mandatory note is attached so the student knows exactly what to fix.
+                            </p>
+                            <form method="POST" action="{{ route('fassg.verification.request-resubmission', $application) }}"
+                                onsubmit="return confirm('Send this application back to the student for document resubmission?');">
+                                @csrf
+                                @method('PATCH')
+                                @php
+                                    $resubReqCanon = static fn ($type) => \App\Enums\DocumentType::canonicalValue($type);
+                                    $resubReqTypes = array_values(array_unique(array_merge(
+                                        $program->requiredDocumentCanonicalValues(),
+                                        $application->documents->map(fn ($d) => $resubReqCanon($d->document_type))->all(),
+                                    )));
+                                    $resubReqLabels = [];
+                                    foreach ($resubReqTypes as $canon) {
+                                        $label = $canon;
+                                        foreach (\App\Enums\DocumentType::cases() as $type) {
+                                            if ($resubReqCanon($type) === $canon) {
+                                                $label = $type->label();
+                                                break;
+                                            }
+                                        }
+                                        $resubReqLabels[$canon] = $label;
+                                    }
+                                @endphp
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold text-dark">
+                                        Documents to Re-upload <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="border rounded-3 bg-white p-3" style="max-height: 220px; overflow-y: auto;">
+                                        @foreach ($resubReqLabels as $resubReqCanonValue => $resubReqLabel)
+                                            <label class="d-flex align-items-start gap-2 small mb-2">
+                                                <input type="checkbox" class="form-check-input mt-1"
+                                                    name="requested_documents[]" value="{{ $resubReqCanonValue }}"
+                                                    @checked(in_array($resubReqCanonValue, (array) old('requested_documents', []), true))>
+                                                <span>{{ $resubReqLabel }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                    @error('requested_documents')
+                                        <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
+                                    @enderror
+                                    <div class="form-text small text-secondary">
+                                        Select at least one document you want the student to replace or provide a clearer copy of.
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold text-dark" for="resubmission_notes">
+                                        Resubmission Notes <span class="text-danger">*</span>
+                                    </label>
+                                    <textarea class="form-control" id="resubmission_notes" name="resubmission_notes" rows="3"
+                                        placeholder="e.g., Uploaded COR is unreadable. Please upload a clear copy."
+                                        required minlength="5" maxlength="1000">{{ old('resubmission_notes') }}</textarea>
+                                    <div class="form-text small text-secondary">
+                                        Mandatory. Displayed to the student on their application page.
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-warning w-100 fw-semibold text-dark">
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i> Request Document Resubmission
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="small text-secondary mt-4 pt-3 border-top">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Verifying forwards the application to the Sponsor Review queue. The sponsor's final approval reserves the program slot and registers the student for beneficiary processing.
+                        </div>
+                    @elseif ($isSettledVerified)
+                        {{-- Application Verified & Forwarded (read-only) --}}
+                        <div class="p-4 text-center">
+                            <div class="mb-3">
+                                <i class="bi bi-patch-check-fill display-4" style="color:#1a7a4a;"></i>
+                            </div>
+                            <h3 class="h5 sf-heading mb-2">Application Verified &amp; Forwarded</h3>
+                            <p class="small text-secondary mb-0">
+                                This application was verified on
+                                <strong>{{ $application->verified_at?->format('F j, Y') ?? '—' }}</strong>
+                                and is currently under Sponsor Review.
+                            </p>
+                        </div>
                     @else
                         {{-- Application Already Finalized --}}
                         <div class="alert {{ $application->status === \App\Enums\ApplicationStatus::Approved ? 'alert-success' : 'alert-secondary' }} mb-0">
@@ -584,11 +718,6 @@
                             </p>
                         </div>
                     @endif
-
-                    <div class="small text-secondary mt-4 pt-3 border-top">
-                        <i class="bi bi-info-circle me-1"></i>
-                        Approving reserves the program slot and registers the student for beneficiary processing.
-                    </div>
                 </div>
             </div>
         </div>

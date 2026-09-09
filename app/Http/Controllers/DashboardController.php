@@ -47,6 +47,7 @@ class DashboardController extends Controller
                 ->whereIn('status', [
                     ApplicationStatus::Pending,
                     ApplicationStatus::Verified,
+                    ApplicationStatus::ResubmissionRequested,
                     'FASSG Verified',
                     'Sponsor Reviewed',
                 ])

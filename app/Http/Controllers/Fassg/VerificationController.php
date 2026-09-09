@@ -7,8 +7,8 @@ use App\Enums\DocumentType;
 use App\Enums\ProgramCategory;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Fassg\ApproveApplicationRequest;
 use App\Http\Requests\Fassg\RejectApplicationRequest;
-use App\Http\Requests\Fassg\VerifyApplicationRequest;
 use App\Models\AcademicProgram;
 use App\Models\Application;
 use App\Models\ApplicationDocument;
@@ -16,8 +16,8 @@ use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -48,7 +48,7 @@ class VerificationController extends Controller
             ->latest()
             ->get();
 
-        $applications = Application::query()
+        $baseQuery = Application::query()
             ->with(['studentProfile.user', 'sponsorshipProgram.sponsor', 'documents'])
             ->when($search !== '', function ($query) use ($search): void {
                 $query->whereHas('studentProfile', function ($pq) use ($search): void {
@@ -64,7 +64,9 @@ class VerificationController extends Controller
             ->when($category !== '', fn ($q) => $q->whereHas(
                 'sponsorshipProgram',
                 fn ($pq) => $pq->where('category', $category)
-            ))
+            ));
+
+        $applications = (clone $baseQuery)
             ->when(
                 $statusFilter !== '' && ApplicationStatus::tryFrom($statusFilter),
                 fn ($q) => $q->where('status', $statusFilter)
@@ -89,10 +91,11 @@ class VerificationController extends Controller
             ->get();
 
         $statusCounts = [
-            'pending'   => $applications->where('status', ApplicationStatus::Pending)->count(),
-            'verified'  => $applications->where('status', ApplicationStatus::Verified)->count(),
-            'approved'  => $applications->where('status', ApplicationStatus::Approved)->count(),
-            'rejected'  => $applications->where('status', ApplicationStatus::Rejected)->count(),
+            'pending'      => (clone $baseQuery)->where('status', ApplicationStatus::Pending)->count(),
+            'verified'     => (clone $baseQuery)->where('status', ApplicationStatus::Verified)->count(),
+            'approved'     => (clone $baseQuery)->where('status', ApplicationStatus::Approved)->count(),
+            'rejected'     => (clone $baseQuery)->where('status', ApplicationStatus::Rejected)->count(),
+            'resubmission' => (clone $baseQuery)->where('status', ApplicationStatus::ResubmissionRequested)->count(),
         ];
 
         return view('fassg.verification.index', [
@@ -157,71 +160,33 @@ class VerificationController extends Controller
         return back()->with('success', 'Student SLE-FHE status verified successfully.');
     }
 
-    public function verify(VerifyApplicationRequest $request, Application $application): RedirectResponse
-    {
-        if ($application->status !== ApplicationStatus::Pending) {
-            return back()->withErrors(['application' => 'Only pending applications can be verified.']);
-        }
-
-        $application->loadMissing(['studentProfile', 'sponsorshipProgram', 'documents']);
-        $required  = array_map(static fn (DocumentType $type): string => $type->value, DocumentType::requiredForApplication());
-        $submitted = $application->documents
-            ->pluck('document_type')
-            ->map(static fn ($type): string => $type instanceof DocumentType ? $type->value : (string) $type)
-            ->unique()
-            ->all();
-
-        if (array_diff($required, $submitted) !== []) {
-            return back()->withErrors(['application' => 'The Certificate of Grades, Proof of Residence, and Barangay Certification are required.']);
-        }
-
-        $eligibilityErrors = $application->sponsorshipProgram->eligibilityErrors(
-            $application->studentProfile,
-            (float) $application->gpa_submitted,
-            $application->address_submitted,
-            (bool) $application->is_rural_submitted,
-        );
-
-        if ($eligibilityErrors !== []) {
-            return back()->withErrors(['application' => $eligibilityErrors]);
-        }
-
-        $application->update(['status' => ApplicationStatus::Verified, 'verified_at' => now()]);
-        $this->audit($request, 'fassg.application.verified', 'applications');
-
-        return back()->with('status', 'Application marked as Verified. You may now approve and reserve a slot.');
-    }
-
     /**
-     * Approve an application (Pending or Verified) and decrement the program's available slot.
+     * Verify that FASSG approves an application (Pending or Verified) and forward
+     * it to the Sponsor Review queue. Final approval and slot reservation are
+     * handled by the sponsor.
      */
-    public function approve(Request $request, Application $application): RedirectResponse
+    public function approve(ApproveApplicationRequest $request, Application $application): RedirectResponse
     {
         if (! in_array($application->status, [ApplicationStatus::Pending, ApplicationStatus::Verified], true)) {
             return back()->withErrors([
-                'application' => 'This application cannot be approved in its current status.',
+                'application' => 'This application cannot be verified in its current status.',
             ]);
         }
 
         $application->loadMissing(['studentProfile.user', 'sponsorshipProgram.sponsor', 'documents']);
         $program = $application->sponsorshipProgram;
 
-        if ($program->available_slots <= 0) {
-            return back()->withErrors([
-                'application' => 'This program has no remaining slots. The slot cannot be reserved.',
-            ]);
-        }
-
         // Validate required documents and eligibility criteria
-        $required  = array_map(static fn (DocumentType $type): string => $type->value, DocumentType::requiredForApplication());
+        $required  = $program->requiredDocumentCanonicalValues();
         $submitted = $application->documents
             ->pluck('document_type')
-            ->map(static fn ($type): string => $type instanceof DocumentType ? $type->value : (string) $type)
+            ->map(fn ($type): string => DocumentType::canonicalValue($type))
             ->unique()
+            ->values()
             ->all();
 
         if (array_diff($required, $submitted) !== []) {
-            return back()->withErrors(['application' => 'All supporting documents (Certificate of Grades, Proof of Residence, Barangay Certificate) must be uploaded before approval.']);
+            return back()->withErrors(['application' => 'All required program supporting documents must be uploaded before verifying.']);
         }
 
         $eligibilityErrors = $program->eligibilityErrors(
@@ -235,34 +200,18 @@ class VerificationController extends Controller
             return back()->withErrors(['application' => $eligibilityErrors]);
         }
 
-        DB::transaction(function () use ($application, $program): void {
-            // Lock program row to prevent race conditions on slot count
-            SponsorshipProgram::query()->lockForUpdate()->find($program->id);
+        $application->update([
+            'status'      => ApplicationStatus::Verified,
+            'verified_at' => now(),
+        ]);
 
-            $decremented = $program->decrementAvailableSlot();
-
-            if (! $decremented) {
-                throw new \RuntimeException('No slots available.');
-            }
-
-            $application->update([
-                'status'      => ApplicationStatus::Approved,
-                'verified_at' => $application->verified_at ?? now(),
-                'approved_at' => now(),
-            ]);
-
-            $application->studentProfile->update([
-                'active_sponsorship_id' => $application->id,
-            ]);
-        });
-
-        $this->audit($request, 'fassg.application.approved', 'applications');
+        $this->audit($request, 'fassg.application.verified', 'applications');
 
         $studentName = $application->studentProfile->user->name ?? 'Student';
 
         return redirect()
             ->route('fassg.verification.index')
-            ->with('status', "Application for {$studentName} approved and 1 slot successfully reserved on {$program->program_name}.");
+            ->with('status', "Application for {$studentName} verified and forwarded to {$program->program_name} for sponsor review. Final approval and slot reservation are handled by the sponsor.");
     }
 
     public function reject(RejectApplicationRequest $request, Application $application): RedirectResponse
@@ -279,6 +228,35 @@ class VerificationController extends Controller
         $this->audit($request, 'fassg.application.rejected', 'applications');
 
         return back()->with('status', "Application rejected: {$reason}");
+    }
+
+    public function requestResubmission(Request $request, Application $application): RedirectResponse
+    {
+        $validDocumentTypes = collect(DocumentType::cases())
+            ->map(fn (DocumentType $type): string => DocumentType::canonicalValue($type))
+            ->unique()
+            ->values()
+            ->all();
+
+        $validated = $request->validate([
+            'resubmission_notes' => ['required', 'string', 'min:5', 'max:1000'],
+            'requested_documents' => ['required', 'array', 'min:1'],
+            'requested_documents.*' => ['string', Rule::in($validDocumentTypes)],
+        ]);
+
+        if (! in_array($application->status, [ApplicationStatus::Pending, ApplicationStatus::Verified], true)) {
+            return back()->withErrors(['application' => 'This application cannot be sent for resubmission in its current status.']);
+        }
+
+        $application->update([
+            'status'              => ApplicationStatus::ResubmissionRequested,
+            'resubmission_notes'  => trim($validated['resubmission_notes']),
+            'requested_documents' => array_values(array_unique($validated['requested_documents'])),
+        ]);
+
+        $this->audit($request, 'fassg.application.resubmission_requested', 'applications');
+
+        return back()->with('status', 'Resubmission requested. The student has been notified to upload corrected documents.');
     }
 
     public function rejectStudent(Request $request, StudentProfile $studentProfile): RedirectResponse

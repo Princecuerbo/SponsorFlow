@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ProgramCategory;
 use App\Enums\ProgramStatus;
 use App\Enums\ApplicationStatus;
+use App\Enums\DocumentType;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -132,6 +133,7 @@ class SponsorshipProgram extends Model
                 ApplicationStatus::Verified,
                 ApplicationStatus::Approved,
                 ApplicationStatus::Ongoing,
+                ApplicationStatus::ResubmissionRequested,
             ])
             ->exists();
     }
@@ -144,6 +146,7 @@ class SponsorshipProgram extends Model
                 ApplicationStatus::Verified,
                 ApplicationStatus::Pending,
                 ApplicationStatus::Ongoing,
+                ApplicationStatus::ResubmissionRequested,
             ])
             ->pluck('id');
 
@@ -168,6 +171,32 @@ class SponsorshipProgram extends Model
     public function sponsorApprovals(): HasMany
     {
         return $this->hasMany(SponsorApproval::class);
+    }
+
+    /**
+     * Canonical required-document values for this program, derived from the
+     * required_documents checklist (label → document types). Falls back to the
+     * application-level required set when no checklist is configured.
+     *
+     * @return list<string>
+     */
+    public function requiredDocumentCanonicalValues(): array
+    {
+        $required = [];
+
+        foreach ((array) $this->required_documents ?? [] as $label) {
+            foreach (DocumentType::typesForLabel((string) $label) as $type) {
+                $required[] = DocumentType::canonicalValue($type);
+            }
+        }
+
+        if ($required === []) {
+            foreach (DocumentType::requiredForApplication() as $type) {
+                $required[] = DocumentType::canonicalValue($type);
+            }
+        }
+
+        return array_values(array_unique($required));
     }
 
     public function isOpen(): bool

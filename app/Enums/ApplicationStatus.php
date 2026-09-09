@@ -10,6 +10,7 @@ enum ApplicationStatus: string
     case Rejected = 'Rejected';
     case Ongoing = 'Ongoing';
     case Expired = 'Expired';
+    case ResubmissionRequested = 'Resubmission Requested';
 
     public function isActiveSponsorship(): bool
     {

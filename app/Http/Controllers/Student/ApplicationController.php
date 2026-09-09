@@ -219,6 +219,7 @@ class ApplicationController extends Controller
                 ApplicationStatus::Verified,
                 ApplicationStatus::Approved,
                 ApplicationStatus::Ongoing,
+                ApplicationStatus::ResubmissionRequested,
             ])
             ->exists();
 
@@ -335,6 +336,82 @@ class ApplicationController extends Controller
             },
             $document->file_name,
         );
+    }
+
+    public function resubmit(Request $request, Application $application): RedirectResponse
+    {
+        $profile = $this->studentProfile($request);
+        $this->assertOwnsApplication($profile->id, $application);
+
+        if ($application->status !== ApplicationStatus::ResubmissionRequested) {
+            return back()->withErrors(['application' => 'This application is not awaiting document resubmission.']);
+        }
+
+        $validated = $request->validate([
+            'documents' => ['sometimes', 'array'],
+            'documents.*' => ['file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+        ]);
+
+        $validKeys = collect(DocumentType::cases())
+            ->map(fn (DocumentType $type): string => DocumentType::canonicalValue($type))
+            ->unique()
+            ->values()
+            ->all();
+
+        $files = array_intersect_key((array) ($validated['documents'] ?? []), array_flip($validKeys));
+
+        if ($files === []) {
+            return back()
+                ->withErrors(['documents' => 'Upload at least one corrected document to resubmit.'])
+                ->withInput();
+        }
+
+        try {
+            DB::transaction(function () use ($application, $files): void {
+                foreach ($files as $documentType => $file) {
+                    $canon = DocumentType::canonicalValue((string) $documentType);
+
+                    $existing = $application->documents->first(
+                        fn ($doc): bool => DocumentType::canonicalValue($doc->document_type) === $canon,
+                    );
+
+                    $newPath = $file->store('applications/documents', 'local');
+                    $payload = [
+                        'document_type' => $canon,
+                        'file_path' => $newPath,
+                        'file_name' => $file->getClientOriginalName(),
+                    ];
+
+                    if ($existing) {
+                        $oldPath = $existing->file_path;
+                        $existing->update($payload);
+
+                        if ($oldPath && $oldPath !== $newPath) {
+                            Storage::disk('local')->delete($oldPath);
+                        }
+                    } else {
+                        $application->documents()->create($payload);
+                    }
+                }
+
+                $application->update([
+                    'status'             => ApplicationStatus::Pending,
+                    'resubmission_notes' => null,
+                    'requested_documents' => null,
+                    'verified_at'        => null,
+                ]);
+            });
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return back()
+                ->withErrors(['application' => 'Unable to resubmit the documents. Please try again.'])
+                ->withInput();
+        }
+
+        $this->audit($request, 'student.application.resubmitted', 'applications');
+
+        return back()->with('success', 'Documents resubmitted successfully. Your application is now back under review.');
     }
 
     private function assertOwnsApplication(int $studentProfileId, Application $application): void
