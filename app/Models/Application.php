@@ -121,4 +121,17 @@ class Application extends Model
             ApplicationStatus::Ongoing,
         ]);
     }
+
+    public function scopePreviouslyApprovedBeneficiaries(Builder $query): Builder
+    {
+        return $query->where(function (Builder $query): void {
+            $query->whereIn('applications.status', [
+                ApplicationStatus::Approved,
+                ApplicationStatus::Ongoing,
+            ])->orWhere(function (Builder $query): void {
+                $query->where('applications.status', ApplicationStatus::Expired)
+                    ->whereNotNull('applications.approved_at');
+            });
+        });
+    }
 }

@@ -61,7 +61,7 @@ class ReportsController extends Controller
             ->pluck('total', 'status')
             ->all();
 
-        $approvedBeneficiaries = Application::query()->approvedBeneficiaries()->count();
+        $approvedBeneficiaries = Application::query()->previouslyApprovedBeneficiaries()->count();
 
         $confirmedLists = FixedList::query()
             ->where('status', FixedListStatus::Approved)
@@ -91,7 +91,7 @@ class ReportsController extends Controller
             ->all();
 
         $approvedByCategory = Application::query()
-            ->approvedBeneficiaries()
+            ->previouslyApprovedBeneficiaries()
             ->join('sponsorship_programs', 'applications.sponsorship_program_id', '=', 'sponsorship_programs.id')
             ->select('sponsorship_programs.category', DB::raw('count(*) as total'))
             ->groupBy('sponsorship_programs.category')
@@ -210,7 +210,7 @@ class ReportsController extends Controller
 
         $slotUtilization = SponsorshipProgram::query()
             ->select('id', 'program_name', 'total_slots', 'available_slots')
-            ->withCount(['applications as approved_count' => fn ($q) => $q->where('status', ApplicationStatus::Approved)])
+            ->withCount(['applications as approved_count' => fn ($q) => $q->previouslyApprovedBeneficiaries()])
             ->orderBy('program_name')
             ->get()
             ->map(function (SponsorshipProgram $program): SponsorshipProgram {
@@ -223,7 +223,7 @@ class ReportsController extends Controller
 
         $programSlots = (int) SponsorshipProgram::sum('total_slots');
         $filledSlots = (int) Application::query()
-            ->where('status', ApplicationStatus::Approved)
+            ->previouslyApprovedBeneficiaries()
             ->count();
         $applicantCategoryTotals = $this->categoryTotals($applicantsByCategory);
         $categoryBreakdown = collect($this->categoryTotals($categoryBreakdown))
