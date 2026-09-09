@@ -157,7 +157,7 @@
                                     </td>
                                     <td>{{ $application->sponsorshipProgram->program_name }}</td>
                                     <td>{{ number_format($application->gpa_submitted, 2) }}</td>
-                                    <td><span class="badge bg-success-subtle text-success-emphasis">FASSG Verified</span>
+                                    <td><span class="badge bg-cyan-50 text-cyan-700 border border-cyan-200"><i class="bi bi-patch-check me-1"></i>FASSG Verified</span>
                                     </td>
                                     <td class="text-end pe-4">
                                         <a href="{{ route('sponsor.applicants.show', $application) }}"
@@ -214,7 +214,7 @@
                                     <td>
                                         @if (!empty($list->approval_document_path))
                                             <span
-                                                class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-2 py-1">
+                                                class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-1">
                                                 <i class="bi bi-file-check me-1"></i>Uploaded
                                             </span>
                                         @else

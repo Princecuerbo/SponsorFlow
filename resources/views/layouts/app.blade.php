@@ -311,6 +311,21 @@
         input[type="password"]::-ms-clear {
             display: none !important;
         }
+
+        /* ---- Palette utilities: Cyan (Verified) / Emerald (Approved) / Indigo (SLE-FHE) ---- */
+        .bg-cyan-50    { background-color: #ecfeff !important; }
+        .text-cyan-700 { color: #0e7490 !important; }
+        .border-cyan-200 { border-color: #a5f3fc !important; }
+
+        .bg-emerald-50    { background-color: #ecfdf5 !important; }
+        .text-emerald-700 { color: #047857 !important; }
+        .border-emerald-200 { border-color: #a7f3d0 !important; }
+
+        .bg-indigo-50    { background-color: #eef2ff !important; }
+        .text-indigo-700 { color: #4338ca !important; }
+        .border-indigo-200 { border-color: #c7d2fe !important; }
+
+        .rounded-full { border-radius: 9999px !important; }
     </style>
 
     @stack('styles')

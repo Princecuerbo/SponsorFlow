@@ -30,7 +30,7 @@
             <h1 class="h2 sf-heading mb-1 fw-bold">Approval History</h1>
             <p class="text-secondary mb-0">Previously finalized applications and beneficiary lists.</p>
         </div>
-        <span class="badge bg-success-subtle text-success-emphasis px-3 py-2">
+        <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-2">
             {{ $applications->count() + $approvals->count() }} finalized records
         </span>
     </div>
@@ -65,7 +65,7 @@
                                         {{ $application->studentProfile->student_id_number }}</div>
                                 </td>
                                 <td>{{ $application->sponsorshipProgram->program_name }}</td>
-                                <td><span class="badge bg-success-subtle text-success-emphasis">Approved</span></td>
+                                <td><span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200">Approved</span></td>
                                 <td>{{ $application->approved_at?->format('M d, Y') ?? ($application->updated_at?->format('M d, Y') ?? '—') }}
                                 </td>
                                 <td class="text-end pe-4">
@@ -121,7 +121,7 @@
                                     </div>
                                 </td>
                                 <td>{{ $approval->sponsorshipProgram->program_name }}</td>
-                                <td><span class="badge bg-success-subtle text-success-emphasis">Confirmed</span></td>
+                                <td><span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200">Confirmed</span></td>
                                 <td>{{ $approval->updated_at?->format('M d, Y') ?? '—' }}</td>
                                 <td class="text-end pe-4">
                                     @if ($approval->approval_document_path)

@@ -138,7 +138,7 @@
                                     <td>{{ $item->campus ?: 'N/A' }}</td>
                                     <td>
                                         <span
-                                            class="badge {{ $item->is_sle_fhe_verified ? 'bg-success-subtle text-success-emphasis border border-success-subtle' : 'bg-warning-subtle text-warning-emphasis border border-warning-subtle' }}">
+                                            class="badge {{ $item->is_sle_fhe_verified ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' : 'bg-warning-subtle text-warning-emphasis border border-warning-subtle' }}">
                                             {{ $item->is_sle_fhe_verified ? 'Verified' : 'Pending Check' }}
                                         </span>
                                     </td>

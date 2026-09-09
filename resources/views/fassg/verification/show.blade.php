@@ -256,7 +256,7 @@
                             <div class="detail-label">SLE-FHE Status</div>
                             <div>
                                 @if ($profile->is_sle_fhe_verified)
-                                    <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-2 py-1">
+                                    <span class="badge bg-cyan-50 text-cyan-700 border border-cyan-200 px-2 py-1">
                                         <i class="bi bi-patch-check me-1"></i> SLE-FHE Verified
                                     </span>
                                 @else
@@ -454,7 +454,7 @@
                                     </div>
                                 </div>
                                 @if ($document)
-                                    <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">
+                                    <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200">
                                         Uploaded
                                     </span>
                                 @else

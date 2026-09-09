@@ -236,7 +236,7 @@
                                                 </span>
                                             @endif
                                             @if ($group['document'])
-                                                <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">
+                                                <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200">
                                                     Uploaded
                                                 </span>
                                             @else

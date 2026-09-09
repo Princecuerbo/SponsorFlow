@@ -46,7 +46,7 @@
                         <span class="badge rounded-pill text-bg-primary">Batch
                             {{ $profile?->created_at?->format('Y') ?? '2024' }}</span>
                         <span
-                            class="badge rounded-pill bg-success">{{ $profile?->is_sle_fhe_verified ? 'SLE-FHE Verified' : 'Main Campus' }}</span>
+                            class="badge rounded-pill {{ $profile?->is_sle_fhe_verified ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' : 'bg-secondary' }}">{{ $profile?->is_sle_fhe_verified ? 'SLE-FHE Verified' : 'Main Campus' }}</span>
                     </div>
                     <hr class="my-4">
                     <div class="d-flex justify-content-between small text-muted">

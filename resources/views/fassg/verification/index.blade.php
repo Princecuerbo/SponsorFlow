@@ -56,6 +56,32 @@
             border-color: #c7d2fe !important;
         }
 
+        /* Cyan – Verified */
+        .bg-cyan-50 {
+            background-color: #ecfeff !important;
+        }
+
+        .text-cyan-700 {
+            color: #0e7490 !important;
+        }
+
+        .border-cyan-200 {
+            border-color: #a5f3fc !important;
+        }
+
+        /* Emerald – Approved / Uploaded */
+        .bg-emerald-50 {
+            background-color: #ecfdf5 !important;
+        }
+
+        .text-emerald-700 {
+            color: #047857 !important;
+        }
+
+        .border-emerald-200 {
+            border-color: #a7f3d0 !important;
+        }
+
         .rounded-full {
             border-radius: 9999px !important;
         }
@@ -80,10 +106,10 @@
             <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #fffbebf5; color: #b45309; border: 1px solid #fde68a;">
                 <i class="bi bi-hourglass-split"></i> {{ $statusCounts['pending'] }} pending
             </span>
-            <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #ecfeff; color: #0e7490; border: 1px solid #a5f3fc;">
+            <span class="stat-pill bg-cyan-50 text-cyan-700 border border-cyan-200 rounded-full" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #ecfeff; color: #0e7490; border: 1px solid #a5f3fc;">
                 <i class="bi bi-patch-check"></i> {{ $statusCounts['verified'] }} verified
             </span>
-            <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
+            <span class="stat-pill bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
                 <i class="bi bi-award"></i> {{ $statusCounts['approved'] }} approved
             </span>
             <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #fff1f2; color: #be123c; border: 1px solid #fecdd3;">

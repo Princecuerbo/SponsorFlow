@@ -160,14 +160,14 @@
                     <div class="card-body p-4">
                         <div class="d-flex align-items-start gap-3 mb-4">
                             <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
-                                style="width: 44px; height: 44px; background-color: {{ $profile?->is_sle_fhe_verified ? '#dcfce7' : '#fef3c7' }}; color: {{ $profile?->is_sle_fhe_verified ? '#16a34a' : '#d97706' }};">
+                                style="width: 44px; height: 44px; background-color: {{ $profile?->is_sle_fhe_verified ? '#ecfeff' : '#fef3c7' }}; color: {{ $profile?->is_sle_fhe_verified ? '#0e7490' : '#d97706' }};">
                                 <i
                                     class="bi {{ $profile?->is_sle_fhe_verified ? 'bi-check-circle-fill' : 'bi-hourglass-split' }} fs-5"></i>
                             </div>
                             <div>
                                 <h6 class="fw-bold text-dark mb-1">Masterlist Verification</h6>
                                 @if ($profile?->is_sle_fhe_verified)
-                                    <span class="badge bg-success mb-2">Verified</span>
+                                    <span class="badge bg-cyan-50 text-cyan-700 border border-cyan-200 mb-2">Verified</span>
                                     <p class="text-secondary small mb-0">Your profile is active and verified for the current
                                         academic term.</p>
                                 @else

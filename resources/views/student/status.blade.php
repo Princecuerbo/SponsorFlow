@@ -21,8 +21,8 @@
                         <h2 class="h5 fw-bold mb-1">{{ $application->sponsorshipProgram->program_name }}</h2>
                         <p class="text-secondary small mb-0">Submitted
                             {{ $application->submitted_at?->format('M d, Y') ?? 'recently' }}</p>
-                    </div><span
-                        class="badge rounded-pill text-bg-success align-self-start px-3 py-2">{{ $application->status->value }}</span>
+                    </div>
+                    <x-status-badge :status="$application->status" class="align-self-start px-3 py-2 rounded-pill" />
                 </div>
                 <div class="sf-timeline">
                     @foreach ($steps as $index => $step)

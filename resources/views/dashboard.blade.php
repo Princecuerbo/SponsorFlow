@@ -61,16 +61,16 @@
                 <div class="card border-0 shadow-sm rounded-3 p-3 bg-white h-100">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center"
-                                style="background-color: #fffbeb; color: #d97706; width: 44px; height: 44px; flex-shrink: 0;">
+                            <div class="rounded-3 d-flex align-items-center justify-content-center me-3"
+                                style="background-color: {{ $isVerified ? '#ecfeff' : '#fffbeb' }}; color: {{ $isVerified ? '#0e7490' : '#d97706' }}; width: 44px; height: 44px; flex-shrink: 0;">
                                 <i class="bi bi-shield-check fs-5"></i>
                             </div>
                             <div>
                                 <div class="text-secondary fw-semibold text-uppercase extra-small mb-1"
                                     style="font-size: 0.72rem; letter-spacing: 0.05em;">SLE-FHE Verification</div>
                                 @if ($isVerified)
-                                    <span class="badge rounded-pill fw-semibold px-2.5 py-1"
-                                        style="background-color: #dcfce7; color: #166534; font-size: 0.72rem;">Verified</span>
+                                    <span class="badge rounded-pill fw-semibold px-2.5 py-1 bg-cyan-50 text-cyan-700 border border-cyan-200"
+                                        style="font-size: 0.72rem;">Verified</span>
                                 @else
                                     <span class="badge rounded-pill fw-semibold px-2.5 py-1"
                                         style="background-color: #fef3c7; color: #b45309; font-size: 0.72rem;">Pending
@@ -109,16 +109,18 @@
                                         @php $statusVal = $app->status?->value ?? $app->status; @endphp
                                         @if (in_array($statusVal, ['Approved', 'Confirmed'], true))
                                             <span
-                                                class="badge bg-secondary bg-opacity-10 text-secondary px-2.5 py-1 rounded-pill fw-semibold"
+                                                class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-pill fw-semibold"
                                                 style="font-size: 0.72rem;">Approved</span>
+                                        @elseif (in_array($statusVal, ['Verified', 'verified'], true))
+                                            <span
+                                                class="badge bg-cyan-50 text-cyan-700 border border-cyan-200 px-2.5 py-1 rounded-pill fw-semibold"
+                                                style="font-size: 0.72rem;">Verified</span>
                                         @elseif (in_array($statusVal, ['Pending', 'pending'], true))
                                             <span
-                                                class="badge bg-secondary bg-opacity-10 text-secondary px-2.5 py-1 rounded-pill fw-semibold"
+                                                class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2.5 py-1 rounded-pill fw-semibold"
                                                 style="font-size: 0.72rem;">Pending</span>
                                         @else
-                                            <span
-                                                class="badge bg-secondary bg-opacity-10 text-secondary px-2.5 py-1 rounded-pill fw-semibold"
-                                                style="font-size: 0.72rem;">{{ $statusVal }}</span>
+                                            <x-status-badge :status="$statusVal" />
                                         @endif
                                     </td>
                                     <td class="text-end">

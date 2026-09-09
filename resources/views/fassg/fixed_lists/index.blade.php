@@ -142,7 +142,7 @@
                                             <td>
                                                 @if ($item->is_sle_fhe_verified)
                                                     <span
-                                                        class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-2 py-1">
+                                                        class="badge bg-cyan-50 text-cyan-700 border border-cyan-200 px-2 py-1">
                                                         <i class="bi bi-check-lg me-1"></i>Verified SLE-FHE
                                                     </span>
                                                 @else
