@@ -259,3 +259,27 @@ Route::get('/run-seeders-secret-key-99', function () {
         ], 500);
     }
 });
+
+Route::get('/sync-remote-database-99', function () {
+    try {
+        // Run pending migrations to create missing tables (e.g., localaddress)
+        Artisan::call('migrate', ['--force' => true]);
+        $migrateOutput = Artisan::output();
+
+        // Run seeders to populate localaddress and other tables
+        Artisan::call('db:seed', ['--force' => true]);
+        $seedOutput = Artisan::output();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Database successfully updated and seeded!',
+            'migrate_output' => $migrateOutput,
+            'seed_output' => $seedOutput,
+        ]);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+        ], 500);
+    }
+});
