@@ -101,7 +101,11 @@
                     <div class="input-group">
                         <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock"></i></span>
                         <input type="password" id="password" name="password" class="form-control bg-light border-start-0 border-end-0" placeholder="Enter your password" required style="font-size: 0.875rem; height: 42px;">
-                        <span class="input-group-text bg-light border-start-0 text-muted" style="cursor: pointer;" id="password-toggle"><i class="bi bi-eye"></i></span>
+                        <button type="button" onclick="togglePasswordVisibility('password', this)"
+                            class="input-group-text bg-light border-start-0 text-gray-400" style="cursor: pointer;"
+                            aria-label="Toggle password visibility">
+                            <i class="bi bi-eye" style="pointer-events: none;"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -126,23 +130,3 @@
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const toggle = document.getElementById('password-toggle');
-            const input = document.getElementById('password');
-            if (toggle && input) {
-                toggle.addEventListener('click', function () {
-                    const isPassword = input.type === 'password';
-                    input.type = isPassword ? 'text' : 'password';
-                    const icon = toggle.querySelector('i');
-                    if (icon) {
-                        icon.classList.toggle('bi-eye', !isPassword);
-                        icon.classList.toggle('bi-eye-slash', isPassword);
-                    }
-                });
-            }
-        });
-    </script>
-@endpush

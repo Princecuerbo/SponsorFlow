@@ -56,14 +56,15 @@
                         <label for="password"
                             class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-700">Password</label>
                         <div class="relative">
-                            <input type="password" name="password" id="student-password-input" required
+                            <input type="password" name="password" id="password" required
                                 autocomplete="current-password" placeholder="Password"
                                 class="w-full rounded-xl border border-slate-300 px-4 py-3 pr-12 text-sm outline-none transition focus:border-[#002B66] focus:ring-2 focus:ring-[#002B66]/20">
-                            <button type="button" id="toggle-student-password-btn"
-                                class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 transition hover:text-slate-600"
+                            <button type="button"
+                                onclick="togglePasswordVisibility('password', this)"
+                                class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-gray-400 transition hover:text-slate-600 focus:outline-none z-10 cursor-pointer"
                                 aria-label="Toggle password visibility">
-                                <svg class="show-icon h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    aria-hidden="true">
+                                <svg class="show-icon h-5 w-5 pointer-events-none" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
                                     <circle cx="12" cy="12" r="3" />
@@ -98,15 +99,22 @@
     </main>
 
     <script>
-        const passwordInput = document.getElementById('student-password-input');
-        const toggleButton = document.getElementById('toggle-student-password-btn');
-        if (passwordInput && toggleButton) {
-            toggleButton.addEventListener('click', function() {
-                const isPassword = passwordInput.type === 'password';
-                passwordInput.type = isPassword ? 'text' : 'password';
-                toggleButton.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
-            });
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+
+            if (isPassword) {
+                btn.classList.add('text-indigo-600');
+                btn.classList.remove('text-gray-400');
+            } else {
+                btn.classList.remove('text-indigo-600');
+                btn.classList.add('text-gray-400');
+            }
         }
+        window.togglePasswordVisibility = togglePasswordVisibility;
     </script>
 </body>
 

@@ -178,7 +178,7 @@
                                 <button
                                     type="button"
                                     onclick="togglePasswordVisibility('current_password', this)"
-                                    class="position-absolute top-50 translate-middle-y end-0 pe-3 border-0 bg-transparent text-secondary d-flex align-items-center"
+                                    class="position-absolute top-50 translate-middle-y end-0 pe-3 border-0 bg-transparent text-gray-400 d-flex align-items-center"
                                     style="cursor:pointer;"
                                     aria-label="Toggle password visibility"
                                 >
@@ -213,7 +213,7 @@
                                 <button
                                     type="button"
                                     onclick="togglePasswordVisibility('new_password', this)"
-                                    class="position-absolute top-50 translate-middle-y end-0 pe-3 border-0 bg-transparent text-secondary d-flex align-items-center"
+                                    class="position-absolute top-50 translate-middle-y end-0 pe-3 border-0 bg-transparent text-gray-400 d-flex align-items-center"
                                     style="cursor:pointer;"
                                     aria-label="Toggle password visibility"
                                 >
@@ -248,7 +248,7 @@
                                 <button
                                     type="button"
                                     onclick="togglePasswordVisibility('new_password_confirmation', this)"
-                                    class="position-absolute top-50 translate-middle-y end-0 pe-3 border-0 bg-transparent text-secondary d-flex align-items-center"
+                                    class="position-absolute top-50 translate-middle-y end-0 pe-3 border-0 bg-transparent text-gray-400 d-flex align-items-center"
                                     style="cursor:pointer;"
                                     aria-label="Toggle password visibility"
                                 >
@@ -284,22 +284,3 @@
         </div>
     </div>
 @endsection
-
-@push('scripts')
-<script>
-    function togglePasswordVisibility(inputId, btn) {
-        const input = document.getElementById(inputId);
-        if (!input) return;
-        const isPassword = input.type === 'password';
-        input.type = isPassword ? 'text' : 'password';
-        if (isPassword) {
-            btn.classList.add('text-indigo-600');
-            btn.classList.remove('text-secondary');
-        } else {
-            btn.classList.remove('text-indigo-600');
-            btn.classList.add('text-secondary');
-        }
-    }
-    window.togglePasswordVisibility = togglePasswordVisibility;
-</script>
-@endpush

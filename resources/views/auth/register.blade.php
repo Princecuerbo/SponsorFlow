@@ -235,9 +235,12 @@
                                             class="form-control form-control-md bg-light border-1 border-end-0" required
                                             autocomplete="new-password" minlength="8"
                                             style="font-size: 0.875rem; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
-                                        <span class="input-group-text bg-light border-1 border-start-0 text-muted"
+                                        <button type="button" onclick="togglePasswordVisibility('password', this)"
+                                            class="input-group-text bg-light border-1 border-start-0 text-gray-400"
                                             style="cursor: pointer; border-top-right-radius: 8px; border-bottom-right-radius: 8px;"
-                                            id="password-toggle"><i class="bi bi-eye"></i></span>
+                                            aria-label="Toggle password visibility">
+                                            <i class="bi bi-eye" style="pointer-events: none;"></i>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -248,9 +251,13 @@
                                             class="form-control form-control-md bg-light border-1 border-end-0" required
                                             autocomplete="new-password"
                                             style="font-size: 0.875rem; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
-                                        <span class="input-group-text bg-light border-1 border-start-0 text-muted"
+                                        <button type="button"
+                                            onclick="togglePasswordVisibility('password_confirmation', this)"
+                                            class="input-group-text bg-light border-1 border-start-0 text-gray-400"
                                             style="cursor: pointer; border-top-right-radius: 8px; border-bottom-right-radius: 8px;"
-                                            id="password-confirm-toggle"><i class="bi bi-eye"></i></span>
+                                            aria-label="Toggle password visibility">
+                                            <i class="bi bi-eye" style="pointer-events: none;"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -457,25 +464,6 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            function setupPasswordToggle(toggleId, inputId) {
-                const toggle = document.getElementById(toggleId);
-                const input = document.getElementById(inputId);
-                if (toggle && input) {
-                    toggle.addEventListener('click', function() {
-                        const isPassword = input.type === 'password';
-                        input.type = isPassword ? 'text' : 'password';
-                        const icon = toggle.querySelector('i');
-                        if (icon) {
-                            icon.classList.toggle('bi-eye', !isPassword);
-                            icon.classList.toggle('bi-eye-slash', isPassword);
-                        }
-                    });
-                }
-            }
-
-            setupPasswordToggle('password-toggle', 'password');
-            setupPasswordToggle('password-confirm-toggle', 'password_confirmation');
-
             // Strict Student ID masking: allow up to 4 digits, auto-insert hyphen, then up to 4 digits
             document.querySelectorAll('[data-mask-student-id]').forEach(function (input) {
                 const maskStudentId = function () {

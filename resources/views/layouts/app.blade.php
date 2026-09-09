@@ -325,6 +325,10 @@
         .text-indigo-700 { color: #4338ca !important; }
         .border-indigo-200 { border-color: #c7d2fe !important; }
 
+        /* Password toggle eye feedback colors */
+        .text-indigo-600 { color: #4f46e5 !important; }
+        .text-gray-400   { color: #94a3b8 !important; }
+
         .rounded-full { border-radius: 9999px !important; }
 
         /* Utility: match Tailwind pointer-events-none */
@@ -366,6 +370,24 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+
+            if (isPassword) {
+                btn.classList.add('text-indigo-600');
+                btn.classList.remove('text-gray-400');
+            } else {
+                btn.classList.remove('text-indigo-600');
+                btn.classList.add('text-gray-400');
+            }
+        }
+        window.togglePasswordVisibility = togglePasswordVisibility;
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var userMenuButton = document.getElementById('user-menu-btn');
