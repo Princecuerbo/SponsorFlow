@@ -26,6 +26,7 @@ use App\Http\Controllers\Student\ApplicationController as StudentApplicationCont
 use App\Http\Controllers\Student\ProfileController;
 use App\Http\Controllers\Student\VerificationController;
 use App\Http\Controllers\Student\PrivacyConsentController;
+use App\Http\Controllers\Student\NotificationController as StudentNotificationController;
 use App\Models\User;
 use App\Models\SponsorshipProgram;
 use Illuminate\Support\Facades\Artisan;
@@ -107,6 +108,11 @@ Route::middleware(['web', 'auth', 'EnsureUserRole:student'])
         Route::post('/applications/{application}/resubmit', [StudentApplicationController::class, 'resubmit'])->name('applications.resubmit');
         Route::get('/applications/{application}/documents/{documentType}', [StudentApplicationController::class, 'downloadDocument'])
             ->name('applications.documents.download');
+
+        Route::get('/notifications/{notification}/read', [StudentNotificationController::class, 'read'])
+            ->name('notifications.read');
+        Route::post('/notifications/read-all', [StudentNotificationController::class, 'markAllRead'])
+            ->name('notifications.mark-all-read');
     });
 
 Route::middleware(['auth', 'EnsureUserRole:fassg'])

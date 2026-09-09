@@ -6,7 +6,7 @@ chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 # Safely apply pending database migrations
 echo "Running database migrations..."
-php artisan migrate:fresh --force
+php artisan migrate --force
 
 # Seed lookup tables & base state (safe to re-run via upserts)
 echo "Seeding lookup data..."

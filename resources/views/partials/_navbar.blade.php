@@ -3,6 +3,8 @@
     $role = $user->role;
     $firstName = trim((string) ($user->name ?? ''));
     $firstName = $firstName === '' ? '' : explode(' ', $firstName)[0];
+    $studentNotifications = $user->isStudent() ? $user->notifications()->limit(5)->get() : collect();
+    $unreadNotificationCount = $user->isStudent() ? $user->unreadNotifications()->count() : 0;
 @endphp
 
 <nav class="sf-navbar navbar bg-white border-bottom py-0 sticky-top" style="min-height:60px;">
@@ -163,13 +165,47 @@
         <div class="d-flex align-items-center gap-3 flex-shrink-0">
 
             @if ($user->isStudent())
-                <a href="#" class="position-relative text-secondary d-none d-md-inline-flex align-items-center"
-                    aria-label="Notifications">
-                    <i class="bi bi-bell fs-5"></i>
-                    <span
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-white fw-bold"
-                        style="font-size: 0.6rem; padding: 0.4em 0.7em;">0</span>
-                </a>
+                <div class="position-relative d-none d-md-block" x-data="{ open: false }" @click.outside="open = false">
+                    <button type="button" @click="open = !open" @keydown.escape.window="open = false"
+                        class="btn btn-link p-1 bg-transparent border-0 position-relative text-secondary d-flex align-items-center"
+                        aria-label="Notifications">
+                        <i class="bi bi-bell fs-5"></i>
+                        @if ($unreadNotificationCount > 0)
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-white fw-bold"
+                                style="font-size: 0.6rem; padding: 0.4em 0.7em;">{{ $unreadNotificationCount }}</span>
+                        @endif
+                    </button>
+
+                    <div x-show="open" x-cloak
+                        style="position: absolute; top: 100%; right: 0; margin-top: 0.5rem; width: 22rem; max-width: 90vw; background: #fff; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 8px 24px rgba(15, 41, 74, 0.12); z-index: 1050; overflow: hidden;">
+                        <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+                            <span class="fw-bold small" style="color: #0f294a;">Notifications</span>
+                            @if ($unreadNotificationCount > 0)
+                                <form method="POST" action="{{ route('student.notifications.mark-all-read') }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-link btn-sm p-0 text-decoration-none small"
+                                        style="font-size: 0.75rem;">Mark all as read</button>
+                                </form>
+                            @endif
+                        </div>
+                        <div style="max-height: 18rem; overflow-y: auto;">
+                            @forelse ($studentNotifications as $notification)
+                                <a href="{{ route('student.notifications.read', $notification) }}"
+                                    class="d-flex align-items-start gap-2 px-3 py-2 text-decoration-none border-bottom {{ $notification->read_at ? 'bg-white' : 'bg-light' }}">
+                                    <i class="bi bi-{{ $notification->data['icon'] ?? 'bell' }} mt-1 text-primary"></i>
+                                    <span>
+                                        <span class="d-block small fw-semibold {{ $notification->read_at ? 'text-secondary' : 'text-dark' }}">{{ $notification->data['title'] ?? 'Notification' }}</span>
+                                        <span class="d-block small text-secondary">{{ $notification->data['message'] ?? '' }}</span>
+                                        <span class="d-block small text-muted">{{ $notification->created_at->diffForHumans() }}</span>
+                                    </span>
+                                </a>
+                            @empty
+                                <div class="px-3 py-4 text-center text-secondary small">You have no notifications.</div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
             @endif
 
             {{-- Desktop User Dropdown --}}
@@ -392,6 +428,10 @@
 </nav>
 
 <style>
+    [x-cloak] {
+        display: none !important;
+    }
+
     .sf-navbar .container {
         justify-content: center;
     }

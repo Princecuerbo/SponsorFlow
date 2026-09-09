@@ -15,6 +15,7 @@ use App\Models\Sponsor;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
 use App\Models\User;
+use App\Notifications\NewSponsorshipProgramOpened;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -101,6 +102,8 @@ class ProgramManagementController extends Controller
 
         $this->audit($request, 'fassg.program.created', 'sponsorship_programs');
 
+        $this->notifyEligibleStudents($program->fresh());
+
         return redirect()
             ->route('fassg.programs.index')
             ->with('status', "Program {$program->program_name} was created and opened.");
@@ -122,6 +125,7 @@ class ProgramManagementController extends Controller
     public function update(UpdateSponsorshipProgramRequest $request, SponsorshipProgram $sponsorshipProgram): RedirectResponse
     {
         $requestedStatus = $request->enum('status', ProgramStatus::class);
+        $wasOpen = $sponsorshipProgram->isOpen();
         $shouldOpen = $requestedStatus === ProgramStatus::Open
             && (int) $request->input('available_slots') > 0;
         $shouldExpire = ! $shouldOpen && ($requestedStatus === ProgramStatus::Expired
@@ -174,6 +178,10 @@ class ProgramManagementController extends Controller
         });
 
         $this->audit($request, 'fassg.program.updated', 'sponsorship_programs');
+
+        if ($shouldOpen && ! $wasOpen) {
+            $this->notifyEligibleStudents($sponsorshipProgram->fresh());
+        }
 
         return redirect()
             ->route('fassg.programs.index')
@@ -239,6 +247,8 @@ class ProgramManagementController extends Controller
 
         $this->audit($request, 'fassg.program.opened', 'sponsorship_programs');
 
+        $this->notifyEligibleStudents($sponsorshipProgram->fresh());
+
         return back()->with('status', "Program {$sponsorshipProgram->program_name} is now open.");
     }
 
@@ -251,6 +261,8 @@ class ProgramManagementController extends Controller
         $sponsorshipProgram->update(['status' => ProgramStatus::Open]);
 
         $this->audit($request, 'fassg.program.reopened', 'sponsorship_programs');
+
+        $this->notifyEligibleStudents($sponsorshipProgram->fresh());
 
         return back()->with('success', 'Program successfully reopened for student applications.');
     }
@@ -298,5 +310,27 @@ class ProgramManagementController extends Controller
         return redirect()
             ->route('fassg.programs.index')
             ->with('status', "Program {$name} was deleted.");
+    }
+
+    /**
+     * Notify eligible active students that a program has just been opened.
+     */
+    private function notifyEligibleStudents(SponsorshipProgram $program): void
+    {
+        $eligibleProfiles = StudentProfile::query()
+            ->with('user')
+            ->whereHas('user', fn ($query) => $query
+                ->where('role', UserRole::Student)
+                ->where('status', UserStatus::Active))
+            ->get()
+            ->reject(fn (StudentProfile $profile) => $program->hasActiveApplicationForStudent($profile->id));
+
+        foreach ($eligibleProfiles as $profile) {
+            $result = $program->checkEligibility($profile);
+
+            if ($result['is_eligible'] && $profile->user !== null) {
+                $profile->user->notify(new NewSponsorshipProgramOpened($program));
+            }
+        }
     }
 }

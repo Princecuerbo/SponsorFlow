@@ -14,6 +14,8 @@ use App\Models\Application;
 use App\Models\ApplicationDocument;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
+use App\Notifications\ApplicationStatusUpdated;
+use App\Notifications\SleFheVerificationUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -170,6 +172,10 @@ class VerificationController extends Controller
     {
         $studentProfile->update(['is_sle_fhe_verified' => true]);
 
+        if ($studentProfile->user !== null) {
+            $studentProfile->user->notify(new SleFheVerificationUpdated($studentProfile, 'verified'));
+        }
+
         $this->audit($request, 'fassg.student.sle_fhe_verified', 'student_profiles');
 
         return back()->with('success', 'Student SLE-FHE status verified successfully.');
@@ -220,6 +226,10 @@ class VerificationController extends Controller
             'verified_at' => now(),
         ]);
 
+        if ($application->studentProfile->user !== null) {
+            $application->studentProfile->user->notify(new ApplicationStatusUpdated($application, ApplicationStatus::Verified));
+        }
+
         $this->audit($request, 'fassg.application.verified', 'applications');
 
         $studentName = $application->studentProfile->user->name ?? 'Student';
@@ -240,6 +250,11 @@ class VerificationController extends Controller
             'status'           => ApplicationStatus::Rejected,
             'rejection_reason' => $reason,
         ]);
+
+        if ($application->studentProfile->user !== null) {
+            $application->studentProfile->user->notify(new ApplicationStatusUpdated($application, ApplicationStatus::Rejected));
+        }
+
         $this->audit($request, 'fassg.application.rejected', 'applications');
 
         return back()->with('status', "Application rejected: {$reason}");
@@ -269,6 +284,10 @@ class VerificationController extends Controller
             'requested_documents' => array_values(array_unique($validated['requested_documents'])),
         ]);
 
+        if ($application->studentProfile->user !== null) {
+            $application->studentProfile->user->notify(new ApplicationStatusUpdated($application, ApplicationStatus::ResubmissionRequested));
+        }
+
         $this->audit($request, 'fassg.application.resubmission_requested', 'applications');
 
         return back()->with('status', 'Resubmission requested. The student has been notified to upload corrected documents.');
@@ -276,6 +295,10 @@ class VerificationController extends Controller
 
     public function rejectStudent(Request $request, StudentProfile $studentProfile): RedirectResponse
     {
+        if ($studentProfile->user !== null) {
+            $studentProfile->user->notify(new SleFheVerificationUpdated($studentProfile, 'fix_required'));
+        }
+
         $this->audit($request, 'fassg.student.sle_fhe_fix_requested', 'student_profiles');
 
         return back()->with('status', 'Student verification was returned for correction.');
