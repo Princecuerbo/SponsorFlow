@@ -29,6 +29,10 @@ class ProfileController extends Controller
             $request->merge(['password_confirmation' => $request->input('new_password_confirmation')]);
         }
 
+        if ($request->has('confirm_password') && !$request->has('password_confirmation')) {
+            $request->merge(['password_confirmation' => $request->input('confirm_password')]);
+        }
+
         $validated = $request->validate([
             'current_password' => ['required', 'current_password'],
             'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
