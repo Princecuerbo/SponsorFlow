@@ -35,6 +35,14 @@ class ApplicantVerificationController extends Controller
             ApplicationStatus::ResubmissionRequested,
         ];
 
+        $filterableStatuses = [
+            ApplicationStatus::Pending,
+            ApplicationStatus::Verified,
+            ApplicationStatus::Approved,
+            ApplicationStatus::ResubmissionRequested,
+            ApplicationStatus::Rejected,
+        ];
+
         $applications = Application::query()
             ->with(['studentProfile.user', 'sponsorshipProgram.sponsor', 'documents'])
             ->whereHas('studentProfile', function ($q) use ($campus): void {
@@ -52,10 +60,13 @@ class ApplicantVerificationController extends Controller
             })
             ->when($programId > 0, fn ($q) => $q->where('sponsorship_program_id', $programId))
             ->when(
-                $status !== '' && in_array(ApplicationStatus::tryFrom($status), $actionableStatuses, true),
+                $status !== '' && in_array(ApplicationStatus::tryFrom($status), $filterableStatuses, true),
                 fn ($q) => $q->where('status', $status)
             )
-            ->whereIn('status', $actionableStatuses)
+            ->when(
+                $status === '',
+                fn ($q) => $q->whereIn('status', $actionableStatuses)
+            )
             ->latest()
             ->paginate(15)
             ->withQueryString();

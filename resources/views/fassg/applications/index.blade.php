@@ -123,7 +123,9 @@
                         <option value="">All statuses</option>
                         <option value="Pending" @selected(request('status') === 'Pending')>Pending</option>
                         <option value="Verified" @selected(request('status') === 'Verified')>Verified</option>
+                        <option value="Approved" @selected(request('status') === 'Approved')>Approved</option>
                         <option value="Resubmission Requested" @selected(request('status') === 'Resubmission Requested')>Resubmission Requested</option>
+                        <option value="Rejected" @selected(request('status') === 'Rejected')>Rejected</option>
                     </select>
                 </div>
 
