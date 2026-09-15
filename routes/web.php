@@ -187,6 +187,7 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
 
         Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
         Route::get('/reports/export-pdf', [ReportsController::class, 'exportPdf'])->name('reports.export-pdf');
+        Route::get('/reports/export-csv', [ReportsController::class, 'exportCsv'])->name('reports.export-csv');
         Route::get('/monitoring', [ReportsController::class, 'index'])->name('monitoring.index');
     });
 

@@ -7,21 +7,19 @@
 @push('styles')
     <style>
         @media print {
-
             .no-print,
             nav,
             header,
             sidebar,
             .navbar,
-            button {
+            button,
+            canvas {
                 display: none !important;
             }
-
             body {
                 background-color: #fff !important;
                 padding: 0 !important;
             }
-
             .card,
             .sf-stat-card {
                 box-shadow: none !important;
@@ -33,6 +31,7 @@
 
 @section('content')
 
+    {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 gap-3">
         <div>
             <h3 class="fw-bold mb-0">Sponsorship Reports</h3>
@@ -43,18 +42,80 @@
                 class="btn btn-outline-secondary fw-semibold d-inline-flex align-items-center gap-2">
                 <i class="bi bi-printer"></i> Print Report
             </button>
-            <a href="{{ route('fassg.reports.export-pdf') }}"
+            <a href="{{ route('fassg.reports.export-pdf', request()->query()) }}"
                 class="btn fw-semibold d-inline-flex align-items-center gap-2 text-white"
                 style="background-color: #0F2942; border-color: #0F2942;">
                 <i class="bi bi-file-earmark-pdf"></i> Export PDF
             </a>
+            <a href="{{ route('fassg.reports.export-csv', request()->query()) }}"
+                class="btn btn-outline-success fw-semibold d-inline-flex align-items-center gap-2">
+                <i class="bi bi-file-earmark-spreadsheet"></i> Export Excel / CSV
+            </a>
         </div>
     </div>
 
+    {{-- Analytical Filter Bar --}}
+    @php
+        $filterYear = $filters['academic_year'] ?? '';
+        $filterSemester = $filters['semester'] ?? '';
+        $filterCampus = $filters['campus'] ?? '';
+        $yearOptions = collect($academicYears ?? [])
+            ->push(sprintf('%d-%d', now()->year, now()->year + 1))
+            ->unique()
+            ->values()
+            ->all();
+    @endphp
+    <div class="card filter-card mb-4 rounded-3 no-print">
+        <div class="card-body p-3">
+            <form method="GET" action="{{ route('fassg.reports.index') }}" class="row g-2 align-items-end">
+                {{-- Academic Year --}}
+                <div class="col-md-3">
+                    <label class="form-label small text-secondary fw-semibold mb-1">Academic Year</label>
+                    <select name="academic_year" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All academic years</option>
+                        @foreach ($yearOptions as $yearOption)
+                            <option value="{{ $yearOption }}" @selected($filterYear === $yearOption)>{{ $yearOption }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Semester --}}
+                <div class="col-md-3">
+                    <label class="form-label small text-secondary fw-semibold mb-1">Semester</label>
+                    <select name="semester" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All semesters</option>
+                        <option value="First" @selected($filterSemester === 'First')>First Semester</option>
+                        <option value="Second" @selected($filterSemester === 'Second')>Second Semester</option>
+                    </select>
+                </div>
+
+                {{-- Campus --}}
+                <div class="col-md-3">
+                    <label class="form-label small text-secondary fw-semibold mb-1">Campus</label>
+                    <select name="campus" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All Campuses</option>
+                        @foreach (['Main Campus (City of Mati)', 'Baganga Campus', 'Banaybanay Campus', 'Cateel Campus', 'San Isidro Campus', 'Tarragona Campus'] as $campusOpt)
+                            <option value="{{ $campusOpt }}" @selected($filterCampus === $campusOpt)>{{ $campusOpt }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Reset --}}
+                <div class="col-md-3">
+                    <a href="{{ route('fassg.reports.index') }}"
+                        class="btn btn-outline-secondary btn-sm w-100">
+                        <i class="bi bi-x-lg"></i> Reset Filters
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- KPI Summary Cards --}}
     <div class="row g-3 mb-4">
         <div class="col-sm-6 col-xl-3">
             <div class="sf-stat-card p-3">
-                <div class="sf-eyebrow mb-1">Slot Utilization</div>
+                <div class="sf-eyebrow mb-1">Overall Slot Utilization</div>
                 <div class="h4 sf-heading mb-1">{{ $report['slot_utilization_pct'] ?? 0 }}%</div>
                 <div class="small text-secondary">{{ $report['slots_filled'] ?? 0 }} of {{ $report['slots_total'] ?? 0 }}
                     slots filled</div>
@@ -76,105 +137,118 @@
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="sf-stat-card p-3">
-                <div class="sf-eyebrow mb-1">Rural Applicants</div>
+                <div class="sf-eyebrow mb-1">Rural Applicants Rate</div>
                 <div class="h4 sf-heading mb-1">{{ $report['rural_pct'] ?? 0 }}%</div>
                 <div class="small text-secondary">Of total verified applicants</div>
             </div>
         </div>
     </div>
 
+    @php
+        $trendsAvailable = ! empty($chartTrends['labels'] ?? []);
+    @endphp
+
+    {{-- Monthly Trends Chart --}}
     <div class="row g-4">
         <div class="col-12">
             <div class="card sf-card">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Monthly Applicant Trends</h2>
-                    <div class="table-responsive">
-                        <table class="table sf-table mb-0 align-middle">
-                            <thead>
-                                <tr>
-                                    <th>Month</th>
-                                    <th class="text-end">Applications</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($applicantTrends ?? [] as $month => $total)
-                                    <tr>
-                                        <td>
-                                            @if ($month && strlen((string) $month) === 7)
-                                                {{ \Carbon\Carbon::parse($month . '-01')->format('F Y') }}
-                                            @else
-                                                {{ $month }}
-                                            @endif
-                                        </td>
-                                        <td class="text-end fw-semibold">{{ $total }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="2" class="text-secondary text-center py-3">No submitted applications
-                                            yet.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="h6 sf-heading mb-0">Monthly Applicant Trends</h2>
+                        <span class="small text-secondary">Applications vs. approvals per month</span>
                     </div>
+                    @if ($trendsAvailable)
+                        <div style="position: relative; height: 320px;">
+                            <canvas id="monthlyTrendsChart"></canvas>
+                        </div>
+                    @else
+                        <div class="sf-empty-state py-4">
+                            <i class="bi bi-bar-chart"></i>
+                            <div class="small">No submission data for the selected period.</div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-12">
-            <div class="card sf-card">
+    {{-- Demographic Charts --}}
+    <div class="row g-4 mt-0">
+        <div class="col-lg-4">
+            <div class="card sf-card h-100">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Slot Utilization by Program</h2>
-                    <div class="table-responsive">
-                        <table class="table sf-table mb-0 align-middle">
-                            <thead>
-                                <tr>
-                                    <th>Program</th>
-                                    <th>Utilization</th>
-                                    <th class="text-end">Filled</th>
-                                    <th class="text-end">Available</th>
-                                    <th class="text-end">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($slotUtilization ?? [] as $program)
-                                    @php
-                                        $filled = $program->filled_slots;
-                                        $available = $program->available_slots;
-                                        $totalSlots = $program->total_slots;
-                                    @endphp
-                                    <tr>
-                                        <td>{{ $program->program_name }}</td>
-                                        <td style="min-width: 220px;">
-                                            <div class="d-flex justify-content-between small mb-1">
-                                                <span>{{ $program->utilization }}%</span>
-                                                <span
-                                                    class="text-secondary">{{ $program->filled_slots }}/{{ $program->total_slots }}</span>
-                                            </div>
-                                            <div class="progress" style="height: 6px;">
-                                                <div class="progress-bar bg-primary"
-                                                    style="width: {{ min(100, $program->utilization) }}%">
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-end">{{ $filled }}</td>
-                                        <td class="text-end">{{ $available }}</td>
-                                        <td class="text-end fw-semibold">{{ $totalSlots }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-secondary text-center py-3">No programs available.
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+                    <h2 class="h6 sf-heading mb-3">Residency Distribution</h2>
+                    @if (! empty($chartRuralUrban['data'] ?? []) && array_sum($chartRuralUrban['data']) > 0)
+                        <div style="position: relative; height: 280px;">
+                            <canvas id="ruralUrbanChart"></canvas>
+                        </div>
+                    @else
+                        <div class="sf-empty-state py-4">
+                            <i class="bi bi-house"></i>
+                            <div class="small">No residency data available.</div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-6">
+        <div class="col-lg-4">
+            <div class="card sf-card h-100">
+                <div class="card-body p-4">
+                    <h2 class="h6 sf-heading mb-3">Gender Distribution</h2>
+                    @if (! empty($chartGender['data'] ?? []) && array_sum($chartGender['data']) > 0)
+                        <div style="position: relative; height: 280px;">
+                            <canvas id="genderChart"></canvas>
+                        </div>
+                    @else
+                        <div class="sf-empty-state py-4">
+                            <i class="bi bi-gender-ambiguous"></i>
+                            <div class="small">No gender data available.</div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card sf-card h-100">
+                <div class="card-body p-4">
+                    <h2 class="h6 sf-heading mb-3">Applicants by Campus</h2>
+                    @if (! empty($chartCampus['data'] ?? []) && array_sum($chartCampus['data']) > 0)
+                        <div style="position: relative; height: 280px;">
+                            <canvas id="campusChart"></canvas>
+                        </div>
+                    @else
+                        <div class="sf-empty-state py-4">
+                            <i class="bi bi-buildings"></i>
+                            <div class="small">No campus data available.</div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-0">
+        <div class="col-lg-7">
+            <div class="card sf-card h-100">
+                <div class="card-body p-4">
+                    <h2 class="h6 sf-heading mb-3">Applicants by Course</h2>
+                    @if (! empty($chartCourse['data'] ?? []) && array_sum($chartCourse['data']) > 0)
+                        <div style="position: relative; height: 300px;">
+                            <canvas id="courseChart"></canvas>
+                        </div>
+                    @else
+                        <div class="sf-empty-state py-4">
+                            <i class="bi bi-book"></i>
+                            <div class="small">No course data available.</div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
                     <h2 class="h6 sf-heading mb-3">Category Breakdown</h2>
@@ -203,86 +277,57 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-lg-6">
-            <div class="card sf-card h-100">
+    {{-- Slot Utilization --}}
+    <div class="row g-4 mt-0">
+        <div class="col-12">
+            <div class="card sf-card">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Demographic Distribution</h2>
-                    <div class="mb-4">
-                        <div class="small fw-semibold mb-2">Gender</div>
-                        @php
-                            $genderDistribution = $genderDistribution ?? $demographics['by_gender'] ?? [];
-                            $maleCount = (int) ($genderDistribution['Male'] ?? $genderDistribution['male'] ?? 0);
-                            $femaleCount = (int) ($genderDistribution['Female'] ?? $genderDistribution['female'] ?? 0);
-                            $genderKnown = $maleCount > 0 || $femaleCount > 0 || (is_array($genderDistribution) && count($genderDistribution) > 0);
-                        @endphp
-                        @if ($genderKnown)
-                            <div class="d-flex justify-content-between small py-1 border-bottom">
-                                <span>Male</span><span class="fw-semibold">{{ $maleCount }}</span>
-                            </div>
-                            <div class="d-flex justify-content-between small py-1 border-bottom">
-                                <span>Female</span><span class="fw-semibold">{{ $femaleCount }}</span>
-                            </div>
-                            @foreach ($genderDistribution as $label => $count)
-                                @if (! in_array(strtolower((string) $label), ['male', 'female'], true))
-                                    <div class="d-flex justify-content-between small py-1 border-bottom">
-                                        <span>{{ $label }}</span><span class="fw-semibold">{{ $count }}</span>
-                                    </div>
-                                @endif
-                            @endforeach
-                        @else
-                            <div class="text-secondary small">No data available.</div>
-                        @endif
-                    </div>
-                    <div class="mb-4">
-                        <div class="small fw-semibold mb-2">Campus</div>
-                        @forelse ($campusDistribution ?? $demographics['by_campus'] ?? [] as $campus => $count)
-                            <div class="d-flex justify-content-between small py-1 border-bottom">
-                                <span>{{ $campus }}</span><span class="fw-semibold">{{ $count }}</span>
-                            </div>
-                        @empty
-                            <div class="text-secondary small">No data available.</div>
-                        @endforelse
-                    </div>
-                    <div>
-                        <div class="small fw-semibold mb-2">Rurality</div>
-                        @forelse ($ruralityDistribution ?? [] as $label => $count)
-                            <div class="d-flex justify-content-between small py-1 border-bottom">
-                                <span>{{ $label }}</span><span class="fw-semibold">{{ $count }}</span>
-                            </div>
-                        @empty
-                            <div class="text-secondary small">No data available.</div>
-                        @endforelse
-                    </div>
-                    <div class="mt-4">
-                        <div class="small fw-semibold mb-2">Course</div>
-                        @forelse (($demographics['by_course'] ?? []) as $course => $count)
-                            <div class="d-flex justify-content-between small py-1 border-bottom">
-                                <span>{{ $course }}</span><span class="fw-semibold">{{ $count }}</span>
-                            </div>
-                        @empty
-                            <div class="text-secondary small">No data available.</div>
-                        @endforelse
-                    </div>
-                    <div class="mt-4">
-                        <div class="small fw-semibold mb-2">Year Level</div>
-                        @forelse (($demographics['by_year_level'] ?? []) as $yearLevel => $count)
-                            <div class="d-flex justify-content-between small py-1 border-bottom">
-                                <span>Year {{ $yearLevel }}</span><span class="fw-semibold">{{ $count }}</span>
-                            </div>
-                        @empty
-                            <div class="text-secondary small">No data available.</div>
-                        @endforelse
-                    </div>
-                    <div class="mt-4">
-                        <div class="small fw-semibold mb-2">Barangay / Municipality</div>
-                        @forelse (($demographics['by_municipality'] ?? $demographics['by_barangay'] ?? $municipalityDistribution ?? []) as $municipality => $count)
-                            <div class="d-flex justify-content-between small py-1 border-bottom">
-                                <span>{{ $municipality }}</span><span class="fw-semibold">{{ $count }}</span>
-                            </div>
-                        @empty
-                            <div class="text-secondary small">No data available.</div>
-                        @endforelse
+                    <h2 class="h6 sf-heading mb-3">Slot Utilization by Program</h2>
+                    <div class="table-responsive">
+                        <table class="table sf-table mb-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Program</th>
+                                    <th>Utilization</th>
+                                    <th class="text-end">Filled</th>
+                                    <th class="text-end">Available</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($slotUtilization ?? [] as $program)
+                                    @php
+                                        $pct = min(100, $program->utilization);
+                                        $barClass = $pct >= 75 ? 'bg-success' : ($pct >= 40 ? 'bg-warning' : 'bg-danger');
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $program->program_name }}</td>
+                                        <td style="min-width: 220px;">
+                                            <div class="d-flex justify-content-between small mb-1">
+                                                <span class="fw-semibold">{{ $program->utilization }}%</span>
+                                                <span
+                                                    class="text-secondary">{{ $program->filled_slots }}/{{ $program->total_slots }}</span>
+                                            </div>
+                                            <div class="progress" style="height: 8px; background-color: #e9ecef;">
+                                                <div class="progress-bar {{ $barClass }}"
+                                                    style="width: {{ $pct }}%">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-end">{{ $program->filled_slots }}</td>
+                                        <td class="text-end">{{ $program->available_slots }}</td>
+                                        <td class="text-end fw-semibold">{{ $program->total_slots }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-secondary text-center py-3">No programs available.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -290,3 +335,140 @@
     </div>
 
 @endsection
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    @php
+        $chartData = [
+            'trends' => $chartTrends ?? [],
+            'ruralUrban' => $chartRuralUrban ?? [],
+            'gender' => $chartGender ?? [],
+            'campus' => $chartCampus ?? [],
+            'course' => $chartCourse ?? [],
+        ];
+    @endphp
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof Chart === 'undefined') return;
+
+            const chartData = @json($chartData);
+
+            const nonEmpty = d => Array.isArray(d.labels) && d.labels.length > 0;
+            const hasCounts = d => Array.isArray(d.data) && d.data.reduce((a, b) => a + b, 0) > 0;
+
+            const navy = '#0F2942';
+            const baseOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, ticks: { precision: 0 } },
+                },
+            };
+
+            if (document.getElementById('monthlyTrendsChart') && nonEmpty(chartData.trends)) {
+                new Chart(document.getElementById('monthlyTrendsChart'), {
+                    type: 'line',
+                    data: {
+                        labels: chartData.trends.labels,
+                        datasets: [
+                            {
+                                label: 'Applications',
+                                data: chartData.trends.applications,
+                                borderColor: navy,
+                                backgroundColor: 'rgba(15, 41, 66, 0.10)',
+                                tension: 0.35,
+                                fill: true,
+                                pointRadius: 3,
+                            },
+                            {
+                                label: 'Approvals',
+                                data: chartData.trends.approvals,
+                                borderColor: '#198754',
+                                backgroundColor: 'rgba(25, 135, 84, 0.10)',
+                                tension: 0.35,
+                                fill: true,
+                                pointRadius: 3,
+                            },
+                        ],
+                    },
+                    options: baseOptions,
+                });
+            }
+
+            if (document.getElementById('ruralUrbanChart') && hasCounts(chartData.ruralUrban)) {
+                new Chart(document.getElementById('ruralUrbanChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: chartData.ruralUrban.labels,
+                        datasets: [{
+                            data: chartData.ruralUrban.data,
+                            backgroundColor: ['#ffc107', navy],
+                            borderWidth: 2,
+                        }],
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } },
+                });
+            }
+
+            if (document.getElementById('genderChart') && hasCounts(chartData.gender)) {
+                new Chart(document.getElementById('genderChart'), {
+                    type: 'pie',
+                    data: {
+                        labels: chartData.gender.labels,
+                        datasets: [{
+                            data: chartData.gender.data,
+                            backgroundColor: ['#0d6efd', '#d63384', '#6f42c1', '#fd7e14', '#20c997'],
+                            borderWidth: 2,
+                        }],
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } },
+                });
+            }
+
+            const horizontalBase = {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { beginAtZero: true, ticks: { precision: 0 } },
+                    y: { grid: { display: false } },
+                },
+            };
+
+            if (document.getElementById('campusChart') && hasCounts(chartData.campus)) {
+                new Chart(document.getElementById('campusChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.campus.labels,
+                        datasets: [{
+                            label: 'Applicants',
+                            data: chartData.campus.data,
+                            backgroundColor: 'rgba(15, 41, 66, 0.75)',
+                            borderRadius: 4,
+                        }],
+                    },
+                    options: horizontalBase,
+                });
+            }
+
+            if (document.getElementById('courseChart') && hasCounts(chartData.course)) {
+                new Chart(document.getElementById('courseChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.course.labels,
+                        datasets: [{
+                            label: 'Applicants',
+                            data: chartData.course.data,
+                            backgroundColor: 'rgba(13, 110, 253, 0.7)',
+                            borderRadius: 4,
+                        }],
+                    },
+                    options: horizontalBase,
+                });
+            }
+        });
+    </script>
+@endpush

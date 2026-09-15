@@ -38,6 +38,39 @@ class ReportsController extends Controller
         return $pdf->download('sponsorship-report-' . now()->format('Y-m-d') . '.pdf');
     }
 
+    public function exportCsv(Request $request): \Illuminate\Http\Response
+    {
+        $data = $this->getReportData($request);
+
+        $stream = fopen('php://temp', 'w+');
+        fputcsv($stream, ['Program', 'Utilization (%)', 'Filled', 'Available', 'Total Slots']);
+        fputcsv($stream, ['', '', '', '', '']);
+        fputcsv($stream, ['Overall Slot Utilization', $data['report']['slot_utilization_pct'] . '%', $data['report']['slots_filled'], $data['report']['slots_total'] - $data['report']['slots_filled'], $data['report']['slots_total']]);
+        fputcsv($stream, ['Total Applicants', $data['report']['total_applicants']]);
+        fputcsv($stream, ['Confirmed Beneficiaries', $data['report']['confirmed_beneficiaries']]);
+        fputcsv($stream, ['Rural Applicants Rate', $data['report']['rural_pct'] . '%']);
+        fputcsv($stream, ['', '', '', '', '']);
+
+        foreach ($data['slotUtilization'] as $program) {
+            fputcsv($stream, [
+                $program->program_name,
+                $program->utilization,
+                $program->filled_slots,
+                $program->available_slots,
+                $program->total_slots,
+            ]);
+        }
+
+        rewind($stream);
+        $content = stream_get_contents($stream);
+        fclose($stream);
+
+        return response($content, 200, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="sponsorship-report-' . now()->format('Y-m-d') . '.csv"',
+        ]);
+    }
+
     private function getReportData(Request $request): array
     {
         $driver = DB::getDriverName();
@@ -48,8 +81,44 @@ class ReportsController extends Controller
             default  => "DATE_FORMAT(submitted_at, '%Y-%m')",
         };
 
+        $campus       = $request->string('campus')->trim()->toString();
+        $academicYear = $request->string('academic_year')->trim()->toString();
+        $semester     = $request->string('semester')->trim()->toString();
+
+        $term = $this->resolveTerm($academicYear, $semester);
+
+        $academicYears = Application::query()
+            ->whereNotNull('submitted_at')
+            ->pluck('submitted_at')
+            ->map(fn ($stamp) => (int) substr((string) $stamp, 0, 4))
+            ->unique()
+            ->sort()
+            ->values()
+            ->map(fn (int $year): string => sprintf('%d-%d', $year, $year + 1))
+            ->values()
+            ->all();
+
+        $termScope = function ($query) use ($term): void {
+            $query->whereBetween('submitted_at', $term);
+        };
+        $campusScope = function ($query) use ($campus): void {
+            $query->whereHas('studentProfile', fn ($pq) => $pq->where('campus', $campus));
+        };
+
         $applicantTrends = Application::query()
             ->whereNotNull('submitted_at')
+            ->when($term !== null, $termScope)
+            ->when($campus !== '', $campusScope)
+            ->selectRaw("{$dateFormat} as month, COUNT(*) as total")
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total', 'month')
+            ->all();
+
+        $approvalTrends = Application::query()
+            ->whereNotNull('approved_at')
+            ->when($term !== null, $termScope)
+            ->when($campus !== '', $campusScope)
             ->selectRaw("{$dateFormat} as month, COUNT(*) as total")
             ->groupBy('month')
             ->orderBy('month')
@@ -57,6 +126,8 @@ class ReportsController extends Controller
             ->all();
 
         $applicantCounts = Application::query()
+            ->when($term !== null, $termScope)
+            ->when($campus !== '', $campusScope)
             ->select('applications.status', DB::raw('count(*) as total'))
             ->groupBy('applications.status')
             ->pluck('total', 'status')
@@ -64,6 +135,8 @@ class ReportsController extends Controller
 
         $approvedBeneficiaries = Application::query()
             ->previouslyApprovedBeneficiaries()
+            ->when($term !== null, $termScope)
+            ->when($campus !== '', $campusScope)
             ->distinct('student_profile_id')
             ->count('student_profile_id');
 
@@ -88,6 +161,8 @@ class ReportsController extends Controller
             ->all();
 
         $applicantsByCategory = Application::query()
+            ->when($term !== null, $termScope)
+            ->when($campus !== '', $campusScope)
             ->join('sponsorship_programs', 'applications.sponsorship_program_id', '=', 'sponsorship_programs.id')
             ->select('sponsorship_programs.category', DB::raw('count(*) as total'))
             ->groupBy('sponsorship_programs.category')
@@ -96,6 +171,8 @@ class ReportsController extends Controller
 
         $approvedByCategory = Application::query()
             ->previouslyApprovedBeneficiaries()
+            ->when($term !== null, $termScope)
+            ->when($campus !== '', $campusScope)
             ->join('sponsorship_programs', 'applications.sponsorship_program_id', '=', 'sponsorship_programs.id')
             ->select('sponsorship_programs.category', DB::raw('count(*) as total'))
             ->groupBy('sponsorship_programs.category')
@@ -103,7 +180,10 @@ class ReportsController extends Controller
             ->all();
 
         // Gather student profiles from both individual applications and confirmed fixed lists
-        $applicantProfileIds = Application::query()->pluck('student_profile_id');
+        $applicantProfileIds = Application::query()
+            ->when($term !== null, $termScope)
+            ->when($campus !== '', $campusScope)
+            ->pluck('student_profile_id');
 
         $confirmedFixedListStudentIds = FixedListItem::query()
             ->whereHas('fixedList', fn($q) => $q->where('status', FixedListStatus::Approved)
@@ -216,15 +296,19 @@ class ReportsController extends Controller
             ->select('id', 'program_name', 'total_slots', 'available_slots', 'status')
             ->orderBy('program_name')
             ->get()
-            ->map(function (SponsorshipProgram $program): SponsorshipProgram {
+            ->map(function (SponsorshipProgram $program) use ($term, $campus, $termScope, $campusScope): SponsorshipProgram {
                 $isOpen = $program->status === ProgramStatus::Open;
 
                 $filledSlots = $isOpen
                     ? $program->applications()
+                        ->when($term !== null, $termScope)
+                        ->when($campus !== '', $campusScope)
                         ->whereIn('status', [ApplicationStatus::Approved, ApplicationStatus::Ongoing])
                         ->distinct('student_profile_id')
                         ->count('student_profile_id')
                     : $program->applications()
+                        ->when($term !== null, $termScope)
+                        ->when($campus !== '', $campusScope)
                         ->previouslyApprovedBeneficiaries()
                         ->distinct('student_profile_id')
                         ->count('student_profile_id');
@@ -246,6 +330,38 @@ class ReportsController extends Controller
             ])
             ->values()
             ->all();
+
+        $trendMonths = array_keys(array_replace($applicantTrends, $approvalTrends));
+        sort($trendMonths);
+
+        $chartTrends = [
+            'labels' => array_map(
+                fn (string $month): string => \Carbon\Carbon::parse($month . '-01')->format('M Y'),
+                $trendMonths
+            ),
+            'applications' => array_map(fn (string $month): int => (int) ($applicantTrends[$month] ?? 0), $trendMonths),
+            'approvals' => array_map(fn (string $month): int => (int) ($approvalTrends[$month] ?? 0), $trendMonths),
+        ];
+
+        $chartRuralUrban = [
+            'labels' => ['Rural', 'Urban'],
+            'data' => [$demographics['rural'], $demographics['urban']],
+        ];
+
+        $chartGender = [
+            'labels' => array_keys($genderDistribution),
+            'data' => array_values($genderDistribution),
+        ];
+
+        $chartCampus = [
+            'labels' => array_keys($demographics['by_campus']),
+            'data' => array_values($demographics['by_campus']),
+        ];
+
+        $chartCourse = [
+            'labels' => array_keys($demographics['by_course']),
+            'data' => array_values($demographics['by_course']),
+        ];
 
         return [
             'user' => $this->actor($request),
@@ -276,7 +392,34 @@ class ReportsController extends Controller
                 'Urban' => $demographics['urban'],
             ],
             'municipalityDistribution' => $byMunicipality,
+            'chartTrends' => $chartTrends,
+            'chartRuralUrban' => $chartRuralUrban,
+            'chartGender' => $chartGender,
+            'chartCampus' => $chartCampus,
+            'chartCourse' => $chartCourse,
+            'academicYears' => $academicYears,
+            'filters' => [
+                'academic_year' => $academicYear,
+                'semester' => $semester,
+                'campus' => $campus,
+            ],
         ];
+    }
+
+    private function resolveTerm(string $academicYear, string $semester): ?array
+    {
+        if (! preg_match('/^(\d{4})-(\d{4})$/', $academicYear, $matches)) {
+            return null;
+        }
+
+        $startYear = (int) $matches[1];
+        $endYear = (int) $matches[2];
+
+        return match ($semester) {
+            'First' => [sprintf('%04d-08-01', $startYear), sprintf('%04d-01-31', $endYear)],
+            'Second' => [sprintf('%04d-02-01', $endYear), sprintf('%04d-06-30', $endYear)],
+            default => [sprintf('%04d-08-01', $startYear), sprintf('%04d-06-30', $endYear)],
+        };
     }
 
     private function statusTotals(array $counts): array
