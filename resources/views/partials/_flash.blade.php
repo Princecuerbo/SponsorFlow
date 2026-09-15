@@ -22,7 +22,8 @@
     </div>
 @endif
 
-@if ($errors->any() && !request()->is('login*', 'register*', 'admin/login*', 'staff/login*'))
+@if ($errors->any() && !request()->is('login*', 'register*', 'admin/login*', 'staff/login*')
+    && !request()->routeIs('admin.login', 'admin.login.store', 'staff.login', 'staff.login.store'))
     <div class="alert alert-danger border-0 shadow-sm rounded-3">
         <div class="d-flex align-items-center gap-2 mb-1">
             <i class="bi bi-exclamation-octagon-fill"></i>

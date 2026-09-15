@@ -62,11 +62,13 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
     Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
 
-    Route::get('/staff/login', [StaffLoginController::class, 'showLoginForm'])->name('staff.login');
-    Route::post('/staff/login', [StaffLoginController::class, 'login'])->name('staff.login.store');
+    Route::get(env('STAFF_LOGIN_PATH', 'dorsu-staff-gate'), [StaffLoginController::class, 'showLoginForm'])->name('staff.login');
+    Route::post(env('STAFF_LOGIN_PATH', 'dorsu-staff-gate'), [StaffLoginController::class, 'login'])->name('staff.login.store');
+    Route::match(['get', 'post'], '/staff/login', fn () => abort(404));
 
-    Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
-    Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login.store');
+    Route::get(env('ADMIN_LOGIN_PATH', 'dorsu-sysadmin-gate'), [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+    Route::post(env('ADMIN_LOGIN_PATH', 'dorsu-sysadmin-gate'), [AdminLoginController::class, 'login'])->name('admin.login.store');
+    Route::match(['get', 'post'], '/admin/login', fn () => abort(404));
 });
 
 Route::post('/logout', [LogoutController::class, 'logout'])
