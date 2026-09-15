@@ -65,9 +65,15 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link sf-topnav-link {{ request()->routeIs('fassg.sle-fhe*') ? 'active' : '' }}"
+                        <a class="nav-link sf-topnav-link {{ request()->routeIs('fassg.sle-fhe.index') ? 'active' : '' }}"
                             href="{{ route('fassg.sle-fhe.index') }}">
                             <i class="bi bi-patch-check"></i> SLE-FHE Verification
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sf-topnav-link {{ request()->routeIs('fassg.sle-fhe.verified') ? 'active' : '' }}"
+                            href="{{ route('fassg.sle-fhe.verified') }}">
+                            <i class="bi bi-person-check"></i> Verified Students
                         </a>
                     </li>
                     <li class="nav-item">
@@ -276,9 +282,15 @@
                             </a>
                         </li>
                         <li class="mt-1">
-                            <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('fassg.sle-fhe*') ? 'sf-mobile-active' : '' }}"
+                            <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('fassg.sle-fhe.index') ? 'sf-mobile-active' : '' }}"
                                 href="{{ route('fassg.sle-fhe.index') }}" style="font-size: 0.925rem;">
                                 <i class="bi bi-patch-check fs-5 text-secondary"></i> SLE-FHE Verification
+                            </a>
+                        </li>
+                        <li class="mt-1">
+                            <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('fassg.sle-fhe.verified') ? 'sf-mobile-active' : '' }}"
+                                href="{{ route('fassg.sle-fhe.verified') }}" style="font-size: 0.925rem;">
+                                <i class="bi bi-person-check fs-5 text-secondary"></i> Verified Students
                             </a>
                         </li>
                         <li class="mt-1">

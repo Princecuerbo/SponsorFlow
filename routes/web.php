@@ -143,6 +143,7 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
 
         Route::get('/applications', [ApplicantVerificationController::class, 'index'])->name('applications.index');
         Route::get('/sle-fhe', [FassgVerificationController::class, 'sleFheIndex'])->name('sle-fhe.index');
+        Route::get('/sle-fhe/verified', [FassgVerificationController::class, 'verifiedIndex'])->name('sle-fhe.verified');
         Route::post('/sle-fhe/{studentProfile}/verify', [FassgVerificationController::class, 'verifyStudent'])->name('sle-fhe.verify');
         Route::post('/sle-fhe/{studentProfile}/reject', [FassgVerificationController::class, 'rejectStudent'])->name('sle-fhe.reject');
         Route::get('/verification', [FassgVerificationController::class, 'index'])->name('verification.index');
