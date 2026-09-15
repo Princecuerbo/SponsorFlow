@@ -85,7 +85,7 @@ Route::middleware('auth')->get('/dashboard', function () {
     return redirect()->route($user->homeRoute());
 })->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'EnsureUserRole:student'])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');

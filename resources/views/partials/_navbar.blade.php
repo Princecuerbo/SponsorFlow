@@ -174,17 +174,19 @@
         {{-- Notification Bell + User Profile (inline, left-aligned) --}}
         <div class="d-flex align-items-center gap-3 flex-shrink-0">
 
-            {{-- Standalone Notification Bell Direct Link (Desktop only) --}}
-            <a href="{{ route('notifications.index') }}"
-                class="btn btn-link p-1 bg-transparent border-0 position-relative text-secondary d-none d-lg-flex align-items-center text-decoration-none {{ request()->routeIs('notifications.*') ? 'text-primary' : '' }}"
-                aria-label="Notifications" title="Notifications">
-                <i class="bi bi-bell fs-5"></i>
-                @if ($user->unreadNotifications->count() > 0)
-                    <span
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-white fw-bold"
-                        style="font-size: 0.6rem; padding: 0.4em 0.7em;">{{ $user->unreadNotifications->count() }}</span>
-                @endif
-            </a>
+            {{-- Standalone Notification Bell Direct Link (Desktop, Students only) --}}
+            @if ($user->isStudent())
+                <a href="{{ route('notifications.index') }}"
+                    class="btn btn-link p-1 bg-transparent border-0 position-relative text-secondary d-none d-lg-flex align-items-center text-decoration-none {{ request()->routeIs('notifications.*') ? 'text-primary' : '' }}"
+                    aria-label="Notifications" title="Notifications">
+                    <i class="bi bi-bell fs-5"></i>
+                    @if ($user->unreadNotifications->count() > 0)
+                        <span
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-white fw-bold"
+                            style="font-size: 0.6rem; padding: 0.4em 0.7em;">{{ $user->unreadNotifications->count() }}</span>
+                    @endif
+                </a>
+            @endif
 
             {{-- Desktop User Dropdown --}}
             <div class="dropdown d-none d-md-block">
@@ -389,15 +391,17 @@
                         <hr class="dropdown-divider my-2.5 border-light">
                     </li>
 
-                    <li class="d-lg-none">
-                        <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('notifications.*') ? 'sf-mobile-active' : '' }}"
-                            href="{{ route('notifications.index') }}" style="font-size: 0.925rem;">
-                            <i class="bi bi-bell fs-5 text-secondary"></i> Notifications
-                            @if ($user->unreadNotifications->count() > 0)
-                                <span class="badge bg-danger rounded-pill ms-auto">{{ $user->unreadNotifications->count() }}</span>
-                            @endif
-                        </a>
-                    </li>
+                    @if ($user->isStudent())
+                        <li class="d-lg-none">
+                            <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('notifications.*') ? 'sf-mobile-active' : '' }}"
+                                href="{{ route('notifications.index') }}" style="font-size: 0.925rem;">
+                                <i class="bi bi-bell fs-5 text-secondary"></i> Notifications
+                                @if ($user->unreadNotifications->count() > 0)
+                                    <span class="badge bg-danger rounded-pill ms-auto">{{ $user->unreadNotifications->count() }}</span>
+                                @endif
+                            </a>
+                        </li>
+                    @endif
 
                     @if ($user->isStudent())
                         <li>
