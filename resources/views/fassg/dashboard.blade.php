@@ -89,15 +89,15 @@
         <div class="col-lg-5">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Pending Verification Queue</h2>
+                    <h2 class="h6 sf-heading mb-3">Pending SLE-FHE Verifications</h2>
                     <div class="d-flex align-items-center gap-3 border-bottom pb-3 mb-3">
                         <div class="sf-stat-icon bg-warning-subtle text-warning">
                             <i class="bi bi-hourglass-split"></i>
                         </div>
-                        <div>
-                            <div class="h4 mb-0 sf-heading">{{ number_format($pendingVerificationCount ?? 0) }}</div>
-                            <div class="small text-secondary">Applications awaiting FASSG or sponsor review</div>
-                        </div>
+                        <a href="{{ route('fassg.sle-fhe.index') }}" class="text-decoration-none">
+                            <div class="h4 mb-0 sf-heading text-body">{{ number_format($pendingVerificationCount ?? 0) }}</div>
+                            <div class="small text-secondary">Student profiles awaiting FASSG masterlist verification</div>
+                        </a>
                     </div>
                     <h3 class="h6 sf-heading mb-2">Recent Program Updates</h3>
                     <div class="list-group list-group-flush">
