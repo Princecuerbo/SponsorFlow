@@ -162,9 +162,9 @@
         {{-- Notification Bell + User Profile (inline, left-aligned) --}}
         <div class="d-flex align-items-center gap-3 flex-shrink-0">
 
-            {{-- Notification Bell Direct Link --}}
+            {{-- Standalone Notification Bell Direct Link (Desktop only) --}}
             <a href="{{ route('notifications.index') }}"
-                class="btn btn-link p-1 bg-transparent border-0 position-relative text-secondary d-flex align-items-center text-decoration-none {{ request()->routeIs('notifications.*') ? 'text-primary' : '' }}"
+                class="btn btn-link p-1 bg-transparent border-0 position-relative text-secondary d-none d-lg-flex align-items-center text-decoration-none {{ request()->routeIs('notifications.*') ? 'text-primary' : '' }}"
                 aria-label="Notifications" title="Notifications">
                 <i class="bi bi-bell fs-5"></i>
                 @if ($user->unreadNotifications->count() > 0)
@@ -194,19 +194,10 @@
                                 <i class="bi bi-person"></i> My Profile
                             </a>
                         </li>
+                        <li>
+                            <hr class="dropdown-divider my-1 border-light">
+                        </li>
                     @endif
-                    <li>
-                        <a class="dropdown-menu-item sf-dropdown-hover rounded-3 px-3 py-2 d-flex align-items-center gap-2 text-decoration-none small"
-                            href="{{ route('notifications.index') }}">
-                            <i class="bi bi-bell"></i> Notifications
-                            @if ($user->unreadNotifications->count() > 0)
-                                <span class="badge bg-danger rounded-pill ms-auto" style="font-size: 0.65rem;">{{ $user->unreadNotifications->count() }}</span>
-                            @endif
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider my-1 border-light">
-                    </li>
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -374,7 +365,7 @@
                         <hr class="dropdown-divider my-2.5 border-light">
                     </li>
 
-                    <li>
+                    <li class="d-lg-none">
                         <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('notifications.*') ? 'sf-mobile-active' : '' }}"
                             href="{{ route('notifications.index') }}" style="font-size: 0.925rem;">
                             <i class="bi bi-bell fs-5 text-secondary"></i> Notifications
