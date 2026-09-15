@@ -3,6 +3,7 @@
 @section('title', 'Register')
 
 @push('styles')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2/dist/css/tom-select.bootstrap5.min.css">
     <style>
         /* Text link hover style: Black text, Blue hover */
         .link-text-hover {
@@ -12,7 +13,6 @@
 
         .link-text-hover:hover {
             color: #0f294a !important;
-            /* Bootstrap primary blue */
         }
 
         .sf-content {
@@ -60,10 +60,46 @@
             overflow: hidden;
         }
 
+        /* Tom Select — align with native Bootstrap inputs */
+        .ts-wrapper.form-control,
+        .ts-wrapper.form-select {
+            padding: 0 !important;
+        }
+
+        .ts-control {
+            min-height: calc(1.5em + 0.75rem + 2px);
+            padding: 0.375rem 2.25rem 0.375rem 0.75rem !important;
+            font-size: 0.875rem !important;
+            border-radius: 8px !important;
+            background-color: #f8f9fa !important;
+            border: 1px solid #dee2e6 !important;
+            box-shadow: none !important;
+        }
+
+        .ts-wrapper.is-focused .ts-control,
+        .ts-wrapper.focus .ts-control {
+            background-color: #fff !important;
+            border-color: #93c5fd !important;
+            box-shadow: 0 0 0 0.2rem rgba(15, 41, 74, 0.12) !important;
+        }
+
+        .ts-dropdown {
+            font-size: 0.875rem;
+            border-radius: 8px;
+            border-color: #dee2e6;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+        }
+
+        .ts-dropdown .option.active,
+        .ts-dropdown .option:hover {
+            background-color: #0f294a;
+            color: #fff;
+        }
+
         /* Custom Register Submit Button Style Matching Login */
         .btn-custom-register {
             background-color: #0f294a;
-            color: #ffffffff;
+            color: #ffffff;
             border: 1px solid #cbd5e1;
             transition: all 0.2s ease-in-out;
         }
@@ -111,7 +147,7 @@
 
             <!-- Scrollable Right Content Panel -->
             <div class="col-lg-6 d-flex align-items-start justify-content-center px-0 px-md-5 py-5 h-100 overflow-y-auto">
-                <div class="w-100 px-3 px-sm-4 py-4" style="max-width: 560px;">
+                <div class="w-100 px-3 px-sm-4 py-4" style="max-width: 580px;">
 
                     <div class="d-block d-lg-none text-center mb-4">
                         <div class="d-inline-flex align-items-center gap-2 mb-2">
@@ -154,42 +190,55 @@
                                 <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem;">Account Information</h6>
                             </div>
 
-                            <!-- Row 1: First, Middle, and Last Name -->
-                            <div class="row g-2.5 mb-3">
-                                <div class="col-md-4">
-                                    <label for="first_name" class="form-label small fw-semibold text-secondary mb-1">First
-                                        Name *</label>
+                            <!-- Row 1: First Name & Middle Name -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-6">
+                                    <label for="first_name" class="form-label small fw-semibold text-secondary mb-1">First Name</label>
                                     <input type="text" id="first_name" name="first_name"
                                         class="form-control form-control-md bg-light border-1"
-                                        value="{{ old('first_name') }}" placeholder="Juan" required autofocus
+                                        value="{{ old('first_name') }}" placeholder="Enter First Name" required autofocus
                                         style="font-size: 0.875rem; border-radius: 8px;">
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="middle_name" class="form-label small fw-semibold text-secondary mb-1">Middle
-                                        Name</label>
+                                <div class="col-6">
+                                    <label for="middle_name" class="form-label small fw-semibold text-secondary mb-1">
+                                        Middle Name <span class="fw-normal text-muted" style="font-size: 0.75rem;">(optional)</span>
+                                    </label>
                                     <input type="text" id="middle_name" name="middle_name"
                                         class="form-control form-control-md bg-light border-1"
-                                        value="{{ old('middle_name') }}" placeholder="Carlos"
-                                        style="font-size: 0.875rem; border-radius: 8px;">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="last_name" class="form-label small fw-semibold text-secondary mb-1">Last
-                                        Name *</label>
-                                    <input type="text" id="last_name" name="last_name"
-                                        class="form-control form-control-md bg-light border-1"
-                                        value="{{ old('last_name') }}" placeholder="Dela Cruz" required
+                                        value="{{ old('middle_name') }}" placeholder="Enter Middle Name"
                                         style="font-size: 0.875rem; border-radius: 8px;">
                                 </div>
                             </div>
 
-                            <!-- Row 2: Sex / Gender and Institutional Email -->
-                            <div class="row g-2.5 mb-3">
-                                <div class="col-md-4">
-                                    <label for="gender" class="form-label small fw-semibold text-secondary mb-1">Sex / Gender *</label>
+                            <!-- Row 2: Last Name & Extension Name -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-6">
+                                    <label for="last_name" class="form-label small fw-semibold text-secondary mb-1">Last Name</label>
+                                    <input type="text" id="last_name" name="last_name"
+                                        class="form-control form-control-md bg-light border-1"
+                                        value="{{ old('last_name') }}" placeholder="Enter Last Name" required
+                                        style="font-size: 0.875rem; border-radius: 8px;">
+                                </div>
+                                <div class="col-6">
+                                    <label for="extension_name" class="form-label small fw-semibold text-secondary mb-1">
+                                        Ext. Name <span class="fw-normal text-muted" style="font-size: 0.75rem;">(optional)</span>
+                                    </label>
+                                    <input type="text" id="extension_name" name="extension_name"
+                                        class="form-control form-control-md bg-light border-1"
+                                        value="{{ old('extension_name') }}" placeholder="Jr., III"
+                                        maxlength="10"
+                                        style="font-size: 0.875rem; border-radius: 8px;">
+                                </div>
+                            </div>
+
+                            <!-- Row 3: Sex / Gender and Institutional Email -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-sm-5">
+                                    <label for="gender" class="form-label small fw-semibold text-secondary mb-1">Sex / Gender</label>
                                     <select id="gender" name="gender"
                                         class="form-select form-select-md bg-light border-1 @error('gender') is-invalid @enderror"
                                         required style="font-size: 0.875rem; border-radius: 8px;">
-                                        <option value="" disabled selected>Select Sex</option>
+                                        <option value="" disabled selected>Select Sex/Gender</option>
                                         <option value="Male" @selected(old('gender') == 'Male')>Male</option>
                                         <option value="Female" @selected(old('gender') == 'Female')>Female</option>
                                     </select>
@@ -197,9 +246,8 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-8">
-                                    <label for="email" class="form-label small fw-semibold text-secondary mb-1">DOrSU
-                                        Institutional Email *</label>
+                                <div class="col-sm-7">
+                                    <label for="email" class="form-label small fw-semibold text-secondary mb-1">DOrSU Institutional Email</label>
                                     <input type="email" id="email" name="email"
                                         class="form-control form-control-md bg-light border-1" value="{{ old('email') }}"
                                         placeholder="name@dorsu.edu.ph" required
@@ -207,33 +255,33 @@
                                 </div>
                             </div>
 
-                            <!-- Row 3: Contact Number -->
-                            <div class="row g-2.5 mb-3">
-                                <div class="col-md-6">
+                            <!-- Row 4: Contact Number -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-sm-6">
                                     <label for="contact_number"
-                                        class="form-label small fw-semibold text-secondary mb-1">Contact Number *</label>
+                                        class="form-label small fw-semibold text-secondary mb-1">Contact Number</label>
                                     <input type="tel" id="contact_number" name="contact_number"
                                         class="form-control form-control-md bg-light border-1 @error('contact_number') is-invalid @enderror"
                                         value="{{ old('contact_number') }}" placeholder="09123456789" required
                                         pattern="09[0-9]{9}" maxlength="11" inputmode="numeric" autocomplete="tel"
                                         data-mask-contact-number title="Format: 09123456789"
                                         style="font-size: 0.875rem; border-radius: 8px;">
-                                    <div class="form-text" style="font-size: 0.75rem;">Format: 09123456789</div>
+                                    <div class="form-text mt-1" style="font-size: 0.72rem;">Format: 09123456789</div>
                                     @error('contact_number')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
 
-                            <!-- Row 4: Passwords -->
-                            <div class="row g-2.5">
-                                <div class="col-md-6">
-                                    <label for="password" class="form-label small fw-semibold text-secondary mb-1">Password
-                                        *</label>
+                            <!-- Row 5: Passwords -->
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label for="password" class="form-label small fw-semibold text-secondary mb-1">Password</label>
                                     <div class="input-group">
                                         <input type="password" id="password" name="password"
                                             class="form-control form-control-md bg-light border-1 border-end-0" required
                                             autocomplete="new-password" minlength="8"
+                                            placeholder="Enter Password"
                                             style="font-size: 0.875rem; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
                                         <button type="button" onclick="togglePasswordVisibility('password', this)"
                                             class="input-group-text bg-light border-1 border-start-0 text-gray-400"
@@ -243,13 +291,14 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-sm-6">
                                     <label for="password_confirmation"
-                                        class="form-label small fw-semibold text-secondary mb-1">Confirm Password *</label>
+                                        class="form-label small fw-semibold text-secondary mb-1">Confirm Password</label>
                                     <div class="input-group">
                                         <input type="password" id="password_confirmation" name="password_confirmation"
                                             class="form-control form-control-md bg-light border-1 border-end-0" required
                                             autocomplete="new-password"
+                                            placeholder="Confirm Password"
                                             style="font-size: 0.875rem; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
                                         <button type="button"
                                             onclick="togglePasswordVisibility('password_confirmation', this)"
@@ -270,11 +319,10 @@
                                 <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem;">Academic Details</h6>
                             </div>
 
-                            <div class="row g-2.5 mb-3">
-                                <div class="col-md-4">
+                            <div class="row g-3 mb-3">
+                                <div class="col-sm-4">
                                     <label for="student_id_number"
-                                        class="form-label small fw-semibold text-secondary mb-1">Student ID Number
-                                        *</label>
+                                        class="form-label small fw-semibold text-secondary mb-1">Student ID Number</label>
                                     <input type="text" id="student_id_number" name="student_id_number"
                                         class="form-control form-control-md bg-light border-1 @error('student_id_number') is-invalid @enderror"
                                         value="{{ old('student_id_number') }}" placeholder="2024-0001" required
@@ -282,14 +330,14 @@
                                         autocomplete="off" data-mask-student-id
                                         title="Format: 2024-0001 (4 digits, hyphen, 4 digits)"
                                         style="font-size: 0.875rem; border-radius: 8px;">
-                                    <div class="form-text" style="font-size: 0.75rem;">Format: 2024-0001</div>
+                                    <div class="form-text mt-1" style="font-size: 0.72rem;">Format: 2024-0001</div>
                                     @error('student_id_number')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-sm-4">
                                     <label for="campus"
-                                        class="form-label small fw-semibold text-secondary mb-1">Campus *</label>
+                                        class="form-label small fw-semibold text-secondary mb-1">Campus</label>
                                     <select id="campus" name="campus"
                                         class="form-select form-select-md bg-light border-1 @error('campus') is-invalid @enderror"
                                         required style="font-size: 0.875rem; border-radius: 8px;">
@@ -304,9 +352,8 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="year_level" class="form-label small fw-semibold text-secondary mb-1">Year
-                                        Level *</label>
+                                <div class="col-sm-4">
+                                    <label for="year_level" class="form-label small fw-semibold text-secondary mb-1">Year Level</label>
                                     <select id="year_level" name="year_level"
                                         class="form-select form-select-md bg-light border-1" required
                                         style="font-size: 0.875rem; border-radius: 8px;">
@@ -320,18 +367,17 @@
                                 </div>
                             </div>
 
-                            <div class="row g-2.5">
-                                <div class="col-md-7">
+                            <div class="row g-3">
+                                <div class="col-sm-7">
                                     <label for="academic_program_id"
-                                        class="form-label small fw-semibold text-secondary mb-1">Academic Program / Course
-                                        *</label>
+                                        class="form-label small fw-semibold text-secondary mb-1">Academic Program / Course</label>
                                     <select id="academic_program_id" name="academic_program_id"
                                         class="form-select form-select-md bg-light border-1 @error('academic_program_id') is-invalid @enderror"
                                         required style="font-size: 0.875rem; border-radius: 8px;">
-                                        <option value="" disabled selected>-- Select Your Course/Program --</option>
+                                        <option value="" disabled selected>Search or select your course/program...</option>
                                         @foreach ($programs as $program)
                                             <option value="{{ $program->program_id }}" @selected(old('academic_program_id') == $program->program_id)>
-                                                {{ $program->code }} — {{ $program->short_name ?: $program->name }}
+                                                {{ $program->code }} — {{ $program->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -339,9 +385,9 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-sm-5">
                                     <label for="birthdate"
-                                        class="form-label small fw-semibold text-secondary mb-1">Birthdate *</label>
+                                        class="form-label small fw-semibold text-secondary mb-1">Birthdate</label>
                                     <input type="date" id="birthdate" name="birthdate"
                                         class="form-control form-control-md bg-light border-1"
                                         value="{{ old('birthdate') }}" required
@@ -357,10 +403,10 @@
                                 <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem;">Address &amp; Rurality</h6>
                             </div>
 
-                            <div class="row g-2.5 mb-3">
-                                <div class="col-md-6">
+                            <div class="row g-3 mb-3">
+                                <div class="col-sm-6">
                                     <label for="province"
-                                        class="form-label small fw-semibold text-secondary mb-1">Province *</label>
+                                        class="form-label small fw-semibold text-secondary mb-1">Province</label>
                                     <select id="province" name="province"
                                         class="form-select form-select-md bg-light border-1 @error('province') is-invalid @enderror"
                                         required style="font-size: 0.875rem; border-radius: 8px;">
@@ -370,9 +416,9 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-sm-6">
                                     <label for="municipality"
-                                        class="form-label small fw-semibold text-secondary mb-1">Municipality / City *</label>
+                                        class="form-label small fw-semibold text-secondary mb-1">Municipality / City</label>
                                     <select id="municipality" name="municipality"
                                         class="form-select form-select-md bg-light border-1 @error('municipality') is-invalid @enderror"
                                         required style="font-size: 0.875rem; border-radius: 8px;">
@@ -384,10 +430,10 @@
                                 </div>
                             </div>
 
-                            <div class="row g-2.5 mb-3">
-                                <div class="col-md-6">
+                            <div class="row g-3 mb-3">
+                                <div class="col-sm-6">
                                     <label for="barangay"
-                                        class="form-label small fw-semibold text-secondary mb-1">Barangay *</label>
+                                        class="form-label small fw-semibold text-secondary mb-1">Barangay</label>
                                     <input type="text" id="barangay" name="barangay"
                                         class="form-control form-control-md bg-light border-1 @error('barangay') is-invalid @enderror"
                                         value="{{ old('barangay') }}" placeholder="Barangay" required
@@ -396,10 +442,9 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-sm-6">
                                     <label for="home_address"
-                                        class="form-label small fw-semibold text-secondary mb-1">Street / Purok / House
-                                        No. *</label>
+                                        class="form-label small fw-semibold text-secondary mb-1">Street / Purok / House No.</label>
                                     <input type="text" id="home_address" name="home_address"
                                         class="form-control form-control-md bg-light border-1 @error('home_address') is-invalid @enderror"
                                         value="{{ old('home_address') }}" placeholder="Street / Purok / House No."
@@ -411,7 +456,7 @@
                             </div>
 
                             <div class="small text-secondary d-flex align-items-center gap-1"
-                                style="font-size: 0.8rem;">
+                                style="font-size: 0.78rem;">
                                 <i class="bi bi-geo-alt-fill"></i>
                                 Your residence is automatically classified as rural or urban for FASSG eligibility.
                             </div>
@@ -462,8 +507,16 @@
 @endsection
 
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2/dist/js/tom-select.complete.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Tom Select: searchable academic program dropdown
+            new TomSelect('#academic_program_id', {
+                placeholder: 'Search or select your course/program...',
+                allowEmptyOption: true,
+                sortField: { field: 'text', direction: 'asc' },
+            });
+
             // Strict Student ID masking: allow up to 4 digits, auto-insert hyphen, then up to 4 digits
             document.querySelectorAll('[data-mask-student-id]').forEach(function (input) {
                 const maskStudentId = function () {
@@ -533,7 +586,7 @@
                             return loadMunicipalities();
                         })
                         .catch(function () {
-                            /* leave selects empty; native 'required' will block submission */
+                            /* leave selects empty */
                         });
                 };
 

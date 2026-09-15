@@ -13,9 +13,11 @@ class ProfileController extends Controller
 {
     public function show(Request $request): View
     {
+        $user = $request->user();
+
         return view('student.profile', [
-            'user' => $request->user(),
-            'profile' => $request->user()->studentProfile,
+            'user' => $user,
+            'studentProfile' => $user->studentProfile,
         ]);
     }
 

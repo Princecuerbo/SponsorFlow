@@ -66,16 +66,37 @@
                 <div class="card h-100 shadow-sm border-0 rounded-3 bg-white">
                     <div class="card-header bg-white border-bottom-0 pt-3 pb-0">
                         <h6 class="fw-bold mb-0 text-slate-800 d-flex align-items-center gap-2">
-                            <i class="fa-solid fa-id-card text-primary"></i> Academic Profile Details
+                            <i class="fa-solid fa-id-card text-primary"></i> Student Profile Details
                         </h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-3 mb-3">
-                            <div class="col-12 pb-2 border-bottom">
+                            <div class="col-6 pb-2 border-bottom">
                                 <span class="text-secondary extra-small text-uppercase d-block mb-1"
-                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">Full Name</span>
+                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">First Name</span>
                                 <span class="fw-bold text-dark"
-                                    style="font-size: 0.925rem;">{{ auth()->user()->name }}</span>
+                                    style="font-size: 0.925rem;">{{ $profile?->first_name ?? '—' }}</span>
+                            </div>
+
+                            <div class="col-6 pb-2 border-bottom">
+                                <span class="text-secondary extra-small text-uppercase d-block mb-1"
+                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">Middle Name</span>
+                                <span class="fw-bold text-dark"
+                                    style="font-size: 0.925rem;">{{ $profile?->middle_name ?? '—' }}</span>
+                            </div>
+
+                            <div class="col-6 pb-2 border-bottom">
+                                <span class="text-secondary extra-small text-uppercase d-block mb-1"
+                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">Last Name</span>
+                                <span class="fw-bold text-dark"
+                                    style="font-size: 0.925rem;">{{ $profile?->last_name ?? '—' }}</span>
+                            </div>
+
+                            <div class="col-6 pb-2 border-bottom">
+                                <span class="text-secondary extra-small text-uppercase d-block mb-1"
+                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">Ext. Name</span>
+                                <span class="fw-bold text-dark"
+                                    style="font-size: 0.925rem;">{{ $profile?->extension_name ?? '—' }}</span>
                             </div>
 
                             <div class="col-6 pb-2 border-bottom">

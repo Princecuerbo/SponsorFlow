@@ -5,14 +5,27 @@
 @section('page-title', 'My Profile')
 
 @php
-    $nameParts = preg_split('/\s+/', trim($user->name), -1, PREG_SPLIT_NO_EMPTY) ?: [];
-    $firstName = $profile?->first_name ?: ($nameParts[0] ?? 'N/A');
-    $lastName = $profile?->last_name ?: (count($nameParts) > 1 ? end($nameParts) : 'N/A');
-    $middleName = $profile?->middle_name ?: (count($nameParts) > 2 ? implode(' ', array_slice($nameParts, 1, -1)) : 'N/A');
+    $firstName = $studentProfile?->first_name;
+    $middleName = $studentProfile?->middle_name;
+    $lastName = $studentProfile?->last_name;
+    $extensionName = $studentProfile?->extension_name;
+    $course = $studentProfile?->course ?? $studentProfile?->program?->name;
+    $initials = mb_strtoupper(mb_substr($firstName ?? ($user->name[0] ?? ''), 0, 1))
+        . mb_strtoupper(mb_substr($lastName ?? (substr($user->name, -1) ?? ''), 0, 1));
+    $initials = $initials ?: 'S';
     $academicYear = now()->year . '-' . (now()->year + 1);
 @endphp
 
 @section('content')
+    <style>
+        @media (min-width: 992px) {
+            .profile-sticky-sidebar {
+                position: sticky;
+                top: 1.5rem;
+            }
+        }
+    </style>
+
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
         <div>
             <h2 class="h4 sf-heading mb-1">Account profile</h2>
@@ -21,8 +34,8 @@
     </div>
 
     <div class="row g-4">
-        <div class="col-12 col-lg-4 align-self-start">
-            <div class="card border-0 shadow-sm overflow-hidden">
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm overflow-hidden profile-sticky-sidebar">
                 <div class="bg-primary text-white text-center px-4 pt-4 pb-5"
                     style="background: linear-gradient(135deg, #0f294a, #1e4b7a) !important;">
                     <span class="small text-uppercase fw-semibold opacity-75">Student Portal</span>
@@ -30,10 +43,10 @@
                 </div>
                 <div class="card-body text-center position-relative pt-0 px-4 pb-4">
                     <div class="position-relative d-inline-block" style="margin-top: -58px;">
-                        <img class="rounded-circle border border-4 border-white shadow-sm"
-                            style="width:116px;height:116px;object-fit:cover;"
-                            src="{{ $user->profile_photo_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=FFC72C&color=002B66&size=232' }}"
-                            alt="{{ $user->name }} profile photo">
+                        <div class="rounded-circle bg-white text-white d-flex align-items-center justify-content-center border border-4 shadow-sm"
+                            style="width:116px;height:116px;font-size:2.5rem;font-weight:700;background: linear-gradient(135deg, #FFC72C, #F0A500) !important;color:#0f294a !important;">
+                            {{ $initials }}
+                        </div>
                         <button type="button"
                             class="btn btn-sm btn-sf-navy rounded-circle position-absolute bottom-0 end-0 shadow"
                             aria-label="Profile photo options" title="Profile photo options">
@@ -41,17 +54,17 @@
                         </button>
                     </div>
                     <h3 class="h5 fw-bold mt-3 mb-1">{{ $user->name }}</h3>
-                    <p class="text-muted small mb-3">{{ $profile?->course ?? 'Student' }}</p>
+                    <p class="text-muted small mb-3">{{ $course ?? 'Student' }}</p>
                     <div class="d-flex flex-wrap justify-content-center gap-2">
                         <span class="badge rounded-pill text-bg-primary">Batch
-                            {{ $profile?->created_at?->format('Y') ?? '2024' }}</span>
+                            {{ $studentProfile?->created_at?->format('Y') ?? '2024' }}</span>
                         <span
-                            class="badge rounded-pill {{ $profile?->is_sle_fhe_verified ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' : 'bg-secondary' }}">{{ $profile?->is_sle_fhe_verified ? 'SLE-FHE Verified' : 'Main Campus' }}</span>
+                            class="badge rounded-pill {{ $studentProfile?->is_sle_fhe_verified ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' : 'bg-secondary' }}">{{ $studentProfile?->is_sle_fhe_verified ? 'SLE-FHE Verified' : 'Main Campus' }}</span>
                     </div>
                     <hr class="my-4">
                     <div class="d-flex justify-content-between small text-muted">
                         <span>Student ID</span>
-                        <span class="fw-semibold text-dark">{{ $profile?->student_id_number ?? 'N/A' }}</span>
+                        <span class="fw-semibold text-dark">{{ $studentProfile?->student_id_number ?? 'N/A' }}</span>
                     </div>
                     <div class="d-flex justify-content-between small text-muted mt-2">
                         <span>Account Status</span>
@@ -59,7 +72,7 @@
                     </div>
                     <div class="d-flex justify-content-between small text-muted mt-2">
                         <span>Campus</span>
-                        <span class="fw-semibold text-dark">Main Campus</span>
+                        <span class="fw-semibold text-dark">{{ $studentProfile?->campus ?? 'Main Campus' }}</span>
                     </div>
                 </div>
             </div>
@@ -84,7 +97,7 @@
                 <div class="card-body p-4">
                     <h6 class="fw-bold mb-3">Student Information</h6>
                     <div class="row g-3">
-                        @foreach ([['First Name', $firstName], ['Middle Name', $middleName], ['Last Name', $lastName], ['Suffix', 'N/A']] as [$label, $value])
+                        @foreach ([['First Name', $firstName], ['Middle Name', $middleName ?? 'N/A'], ['Last Name', $lastName], ['Suffix / Ext. Name', $extensionName ?? 'N/A']] as [$label, $value])
                             <div class="col-md-6">
                                 <label class="form-label text-muted small fw-bold"
                                     for="{{ str($label)->slug() }}">{{ $label }}</label>
@@ -95,12 +108,12 @@
                         <div class="col-md-6">
                             <label class="form-label text-muted small fw-bold" for="sex-gender">Sex / Gender</label>
                             <input id="sex-gender" class="form-control bg-light rounded-3"
-                                value="{{ $profile?->gender ?? 'N/A' }}" readonly>
+                                value="{{ $studentProfile?->gender ?? 'N/A' }}" readonly>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-muted small fw-bold" for="municipality">Municipality / City</label>
                             <input id="municipality" class="form-control bg-light rounded-3"
-                                value="{{ $profile?->municipality ?? ($profile?->barangay ?? 'N/A') }}" readonly>
+                                value="{{ $studentProfile?->municipality ?? ($studentProfile?->barangay ?? 'N/A') }}" readonly>
                         </div>
                     </div>
 
@@ -110,12 +123,12 @@
                         <div class="col-md-6">
                             <label class="form-label text-muted small fw-bold" for="student-id">ID Number</label>
                             <input id="student-id" class="form-control bg-light rounded-3"
-                                value="{{ $profile?->student_id_number ?? 'N/A' }}" readonly>
+                                value="{{ $studentProfile?->student_id_number ?? 'N/A' }}" readonly>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-muted small fw-bold" for="course">COURSE</label>
                             <input id="course" class="form-control bg-light rounded-3"
-                                value="{{ $profile?->course ?? 'N/A' }}" readonly>
+                                value="{{ $course ?? 'N/A' }}" readonly>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-muted small fw-bold" for="school-year">SCHOOL YEAR</label>
@@ -141,7 +154,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="small text-muted mb-1">DATE REGISTERED</div>
-                            <div class="fw-semibold text-dark">{{ $user->created_at?->format('M d, Y') ?? 'N/A' }}</div>
+                            <div class="fw-semibold text-dark">{{ $studentProfile?->created_at?->format('M d, Y') ?? 'N/A' }}</div>
                         </div>
                     </div>
 

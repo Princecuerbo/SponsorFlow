@@ -45,6 +45,7 @@ class RegisteredUserController extends Controller
             'first_name' => ['required', 'string', 'max:100'],
             'middle_name' => ['nullable', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
+            'extension_name' => ['nullable', 'string', 'max:10'],
             'gender' => ['required', 'string', 'in:Male,Female'],
             'contact_number' => ['required', 'string', 'regex:/^09\d{9}$/'],
             'email' => ['required', 'email', 'max:191', 'regex:/^[a-zA-Z0-9._%+-]+@dorsu\.edu\.ph$/i', 'unique:users,email'],
@@ -77,7 +78,13 @@ class RegisteredUserController extends Controller
         $course = $program->name;
 
         $user = DB::transaction(function () use ($validated, $isRural, $course): User {
-            $fullName = trim("{$validated['first_name']} " . ($validated['middle_name'] ?? '') . " {$validated['last_name']}");
+            $nameParts = array_filter([
+                $validated['first_name'],
+                $validated['middle_name'] ?? null,
+                $validated['last_name'],
+                $validated['extension_name'] ?? null,
+            ]);
+            $fullName = trim(implode(' ', $nameParts));
 
             $user = User::query()->create([
                 'name' => $fullName,
@@ -94,6 +101,7 @@ class RegisteredUserController extends Controller
                 'first_name' => $validated['first_name'],
                 'middle_name' => $validated['middle_name'] ?? null,
                 'last_name' => $validated['last_name'],
+                'extension_name' => $validated['extension_name'] ?? null,
                 'academic_program_id' => $validated['academic_program_id'],
                 'course' => $course,
                 'campus' => $validated['campus'],

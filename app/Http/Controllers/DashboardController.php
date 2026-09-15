@@ -169,6 +169,16 @@ class DashboardController extends Controller
                 'applicationStatusBreakdown' => collect(ApplicationStatus::cases())
                     ->mapWithKeys(function (ApplicationStatus $status) use ($statusCounts): array {
                         $count = match ($status) {
+                            ApplicationStatus::Approved => Application::query()
+                                ->where(function ($query): void {
+                                    $query->where('status', ApplicationStatus::Approved)
+                                        ->orWhere(function ($query): void {
+                                            $query->where('status', ApplicationStatus::Expired)
+                                                ->whereNotNull('approved_at');
+                                        });
+                                })
+                                ->distinct('student_profile_id')
+                                ->count('student_profile_id'),
                             ApplicationStatus::Expired => Application::query()
                                 ->where('status', ApplicationStatus::Expired)
                                 ->whereNull('approved_at')

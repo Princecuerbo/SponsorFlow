@@ -113,9 +113,15 @@ class SponsorshipProgram extends Model
             return max(0, (int) $this->attributes['approved_count']);
         }
 
-        // Only count active/ongoing beneficiaries for the current program term
-        return (int) $this->applications()
-            ->whereIn('status', [ApplicationStatus::Approved, ApplicationStatus::Ongoing])
+        $query = $this->applications();
+
+        if ($this->status === ProgramStatus::Open) {
+            $query->whereIn('status', [ApplicationStatus::Approved, ApplicationStatus::Ongoing]);
+        } else {
+            $query->previouslyApprovedBeneficiaries();
+        }
+
+        return (int) $query
             ->distinct('student_profile_id')
             ->count('student_profile_id');
     }

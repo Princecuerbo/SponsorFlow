@@ -21,6 +21,7 @@ class StudentProfile extends Model
         'first_name',
         'middle_name',
         'last_name',
+        'extension_name',
         'course',
         'academic_program_id',
         'campus',
@@ -58,6 +59,18 @@ class StudentProfile extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function getFullNameAttribute(): string
+    {
+        $parts = array_filter([
+            $this->first_name,
+            $this->middle_name,
+            $this->last_name,
+            $this->extension_name,
+        ]);
+
+        return trim(implode(' ', $parts));
+    }
+
     public function getFullAddressAttribute(): string
     {
         return "{$this->home_address}, Brgy. {$this->barangay}, {$this->municipality}, {$this->province}";
@@ -66,6 +79,11 @@ class StudentProfile extends Model
     public function academicProgram(): BelongsTo
     {
         return $this->belongsTo(AcademicProgram::class, 'academic_program_id', 'program_id');
+    }
+
+    public function program(): BelongsTo
+    {
+        return $this->academicProgram();
     }
 
     public function activeSponsorship(): BelongsTo
