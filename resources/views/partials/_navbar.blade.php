@@ -65,9 +65,15 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link sf-topnav-link {{ request()->routeIs('fassg.verification*') ? 'active' : '' }}"
-                            href="{{ route('fassg.verification.index') }}">
-                            <i class="bi bi-patch-check"></i> Verification Queue
+                        <a class="nav-link sf-topnav-link {{ request()->routeIs('fassg.sle-fhe*') ? 'active' : '' }}"
+                            href="{{ route('fassg.sle-fhe.index') }}">
+                            <i class="bi bi-patch-check"></i> SLE-FHE Verification
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sf-topnav-link {{ request()->routeIs('fassg.applications.index') ? 'active' : '' }}"
+                            href="{{ route('fassg.applications.index') }}">
+                            <i class="bi bi-inboxes"></i> Application Queue
                         </a>
                     </li>
                     <li class="nav-item">
@@ -270,9 +276,15 @@
                             </a>
                         </li>
                         <li class="mt-1">
-                            <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('fassg.verification*') ? 'sf-mobile-active' : '' }}"
-                                href="{{ route('fassg.verification.index') }}" style="font-size: 0.925rem;">
-                                <i class="bi bi-patch-check fs-5 text-secondary"></i> Verification Queue
+                            <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('fassg.sle-fhe*') ? 'sf-mobile-active' : '' }}"
+                                href="{{ route('fassg.sle-fhe.index') }}" style="font-size: 0.925rem;">
+                                <i class="bi bi-patch-check fs-5 text-secondary"></i> SLE-FHE Verification
+                            </a>
+                        </li>
+                        <li class="mt-1">
+                            <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('fassg.applications.index') ? 'sf-mobile-active' : '' }}"
+                                href="{{ route('fassg.applications.index') }}" style="font-size: 0.925rem;">
+                                <i class="bi bi-inboxes fs-5 text-secondary"></i> Application Queue
                             </a>
                         </li>
                         <li class="mt-1">

@@ -140,6 +140,35 @@ class VerificationController extends Controller
         ]);
     }
 
+    public function sleFheIndex(Request $request): View
+    {
+        $search = $request->string('q')->trim()->toString();
+        $campus = $request->string('campus')->trim()->toString();
+
+        $pendingProfiles = StudentProfile::query()
+            ->with('user')
+            ->where('is_sle_fhe_verified', false)
+            ->when($search !== '', function ($query) use ($search): void {
+                $query->where(function ($query) use ($search): void {
+                    $query->where('student_id_number', 'like', "%{$search}%")
+                        ->orWhere('course', 'like', "%{$search}%")
+                        ->orWhere('first_name', 'like', "%{$search}%")
+                        ->orWhere('last_name', 'like', "%{$search}%")
+                        ->orWhereHas('user', fn ($uq) => $uq->where('name', 'like', "%{$search}%"));
+                });
+            })
+            ->when($campus !== '', fn ($q) => $q->where('campus', $campus))
+            ->latest()
+            ->get();
+
+        return view('fassg.sle-fhe.index', [
+            'user'                => $this->actor($request),
+            'pendingProfiles'     => $pendingProfiles,
+            'pendingSleFheCount'  => StudentProfile::query()->where('is_sle_fhe_verified', false)->count(),
+            'verifiedSleFheCount' => StudentProfile::query()->where('is_sle_fhe_verified', true)->count(),
+        ]);
+    }
+
     public function show(Request $request, Application $application): View
     {
         $application->load([

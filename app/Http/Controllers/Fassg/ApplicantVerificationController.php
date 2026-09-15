@@ -10,6 +10,7 @@ use App\Http\Requests\Fassg\RejectApplicationRequest;
 use App\Http\Requests\Fassg\VerifyApplicationRequest;
 use App\Models\Application;
 use App\Models\ApplicationDocument;
+use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,7 +24,54 @@ class ApplicantVerificationController extends Controller
 
     public function index(Request $request): View
     {
-        return app(VerificationController::class)->index($request);
+        $search    = $request->string('q')->trim()->toString();
+        $programId = $request->integer('program_id', 0);
+        $status    = $request->string('status')->trim()->toString();
+
+        $actionableStatuses = [
+            ApplicationStatus::Pending,
+            ApplicationStatus::Verified,
+            ApplicationStatus::ResubmissionRequested,
+        ];
+
+        $applications = Application::query()
+            ->with(['studentProfile.user', 'sponsorshipProgram.sponsor', 'documents'])
+            ->whereHas('studentProfile', fn ($q) => $q->where('is_sle_fhe_verified', true))
+            ->when($search !== '', function ($q) use ($search): void {
+                $q->whereHas('studentProfile', function ($pq) use ($search): void {
+                    $pq->where('student_id_number', 'like', "%{$search}%")
+                        ->orWhere('course', 'like', "%{$search}%")
+                        ->orWhereHas('user', fn ($uq) => $uq->where('name', 'like', "%{$search}%"));
+                });
+            })
+            ->when($programId > 0, fn ($q) => $q->where('sponsorship_program_id', $programId))
+            ->when(
+                $status !== '' && in_array(ApplicationStatus::tryFrom($status), $actionableStatuses, true),
+                fn ($q) => $q->where('status', $status)
+            )
+            ->whereIn('status', $actionableStatuses)
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
+        $programs = SponsorshipProgram::query()
+            ->with('sponsor')
+            ->orderBy('program_name')
+            ->get();
+
+        $pendingCount = Application::whereHas('studentProfile', fn ($q) => $q->where('is_sle_fhe_verified', true))
+            ->whereIn('status', $actionableStatuses)
+            ->count();
+
+        $approvedCount = Application::where('status', ApplicationStatus::Approved)->count();
+
+        return view('fassg.applications.index', [
+            'user'                 => $this->actor($request),
+            'pendingApplications'  => $applications,
+            'pendingCount'         => $pendingCount,
+            'approvedCount'        => $approvedCount,
+            'programs'             => $programs,
+        ]);
     }
 
     public function show(Request $request, Application $application): View

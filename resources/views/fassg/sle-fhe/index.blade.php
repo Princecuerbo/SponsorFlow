@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Application Queue')
+@section('title', 'SLE-FHE Verification')
 @section('eyebrow', 'FASSG Office')
-@section('page-title', 'Application Queue')
+@section('page-title', 'SLE-FHE Verification')
 
 @push('styles')
     <style>
@@ -44,16 +44,16 @@
             font-weight: 600;
         }
 
-        .bg-cyan-50 {
-            background-color: #ecfeff !important;
+        .bg-indigo-50 {
+            background-color: #eef2ff !important;
         }
 
-        .text-cyan-700 {
-            color: #0e7490 !important;
+        .text-indigo-700 {
+            color: #4338ca !important;
         }
 
-        .border-cyan-200 {
-            border-color: #a5f3fc !important;
+        .border-indigo-200 {
+            border-color: #c7d2fe !important;
         }
 
         .bg-emerald-50 {
@@ -78,16 +78,16 @@
     {{-- Page Header --}}
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
-            <p class="text-uppercase small fw-semibold text-secondary mb-2">FASSG Office · Applications</p>
-            <h1 class="display-6 fw-bold mb-1">Application Queue</h1>
-            <p class="text-secondary mb-0">Review submitted scholarship applications from SLE-FHE verified students.</p>
+            <p class="text-uppercase small fw-semibold text-secondary mb-2">FASSG Office · Verification</p>
+            <h1 class="display-6 fw-bold mb-1">SLE-FHE Verification</h1>
+            <p class="text-secondary mb-0">Verify student profiles awaiting secondary board eligibility confirmation.</p>
         </div>
         <div class="d-flex flex-wrap gap-2">
-            <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #ecfeff; color: #0e7490; border: 1px solid #a5f3fc;">
-                <i class="bi bi-hourglass-split"></i> {{ $pendingCount ?? 0 }} pending applications
+            <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe;">
+                <i class="bi bi-hourglass-split"></i> {{ $pendingSleFheCount ?? 0 }} pending profiles
             </span>
             <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
-                <i class="bi bi-award"></i> {{ $approvedCount ?? 0 }} approved
+                <i class="bi bi-patch-check"></i> {{ $verifiedSleFheCount ?? 0 }} verified
             </span>
         </div>
     </div>
@@ -110,33 +110,20 @@
     {{-- Filter Bar --}}
     <div class="card filter-card mb-4 rounded-3">
         <div class="card-body p-3">
-            <form method="GET" action="{{ route('fassg.applications.index') }}" class="row g-2 align-items-end">
-                {{-- Program --}}
+            <form method="GET" action="{{ route('fassg.sle-fhe.index') }}" class="row g-2 align-items-end">
+                {{-- Campus --}}
                 <div class="col-md-3">
-                    <label class="form-label small text-secondary fw-semibold mb-1">Program</label>
-                    <select name="program_id" class="form-select form-select-sm" onchange="this.form.submit()">
-                        <option value="">All programs</option>
-                        @foreach ($programs as $prog)
-                            <option value="{{ $prog->id }}" @selected((int) request('program_id') === $prog->id)>
-                                {{ $prog->program_name }}
-                            </option>
+                    <label class="form-label small text-secondary fw-semibold mb-1">Campus</label>
+                    <select name="campus" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All campuses</option>
+                        @foreach (['Main Campus (City of Mati)', 'Baganga Campus', 'Banaybanay Campus', 'Cateel Campus', 'San Isidro Campus', 'Tarragona Campus'] as $campus)
+                            <option value="{{ $campus }}" @selected(request('campus') === $campus)>{{ $campus }}</option>
                         @endforeach
                     </select>
                 </div>
 
-                {{-- Status --}}
-                <div class="col-md-2">
-                    <label class="form-label small text-secondary fw-semibold mb-1">Status</label>
-                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-                        <option value="">All statuses</option>
-                        <option value="Pending" @selected(request('status') === 'Pending')>Pending</option>
-                        <option value="Verified" @selected(request('status') === 'Verified')>Verified</option>
-                        <option value="Resubmission Requested" @selected(request('status') === 'Resubmission Requested')>Resubmission Requested</option>
-                    </select>
-                </div>
-
                 {{-- Search --}}
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <label class="form-label small text-secondary fw-semibold mb-1">Search</label>
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white border-end-0">
@@ -151,7 +138,7 @@
 
                 {{-- Reset --}}
                 <div class="col-md-1">
-                    <a href="{{ route('fassg.applications.index') }}"
+                    <a href="{{ route('fassg.sle-fhe.index') }}"
                         class="btn btn-outline-secondary btn-sm w-100">
                         <i class="bi bi-x-lg"></i>
                     </a>
@@ -161,12 +148,12 @@
     </div>
 
     {{-- Queue Table --}}
-    @if ($pendingApplications->isEmpty())
+    @if ($pendingProfiles->isEmpty())
         <div class="card sf-card">
             <div class="sf-empty-state">
-                <i class="bi bi-inboxes"></i>
-                <div class="fw-semibold">Queue is empty</div>
-                <div class="small">No applications match the current filters.</div>
+                <i class="bi bi-patch-check"></i>
+                <div class="fw-semibold">No pending profiles</div>
+                <div class="small">No student profiles match the current filters.</div>
             </div>
         </div>
     @else
@@ -176,16 +163,14 @@
                     <thead>
                         <tr>
                             <th class="ps-4">Student</th>
-                            <th>Program applied</th>
-                            <th>Date submitted</th>
-                            <th>Documents</th>
+                            <th>Course &amp; Year</th>
+                            <th>Campus</th>
                             <th>Status</th>
                             <th class="text-end pe-4">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($pendingApplications as $application)
-                            @php $profile = $application->studentProfile; @endphp
+                        @foreach ($pendingProfiles as $profile)
                             <tr>
                                 {{-- Student --}}
                                 <td class="ps-4">
@@ -193,40 +178,55 @@
                                     <div class="small text-secondary sf-mono">{{ $profile->student_id_number ?: '—' }}</div>
                                 </td>
 
-                                {{-- Program --}}
+                                {{-- Course & Year --}}
                                 <td>
-                                    <div class="small fw-semibold text-break" style="max-width:180px;">
-                                        {{ $application->sponsorshipProgram->program_name }}
-                                    </div>
+                                    <div>{{ $profile->course ?: '—' }}</div>
                                     <div class="small text-secondary">
-                                        {{ $application->sponsorshipProgram->sponsor->company_organization_name }}
+                                        @if ($profile->year_level)
+                                            Year {{ $profile->year_level }}
+                                        @else
+                                            <span class="text-muted">Year N/A</span>
+                                        @endif
                                     </div>
                                 </td>
 
-                                {{-- Date Submitted --}}
+                                {{-- Campus --}}
                                 <td>
-                                    <div class="small">{{ optional($application->submitted_at ?? $application->created_at)->format('M d, Y') }}</div>
-                                </td>
-
-                                {{-- Documents --}}
-                                <td>
-                                    @php $docCounts = $application->documentStatusCounts(); @endphp
-                                    <span class="badge {{ $docCounts['uploaded'] >= $docCounts['required'] ? 'bg-success-subtle text-success-emphasis' : 'bg-warning-subtle text-warning-emphasis' }}">
-                                        {{ $docCounts['uploaded'] }}/{{ $docCounts['required'] }} docs
+                                    <span class="badge rounded-2 fw-medium"
+                                        style="background-color: rgba(15,41,66,0.08); color:#0F2942;">
+                                        {{ $profile->campus ?: 'Not Assigned' }}
                                     </span>
                                 </td>
 
                                 {{-- Status --}}
                                 <td>
-                                    <x-status-badge :status="$application->status" />
+                                    <span class="px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-medium flex items-center gap-1.5 d-inline-flex align-items-center"
+                                        style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.25rem 0.65rem; font-weight: 500; font-size: 0.8rem; background-color: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" class="w-3.5 h-3.5" style="width: 0.875rem; height: 0.875rem; flex-shrink: 0;" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
+                                        </svg>
+                                        Pending SLE-FHE
+                                    </span>
                                 </td>
 
                                 {{-- Actions --}}
                                 <td class="text-end pe-4">
-                                    <a href="{{ route('fassg.applications.show', $application) }}"
-                                        class="btn btn-sm btn-navy-primary">
-                                        Review <i class="bi bi-chevron-right"></i>
-                                    </a>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <form method="POST"
+                                            action="{{ route('fassg.sle-fhe.verify', $profile) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-navy-primary">
+                                                <i class="bi bi-check2-circle me-1"></i>Verify SLE-FHE
+                                            </button>
+                                        </form>
+                                        <form method="POST"
+                                            action="{{ route('fassg.sle-fhe.reject', $profile) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-arrow-return-left me-1"></i>Request Fix
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -234,11 +234,5 @@
                 </table>
             </div>
         </div>
-
-        @if ($pendingApplications->hasPages())
-            <div class="mt-3 d-flex justify-content-end">
-                {{ $pendingApplications->withQueryString()->links() }}
-            </div>
-        @endif
     @endif
 @endsection

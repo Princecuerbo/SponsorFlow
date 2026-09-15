@@ -142,6 +142,9 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
         Route::delete('/programs/{sponsorshipProgram}', [ProgramManagementController::class, 'destroy'])->name('programs.destroy');
 
         Route::get('/applications', [ApplicantVerificationController::class, 'index'])->name('applications.index');
+        Route::get('/sle-fhe', [FassgVerificationController::class, 'sleFheIndex'])->name('sle-fhe.index');
+        Route::post('/sle-fhe/{studentProfile}/verify', [FassgVerificationController::class, 'verifyStudent'])->name('sle-fhe.verify');
+        Route::post('/sle-fhe/{studentProfile}/reject', [FassgVerificationController::class, 'rejectStudent'])->name('sle-fhe.reject');
         Route::get('/verification', [FassgVerificationController::class, 'index'])->name('verification.index');
         Route::get('/applications/{application}', [ApplicantVerificationController::class, 'show'])->name('applications.show');
         Route::get('/verification/{application}', [FassgVerificationController::class, 'show'])->name('verification.show');
