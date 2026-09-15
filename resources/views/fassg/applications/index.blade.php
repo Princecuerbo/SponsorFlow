@@ -43,34 +43,6 @@
             font-size: 0.8rem;
             font-weight: 600;
         }
-
-        .bg-cyan-50 {
-            background-color: #ecfeff !important;
-        }
-
-        .text-cyan-700 {
-            color: #0e7490 !important;
-        }
-
-        .border-cyan-200 {
-            border-color: #a5f3fc !important;
-        }
-
-        .bg-emerald-50 {
-            background-color: #ecfdf5 !important;
-        }
-
-        .text-emerald-700 {
-            color: #047857 !important;
-        }
-
-        .border-emerald-200 {
-            border-color: #a7f3d0 !important;
-        }
-
-        .rounded-full {
-            border-radius: 9999px !important;
-        }
     </style>
 @endpush
 
@@ -83,11 +55,17 @@
             <p class="text-secondary mb-0">Review submitted scholarship applications from SLE-FHE verified students.</p>
         </div>
         <div class="d-flex flex-wrap gap-2">
-            <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #ecfeff; color: #0e7490; border: 1px solid #a5f3fc;">
-                <i class="bi bi-hourglass-split"></i> {{ $pendingCount ?? 0 }} pending applications
+            <span class="stat-pill bg-warning bg-opacity-10 text-dark border border-warning-subtle">
+                <i class="bi bi-hourglass-split"></i> {{ $pendingCount ?? 0 }} Pending Applications
             </span>
-            <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
-                <i class="bi bi-award"></i> {{ $approvedCount ?? 0 }} approved
+            <span class="stat-pill bg-success bg-opacity-10 text-success border border-success-subtle">
+                <i class="bi bi-award"></i> {{ $approvedCount ?? 0 }} Approved
+            </span>
+            <span class="stat-pill bg-info bg-opacity-10 text-info border border-info-subtle">
+                <i class="bi bi-arrow-counterclockwise"></i> {{ $resubmissionCount ?? 0 }} Resubmission Requested
+            </span>
+            <span class="stat-pill bg-danger bg-opacity-10 text-danger border border-danger-subtle">
+                <i class="bi bi-x-circle"></i> {{ $rejectedCount ?? 0 }} Rejected
             </span>
         </div>
     </div>
@@ -124,6 +102,17 @@
                     </select>
                 </div>
 
+                {{-- Campus --}}
+                <div class="col-md-3">
+                    <label class="form-label small text-secondary fw-semibold mb-1">Campus</label>
+                    <select name="campus" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All Campuses</option>
+                        @foreach (['Main Campus (City of Mati)', 'Baganga Campus', 'Banaybanay Campus', 'Cateel Campus', 'San Isidro Campus', 'Tarragona Campus'] as $campusOpt)
+                            <option value="{{ $campusOpt }}" @selected(request('campus') === $campusOpt)>{{ $campusOpt }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 {{-- Status --}}
                 <div class="col-md-2">
                     <label class="form-label small text-secondary fw-semibold mb-1">Status</label>
@@ -136,7 +125,7 @@
                 </div>
 
                 {{-- Search --}}
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <label class="form-label small text-secondary fw-semibold mb-1">Search</label>
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white border-end-0">
@@ -175,9 +164,10 @@
                 <table class="table sf-table mb-0">
                     <thead>
                         <tr>
-                            <th class="ps-4">Student</th>
-                            <th>Program applied</th>
-                            <th>Date submitted</th>
+                            <th class="ps-4">Applicant</th>
+                            <th>Course &amp; Year Level</th>
+                            <th>Program Applied</th>
+                            <th>Date Submitted</th>
                             <th>Documents</th>
                             <th>Status</th>
                             <th class="text-end pe-4">Actions</th>
@@ -193,7 +183,19 @@
                                     <div class="small text-secondary sf-mono">{{ $profile->student_id_number ?: '—' }}</div>
                                 </td>
 
-                                {{-- Program --}}
+                                {{-- Course & Year Level --}}
+                                <td style="min-width:150px;">
+                                    <div>{{ $profile->course ?: '—' }}</div>
+                                    <div class="small text-secondary">
+                                        @if ($profile->year_level)
+                                            Year {{ $profile->year_level }}
+                                        @else
+                                            <span class="text-muted">Year N/A</span>
+                                        @endif
+                                    </div>
+                                </td>
+
+                                {{-- Program Applied --}}
                                 <td>
                                     <div class="small fw-semibold text-break" style="max-width:180px;">
                                         {{ $application->sponsorshipProgram->program_name }}
@@ -211,8 +213,9 @@
                                 {{-- Documents --}}
                                 <td>
                                     @php $docCounts = $application->documentStatusCounts(); @endphp
-                                    <span class="badge {{ $docCounts['uploaded'] >= $docCounts['required'] ? 'bg-success-subtle text-success-emphasis' : 'bg-warning-subtle text-warning-emphasis' }}">
-                                        {{ $docCounts['uploaded'] }}/{{ $docCounts['required'] }} docs
+                                    <span class="badge {{ $docCounts['uploaded'] >= $docCounts['required'] ? 'bg-success-subtle text-success-emphasis' : 'bg-warning-subtle text-warning-emphasis' }}"
+                                        title="{{ $docCounts['uploaded'] }} of {{ $docCounts['required'] }} required docs">
+                                        <i class="bi bi-paperclip me-1"></i>{{ $docCounts['uploaded'] }}
                                     </span>
                                 </td>
 
@@ -225,7 +228,7 @@
                                 <td class="text-end pe-4">
                                     <a href="{{ route('fassg.applications.show', $application) }}"
                                         class="btn btn-sm btn-navy-primary">
-                                        Review <i class="bi bi-chevron-right"></i>
+                                        Review Application <i class="bi bi-chevron-right"></i>
                                     </a>
                                 </td>
                             </tr>

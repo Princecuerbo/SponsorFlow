@@ -26,6 +26,7 @@ class ApplicantVerificationController extends Controller
     {
         $search    = $request->string('q')->trim()->toString();
         $programId = $request->integer('program_id', 0);
+        $campus    = $request->string('campus')->trim()->toString();
         $status    = $request->string('status')->trim()->toString();
 
         $actionableStatuses = [
@@ -36,7 +37,12 @@ class ApplicantVerificationController extends Controller
 
         $applications = Application::query()
             ->with(['studentProfile.user', 'sponsorshipProgram.sponsor', 'documents'])
-            ->whereHas('studentProfile', fn ($q) => $q->where('is_sle_fhe_verified', true))
+            ->whereHas('studentProfile', function ($q) use ($campus): void {
+                $q->where('is_sle_fhe_verified', true);
+                if ($campus !== '') {
+                    $q->where('campus', $campus);
+                }
+            })
             ->when($search !== '', function ($q) use ($search): void {
                 $q->whereHas('studentProfile', function ($pq) use ($search): void {
                     $pq->where('student_id_number', 'like', "%{$search}%")
@@ -59,17 +65,21 @@ class ApplicantVerificationController extends Controller
             ->orderBy('program_name')
             ->get();
 
-        $pendingCount = Application::whereHas('studentProfile', fn ($q) => $q->where('is_sle_fhe_verified', true))
-            ->whereIn('status', $actionableStatuses)
-            ->count();
+        $scoped = Application::query()
+            ->whereHas('studentProfile', fn ($q) => $q->where('is_sle_fhe_verified', true));
 
-        $approvedCount = Application::where('status', ApplicationStatus::Approved)->count();
+        $pendingCount      = (clone $scoped)->where('status', ApplicationStatus::Pending)->count();
+        $approvedCount     = (clone $scoped)->where('status', ApplicationStatus::Approved)->count();
+        $resubmissionCount = (clone $scoped)->where('status', ApplicationStatus::ResubmissionRequested)->count();
+        $rejectedCount     = (clone $scoped)->where('status', ApplicationStatus::Rejected)->count();
 
         return view('fassg.applications.index', [
             'user'                 => $this->actor($request),
             'pendingApplications'  => $applications,
             'pendingCount'         => $pendingCount,
             'approvedCount'        => $approvedCount,
+            'resubmissionCount'    => $resubmissionCount,
+            'rejectedCount'        => $rejectedCount,
             'programs'             => $programs,
         ]);
     }
