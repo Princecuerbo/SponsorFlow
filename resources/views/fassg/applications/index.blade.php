@@ -58,6 +58,9 @@
             <span class="stat-pill bg-warning bg-opacity-10 text-dark border border-warning-subtle">
                 <i class="bi bi-hourglass-split"></i> {{ $pendingCount ?? 0 }} Pending Applications
             </span>
+            <span class="stat-pill bg-primary bg-opacity-10 text-primary border border-primary-subtle">
+                <i class="bi bi-patch-check"></i> {{ $verifiedCount ?? 0 }} Verified
+            </span>
             <span class="stat-pill bg-success bg-opacity-10 text-success border border-success-subtle">
                 <i class="bi bi-award"></i> {{ $approvedCount ?? 0 }} Approved
             </span>

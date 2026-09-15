@@ -69,6 +69,7 @@ class ApplicantVerificationController extends Controller
             ->whereHas('studentProfile', fn ($q) => $q->where('is_sle_fhe_verified', true));
 
         $pendingCount      = (clone $scoped)->where('status', ApplicationStatus::Pending)->count();
+        $verifiedCount     = (clone $scoped)->where('status', ApplicationStatus::Verified)->count();
         $approvedCount     = (clone $scoped)->where('status', ApplicationStatus::Approved)->count();
         $resubmissionCount = (clone $scoped)->where('status', ApplicationStatus::ResubmissionRequested)->count();
         $rejectedCount     = (clone $scoped)->where('status', ApplicationStatus::Rejected)->count();
@@ -77,6 +78,7 @@ class ApplicantVerificationController extends Controller
             'user'                 => $this->actor($request),
             'pendingApplications'  => $applications,
             'pendingCount'         => $pendingCount,
+            'verifiedCount'        => $verifiedCount,
             'approvedCount'        => $approvedCount,
             'resubmissionCount'    => $resubmissionCount,
             'rejectedCount'        => $rejectedCount,
