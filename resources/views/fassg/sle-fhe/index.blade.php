@@ -43,22 +43,6 @@
             font-size: 0.8rem;
             font-weight: 600;
         }
-
-        .bg-indigo-50 {
-            background-color: #eef2ff !important;
-        }
-
-        .text-indigo-700 {
-            color: #4338ca !important;
-        }
-
-        .border-indigo-200 {
-            border-color: #c7d2fe !important;
-        }
-
-        .rounded-full {
-            border-radius: 9999px !important;
-        }
     </style>
 @endpush
 
@@ -185,11 +169,9 @@
 
                                 {{-- Status --}}
                                 <td>
-                                    <span class="px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-medium flex items-center gap-1.5 d-inline-flex align-items-center"
-                                        style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.25rem 0.65rem; font-weight: 500; font-size: 0.8rem; background-color: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" class="w-3.5 h-3.5" style="width: 0.875rem; height: 0.875rem; flex-shrink: 0;" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
-                                        </svg>
+                                    <span class="px-2.5 py-1.5 rounded-pill bg-warning bg-opacity-10 text-dark border border-warning border-opacity-25 fw-semibold d-inline-flex align-items-center gap-2"
+                                        style="display: inline-flex; align-items: center; gap: 0.375rem; border-radius: 9999px; padding: 0.25rem 0.65rem; font-size: 0.8rem;">
+                                        <i class="bi bi-hourglass-split" style="font-size: 0.875rem; flex-shrink: 0;"></i>
                                         Pending SLE-FHE
                                     </span>
                                 </td>
