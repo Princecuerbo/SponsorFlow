@@ -198,10 +198,11 @@ class ReportsController extends Controller
 
         $genderDistribution = StudentProfile::query()
             ->whereIn('id', $allProfileIds)
-            ->whereNotNull('gender')
-            ->select('gender', DB::raw('count(*) as total'))
-            ->groupBy('gender')
-            ->pluck('total', 'gender')
+            ->selectRaw("COALESCE(gender, 'Unassigned') as label")
+            ->selectRaw('COUNT(*) as total')
+            ->groupByRaw("COALESCE(gender, 'Unassigned')")
+            ->get()
+            ->pluck('total', 'label')
             ->all();
 
         $byMunicipality = StudentProfile::query()
@@ -263,17 +264,19 @@ class ReportsController extends Controller
             'urban' => $baseProfileQuery()->where('is_rural', false)->count(),
             'sle_fhe_verified' => $baseProfileQuery()->where('is_sle_fhe_verified', true)->count(),
             'by_gender' => $baseProfileQuery()
-                ->whereNotNull('gender')
-                ->select('gender', DB::raw('count(*) as total'))
-                ->groupBy('gender')
-                ->pluck('total', 'gender')
+                ->selectRaw("COALESCE(gender, 'Unassigned') as label")
+                ->selectRaw('COUNT(*) as total')
+                ->groupByRaw("COALESCE(gender, 'Unassigned')")
+                ->get()
+                ->pluck('total', 'label')
                 ->all(),
             'by_campus' => $baseProfileQuery()
-                ->whereNotNull('campus')
-                ->select('campus', DB::raw('count(*) as total'))
-                ->groupBy('campus')
+                ->selectRaw("COALESCE(campus, 'Unassigned') as label")
+                ->selectRaw('COUNT(*) as total')
+                ->groupByRaw("COALESCE(campus, 'Unassigned')")
                 ->orderByDesc('total')
-                ->pluck('total', 'campus')
+                ->get()
+                ->pluck('total', 'label')
                 ->all(),
             'by_year_level' => $baseProfileQuery()
                 ->select('year_level', DB::raw('count(*) as total'))
@@ -282,11 +285,13 @@ class ReportsController extends Controller
                 ->pluck('total', 'year_level')
                 ->all(),
             'by_course' => $baseProfileQuery()
-                ->select('course', DB::raw('count(*) as total'))
-                ->groupBy('course')
+                ->selectRaw("COALESCE(course, 'Unassigned') as label")
+                ->selectRaw('COUNT(*) as total')
+                ->groupByRaw("COALESCE(course, 'Unassigned')")
                 ->orderByDesc('total')
                 ->limit(10)
-                ->pluck('total', 'course')
+                ->get()
+                ->pluck('total', 'label')
                 ->all(),
             'by_barangay' => $byMunicipality,
             'by_municipality' => $byMunicipality,
