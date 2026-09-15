@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\StaffLoginController;
 use App\Http\Controllers\Auth\StudentLoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Fassg\ApplicantVerificationController;
 use App\Http\Controllers\Fassg\FixedListController;
 use App\Http\Controllers\Fassg\ProgramManagementController;
@@ -83,6 +84,12 @@ Route::middleware('auth')->get('/dashboard', function () {
     /** @var User $user */
     return redirect()->route($user->homeRoute());
 })->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
+});
 
 Route::middleware(['web', 'auth', 'EnsureUserRole:student'])
     ->prefix('student')
