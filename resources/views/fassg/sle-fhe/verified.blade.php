@@ -55,9 +55,9 @@
             <p class="text-secondary mb-0">Masterlist of student profiles confirmed for secondary board eligibility.</p>
         </div>
         <div class="d-flex flex-wrap gap-2">
-            <span class="stat-pill bg-success bg-opacity-10 text-success border border-success-subtle">
+            <a href="{{ route('fassg.sle-fhe.verified') }}" class="stat-pill bg-success bg-opacity-10 text-success border border-success-subtle text-decoration-none">
                 <i class="bi bi-patch-check"></i> {{ $verifiedCount ?? 0 }} verified
-            </span>
+            </a>
             <a href="{{ route('fassg.sle-fhe.index') }}" class="stat-pill bg-warning bg-opacity-10 text-dark border border-warning-subtle text-decoration-none">
                 <i class="bi bi-hourglass-split"></i> {{ $pendingSleFheCount ?? 0 }} pending profiles
             </a>
@@ -139,6 +139,7 @@
                             <th>Campus</th>
                             <th>Residency</th>
                             <th>Status</th>
+                            <th class="text-end pe-4">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -192,6 +193,11 @@
                                         </svg>
                                         Verified
                                     </span>
+                                </td>
+
+                                {{-- Actions --}}
+                                <td class="text-end pe-4">
+                                    <span class="text-secondary">—</span>
                                 </td>
                             </tr>
                         @endforeach

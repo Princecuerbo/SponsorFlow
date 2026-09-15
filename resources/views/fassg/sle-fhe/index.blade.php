@@ -50,14 +50,17 @@
     {{-- Page Header --}}
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
-            <p class="text-uppercase small fw-semibold text-secondary mb-2">FASSG Office · Verification</p>
+            <p class="text-uppercase small fw-semibold text-secondary mb-2">FASSG Office · SLE-FHE Verification</p>
             <h1 class="display-6 fw-bold mb-1">SLE-FHE Verification</h1>
             <p class="text-secondary mb-0">Verify student profiles awaiting secondary board eligibility confirmation.</p>
         </div>
         <div class="d-flex flex-wrap gap-2">
-            <span class="stat-pill bg-warning bg-opacity-10 text-dark border border-warning-subtle">
+            <a href="{{ route('fassg.sle-fhe.index') }}" class="stat-pill bg-warning bg-opacity-10 text-dark border border-warning-subtle text-decoration-none">
                 <i class="bi bi-hourglass-split"></i> {{ $pendingSleFheCount ?? 0 }} pending profiles
-            </span>
+            </a>
+            <a href="{{ route('fassg.sle-fhe.verified') }}" class="stat-pill bg-success bg-opacity-10 text-success border border-success-subtle text-decoration-none">
+                <i class="bi bi-patch-check"></i> {{ $verifiedSleFheCount ?? 0 }} verified
+            </a>
         </div>
     </div>
 
@@ -134,6 +137,7 @@
                             <th class="ps-4">Student</th>
                             <th>Course &amp; Year</th>
                             <th>Campus</th>
+                            <th>Residency</th>
                             <th>Status</th>
                             <th class="text-end pe-4">Actions</th>
                         </tr>
@@ -165,6 +169,19 @@
                                         style="background-color: rgba(15,41,66,0.08); color:#0F2942;">
                                         {{ $profile->campus ?: 'Not Assigned' }}
                                     </span>
+                                </td>
+
+                                {{-- Residency --}}
+                                <td>
+                                    @if ($profile->is_rural)
+                                        <span class="badge rounded-2 fw-medium bg-success-subtle text-success-emphasis">
+                                            <i class="bi bi-tree me-1"></i>Rural
+                                        </span>
+                                    @else
+                                        <span class="badge rounded-2 fw-medium bg-secondary-subtle text-secondary-emphasis">
+                                            <i class="bi bi-building me-1"></i>Urban
+                                        </span>
+                                    @endif
                                 </td>
 
                                 {{-- Status --}}

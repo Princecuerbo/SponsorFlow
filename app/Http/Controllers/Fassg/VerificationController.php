@@ -162,9 +162,10 @@ class VerificationController extends Controller
             ->get();
 
         return view('fassg.sle-fhe.index', [
-            'user'               => $this->actor($request),
-            'pendingProfiles'    => $pendingProfiles,
-            'pendingSleFheCount' => StudentProfile::query()->where('is_sle_fhe_verified', false)->count(),
+            'user'                => $this->actor($request),
+            'pendingProfiles'     => $pendingProfiles,
+            'pendingSleFheCount'  => StudentProfile::query()->where('is_sle_fhe_verified', false)->count(),
+            'verifiedSleFheCount' => StudentProfile::query()->where('is_sle_fhe_verified', true)->count(),
         ]);
     }
 
