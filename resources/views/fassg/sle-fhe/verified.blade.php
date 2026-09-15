@@ -139,7 +139,6 @@
                             <th>Campus</th>
                             <th>Residency</th>
                             <th>Status</th>
-                            <th class="text-end pe-4">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -193,11 +192,6 @@
                                         </svg>
                                         Verified
                                     </span>
-                                </td>
-
-                                {{-- Actions --}}
-                                <td class="text-end pe-4">
-                                    <span class="text-secondary">—</span>
                                 </td>
                             </tr>
                         @endforeach
