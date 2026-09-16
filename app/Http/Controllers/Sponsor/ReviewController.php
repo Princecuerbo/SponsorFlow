@@ -212,7 +212,7 @@ class ReviewController extends Controller
         $approvals = SponsorApproval::query()
             ->whereHas('sponsorshipProgram', fn($query) => $query->where('sponsor_id', $sponsorId))
             ->where('confirmation_status', ConfirmationStatus::Confirmed)
-            ->with(['fixedList', 'sponsorshipProgram'])
+            ->with(['fixedList.items.application', 'sponsorshipProgram'])
             ->latest()
             ->get();
 

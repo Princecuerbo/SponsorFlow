@@ -117,8 +117,7 @@
                             <tr>
                                 <td class="ps-4">
                                     <div class="fw-semibold">{{ $approval->fixedList->batch_name }}</div>
-                                    <div class="small text-secondary">{{ $approval->fixedList->total_names }} beneficiaries
-                                    </div>
+                                    <div class="small text-secondary">{{ $approval->fixedList->items->reject(fn($item) => $item->application?->status->value === 'Rejected')->count() }} beneficiary(ies)</div>
                                 </td>
                                 <td>{{ $approval->sponsorshipProgram->program_name }}</td>
                                 <td><span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200">Confirmed</span></td>
