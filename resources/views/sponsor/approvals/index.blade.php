@@ -182,9 +182,9 @@
         <div class="tab-pane fade" id="fixed-lists-pane" role="tabpanel" aria-labelledby="fixed-lists-tab" tabindex="0">
             <div class="d-flex align-items-center justify-content-between mb-3">
                 <div>
-                    <h2 class="h5 sf-heading mb-1 fw-bold">Sponsor-Provided Fixed Lists</h2>
-                    <p class="small text-secondary mb-0">Batch lists submitted by FASSG for sponsor document upload and
-                        confirmation.</p>
+                    <h2 class="h5 sf-heading mb-1 fw-bold">Submitted Beneficiary Batches</h2>
+                    <p class="small text-secondary mb-0">Review beneficiary batches forwarded by FASSG for sponsor approval and
+                        document upload.</p>
                 </div>
                 <i class="bi bi-people fs-3" style="color: #0F2942;"></i>
             </div>
