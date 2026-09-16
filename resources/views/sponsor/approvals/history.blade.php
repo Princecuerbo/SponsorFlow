@@ -35,66 +35,10 @@
         </span>
     </div>
 
-    <section class="mb-5">
-        <div class="d-flex align-items-center justify-content-between mb-3">
-            <div>
-                <h2 class="h5 sf-heading mb-1 fw-bold">Approved Individual Applications</h2>
-                <p class="small text-secondary mb-0">FASSG-verified students confirmed by your organization.</p>
-            </div>
-            <i class="bi bi-person-check fs-3" style="color: #0F2942;"></i>
-        </div>
-
-        <div class="card sf-card border-0 shadow-sm">
-            <div class="table-responsive">
-                <table class="table sf-table mb-0 align-middle">
-                    <thead>
-                        <tr>
-                            <th class="ps-4">Student</th>
-                            <th>Program</th>
-                            <th>Status</th>
-                            <th>Approved</th>
-                            <th class="text-end pe-4">Endorsement</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($applications as $application)
-                            <tr>
-                                <td class="ps-4">
-                                    <div class="fw-semibold">{{ $application->studentProfile->user->name }}</div>
-                                    <div class="small text-secondary sf-mono">
-                                        {{ $application->studentProfile->student_id_number }}</div>
-                                </td>
-                                <td>{{ $application->sponsorshipProgram->program_name }}</td>
-                                <td><x-status-badge :status="$application->status" /></td>
-                                <td>{{ $application->approved_at?->format('M d, Y') ?? ($application->updated_at?->format('M d, Y') ?? '—') }}
-                                </td>
-                                <td class="text-end pe-4">
-                                    @if ($application->sponsor_approval_path)
-                                        <a href="{{ route('sponsor.applicants.approval-document', $application) }}"
-                                            target="_blank" rel="noopener" class="btn btn-sm btn-navy-primary">
-                                            <i class="bi bi-file-earmark-text me-1"></i>View File
-                                        </a>
-                                    @else
-                                        <span class="small text-secondary">Not available</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center text-secondary py-5">No approved individual
-                                    applications yet.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-
     <section>
         <div class="d-flex align-items-center justify-content-between mb-3">
             <div>
-                <h2 class="h5 sf-heading mb-1 fw-bold">Confirmed Fixed Lists</h2>
+                <h2 class="h5 sf-heading mb-1 fw-bold">Confirmed Beneficiary Batches</h2>
                 <p class="small text-secondary mb-0">Beneficiary lists confirmed with sponsor endorsement documents.</p>
             </div>
             <i class="bi bi-people fs-3" style="color: #0F2942;"></i>

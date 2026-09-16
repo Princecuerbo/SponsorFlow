@@ -305,7 +305,7 @@ class ReferenceController extends Controller
                     'approved_at' => $approval?->created_at,
                     'billing_status' => 'Confirmed for reference',
                     'application_status' => 'List beneficiary',
-                    'reference_label' => $isGenerated ? 'Generated Batch' : 'Fixed list',
+                    'reference_label' => $isGenerated ? 'Application Batch' : 'Fixed List',
                 ];
             });
 

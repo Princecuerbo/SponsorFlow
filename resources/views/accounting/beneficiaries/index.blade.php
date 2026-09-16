@@ -234,9 +234,10 @@
                                     {{ isset($beneficiary['approved_at']) && $beneficiary['approved_at'] ? \Carbon\Carbon::parse($beneficiary['approved_at'])->format('M d, Y') : '—' }}
                                 </td>
                                 <td class="text-end pe-4 no-print">
-                                    <div class="small text-secondary">
-                                        {{ $beneficiary['reference_label'] ?? 'Application' }}
-                                    </div>
+                                    <span
+                                        class="badge {{ !empty($beneficiary['application_id']) ? 'bg-primary-subtle text-primary-emphasis border border-primary-subtle' : 'bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle' }} fw-semibold">
+                                        {{ $beneficiary['reference_label'] ?? (!empty($beneficiary['application_id']) ? 'Application Batch' : 'Fixed List') }}
+                                    </span>
                                     @if (!empty($beneficiary['application_id']))
                                         <a href="{{ route('accounting.beneficiaries.show', $beneficiary['application_id']) }}"
                                             class="btn btn-sm btn-outline-secondary mt-1">

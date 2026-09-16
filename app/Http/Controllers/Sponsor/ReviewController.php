@@ -35,10 +35,12 @@ class ReviewController extends Controller
             'sponsor' => $sponsor,
             'connectedPrograms' => $sponsor?->sponsorshipPrograms()->count() ?? 0,
             'listsPendingReview' => $pendingReviewCount,
-            'uploadedApprovals' => Application::query()
+            'uploadedApprovals' => FixedList::query()
                 ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor?->id))
-                ->whereIn('status', [ApplicationStatus::Approved, ApplicationStatus::Ongoing])
-                ->whereNotNull('sponsor_approval_path')
+                ->where(fn ($query) => $query
+                    ->where('status', FixedListStatus::Approved)
+                    ->orWhereHas('latestApproval', fn ($approval) => $approval->whereNotNull('approval_document_path'))
+                    ->orWhereHas('latestApproval', fn ($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed)))
                 ->count(),
         ]);
     }
