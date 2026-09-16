@@ -12,9 +12,11 @@ use App\Models\Application;
 use App\Models\ApplicationDocument;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
+use App\Notifications\ApplicationStatusUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -125,19 +127,18 @@ class ApplicantVerificationController extends Controller
 
         $application->loadMissing(['studentProfile', 'sponsorshipProgram', 'documents']);
 
-        $requiredDocumentTypes = array_map(
-            static fn (DocumentType $type): string => $type->value,
-            DocumentType::requiredForApplication(),
-        );
+        $requiredDocumentTypes = $application->sponsorshipProgram?->requiredDocumentCanonicalValues() ?? [];
+
         $submittedDocumentTypes = $application->documents
             ->pluck('document_type')
-            ->map(static fn ($type): string => $type instanceof DocumentType ? $type->value : (string) $type)
+            ->map(static fn ($type): string => DocumentType::canonicalValue($type))
             ->unique()
+            ->values()
             ->all();
 
         if (array_diff($requiredDocumentTypes, $submittedDocumentTypes) !== []) {
             return back()->withErrors([
-                'application' => 'The Certificate of Grades, Proof of Residence, and Barangay Certification are required.',
+                'application' => 'The Certificate of Grades and Proof of Residence / Barangay Certificate are required.',
             ]);
         }
 
@@ -201,6 +202,41 @@ class ApplicantVerificationController extends Controller
         return back()->with('status', 'Application marked as Rejected.');
     }
 
+    public function requestResubmission(Request $request, Application $application): RedirectResponse
+    {
+        $validDocumentTypes = collect(DocumentType::cases())
+            ->map(static fn (DocumentType $type): string => DocumentType::canonicalValue($type))
+            ->unique()
+            ->values()
+            ->all();
+
+        $validated = $request->validate([
+            'resubmission_notes' => ['required', 'string', 'min:5', 'max:1000'],
+            'requested_documents' => ['required', 'array', 'min:1'],
+            'requested_documents.*' => ['string', Rule::in($validDocumentTypes)],
+        ]);
+
+        if (! in_array($application->status, [ApplicationStatus::Pending, ApplicationStatus::Verified], true)) {
+            return back()->withErrors(['application' => 'This application cannot be sent for resubmission in its current status.']);
+        }
+
+        $application->update([
+            'status'              => ApplicationStatus::ResubmissionRequested,
+            'resubmission_notes'  => trim($validated['resubmission_notes']),
+            'requested_documents' => array_values(array_unique($validated['requested_documents'])),
+        ]);
+
+        if ($application->studentProfile->user !== null) {
+            $application->studentProfile->user->notify(
+                new ApplicationStatusUpdated($application, ApplicationStatus::ResubmissionRequested),
+            );
+        }
+
+        $this->audit($request, 'fassg.application.resubmission_requested', 'applications');
+
+        return back()->with('status', 'Resubmission requested. The student has been notified to upload the corrected documents.');
+    }
+
     private function verifyStatus(Request $request, Application $application): RedirectResponse
     {
         if ($application->status !== ApplicationStatus::Pending) {
@@ -208,8 +244,15 @@ class ApplicantVerificationController extends Controller
         }
 
         $application->loadMissing(['studentProfile', 'sponsorshipProgram', 'documents']);
-        $required = array_map(static fn (DocumentType $type): string => $type->value, DocumentType::requiredForApplication());
-        $submitted = $application->documents->pluck('document_type')->map(static fn ($type): string => $type instanceof DocumentType ? $type->value : (string) $type)->unique()->all();
+
+        $required = $application->sponsorshipProgram?->requiredDocumentCanonicalValues() ?? [];
+
+        $submitted = $application->documents
+            ->pluck('document_type')
+            ->map(static fn ($type): string => DocumentType::canonicalValue($type))
+            ->unique()
+            ->values()
+            ->all();
 
         if (array_diff($required, $submitted) !== []) {
             return back()->withErrors(['application' => 'All required application documents must be uploaded.']);

@@ -444,6 +444,77 @@
                                 </div>
                             </form>
                         </div>
+
+                        <hr class="my-3">
+
+                        {{-- ── 3. REQUEST RESUBMISSION / CORRECTION ACTION ── --}}
+                        <div>
+                            <h3 class="h6 fw-bold mb-2" style="color:#9a6b00;">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i> Request Resubmission / Correction
+                            </h3>
+                            <p class="small text-secondary mb-3">
+                                Ask the student to upload a corrected or clearer copy of a document. A mandatory note is attached so the student knows exactly what to fix.
+                            </p>
+
+                            <form method="POST" action="{{ route('fassg.applications.request-resubmission', $application) }}"
+                                onsubmit="return confirm('Send this application back to the student for document resubmission?');">
+                                @csrf
+                                @method('PATCH')
+                                @php
+                                    $resubReqCanon = static fn ($type) => \App\Enums\DocumentType::canonicalValue($type);
+                                    $resubReqTypes = array_values(array_unique(array_merge(
+                                        $program->requiredDocumentCanonicalValues(),
+                                        $application->documents->map(fn ($d) => $resubReqCanon($d->document_type))->all(),
+                                    )));
+                                    $resubReqLabels = [];
+                                    foreach ($resubReqTypes as $canon) {
+                                        $label = $canon;
+                                        foreach (\App\Enums\DocumentType::cases() as $type) {
+                                            if ($resubReqCanon($type) === $canon) {
+                                                $label = $type->label();
+                                                break;
+                                            }
+                                        }
+                                        $resubReqLabels[$canon] = $label;
+                                    }
+                                @endphp
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold text-dark">
+                                        Documents to Re-upload <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="border rounded-3 bg-white p-3" style="max-height: 220px; overflow-y: auto;">
+                                        @foreach ($resubReqLabels as $resubReqCanonValue => $resubReqLabel)
+                                            <label class="d-flex align-items-start gap-2 small mb-2">
+                                                <input type="checkbox" class="form-check-input mt-1"
+                                                    name="requested_documents[]" value="{{ $resubReqCanonValue }}"
+                                                    @checked(in_array($resubReqCanonValue, (array) old('requested_documents', []), true))>
+                                                <span>{{ $resubReqLabel }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                    @error('requested_documents')
+                                        <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
+                                    @enderror
+                                    <div class="form-text small text-secondary">
+                                        Select at least one document you want the student to replace or provide a clearer copy of.
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold text-dark" for="resubmission_notes">
+                                        Resubmission Notes <span class="text-danger">*</span>
+                                    </label>
+                                    <textarea class="form-control" id="resubmission_notes" name="resubmission_notes" rows="3"
+                                        placeholder="e.g., Uploaded COR is unreadable. Please upload a clear copy."
+                                        required minlength="5" maxlength="1000">{{ old('resubmission_notes') }}</textarea>
+                                    <div class="form-text small text-secondary">
+                                        Mandatory. Displayed to the student on their application page.
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-warning w-100 fw-semibold text-dark">
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i> Request Document Resubmission
+                                </button>
+                            </form>
+                        </div>
                     @elseif ($isVerified)
                         {{-- Application Verified (read-only) --}}
                         <div class="p-4 text-center">

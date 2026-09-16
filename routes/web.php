@@ -157,6 +157,7 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
             ->name('verification.documents.show');
         Route::patch('/applications/{application}/verify', [ApplicantVerificationController::class, 'verify'])->name('applications.verify');
         Route::patch('/applications/{application}/reject', [ApplicantVerificationController::class, 'reject'])->name('applications.reject');
+        Route::patch('/applications/{application}/request-resubmission', [ApplicantVerificationController::class, 'requestResubmission'])->name('applications.request-resubmission');
         Route::post('/verification/{application}/update', [ApplicantVerificationController::class, 'updateStatus'])->name('verification.update');
         Route::patch('/verification/{application}/approve', [FassgVerificationController::class, 'approve'])->name('verification.approve');
         Route::patch('/verification/{application}/reject', [FassgVerificationController::class, 'reject'])->name('verification.reject');
