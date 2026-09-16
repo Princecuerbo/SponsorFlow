@@ -5,13 +5,6 @@
 @section('page-title', 'Generated Batches')
 
 @push('styles')
-    <style>
-        .badge-info-custom {
-            background-color: #e0f2fe !important;
-            color: #0369a1 !important;
-            border: 1px solid #bae6fd !important;
-        }
-    </style>
 @endpush
 
 @section('content')
@@ -58,13 +51,21 @@
                             </div>
                             <div class="d-flex align-items-center gap-2">
                                 @php($listStatus = strtolower($list->status->value ?? (string) $list->status))
-                                @if ($listStatus === 'saved')
-                                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-2 fw-semibold d-inline-flex align-items-center gap-1">
-                                        <i class="bi bi-pencil-square"></i>Reviewing
+                                @if ($listStatus === 'saved' || $listStatus === 'draft')
+                                    <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle px-2 py-2 fw-semibold d-inline-flex align-items-center gap-1">
+                                        <i class="bi bi-pencil-square"></i>Saved
                                     </span>
                                 @elseif ($listStatus === 'submitted')
-                                    <span class="badge badge-info-custom px-2 py-2 fw-semibold d-inline-flex align-items-center gap-1">
-                                        <i class="bi bi-send me-1"></i>Forwarded to Sponsor
+                                    <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle px-2 py-2 fw-semibold d-inline-flex align-items-center gap-1">
+                                        <i class="bi bi-send me-1"></i>Submitted to Sponsor
+                                    </span>
+                                @elseif ($listStatus === 'approved')
+                                    <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-2 py-2 fw-semibold d-inline-flex align-items-center gap-1">
+                                        <i class="bi bi-check-circle me-1"></i>Approved by Sponsor
+                                    </span>
+                                @elseif ($listStatus === 'rejected')
+                                    <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle px-2 py-2 fw-semibold d-inline-flex align-items-center gap-1">
+                                        <i class="bi bi-x-circle me-1"></i>Rejected
                                     </span>
                                 @else
                                     <span class="badge bg-light text-secondary border px-2 py-2 fw-semibold">
