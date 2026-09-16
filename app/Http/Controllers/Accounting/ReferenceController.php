@@ -68,6 +68,28 @@ class ReferenceController extends Controller
         ]);
     }
 
+    public function showFixedListReference(Request $request, FixedList $fixedList): View
+    {
+        abort_unless($fixedList->status === FixedListStatus::Approved, 404);
+        abort_unless($fixedList->fassg_assigned_at !== null, 404);
+
+        $approval = $fixedList->latestApproval;
+        abort_unless($approval?->confirmation_status === ConfirmationStatus::Confirmed, 404);
+
+        $fixedList->load([
+            'sponsorshipProgram.sponsor',
+            'latestApproval',
+            'items.application.studentProfile.user',
+            'items.fassgAssignedBy',
+        ]);
+
+        return view('accounting.beneficiaries.show', [
+            'user' => $this->actor($request),
+            'fixedList' => $fixedList,
+            'approval' => $approval,
+        ]);
+    }
+
     public function viewDocument(Request $request, Application $application): BinaryFileResponse
     {
         return $this->viewApplicationDocument($request, $application);
@@ -279,6 +301,8 @@ class ReferenceController extends Controller
 
                 return [
                     'source' => 'confirmed_fixed_list',
+                    'fixed_list_id' => $item->fixed_list_id,
+                    'item_id' => $item->id,
                     'application_id' => $item->application_id,
                     'student_id_number' => $item->student_id_number,
                     'student_name' => $item->student_name,

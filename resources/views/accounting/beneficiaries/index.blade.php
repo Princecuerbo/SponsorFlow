@@ -238,7 +238,12 @@
                                         class="badge {{ !empty($beneficiary['application_id']) ? 'bg-primary-subtle text-primary-emphasis border border-primary-subtle' : 'bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle' }} fw-semibold">
                                         {{ $beneficiary['reference_label'] ?? (!empty($beneficiary['application_id']) ? 'Application Batch' : 'Fixed List') }}
                                     </span>
-                                    @if (!empty($beneficiary['application_id']))
+                                    @if (!empty($beneficiary['fixed_list_id']))
+                                        <a href="{{ route('accounting.beneficiaries.reference', $beneficiary['fixed_list_id']) }}"
+                                            class="btn btn-sm btn-outline-secondary mt-1">
+                                            <i class="bi bi-eye me-1"></i>View Reference
+                                        </a>
+                                    @elseif (!empty($beneficiary['application_id']))
                                         <a href="{{ route('accounting.beneficiaries.show', $beneficiary['application_id']) }}"
                                             class="btn btn-sm btn-outline-secondary mt-1">
                                             <i class="bi bi-eye me-1"></i>View Reference

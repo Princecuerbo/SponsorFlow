@@ -232,6 +232,7 @@ Route::middleware(['auth', 'EnsureUserRole:accounting'])
         Route::get('/beneficiaries', [ReferenceController::class, 'index'])->name('beneficiaries.index');
         Route::get('/beneficiaries/export', [ReferenceController::class, 'export'])->name('beneficiaries.export');
         Route::get('/beneficiaries/{application}', [ReferenceController::class, 'show'])->name('beneficiaries.show');
+        Route::get('/beneficiaries/{fixedList}/reference', [ReferenceController::class, 'showFixedListReference'])->name('beneficiaries.reference');
         Route::get('/applications/{application}/document', [ReferenceController::class, 'viewApplicationDocument'])->name('applications.document');
         Route::get('/applications/{application}/document-reference', [ReferenceController::class, 'viewApplicationDocument'])->name('documents.view');
         Route::get('/fixed-lists/{fixedList}/document', [ReferenceController::class, 'viewFixedListDocument'])->name('fixed-lists.document');
