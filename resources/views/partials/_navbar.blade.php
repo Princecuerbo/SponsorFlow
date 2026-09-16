@@ -6,7 +6,7 @@
 @endphp
 
 <nav class="sf-navbar navbar bg-white border-bottom py-0 sticky-top" style="min-height:60px;">
-    <div class="container-fluid d-flex align-items-center justify-content-between gap-2 gap-xl-3 py-2 px-3 px-xl-4 flex-nowrap" style="min-width: 0;">
+    <div class="container-fluid d-flex w-100 align-items-center justify-content-between gap-2 gap-xl-3 py-2 px-3 px-xl-4 flex-nowrap" style="min-width: 0;">
 
         {{-- Brand --}}
         <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-decoration-none flex-shrink-0"
@@ -20,7 +20,7 @@
 
         {{-- Navigation Links --}}
         <div class="d-none d-md-block sf-navbar-center">
-            <ul class="navbar-nav d-flex flex-row align-items-center gap-1 gap-xl-3 flex-nowrap mb-0"
+            <ul class="navbar-nav d-flex flex-row align-items-center gap-1 gap-xl-2 flex-nowrap mb-0"
                 style="width: max-content; margin: 0 auto;">
 
                 {{-- Student --}}
@@ -65,26 +65,17 @@
                             <i class="bi bi-briefcase"></i> Programs
                         </a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link sf-topnav-link sf-verification-link dropdown-toggle {{ request()->routeIs('fassg.sle-fhe.*') ? 'active' : '' }}"
-                            href="#" id="fassgVerificationDropdown" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="bi bi-patch-check"></i> Verification
+<li class="nav-item">
+                        <a class="nav-link sf-topnav-link {{ request()->routeIs('fassg.sle-fhe.index') ? 'active' : '' }}"
+                            href="{{ route('fassg.sle-fhe.index') }}">
+                            <i class="bi bi-patch-check"></i> SLE-FHE Verification
                         </a>
-                        <ul class="dropdown-menu sf-verification-menu shadow" aria-labelledby="fassgVerificationDropdown">
-                            <li>
-                                <a class="dropdown-item {{ request()->routeIs('fassg.sle-fhe.index') ? 'active' : '' }}"
-                                    href="{{ route('fassg.sle-fhe.index') }}">
-                                    <i class="bi bi-clipboard-check me-2"></i> SLE-FHE Verification
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item {{ request()->routeIs('fassg.sle-fhe.verified') ? 'active' : '' }}"
-                                    href="{{ route('fassg.sle-fhe.verified') }}">
-                                    <i class="bi bi-person-check me-2"></i> Verified Students
-                                </a>
-                            </li>
-                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sf-topnav-link {{ request()->routeIs('fassg.sle-fhe.verified') ? 'active' : '' }}"
+                            href="{{ route('fassg.sle-fhe.verified') }}">
+                            <i class="bi bi-person-check"></i> Verified Students
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link sf-topnav-link {{ request()->routeIs('fassg.applications.index') ? 'active' : '' }}"
@@ -479,22 +470,14 @@
         border-radius: 9999px;
     }
 
-    .sf-verification-menu {
-        min-width: max-content;
-    }
-
-    .sf-verification-menu .dropdown-item.active {
-        background-color: #eef2f6 !important;
-        color: #0f294a !important;
-    }
-
     .sf-topnav-link {
         color: #475569 !important;
         font-weight: 500;
-        font-size: 0.825rem;
+        font-size: 0.8rem;
+        line-height: 1.25;
         transition: all 0.15s ease-in-out;
         white-space: nowrap;
-        padding: 0.5rem 0.65rem;
+        padding: 0.375rem 0.5rem;
         border-radius: 6px;
     }
 
@@ -525,15 +508,3 @@
         color: #0f294a !important;
     }
 </style>
-
-<script>
-    document.querySelectorAll('.sf-navbar-center .dropdown-toggle').forEach(function (toggle) {
-        var center = toggle.closest('.sf-navbar-center');
-        toggle.addEventListener('show.bs.dropdown', function () {
-            center.style.overflowX = 'visible';
-        });
-        toggle.addEventListener('hidden.bs.dropdown', function () {
-            center.style.overflowX = '';
-        });
-    });
-</script>
