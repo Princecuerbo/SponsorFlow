@@ -79,6 +79,10 @@ class ReferenceController extends Controller
         $fixedList->load([
             'sponsorshipProgram.sponsor',
             'latestApproval',
+            'items' => function ($query): void {
+                $query->where('is_sle_fhe_verified', true)
+                    ->whereDoesntHave('application', fn ($applicationQuery) => $applicationQuery->where('status', ApplicationStatus::Rejected));
+            },
             'items.application.studentProfile.user',
             'items.fassgAssignedBy',
         ]);
@@ -313,7 +317,7 @@ class ReferenceController extends Controller
                     'category' => $program->category->value,
                     'sponsor' => $program->sponsor->company_organization_name,
                     'billing_contact' => $program->sponsor->contact_person,
-                    'gwa' => null,
+                    'gwa' => $application?->gpa_submitted,
                     'address' => $isGenerated
                         ? ($application?->address_submitted ?? $profile?->full_address)
                         : null,

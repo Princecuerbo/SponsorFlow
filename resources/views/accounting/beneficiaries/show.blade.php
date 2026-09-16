@@ -150,6 +150,7 @@
                             <th class="ps-4">Student ID Number</th>
                             <th>Full Name</th>
                             <th>Course &amp; Year</th>
+                            <th>GWA / GPA</th>
                             <th>Campus</th>
                             <th>Source</th>
                             <th>Rurality</th>
@@ -165,6 +166,16 @@
                                     {{ $item->course ?: '—' }}
                                     @if ($item->year_level)
                                         <div class="small text-secondary">Year {{ $item->year_level }}</div>
+                                    @endif
+                                </td>
+                                <td>
+                                    @php
+                                        $gwa = $item->application?->gpa_submitted ?? $item->gwa;
+                                    @endphp
+                                    @if ($gwa !== null)
+                                        {{ number_format((float) $gwa, 2) }}
+                                    @else
+                                        <span class="text-secondary">—</span>
                                     @endif
                                 </td>
                                 <td>{{ $item->campus ?: 'N/A' }}</td>
@@ -200,7 +211,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center text-secondary py-5">
+                                <td colspan="8" class="text-center text-secondary py-5">
                                     <div class="fw-semibold text-dark">No beneficiary records in this batch.</div>
                                 </td>
                             </tr>
