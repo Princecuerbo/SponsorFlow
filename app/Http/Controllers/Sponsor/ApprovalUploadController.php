@@ -12,8 +12,8 @@ use App\Models\Application;
 use App\Models\FixedList;
 use App\Models\Sponsor;
 use App\Models\SponsorApproval;
-use App\Models\StudentProfile;
 use App\Models\SponsorshipProgram;
+use App\Models\StudentProfile;
 use App\Notifications\ApplicationStatusUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -68,9 +68,26 @@ class ApprovalUploadController extends Controller
             ]);
         }
 
-        DB::transaction(function () use ($fixedList, $approval): void {
+        DB::transaction(function () use ($fixedList, $approval, $request): void {
             $approval->update(['confirmation_status' => ConfirmationStatus::Confirmed]);
-            $fixedList->update(['status' => FixedListStatus::Approved]);
+
+            // Automatic Accounting hand-off: stamp FASSG assignment on the batch
+            // and all eligible items so verified beneficiaries appear in Accounting
+            // immediately without requiring a manual post-sponsor assignment step.
+            $fixedList->items()
+                ->where('is_sle_fhe_verified', true)
+                ->whereDoesntHave('application', fn ($query) => $query->where('status', ApplicationStatus::Rejected))
+                ->update([
+                    'fassg_assigned_at' => now(),
+                    'fassg_assigned_by_id' => $this->actor($request)->id,
+                ]);
+
+            $fixedList->update([
+                'status' => FixedListStatus::Approved,
+                'fassg_assigned_at' => now(),
+                'fassg_assigned_by_id' => $this->actor($request)->id,
+            ]);
+
             $program = SponsorshipProgram::query()
                 ->lockForUpdate()
                 ->findOrFail($fixedList->sponsorship_program_id);
@@ -120,7 +137,7 @@ class ApprovalUploadController extends Controller
         abort_unless(is_file($path), 404, 'Approval document not found.');
 
         return response()->file($path, [
-            'Content-Disposition' => 'inline; filename="' . basename($sponsorApproval->approval_document_path) . '"',
+            'Content-Disposition' => 'inline; filename="'.basename($sponsorApproval->approval_document_path).'"',
         ]);
     }
 
@@ -149,7 +166,7 @@ class ApprovalUploadController extends Controller
 
         $applications = Application::query()
             ->where('sponsorship_program_id', $fixedList->sponsorship_program_id)
-            ->whereHas('studentProfile', fn($query) => $query->whereIn('student_id_number', $studentIds))
+            ->whereHas('studentProfile', fn ($query) => $query->whereIn('student_id_number', $studentIds))
             ->where('status', ApplicationStatus::Pending)
             ->with('studentProfile')
             ->get();

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Fassg;
 
+use App\Enums\ApplicationStatus;
 use App\Enums\FixedListItemStatus;
 use App\Enums\FixedListStatus;
-use App\Enums\ApplicationStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Fassg\ImportFixedListRequest;
@@ -17,9 +17,9 @@ use App\Models\SponsorshipProgram;
 use App\Notifications\ApplicationStatusUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
-use Illuminate\Http\UploadedFile;
 use SplFileObject;
 
 class FixedListController extends Controller
@@ -342,34 +342,6 @@ class FixedListController extends Controller
             : "Endorsement removed for {$fixedListItem->student_name}.");
     }
 
-    public function assignFassg(Request $request, FixedList $fixedList): RedirectResponse
-    {
-        abort_unless(
-            in_array($fixedList->status, [FixedListStatus::Approved, FixedListStatus::Submitted], true),
-            403,
-            'This list cannot be assigned yet.',
-        );
-
-        DB::transaction(function () use ($fixedList, $request): void {
-            $fixedList->update([
-                'fassg_assigned_at' => now(),
-                'fassg_assigned_by_id' => $this->actor($request)->id,
-            ]);
-
-            $fixedList->items()
-                ->where('is_sle_fhe_verified', true)
-                ->whereDoesntHave('application', fn($query) => $query->where('status', ApplicationStatus::Rejected))
-                ->update([
-                    'fassg_assigned_at' => now(),
-                    'fassg_assigned_by_id' => $this->actor($request)->id,
-                ]);
-        });
-
-        $this->audit($request, 'fassg.fixed_list.fassg_assigned', 'fixed_lists');
-
-        return back()->with('status', 'FASSG assignment recorded. Accounting can now view beneficiary payout rows.');
-    }
-
     private function assertListEditable(FixedList $fixedList): void
     {
         abort_unless(
@@ -403,11 +375,11 @@ class FixedListController extends Controller
                 continue;
             }
 
-            $row = array_map(static fn($value) => is_string($value) ? trim($value) : $value, $row);
+            $row = array_map(static fn ($value) => is_string($value) ? trim($value) : $value, $row);
 
             if ($header === null) {
                 $header = array_map(
-                    static fn($value) => strtolower(str_replace(' ', '_', (string) $value)),
+                    static fn ($value) => strtolower(str_replace(' ', '_', (string) $value)),
                     $row,
                 );
 

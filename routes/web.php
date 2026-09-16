@@ -190,8 +190,6 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
             ->name('fixed-lists.items.verify');
         Route::patch('/fixed-lists/{fixedList}/items/{fixedListItem}/endorse', [FixedListController::class, 'endorseItem'])
             ->name('fixed-lists.items.endorse');
-        Route::patch('/fixed-lists/{fixedList}/assign-fassg', [FixedListController::class, 'assignFassg'])
-            ->name('fixed-lists.assign-fassg');
 
         Route::get('/generated-batches', [FixedListController::class, 'generatedIndex'])->name('generated-batches.index');
         Route::get('/generated-batches/{fixedList}', [FixedListController::class, 'showGenerated'])->name('generated-batches.show');

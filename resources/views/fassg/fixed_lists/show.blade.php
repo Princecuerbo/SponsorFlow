@@ -264,29 +264,25 @@
                         </form>
                     </div>
                 </div>
-            @endif
-            @if ($list->status === \App\Enums\FixedListStatus::Approved && blank($list->fassg_assigned_at))
+            @elseif ($list->status === \App\Enums\FixedListStatus::Submitted)
                 <div class="card sf-card border-0 shadow-sm">
                     <div class="card-body p-4 text-center">
-                        <h3 class="h6 fw-bold mb-2"><i class="bi bi-lock-fill me-1 text-success"></i>Complete FASSG Assignment</h3>
-                        <p class="text-secondary small mb-3">Record this list as FASSG-assigned before Accounting can view its
-                            beneficiary payout rows.</p>
-                        <form method="POST" action="{{ route('fassg.fixed-lists.assign-fassg', $list) }}">
-                            @csrf
-                            @method('PATCH')
-                            <button type="submit" class="btn btn-success w-100 py-2"
-                                onClick="return confirm('Record this list as FASSG-assigned? Verified students become visible to Accounting.');">
-                                <i class="bi bi-check-lg me-1"></i>Complete FASSG Assignment
-                            </button>
-                        </form>
+                        <h3 class="h6 fw-bold mb-2"><i class="bi bi-hourglass-split me-1 text-info"></i>Submitted to Sponsor</h3>
+                        <p class="text-secondary small mb-3">This list is awaiting sponsor review and approval.</p>
+                        <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle px-3 py-2 fw-semibold">
+                            <i class="bi bi-send me-1"></i>Submitted to Sponsor (Awaiting Sponsor Approval)
+                        </span>
                     </div>
                 </div>
-            @elseif ($list->status === \App\Enums\FixedListStatus::Approved && $list->fassg_assigned_at !== null)
+            @elseif ($list->status === \App\Enums\FixedListStatus::Approved)
                 <div class="card sf-card border-0 shadow-sm">
                     <div class="card-body p-4 text-center">
-                        <h3 class="h6 fw-bold mb-2 text-success"><i class="bi bi-lock-fill me-1"></i>FASSG Assigned</h3>
-                        <p class="text-secondary small mb-0">Assigned {{ $list->fassg_assigned_at?->format('M d, Y h:i A') }}.
-                            Verified students are visible to Accounting.</p>
+                        <h3 class="h6 fw-bold mb-2 text-success"><i class="bi bi-check-circle-fill me-1"></i>Approved by Sponsor</h3>
+                        <p class="text-secondary small mb-3">The sponsor has confirmed this list. Verified beneficiaries
+                            have been forwarded to Accounting automatically.</p>
+                        <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-3 py-2 fw-semibold">
+                            <i class="bi bi-patch-check me-1"></i>Approved by Sponsor
+                        </span>
                     </div>
                 </div>
             @endif

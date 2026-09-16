@@ -30,10 +30,10 @@ class ApplicantVerificationController extends Controller
 
     public function index(Request $request): View
     {
-        $search    = $request->string('q')->trim()->toString();
+        $search = $request->string('q')->trim()->toString();
         $programId = $request->integer('program_id', 0);
-        $campus    = $request->string('campus')->trim()->toString();
-        $status    = $request->string('status')->trim()->toString();
+        $campus = $request->string('campus')->trim()->toString();
+        $status = $request->string('status')->trim()->toString();
 
         $statusEnum = $status !== ''
             ? collect(ApplicationStatus::cases())->first(
@@ -81,25 +81,25 @@ class ApplicantVerificationController extends Controller
         $scoped = Application::query()
             ->whereHas('studentProfile', fn ($q) => $q->where('is_sle_fhe_verified', true));
 
-        $pendingCount      = (clone $scoped)->where('status', ApplicationStatus::Pending)->count();
-        $verifiedCount     = (clone $scoped)->where('status', ApplicationStatus::Verified)->count();
-        $approvedCount     = (clone $scoped)->where('status', ApplicationStatus::Approved)->count();
+        $pendingCount = (clone $scoped)->where('status', ApplicationStatus::Pending)->count();
+        $verifiedCount = (clone $scoped)->where('status', ApplicationStatus::Verified)->count();
+        $approvedCount = (clone $scoped)->where('status', ApplicationStatus::Approved)->count();
         $resubmissionCount = (clone $scoped)->where('status', ApplicationStatus::ResubmissionRequested)->count();
-        $rejectedCount     = (clone $scoped)->where('status', ApplicationStatus::Rejected)->count();
+        $rejectedCount = (clone $scoped)->where('status', ApplicationStatus::Rejected)->count();
 
         return view('fassg.applications.index', [
-            'user'                 => $this->actor($request),
-            'pendingApplications'  => $applications,
-            'pendingCount'         => $pendingCount,
-            'verifiedCount'        => $verifiedCount,
-            'approvedCount'        => $approvedCount,
-            'resubmissionCount'    => $resubmissionCount,
-            'rejectedCount'        => $rejectedCount,
-            'programs'             => $programs,
-            'selectedProgram'      => $selectedProgram,
-            'availableSlots'       => $selectedProgram?->available_slots ?? null,
-            'selectedProgramId'    => $programId,
-            'selectedStatus'       => $statusEnum?->value,
+            'user' => $this->actor($request),
+            'pendingApplications' => $applications,
+            'pendingCount' => $pendingCount,
+            'verifiedCount' => $verifiedCount,
+            'approvedCount' => $approvedCount,
+            'resubmissionCount' => $resubmissionCount,
+            'rejectedCount' => $rejectedCount,
+            'programs' => $programs,
+            'selectedProgram' => $selectedProgram,
+            'availableSlots' => $selectedProgram?->available_slots ?? null,
+            'selectedProgramId' => $programId,
+            'selectedStatus' => $statusEnum?->value,
         ]);
     }
 
@@ -118,12 +118,13 @@ class ApplicantVerificationController extends Controller
         $applications = Application::query()
             ->where('sponsorship_program_id', $programId)
             ->whereIn('id', $applicationIds)
+            ->whereIn('status', [ApplicationStatus::Verified])
             ->with('studentProfile.user')
             ->get();
 
         if ($applications->isEmpty()) {
             return back()->withErrors([
-                'selected_applications' => 'Select at least one application belonging to the target program.',
+                'selected_applications' => 'Select at least one eligible (Verified) application belonging to the target program. Rejected and Pending applications cannot be bundled into a batch.',
             ]);
         }
 
@@ -144,7 +145,7 @@ class ApplicantVerificationController extends Controller
                 }
 
                 $name = $profile->user?->name ?? trim(
-                    ($profile->first_name ?? '') . ' ' . ($profile->middle_name ?? '') . ' ' . ($profile->last_name ?? '')
+                    ($profile->first_name ?? '').' '.($profile->middle_name ?? '').' '.($profile->last_name ?? '')
                 );
 
                 $list->items()->updateOrCreate(
@@ -295,8 +296,8 @@ class ApplicantVerificationController extends Controller
         }
 
         $application->update([
-            'status'              => ApplicationStatus::ResubmissionRequested,
-            'resubmission_notes'  => trim($validated['resubmission_notes']),
+            'status' => ApplicationStatus::ResubmissionRequested,
+            'resubmission_notes' => trim($validated['resubmission_notes']),
             'requested_documents' => array_values(array_unique($validated['requested_documents'])),
         ]);
 
@@ -345,7 +346,7 @@ class ApplicantVerificationController extends Controller
         $path = Storage::disk('public')->path($applicationDocument->file_path);
         abort_unless(is_file($path), 404, 'Document file not found.');
 
-        $fileName = addcslashes(basename($applicationDocument->file_name), "\\\"");
+        $fileName = addcslashes(basename($applicationDocument->file_name), '\\"');
         $mimeType = mime_content_type($path) ?: 'application/octet-stream';
 
         return response()->file($path, [
