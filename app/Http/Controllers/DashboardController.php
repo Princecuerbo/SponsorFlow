@@ -28,52 +28,52 @@ class DashboardController extends Controller
             $studentProfile = $user->studentProfile;
             $applications = $studentProfile
                 ? Application::query()
-                ->with('sponsorshipProgram')
-                ->where('student_profile_id', $studentProfile->id)
-                ->latest()
-                ->get()
+                    ->with('sponsorshipProgram')
+                    ->where('student_profile_id', $studentProfile->id)
+                    ->latest()
+                    ->get()
                 : collect();
             $latestApplication = $studentProfile
                 ? Application::query()
-                ->with(['sponsorshipProgram.sponsor', 'documents'])
-                ->where('student_profile_id', $studentProfile->id)
-                ->latest()
-                ->first()
+                    ->with(['sponsorshipProgram.sponsor', 'documents'])
+                    ->where('student_profile_id', $studentProfile->id)
+                    ->latest()
+                    ->first()
                 : null;
 
             $pendingApplicationsCount = $studentProfile
                 ? Application::query()
-                ->where('student_profile_id', $studentProfile->id)
-                ->whereIn('status', [
-                    ApplicationStatus::Pending,
-                    ApplicationStatus::Verified,
-                    ApplicationStatus::ResubmissionRequested,
-                    'FASSG Verified',
-                    'Sponsor Reviewed',
-                ])
-                ->count()
+                    ->where('student_profile_id', $studentProfile->id)
+                    ->whereIn('status', [
+                        ApplicationStatus::Pending,
+                        ApplicationStatus::Verified,
+                        ApplicationStatus::ResubmissionRequested,
+                        'FASSG Verified',
+                        'Sponsor Reviewed',
+                    ])
+                    ->count()
                 : 0;
 
             $activeGrant = $studentProfile
                 ? Application::query()
-                ->with('sponsorshipProgram.sponsor')
-                ->where('student_profile_id', $studentProfile->id)
-                ->where('status', ApplicationStatus::Approved)
-                ->whereHas('sponsorshipProgram', function ($query): void {
-                    $query->whereIn('status', [ProgramStatus::Open, ProgramStatus::Closed]);
-                })
-                ->latest('approved_at')
-                ->first()
+                    ->with('sponsorshipProgram.sponsor')
+                    ->where('student_profile_id', $studentProfile->id)
+                    ->where('status', ApplicationStatus::Approved)
+                    ->whereHas('sponsorshipProgram', function ($query): void {
+                        $query->whereIn('status', [ProgramStatus::Open, ProgramStatus::Closed]);
+                    })
+                    ->latest('approved_at')
+                    ->first()
                 : null;
 
             $activeSponsorships = $studentProfile
                 ? Application::query()
-                ->where('student_profile_id', $studentProfile->id)
-                ->whereIn('status', [
-                    ApplicationStatus::Approved,
-                    ApplicationStatus::Ongoing,
-                ])
-                ->count()
+                    ->where('student_profile_id', $studentProfile->id)
+                    ->whereIn('status', [
+                        ApplicationStatus::Approved,
+                        ApplicationStatus::Ongoing,
+                    ])
+                    ->count()
                 : 0;
 
             return view('dashboard', [
@@ -121,9 +121,6 @@ class DashboardController extends Controller
 
             $pendingVerificationCount = StudentProfile::query()
                 ->where('is_sle_fhe_verified', false)
-                ->count()
-                + Application::query()
-                ->where('status', ApplicationStatus::Pending)
                 ->count();
 
             $recentPrograms = SponsorshipProgram::query()
@@ -142,7 +139,7 @@ class DashboardController extends Controller
 
             $confirmedFixedListNamesCount = FixedList::query()
                 ->where('status', FixedListStatus::Approved)
-                ->whereHas('latestApproval', fn($q) => $q->where('confirmation_status', ConfirmationStatus::Confirmed))
+                ->whereHas('latestApproval', fn ($q) => $q->where('confirmation_status', ConfirmationStatus::Confirmed))
                 ->withCount('items')
                 ->get()
                 ->sum('items_count');
@@ -152,11 +149,11 @@ class DashboardController extends Controller
             return view('fassg.dashboard', [
                 'user' => $user,
                 'stats' => [
-                    'total_applicants' => Application::distinct('student_profile_id')->count('student_profile_id'),
+                    'total_applicants' => Application::count(),
                     'verified_sle_fhe' => StudentProfile::query()
                         ->where(function ($query): void {
                             $query->where('is_sle_fhe_verified', true)
-                                ->orWhereHas('applications', fn($applicationQuery) => $applicationQuery->whereIn('status', [
+                                ->orWhereHas('applications', fn ($applicationQuery) => $applicationQuery->whereIn('status', [
                                     ApplicationStatus::Verified,
                                     ApplicationStatus::Approved,
                                     ApplicationStatus::Ongoing,

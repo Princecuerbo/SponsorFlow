@@ -6,7 +6,6 @@ use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
 use App\Enums\FixedListStatus;
 use App\Enums\ProgramCategory;
-use App\Enums\ProgramStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
@@ -322,22 +321,16 @@ class ReportsController extends Controller
             ->select('id', 'program_name', 'total_slots', 'available_slots', 'status')
             ->orderBy('program_name')
             ->get()
-            ->map(function (SponsorshipProgram $program) use ($term, $campus, $termScope, $campusScope): SponsorshipProgram {
-                $isOpen = $program->status === ProgramStatus::Open;
-
-                $filledSlots = $isOpen
-                    ? $program->applications()
-                        ->when($term !== null, $termScope)
-                        ->when($campus !== '', $campusScope)
-                        ->where('status', ApplicationStatus::Approved)
-                        ->distinct('student_profile_id')
-                        ->count('student_profile_id')
-                    : $program->applications()
-                        ->when($term !== null, $termScope)
-                        ->when($campus !== '', $campusScope)
-                        ->previouslyApprovedBeneficiaries()
-                        ->distinct('student_profile_id')
-                        ->count('student_profile_id');
+            ->map(function (SponsorshipProgram $program): SponsorshipProgram {
+                $filledSlots = FixedListItem::query()
+                    ->whereHas('fixedList', fn ($q) => $q
+                        ->where('sponsorship_program_id', $program->id)
+                        ->whereNotNull('fassg_assigned_at')
+                    )
+                    ->whereDoesntHave('application', fn ($q) => $q
+                        ->where('status', ApplicationStatus::Rejected)
+                    )
+                    ->count();
 
                 $program->setAttribute('approved_count', $filledSlots);
                 $program->setAttribute('available_slots', max(0, (int) $program->total_slots - $filledSlots));
