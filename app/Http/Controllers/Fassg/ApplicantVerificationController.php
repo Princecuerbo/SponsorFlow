@@ -115,16 +115,19 @@ class ApplicantVerificationController extends Controller
         $programId = (int) $validated['sponsorship_program_id'];
         $applicationIds = array_values(array_unique(array_map('intval', $validated['selected_applications'])));
 
+        // Pending and Verified applications (plus manually endorsed ones) can be
+        // bundled; only Rejected applications are excluded. Pending students are
+        // held back at the sponsor-submission gate, not at batch creation.
         $applications = Application::query()
             ->where('sponsorship_program_id', $programId)
             ->whereIn('id', $applicationIds)
-            ->whereIn('status', [ApplicationStatus::Verified])
+            ->whereNotIn('status', [ApplicationStatus::Rejected])
             ->with('studentProfile.user')
             ->get();
 
         if ($applications->isEmpty()) {
             return back()->withErrors([
-                'selected_applications' => 'Select at least one eligible (Verified) application belonging to the target program. Rejected and Pending applications cannot be bundled into a batch.',
+                'selected_applications' => 'Select at least one eligible application belonging to the target program. Rejected applications cannot be bundled into a batch.',
             ]);
         }
 

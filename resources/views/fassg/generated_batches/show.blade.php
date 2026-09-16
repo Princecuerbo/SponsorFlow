@@ -176,8 +176,9 @@
                         @if ($hasPending)
                             <div class="alert alert-warning text-xs mb-3">
                                 <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                                <strong>Action Required:</strong> Verify all pending student applications below before
-                                submitting this batch to the sponsor.
+                                <strong>Action Required:</strong> Pending students cannot be forwarded to the sponsor. Use
+                                the <span class="fw-semibold">View Application</span> link on each pending row below to
+                                verify their documents before submitting this batch.
                             </div>
                         @endif
 
