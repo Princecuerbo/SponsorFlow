@@ -140,7 +140,7 @@
     <section>
         <div class="d-flex align-items-center justify-content-between mb-3">
             <div>
-                <h2 class="h5 sf-heading mb-1 fw-bold">Sponsor-Provided Fixed Lists</h2>
+                <h2 class="h5 sf-heading mb-1 fw-bold">Submitted Beneficiary Batches</h2>
                 <p class="small text-secondary mb-0">Batch lists forwarded by FASSG for sponsor confirmation.</p>
             </div>
             <i class="bi bi-people fs-3" style="color: #0F2942;"></i>

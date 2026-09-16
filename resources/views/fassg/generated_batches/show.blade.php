@@ -95,6 +95,7 @@
                                 <th>Course &amp; Year</th>
                                 <th>Campus</th>
                                 <th>GWA</th>
+                                <th>Application Status</th>
                                 <th>SLE-FHE Status</th>
                                 <th>Endorsed</th>
                                 <th class="text-end pe-4">Action</th>
@@ -110,18 +111,19 @@
                                     </td>
                                     <td class="fw-semibold">
                                         {{ $item->student_name }}
-                                        @if ($item->application_id)
-                                            <a href="{{ route('fassg.applications.show', $item->application_id) }}"
-                                                class="d-block small text-primary text-decoration-none fw-normal">
-                                                <i class="bi bi-arrow-right-circle me-1"></i>View source application
-                                            </a>
-                                        @endif
                                     </td>
                                     <td class="sf-mono">{{ $item->student_id_number ?: 'N/A' }}</td>
                                     <td>{{ $item->course }} {{ $item->year_level ? "Year {$item->year_level}" : '' }}</td>
                                     <td>{{ $item->campus ?: 'N/A' }}</td>
                                     <td class="fw-semibold">
                                         {{ $item->application?->gpa_submitted !== null ? number_format((float) $item->application->gpa_submitted, 2) : '—' }}
+                                    </td>
+                                    <td>
+                                        @if ($item->application)
+                                            <x-status-badge :status="$item->application->status" />
+                                        @else
+                                            <span class="badge bg-light text-secondary border">No Application</span>
+                                        @endif
                                     </td>
                                     <td>
                                         <span class="badge {{ $item->is_sle_fhe_verified ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' : 'bg-warning-subtle text-warning-emphasis border border-warning-subtle' }}">
@@ -141,9 +143,17 @@
                                         @endif
                                     </td>
                                     <td class="text-end pe-4">
+                                        @if ($item->application_id)
+                                            <a href="{{ route('fassg.applications.show', $item->application_id) }}"
+                                                class="btn btn-sm btn-outline-primary fw-semibold"
+                                                title="View Source Application">
+                                                <i class="bi bi-file-earmark-person me-1"></i>View Application
+                                            </a>
+                                        @endif
                                         @if (!$item->is_sle_fhe_verified && $item->status !== \App\Enums\FixedListItemStatus::Endorsed)
                                             <form method="POST"
-                                                action="{{ route('fassg.fixed-lists.items.verify', [$list, $item]) }}">
+                                                action="{{ route('fassg.fixed-lists.items.verify', [$list, $item]) }}"
+                                                class="d-inline">
                                                 @csrf
                                                 @method('PATCH')
                                                 <button type="submit" class="btn btn-outline-navy btn-sm">Verify</button>
@@ -153,7 +163,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center text-secondary py-4">No applicants in this generated batch yet.</td>
+                                    <td colspan="10" class="text-center text-secondary py-4">No applicants in this generated batch yet.</td>
                                 </tr>
                             @endforelse
                         </tbody>
