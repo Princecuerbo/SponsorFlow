@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Sponsor;
 use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
 use App\Enums\FixedListStatus;
+use App\Enums\ProgramStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicProgram;
