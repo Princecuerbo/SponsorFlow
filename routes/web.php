@@ -193,6 +193,9 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
         Route::patch('/fixed-lists/{fixedList}/assign-fassg', [FixedListController::class, 'assignFassg'])
             ->name('fixed-lists.assign-fassg');
 
+        Route::get('/generated-batches', [FixedListController::class, 'generatedIndex'])->name('generated-batches.index');
+        Route::get('/generated-batches/{fixedList}', [FixedListController::class, 'showGenerated'])->name('generated-batches.show');
+
         Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
         Route::get('/reports/export-pdf', [ReportsController::class, 'exportPdf'])->name('reports.export-pdf');
         Route::get('/reports/export-csv', [ReportsController::class, 'exportCsv'])->name('reports.export-csv');

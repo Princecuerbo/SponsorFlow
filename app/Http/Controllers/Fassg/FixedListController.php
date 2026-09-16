@@ -31,6 +31,7 @@ class FixedListController extends Controller
         $lists = FixedList::query()
             ->with('sponsorshipProgram')
             ->withCount('items')
+            ->whereDoesntHave('items', fn ($query) => $query->whereNotNull('application_id'))
             ->latest()
             ->get();
 
@@ -39,6 +40,41 @@ class FixedListController extends Controller
             'lists' => $lists,
             'fixedLists' => $lists,
             'programs' => SponsorshipProgram::query()->orderBy('program_name')->get(),
+        ]);
+    }
+
+    public function generatedIndex(Request $request): View
+    {
+        $lists = FixedList::query()
+            ->with('sponsorshipProgram')
+            ->withCount('items')
+            ->whereHas('items', fn ($query) => $query->whereNotNull('application_id'))
+            ->latest()
+            ->get();
+
+        return view('fassg.generated_batches.index', [
+            'user' => $this->actor($request),
+            'lists' => $lists,
+            'fixedLists' => $lists,
+            'programs' => SponsorshipProgram::query()->orderBy('program_name')->get(),
+        ]);
+    }
+
+    public function showGenerated(Request $request, FixedList $fixedList): View
+    {
+        $fixedList->load(['sponsorshipProgram', 'items.application']);
+
+        $fixedList->setRelation(
+            'items',
+            $fixedList->items->sortBy(
+                static fn (FixedListItem $item) => $item->application?->gpa_submitted ?? PHP_FLOAT_MAX,
+            ),
+        );
+
+        return view('fassg.generated_batches.show', [
+            'user' => $this->actor($request),
+            'list' => $fixedList,
+            'fixedList' => $fixedList,
         ]);
     }
 

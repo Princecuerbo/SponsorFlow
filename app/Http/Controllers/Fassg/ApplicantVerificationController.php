@@ -183,7 +183,7 @@ class ApplicantVerificationController extends Controller
         $this->audit($request, 'fassg.fixed_list.generated_from_applications', 'fixed_lists');
 
         return redirect()
-            ->route('fassg.fixed-lists.show', $list)
+            ->route('fassg.generated-batches.show', $list)
             ->with('status', "Batch list '{$list->batch_name}' created from {$list->total_names} applicant(s). Review and submit when ready.");
     }
 

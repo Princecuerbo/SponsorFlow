@@ -83,6 +83,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link sf-topnav-link {{ request()->routeIs('fassg.generated-batches*') ? 'active' : '' }}"
+                            href="{{ route('fassg.generated-batches.index') }}">
+                            <i class="bi bi-boxes"></i> Generated Batches
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link sf-topnav-link {{ request()->routeIs('fassg.fixed*') ? 'active' : '' }}"
                             href="{{ route('fassg.fixed-lists.index') }}">
                             <i class="bi bi-list-check"></i> Fixed Lists
@@ -299,6 +305,12 @@
                             <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('fassg.applications.index') ? 'sf-mobile-active' : '' }}"
                                 href="{{ route('fassg.applications.index') }}" style="font-size: 0.925rem;">
                                 <i class="bi bi-inboxes fs-5 text-secondary"></i> Application Queue
+                            </a>
+                        </li>
+                        <li class="mt-1">
+                            <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('fassg.generated-batches*') ? 'sf-mobile-active' : '' }}"
+                                href="{{ route('fassg.generated-batches.index') }}" style="font-size: 0.925rem;">
+                                <i class="bi bi-boxes fs-5 text-secondary"></i> Generated Batches
                             </a>
                         </li>
                         <li class="mt-1">
