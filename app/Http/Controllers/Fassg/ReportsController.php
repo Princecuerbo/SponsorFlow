@@ -183,7 +183,7 @@ class ReportsController extends Controller
             ->when($term !== null, $termScope)
             ->when($campus !== '', $campusScope)
             ->when($sponsorshipProgramId > 0, $programScope)
-            ->when(!empty($linkedConfirmedAppIds), fn ($q) => $q->whereNotIn('id', $linkedConfirmedAppIds))
+            ->when(! empty($linkedConfirmedAppIds), fn ($q) => $q->whereNotIn('id', $linkedConfirmedAppIds))
             ->distinct('student_profile_id')
             ->count('student_profile_id');
 
@@ -345,7 +345,7 @@ class ReportsController extends Controller
             'by_barangay' => $baseProfileQuery()
                 ->whereNotNull('barangay')
                 ->where('barangay', '!=', '')
-                ->selectRaw("barangay as label, count(*) as total")
+                ->selectRaw('barangay as label, count(*) as total')
                 ->groupBy('barangay')
                 ->orderByDesc('total')
                 ->limit(10)
@@ -386,7 +386,7 @@ class ReportsController extends Controller
                     ->previouslyApprovedBeneficiaries()
                     ->when($term !== null, $termScope)
                     ->when($campus !== '', $campusScope)
-                    ->when(!empty($linkedAppIds), fn ($q) => $q->whereNotIn('id', $linkedAppIds))
+                    ->when(! empty($linkedAppIds), fn ($q) => $q->whereNotIn('id', $linkedAppIds))
                     ->count();
 
                 $filledSlots = $flItems->count() + $standaloneApprovedApps;
@@ -454,14 +454,18 @@ class ReportsController extends Controller
             'approvedByCategory' => $this->categoryTotals($approvedByCategory),
             'demographics' => $demographics,
             'report' => [
-                'slot_utilization_pct' => $programSlots > 0 ? round(($filledSlots / $programSlots) * 100, 1) : 0,
+                'slot_utilization_pct' => $programSlots > 0 ? round(($filledSlots / $programSlots) * 100, 1) : 0.0,
+                'utilization_rate' => $programSlots > 0 ? round(($filledSlots / $programSlots) * 100, 1) : 0.0,
                 'slots_filled' => $filledSlots,
                 'slots_total' => $programSlots,
                 'total_applicants' => array_sum($this->statusTotals($applicantCounts)),
                 'confirmed_beneficiaries' => $confirmedListNames,
                 'rural_pct' => $demographics['rural'] + $demographics['urban'] > 0
                     ? round(($demographics['rural'] / ($demographics['rural'] + $demographics['urban'])) * 100, 1)
-                    : 0,
+                    : 0.0,
+                'rural_rate' => $demographics['rural'] + $demographics['urban'] > 0
+                    ? round(($demographics['rural'] / ($demographics['rural'] + $demographics['urban'])) * 100, 1)
+                    : 0.0,
             ],
             'categoryBreakdown' => $categoryBreakdown,
             'genderDistribution' => $genderDistribution,
@@ -498,8 +502,8 @@ class ReportsController extends Controller
         $endYear = (int) $matches[2];
 
         return match ($semester) {
-            'First' => [sprintf('%04d-08-01 00:00:00', $startYear), sprintf('%04d-01-31 23:59:59', $endYear)],
-            'Second' => [sprintf('%04d-02-01 00:00:00', $endYear), sprintf('%04d-06-30 23:59:59', $endYear)],
+            'First', 'First Semester' => [sprintf('%04d-08-01 00:00:00', $startYear), sprintf('%04d-01-31 23:59:59', $endYear)],
+            'Second', 'Second Semester' => [sprintf('%04d-02-01 00:00:00', $endYear), sprintf('%04d-06-30 23:59:59', $endYear)],
             default => [sprintf('%04d-08-01 00:00:00', $startYear), sprintf('%04d-06-30 23:59:59', $endYear)],
         };
     }

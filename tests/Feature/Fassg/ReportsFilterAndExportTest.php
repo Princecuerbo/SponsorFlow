@@ -22,7 +22,9 @@ class ReportsFilterAndExportTest extends TestCase
     use RefreshDatabase;
 
     private User $fassg;
+
     private SponsorshipProgram $filterTestProgram;
+
     private SponsorshipProgram $otherProgram;
 
     protected function setUp(): void
@@ -31,8 +33,9 @@ class ReportsFilterAndExportTest extends TestCase
 
         $this->fassg = User::factory()->create(['role' => UserRole::Fassg]);
 
-        // Program 1: Group Category
+        // Program 1: Group Category (ID: 24 to match canonical DB)
         $this->filterTestProgram = SponsorshipProgram::factory()->create([
+            'id' => 24,
             'program_name' => 'FilterTest Grant',
             'category' => ProgramCategory::Group,
             'total_slots' => 5,
@@ -49,9 +52,9 @@ class ReportsFilterAndExportTest extends TestCase
             'status' => ProgramStatus::Open,
         ]);
 
-        // Student 1: Mati Campus, Urban, Female, BSIT
+        // Student 1: Unassigned Campus (like Maria Santos in canonical DB), Urban, Female, BSIT
         $profile1 = StudentProfile::factory()->create([
-            'campus' => 'Main Campus (City of Mati)',
+            'campus' => null,
             'is_rural' => false,
             'gender' => 'Female',
             'course' => 'Bachelor of Science in Information Technology',
@@ -67,10 +70,10 @@ class ReportsFilterAndExportTest extends TestCase
             'student_id_number' => '2024-00002',
         ]);
 
-        // Student 3: Mati Campus, Rural, Male, PolSci
+        // Student 3: Mati Campus, Urban, Male, PolSci
         $profile3 = StudentProfile::factory()->create([
             'campus' => 'Main Campus (City of Mati)',
-            'is_rural' => true,
+            'is_rural' => false,
             'gender' => 'Male',
             'course' => 'Bachelor of Arts in Political Science',
             'student_id_number' => '2024-00003',
@@ -254,5 +257,72 @@ class ReportsFilterAndExportTest extends TestCase
         $content = $csvResponse->getContent();
         $this->assertStringContainsString('FilterTest Grant', $content);
         $this->assertStringContainsString('20%,1,4,5', $content);
+    }
+
+    public function test_single_program_filter_pipeline(): void
+    {
+        // 1. Single Program Filter: GET /fassg/reports?sponsorship_program_id=24
+        $response = $this->actingAs($this->fassg)
+            ->get('/fassg/reports?sponsorship_program_id=24')
+            ->assertOk();
+
+        $report = $response->viewData('report');
+        $this->assertEquals(20.0, $report['utilization_rate']);
+        $this->assertEquals(3, $report['total_applicants']);
+        $this->assertEquals(1, $report['confirmed_beneficiaries']);
+    }
+
+    public function test_cross_filter_program_and_campus_pipeline(): void
+    {
+        // 2. Cross-Filter (Program + Campus): GET /fassg/reports?sponsorship_program_id=24&campus=Main+Campus+%28City+of+Mati%29
+        $response = $this->actingAs($this->fassg)
+            ->get('/fassg/reports?sponsorship_program_id=24&campus=Main+Campus+%28City+of+Mati%29')
+            ->assertOk();
+
+        $report = $response->viewData('report');
+        $this->assertEquals(0.0, $report['utilization_rate']);
+        $this->assertEquals(1, $report['total_applicants']);
+        $this->assertEquals(0, $report['confirmed_beneficiaries']);
+        $this->assertEquals(0.0, $report['rural_rate']);
+    }
+
+    public function test_cross_filter_program_academic_year_and_semester_pipeline(): void
+    {
+        // 3. Cross-Filter (Program + Academic Year + Semester): GET /fassg/reports?sponsorship_program_id=24&academic_year=2026-2027&semester=First+Semester
+        $response = $this->actingAs($this->fassg)
+            ->get('/fassg/reports?sponsorship_program_id=24&academic_year=2026-2027&semester=First+Semester')
+            ->assertOk();
+
+        $report = $response->viewData('report');
+        $this->assertEquals(3, $report['total_applicants']);
+        $this->assertEquals(1, $report['confirmed_beneficiaries']);
+    }
+
+    public function test_empty_multi_filter_out_of_range_pipeline(): void
+    {
+        // 4. Empty Multi-Filter (Out of Range): GET /fassg/reports?sponsorship_program_id=24&campus=NonExistentCampus
+        $response = $this->actingAs($this->fassg)
+            ->get('/fassg/reports?sponsorship_program_id=24&campus=NonExistentCampus')
+            ->assertOk();
+
+        $report = $response->viewData('report');
+        $this->assertEquals(0, $report['total_applicants']);
+        $this->assertEquals(0, $report['confirmed_beneficiaries']);
+        $this->assertEquals(0.0, $report['utilization_rate']);
+        $this->assertEquals(0.0, $report['rural_rate']);
+        $this->assertEquals(0, $report['slots_filled']);
+    }
+
+    public function test_all_four_filter_dropdowns_evaluate_correctly_in_combination(): void
+    {
+        // All 4 filter dropdowns combined: Program, Academic Year, Semester, Campus
+        $response = $this->actingAs($this->fassg)
+            ->get('/fassg/reports?sponsorship_program_id=24&academic_year=2026-2027&semester=First&campus=Main+Campus+%28City+of+Mati%29')
+            ->assertOk();
+
+        $report = $response->viewData('report');
+        $this->assertEquals(1, $report['total_applicants']);
+        $this->assertEquals(0, $report['confirmed_beneficiaries']);
+        $this->assertEquals(0.0, $report['utilization_rate']);
     }
 }
