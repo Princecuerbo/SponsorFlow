@@ -8,4 +8,5 @@ enum FixedListStatus: string
     case Submitted = 'Submitted';
     case Approved = 'Approved';
     case Rejected = 'Rejected';
+    case Saved = 'Saved';
 }

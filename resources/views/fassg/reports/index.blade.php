@@ -59,6 +59,7 @@
         $filterYear = $filters['academic_year'] ?? '';
         $filterSemester = $filters['semester'] ?? '';
         $filterCampus = $filters['campus'] ?? '';
+        $filterProgram = $filters['sponsorship_program_id'] ?? 0;
         $yearOptions = collect($academicYears ?? [])
             ->push(sprintf('%d-%d', now()->year, now()->year + 1))
             ->unique()
@@ -68,8 +69,19 @@
     <div class="card filter-card mb-4 rounded-3 no-print">
         <div class="card-body p-3">
             <form method="GET" action="{{ route('fassg.reports.index') }}" class="row g-2 align-items-end">
+                {{-- Sponsorship Program --}}
+                <div class="col-md-2">
+                    <label class="form-label small text-secondary fw-semibold mb-1">Sponsorship Program</label>
+                    <select name="sponsorship_program_id" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All Programs</option>
+                        @foreach (($programs ?? []) as $program)
+                            <option value="{{ $program->id }}" @selected($filterProgram == $program->id)>{{ $program->program_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 {{-- Academic Year --}}
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label small text-secondary fw-semibold mb-1">Academic Year</label>
                     <select name="academic_year" class="form-select form-select-sm" onchange="this.form.submit()">
                         <option value="">All academic years</option>
@@ -80,7 +92,7 @@
                 </div>
 
                 {{-- Semester --}}
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label small text-secondary fw-semibold mb-1">Semester</label>
                     <select name="semester" class="form-select form-select-sm" onchange="this.form.submit()">
                         <option value="">All semesters</option>

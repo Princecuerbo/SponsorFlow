@@ -22,6 +22,8 @@ class FixedList extends Model
         'uploaded_by_fassg_id',
         'total_names',
         'status',
+        'fassg_assigned_at',
+        'fassg_assigned_by_id',
     ];
 
     /**
@@ -32,7 +34,13 @@ class FixedList extends Model
         return [
             'total_names' => 'integer',
             'status' => FixedListStatus::class,
+            'fassg_assigned_at' => 'datetime',
         ];
+    }
+
+    public function fassgAssignedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'fassg_assigned_by_id');
     }
 
     public function sponsorshipProgram(): BelongsTo

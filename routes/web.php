@@ -186,6 +186,10 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
         Route::post('/fixed-lists/{fixedList}/forward', [FixedListController::class, 'submit'])->name('fixed-lists.forward');
         Route::patch('/fixed-lists/{fixedList}/items/{fixedListItem}/verify', [FixedListController::class, 'verifyItem'])
             ->name('fixed-lists.items.verify');
+        Route::patch('/fixed-lists/{fixedList}/items/{fixedListItem}/endorse', [FixedListController::class, 'endorseItem'])
+            ->name('fixed-lists.items.endorse');
+        Route::patch('/fixed-lists/{fixedList}/assign-fassg', [FixedListController::class, 'assignFassg'])
+            ->name('fixed-lists.assign-fassg');
 
         Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
         Route::get('/reports/export-pdf', [ReportsController::class, 'exportPdf'])->name('reports.export-pdf');

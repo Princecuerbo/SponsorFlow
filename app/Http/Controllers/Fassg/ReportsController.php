@@ -84,6 +84,7 @@ class ReportsController extends Controller
         $campus       = $request->string('campus')->trim()->toString();
         $academicYear = $request->string('academic_year')->trim()->toString();
         $semester     = $request->string('semester')->trim()->toString();
+        $sponsorshipProgramId = $request->integer('sponsorship_program_id', 0);
 
         $term = $this->resolveTerm($academicYear, $semester);
 
@@ -104,11 +105,15 @@ class ReportsController extends Controller
         $campusScope = function ($query) use ($campus): void {
             $query->whereHas('studentProfile', fn ($pq) => $pq->where('campus', $campus));
         };
+        $programScope = function ($query) use ($sponsorshipProgramId): void {
+            $query->when($sponsorshipProgramId > 0, fn ($q) => $q->where('sponsorship_program_id', $sponsorshipProgramId));
+        };
 
         $applicantTrends = Application::query()
             ->whereNotNull('submitted_at')
             ->when($term !== null, $termScope)
             ->when($campus !== '', $campusScope)
+            ->when($sponsorshipProgramId > 0, $programScope)
             ->selectRaw("{$dateFormat} as month, COUNT(*) as total")
             ->groupBy('month')
             ->orderBy('month')
@@ -119,6 +124,7 @@ class ReportsController extends Controller
             ->whereNotNull('approved_at')
             ->when($term !== null, $termScope)
             ->when($campus !== '', $campusScope)
+            ->when($sponsorshipProgramId > 0, $programScope)
             ->selectRaw("{$dateFormat} as month, COUNT(*) as total")
             ->groupBy('month')
             ->orderBy('month')
@@ -128,6 +134,7 @@ class ReportsController extends Controller
         $applicantCounts = Application::query()
             ->when($term !== null, $termScope)
             ->when($campus !== '', $campusScope)
+            ->when($sponsorshipProgramId > 0, $programScope)
             ->select('applications.status', DB::raw('count(*) as total'))
             ->groupBy('applications.status')
             ->pluck('total', 'status')
@@ -137,17 +144,20 @@ class ReportsController extends Controller
             ->previouslyApprovedBeneficiaries()
             ->when($term !== null, $termScope)
             ->when($campus !== '', $campusScope)
+            ->when($sponsorshipProgramId > 0, $programScope)
             ->distinct('student_profile_id')
             ->count('student_profile_id');
 
         $confirmedLists = FixedList::query()
             ->where('status', FixedListStatus::Approved)
             ->whereHas('latestApproval', fn($query) => $query->where('confirmation_status', ConfirmationStatus::Confirmed))
+            ->when($sponsorshipProgramId > 0, fn ($q) => $q->where('sponsorship_program_id', $sponsorshipProgramId))
             ->count();
 
         $confirmedListNames = FixedList::query()
             ->where('status', FixedListStatus::Approved)
             ->whereHas('latestApproval', fn($query) => $query->where('confirmation_status', ConfirmationStatus::Confirmed))
+            ->when($sponsorshipProgramId > 0, fn ($q) => $q->where('sponsorship_program_id', $sponsorshipProgramId))
             ->withCount('items')
             ->get()
             ->sum('items_count');
@@ -163,6 +173,7 @@ class ReportsController extends Controller
         $applicantsByCategory = Application::query()
             ->when($term !== null, $termScope)
             ->when($campus !== '', $campusScope)
+            ->when($sponsorshipProgramId > 0, $programScope)
             ->join('sponsorship_programs', 'applications.sponsorship_program_id', '=', 'sponsorship_programs.id')
             ->select('sponsorship_programs.category', DB::raw('count(*) as total'))
             ->groupBy('sponsorship_programs.category')
@@ -173,6 +184,7 @@ class ReportsController extends Controller
             ->previouslyApprovedBeneficiaries()
             ->when($term !== null, $termScope)
             ->when($campus !== '', $campusScope)
+            ->when($sponsorshipProgramId > 0, $programScope)
             ->join('sponsorship_programs', 'applications.sponsorship_program_id', '=', 'sponsorship_programs.id')
             ->select('sponsorship_programs.category', DB::raw('count(*) as total'))
             ->groupBy('sponsorship_programs.category')
@@ -183,11 +195,17 @@ class ReportsController extends Controller
         $applicantProfileIds = Application::query()
             ->when($term !== null, $termScope)
             ->when($campus !== '', $campusScope)
+            ->when($sponsorshipProgramId > 0, $programScope)
             ->pluck('student_profile_id');
 
         $confirmedFixedListStudentIds = FixedListItem::query()
-            ->whereHas('fixedList', fn($q) => $q->where('status', FixedListStatus::Approved)
-                ->whereHas('latestApproval', fn($sub) => $sub->where('confirmation_status', ConfirmationStatus::Confirmed)))
+            ->whereHas('fixedList', function ($q) use ($sponsorshipProgramId): void {
+                $q->where('status', FixedListStatus::Approved)
+                    ->whereHas('latestApproval', fn($sub) => $sub->where('confirmation_status', ConfirmationStatus::Confirmed));
+                if ($sponsorshipProgramId > 0) {
+                    $q->where('sponsorship_program_id', $sponsorshipProgramId);
+                }
+            })
             ->pluck('student_id_number');
 
         $fixedListProfileIds = StudentProfile::query()
@@ -407,7 +425,9 @@ class ReportsController extends Controller
                 'academic_year' => $academicYear,
                 'semester' => $semester,
                 'campus' => $campus,
+                'sponsorship_program_id' => $sponsorshipProgramId,
             ],
+            'programs' => SponsorshipProgram::query()->orderBy('program_name')->get(['id', 'program_name']),
         ];
     }
 

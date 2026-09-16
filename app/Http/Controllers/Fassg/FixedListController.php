@@ -103,7 +103,7 @@ class FixedListController extends Controller
     {
         $list = DB::transaction(function () use ($request): FixedList {
             $list = FixedList::query()->create([
-                ...$request->safe()->except(['file', 'list_file']),
+                ...$request->safe()->except(['file', 'list_file', 'criteria_course', 'criteria_campus', 'criteria_gpa']),
                 'uploaded_by_fassg_id' => $this->actor($request)->id,
                 'total_names' => 0,
                 'status' => FixedListStatus::Draft,
@@ -111,7 +111,11 @@ class FixedListController extends Controller
 
             $uploadedFile = $request->file('file') ?? $request->file('list_file');
             if ($uploadedFile instanceof UploadedFile && $uploadedFile->isValid()) {
-                $this->processCsvImport($list, $uploadedFile);
+                $this->processCsvImport($list, $uploadedFile, [
+                    'course' => $request->string('criteria_course')->trim()->toString(),
+                    'campus' => $request->string('criteria_campus')->trim()->toString(),
+                    'gpa' => (float) $request->input('criteria_gpa', 0),
+                ]);
             }
 
             return $list;
@@ -263,6 +267,53 @@ class FixedListController extends Controller
         return back()->with('status', "SLE-FHE verified for {$fixedListItem->student_id_number}.");
     }
 
+    public function endorseItem(Request $request, FixedList $fixedList, FixedListItem $fixedListItem): RedirectResponse
+    {
+        abort_unless($fixedListItem->fixed_list_id === $fixedList->id, 404);
+
+        $newStatus = ! $fixedListItem->is_manually_endorsed;
+
+        $fixedListItem->update([
+            'is_manually_endorsed' => $newStatus,
+            'endorsed_by_id' => $newStatus ? $this->actor($request)->id : null,
+            'endorsed_at' => $newStatus ? now() : null,
+            'status' => $newStatus ? FixedListItemStatus::Endorsed : FixedListItemStatus::Pending,
+        ]);
+
+        $this->audit($request, $newStatus ? 'fassg.fixed_list.item_endorsed' : 'fassg.fixed_list.item_endorsement_revoked', 'fixed_list_items');
+
+        return back()->with('status', $newStatus
+            ? "{$fixedListItem->student_name} has been manually endorsed."
+            : "Endorsement removed for {$fixedListItem->student_name}.");
+    }
+
+    public function assignFassg(Request $request, FixedList $fixedList): RedirectResponse
+    {
+        abort_unless(
+            in_array($fixedList->status, [FixedListStatus::Approved, FixedListStatus::Submitted], true),
+            403,
+            'This list cannot be assigned yet.',
+        );
+
+        DB::transaction(function () use ($fixedList, $request): void {
+            $fixedList->update([
+                'fassg_assigned_at' => now(),
+                'fassg_assigned_by_id' => $this->actor($request)->id,
+            ]);
+
+            $fixedList->items()
+                ->where('is_sle_fhe_verified', true)
+                ->update([
+                    'fassg_assigned_at' => now(),
+                    'fassg_assigned_by_id' => $this->actor($request)->id,
+                ]);
+        });
+
+        $this->audit($request, 'fassg.fixed_list.fassg_assigned', 'fixed_lists');
+
+        return back()->with('status', 'FASSG assignment recorded. Accounting can now view beneficiary payout rows.');
+    }
+
     private function assertListEditable(FixedList $fixedList): void
     {
         abort_unless(
@@ -277,8 +328,12 @@ class FixedListController extends Controller
         $fixedList->update(['total_names' => $fixedList->items()->count()]);
     }
 
-    private function processCsvImport(FixedList $fixedList, UploadedFile $uploadedFile): void
+    private function processCsvImport(FixedList $fixedList, UploadedFile $uploadedFile, array $criteria = []): void
     {
+        $criteriaCourse = trim((string) ($criteria['course'] ?? ''));
+        $criteriaCampus = trim((string) ($criteria['campus'] ?? ''));
+        $criteriaGpa = (float) ($criteria['gpa'] ?? 0);
+
         $file = new SplFileObject($uploadedFile->getRealPath());
         $file->setFlags(SplFileObject::READ_CSV | SplFileObject::SKIP_EMPTY | SplFileObject::DROP_NEW_LINE);
         $header = null;
@@ -306,15 +361,30 @@ class FixedListController extends Controller
             }
 
             $studentId = trim((string) ($record['student_id_number'] ?? $record['student_id']));
+            $rowCourse = trim((string) ($record['course'] ?? ''));
+            $rowCampus = blank($record['campus'] ?? null) ? '' : trim((string) $record['campus']);
+            $gpaValue = $record['gpa'] ?? $record['gwa'] ?? null;
+            $rowGpa = blank($gpaValue) ? 0.0 : (float) $gpaValue;
+
+            if ($criteriaCourse !== '' && stripos($rowCourse, $criteriaCourse) === false) {
+                continue;
+            }
+
+            if ($criteriaCampus !== '' && strcasecmp($rowCampus, $criteriaCampus) !== 0) {
+                continue;
+            }
+
+            if ($criteriaGpa > 0 && $rowGpa > 0 && $rowGpa > $criteriaGpa) {
+                continue;
+            }
+
             $fixedList->items()->updateOrCreate(
                 ['student_id_number' => $studentId],
                 [
                     'student_name' => trim((string) ($record['student_name'] ?? $record['name'] ?? 'Unknown')),
-                    'course' => trim((string) ($record['course'] ?? 'Unspecified')),
+                    'course' => $rowCourse !== '' ? $rowCourse : 'Unspecified',
                     'year_level' => (int) ($record['year_level'] ?? $record['year'] ?? 1),
-                    'campus' => blank($record['campus'] ?? null)
-                        ? null
-                        : trim((string) $record['campus']),
+                    'campus' => $rowCampus !== '' ? $rowCampus : null,
                     'is_sle_fhe_verified' => false,
                     'status' => FixedListItemStatus::Pending,
                 ],

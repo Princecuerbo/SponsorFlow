@@ -8,4 +8,5 @@ enum FixedListItemStatus: string
     case Verified = 'Verified';
     case Eligible = 'Eligible';
     case Ineligible = 'Ineligible';
+    case Endorsed = 'Endorsed';
 }

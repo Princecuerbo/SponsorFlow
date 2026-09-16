@@ -198,6 +198,35 @@
                                 <div class="form-text">Or leave blank and encode names one by one after creating the batch.
                                 </div>
                             </div>
+
+                            <div class="col-12">
+                                <hr class="my-1">
+                                <label
+                                    class="form-label small text-secondary fw-semibold d-flex align-items-center gap-1">
+                                    <i class="bi bi-funnel"></i>Criteria Filtering
+                                    <span class="text-secondary fw-normal">(optional, applied to uploaded rows)</span>
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small text-secondary">Course</label>
+                                <input type="text" name="criteria_course" class="form-control"
+                                    placeholder="e.g. BSIT" value="{{ old('criteria_course') }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small text-secondary">Campus</label>
+                                <select name="criteria_campus" class="form-select">
+                                    <option value="">All Campuses</option>
+                                    @foreach (['Main Campus (City of Mati)', 'Baganga Campus', 'Banaybanay Campus', 'Cateel Campus', 'San Isidro Campus', 'Tarragona Campus'] as $campusOpt)
+                                        <option value="{{ $campusOpt }}" @selected(old('criteria_campus') === $campusOpt)>{{ $campusOpt }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small text-secondary">Max GPA / Requirement</label>
+                                <input type="number" step="0.01" min="0" max="5" name="criteria_gpa"
+                                    class="form-control" placeholder="e.g. 1.75" value="{{ old('criteria_gpa') }}">
+                                <div class="form-text">Rows with a higher GPA than this are skipped.</div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">

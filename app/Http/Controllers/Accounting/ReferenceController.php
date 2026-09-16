@@ -241,9 +241,11 @@ class ReferenceController extends Controller
 
         $confirmedItems = FixedListItem::query()
             ->where('is_sle_fhe_verified', true)
+            ->whereNotNull('fassg_assigned_at')
             ->whereHas('fixedList', function ($query) use ($academicProgramId, $sponsorshipProgramId): void {
                 $query->where('status', FixedListStatus::Approved)
-                    ->whereHas('latestApproval', fn($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed));
+                    ->whereHas('latestApproval', fn($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed))
+                    ->whereNotNull('fassg_assigned_at');
                 if ($sponsorshipProgramId > 0) {
                     $query->where('sponsorship_program_id', $sponsorshipProgramId);
                 }

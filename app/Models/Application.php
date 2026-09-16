@@ -36,6 +36,9 @@ class Application extends Model
         'rejection_reason',
         'resubmission_notes',
         'requested_documents',
+        'is_manually_endorsed',
+        'endorsed_by_id',
+        'endorsed_at',
     ];
 
     /**
@@ -46,11 +49,13 @@ class Application extends Model
         return [
             'gpa_submitted' => 'decimal:2',
             'is_rural_submitted' => 'boolean',
+            'is_manually_endorsed' => 'boolean',
             'status' => ApplicationStatus::class,
             'requested_documents' => 'array',
             'submitted_at' => 'datetime',
             'verified_at' => 'datetime',
             'approved_at' => 'datetime',
+            'endorsed_at' => 'datetime',
         ];
     }
 
@@ -62,6 +67,11 @@ class Application extends Model
     public function sponsorshipProgram(): BelongsTo
     {
         return $this->belongsTo(SponsorshipProgram::class);
+    }
+
+    public function endorsedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'endorsed_by_id');
     }
 
     public function getStatusAttribute($value): ?ApplicationStatus

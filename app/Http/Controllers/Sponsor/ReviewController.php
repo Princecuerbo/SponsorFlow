@@ -5,21 +5,15 @@ namespace App\Http\Controllers\Sponsor;
 use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
 use App\Enums\FixedListStatus;
-use App\Enums\ProgramStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicProgram;
 use App\Models\Application;
 use App\Models\FixedList;
 use App\Models\Sponsor;
-use App\Models\StudentProfile;
-use App\Models\SponsorshipProgram;
 use App\Models\SponsorApproval;
-use App\Notifications\ApplicationStatusUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -143,80 +137,7 @@ class ReviewController extends Controller
 
     public function confirmApplication(Request $request, Application $application): RedirectResponse
     {
-        $sponsor = $this->sponsorOrganization($request);
-        $application->load(['studentProfile', 'sponsorshipProgram']);
-
-        abort_unless($sponsor->ownsProgram($application->sponsorshipProgram), 403);
-
-        $validated = $request->validate([
-            'approval_document' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
-        ]);
-
-        if ($application->status !== ApplicationStatus::Verified) {
-            return back()->withErrors(['application' => 'Only FASSG-verified applications can be confirmed.']);
-        }
-
-        $path = $validated['approval_document']->store('sponsor-approvals/applications', 'local');
-
-        $approved = DB::transaction(function () use ($application, $path): bool {
-            $program = SponsorshipProgram::query()
-                ->lockForUpdate()
-                ->findOrFail($application->sponsorship_program_id);
-            $profile = StudentProfile::query()
-                ->lockForUpdate()
-                ->findOrFail($application->student_profile_id);
-
-            if ($program->available_slots < 1 || $profile->hasActiveSponsorship()) {
-                return false;
-            }
-
-            $application->update([
-                'status' => ApplicationStatus::Ongoing,
-                'approved_at' => now(),
-                'sponsor_approval_path' => $path,
-            ]);
-
-            $profile->update(['active_sponsorship_id' => $application->id]);
-            $program->decrementAvailableSlot();
-
-            if ($program->status === ProgramStatus::Closed) {
-
-                $pendingApplicationIds = $program->applications()
-                    ->whereIn('status', [ApplicationStatus::Pending, ApplicationStatus::Verified])
-                    ->pluck('id');
-
-                if ($pendingApplicationIds->isNotEmpty()) {
-                    $program->applications()
-                        ->whereKey($pendingApplicationIds)
-                        ->update([
-                            'status' => ApplicationStatus::Rejected,
-                            'rejection_reason' => 'Program capacity reached (0 slots remaining).',
-                        ]);
-
-                    StudentProfile::query()
-                        ->whereIn('active_sponsorship_id', $pendingApplicationIds)
-                        ->update(['active_sponsorship_id' => null]);
-                }
-            }
-
-            return true;
-        });
-
-        if (! $approved) {
-            Storage::disk('local')->delete($path);
-
-            return back()->withErrors(['application' => 'This student already has an active sponsorship or the program has no remaining slots.']);
-        }
-
-        $this->audit($request, 'sponsor.application.confirmed', 'applications');
-
-        $studentUser = $application->studentProfile->user ?? null;
-
-        if ($studentUser !== null) {
-            $studentUser->notify(new ApplicationStatusUpdated($application, ApplicationStatus::Ongoing));
-        }
-
-        return redirect()->route('sponsor.applicants.index')->with('status', 'Application confirmed and forwarded to Accounting.');
+        abort(403, 'Individual application confirmation is disabled. Please use the Batch List workflow instead.');
     }
 
     public function reject(Request $request, Application $application): RedirectResponse

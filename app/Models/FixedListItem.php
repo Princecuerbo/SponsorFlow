@@ -16,6 +16,7 @@ class FixedListItem extends Model
      */
     protected $fillable = [
         'fixed_list_id',
+        'application_id',
         'student_name',
         'student_id_number',
         'course',
@@ -23,6 +24,11 @@ class FixedListItem extends Model
         'campus',
         'is_sle_fhe_verified',
         'status',
+        'is_manually_endorsed',
+        'endorsed_by_id',
+        'endorsed_at',
+        'fassg_assigned_at',
+        'fassg_assigned_by_id',
     ];
 
     /**
@@ -33,13 +39,31 @@ class FixedListItem extends Model
         return [
             'year_level' => 'integer',
             'is_sle_fhe_verified' => 'boolean',
+            'is_manually_endorsed' => 'boolean',
             'status' => FixedListItemStatus::class,
+            'endorsed_at' => 'datetime',
+            'fassg_assigned_at' => 'datetime',
         ];
     }
 
     public function fixedList(): BelongsTo
     {
         return $this->belongsTo(FixedList::class);
+    }
+
+    public function application(): BelongsTo
+    {
+        return $this->belongsTo(Application::class);
+    }
+
+    public function endorsedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'endorsed_by_id');
+    }
+
+    public function fassgAssignedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'fassg_assigned_by_id');
     }
 
     public function matchingStudentProfile(): ?StudentProfile

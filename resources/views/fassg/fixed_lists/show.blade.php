@@ -114,25 +114,39 @@
             </div>
 
             <div class="card sf-card border-0 shadow-sm">
-                <div class="card-header bg-white py-3 border-bottom">
+                <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
                     <h3 class="h6 fw-bold mb-0">Encoded &amp; Imported Students</h3>
+                    @if (in_array($list->status, [\App\Enums\FixedListStatus::Draft, \App\Enums\FixedListStatus::Rejected, \App\Enums\FixedListStatus::Saved], true))
+                        <button type="button" class="btn btn-outline-success btn-sm" id="bulkEndorseBtn" disabled>
+                            <i class="bi bi-check2-square me-1"></i>Endorse Selected
+                        </button>
+                    @endif
                 </div>
                 <div class="table-responsive">
-                    <table class="table sf-table mb-0 align-middle">
+                    <table class="table sf-table mb-0 align-middle" id="candidateListTable">
                         <thead>
                             <tr>
-                                <th class="ps-4">Student Name</th>
+                                <th class="ps-4" style="width: 36px;">
+                                    <input type="checkbox" class="form-check-input" id="selectAllCheckbox"
+                                        aria-label="Select all candidates">
+                                </th>
+                                <th>Student Name</th>
                                 <th>Student ID</th>
                                 <th>Course &amp; Year</th>
                                 <th>Campus</th>
                                 <th>SLE-FHE Status</th>
+                                <th>Endorsed</th>
                                 <th class="text-end pe-4">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($list->items as $item)
-                                <tr>
-                                    <td class="ps-4 fw-semibold">{{ $item->student_name }}</td>
+                                <tr class="{{ $item->is_manually_endorsed ? 'table-success' : '' }}">
+                                    <td class="ps-4">
+                                        <input type="checkbox" class="form-check-input item-checkbox"
+                                            value="{{ $item->id }}" aria-label="Select {{ $item->student_name }}">
+                                    </td>
+                                    <td class="fw-semibold">{{ $item->student_name }}</td>
                                     <td class="sf-mono">{{ $item->student_id_number ?: 'N/A' }}</td>
                                     <td>{{ $item->course }} {{ $item->year_level ? "Year {$item->year_level}" : '' }}</td>
                                     <td>{{ $item->campus ?: 'N/A' }}</td>
@@ -142,8 +156,21 @@
                                             {{ $item->is_sle_fhe_verified ? 'Verified' : 'Pending Check' }}
                                         </span>
                                     </td>
+                                    <td>
+                                        @if ($item->status === \App\Enums\FixedListItemStatus::Endorsed)
+                                            <span
+                                                class="badge bg-success-subtle text-success-emphasis border border-success-subtle">
+                                                Endorsed
+                                            </span>
+                                        @else
+                                            <button type="submit" form="endorse-{{ $item->id }}"
+                                                class="btn btn-outline-success btn-sm">
+                                                <i class="bi bi-check-lg me-1"></i>Endorse
+                                            </button>
+                                        @endif
+                                    </td>
                                     <td class="text-end pe-4">
-                                        @if (!$item->is_sle_fhe_verified)
+                                        @if (!$item->is_sle_fhe_verified && $item->status !== \App\Enums\FixedListItemStatus::Endorsed)
                                             <form method="POST"
                                                 action="{{ route('fassg.fixed-lists.items.verify', [$list, $item]) }}">
                                                 @csrf
@@ -155,13 +182,22 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center text-secondary py-4">No students encoded in this
+                                    <td colspan="8" class="text-center text-secondary py-4">No students encoded in this
                                         batch yet.</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
+
+                @foreach ($list->items as $item)
+                    <form method="POST" id="endorse-{{ $item->id }}"
+                        action="{{ route('fassg.fixed-lists.items.endorse', [$list, $item]) }}"
+                        class="d-none">
+                        @csrf
+                        @method('PATCH')
+                    </form>
+                @endforeach
             </div>
         </div>
 
@@ -205,6 +241,76 @@
                     </div>
                 </div>
             @endif
+            @if ($list->status === \App\Enums\FixedListStatus::Approved && blank($list->fassg_assigned_at))
+                <div class="card sf-card border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <h3 class="h6 fw-bold mb-2"><i class="bi bi-lock-fill me-1 text-success"></i>Complete FASSG Assignment</h3>
+                        <p class="text-secondary small mb-3">Record this list as FASSG-assigned before Accounting can view its
+                            beneficiary payout rows.</p>
+                        <form method="POST" action="{{ route('fassg.fixed-lists.assign-fassg', $list) }}">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn btn-success w-100 py-2"
+                                onClick="return confirm('Record this list as FASSG-assigned? Verified students become visible to Accounting.');">
+                                <i class="bi bi-check-lg me-1"></i>Complete FASSG Assignment
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @elseif ($list->status === \App\Enums\FixedListStatus::Approved && $list->fassg_assigned_at !== null)
+                <div class="card sf-card border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <h3 class="h6 fw-bold mb-2 text-success"><i class="bi bi-lock-fill me-1"></i>FASSG Assigned</h3>
+                        <p class="text-secondary small mb-0">Assigned {{ $list->fassg_assigned_at?->format('M d, Y h:i A') }}.
+                            Verified students are visible to Accounting.</p>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            (function () {
+                const selectAll = document.getElementById('selectAllCheckbox');
+                const bulkEndorseBtn = document.getElementById('bulkEndorseBtn');
+                if (!selectAll || !bulkEndorseBtn) {
+                    return;
+                }
+
+                const checkboxes = Array.from(document.querySelectorAll('.item-checkbox'));
+
+                function updateState() {
+                    const checked = checkboxes.filter(chk => chk.checked);
+                    bulkEndorseBtn.disabled = checked.length === 0;
+                    selectAll.checked = checked.length > 0 && checked.length === checkboxes.length;
+                }
+
+                selectAll.addEventListener('change', function () {
+                    checkboxes.forEach(chk => { chk.checked = selectAll.checked; });
+                    updateState();
+                });
+
+                checkboxes.forEach(chk => chk.addEventListener('change', updateState));
+
+                bulkEndorseBtn.addEventListener('click', function () {
+                    const checked = checkboxes.filter(chk => chk.checked);
+                    if (checked.length === 0) {
+                        return;
+                    }
+
+                    if (!confirm('Endorse ' + checked.length + ' selected student(s) as outside-criteria? This overrides standard criteria for the batch.')) {
+                        return;
+                    }
+
+                    checked.forEach((chk, index) => {
+                        const form = document.getElementById('endorse-' + chk.value);
+                        if (form) {
+                            setTimeout(() => form.submit(), index * 150);
+                        }
+                    });
+                });
+            })();
+        </script>
+    @endpush
 @endsection
