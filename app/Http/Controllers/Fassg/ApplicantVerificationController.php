@@ -4,17 +4,21 @@ namespace App\Http\Controllers\Fassg;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\DocumentType;
+use App\Enums\FixedListItemStatus;
+use App\Enums\FixedListStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Fassg\RejectApplicationRequest;
 use App\Http\Requests\Fassg\VerifyApplicationRequest;
 use App\Models\Application;
 use App\Models\ApplicationDocument;
+use App\Models\FixedList;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
 use App\Notifications\ApplicationStatusUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -69,7 +73,16 @@ class ApplicantVerificationController extends Controller
                 $status === '',
                 fn ($q) => $q->whereIn('status', $actionableStatuses)
             )
-            ->latest()
+            ->when(
+                // When a specific program is selected, rank the queue by best GWA first
+                // (ASC = best to lowest) so officers can shortlist the top candidates
+                // against the program's available slots.
+                $programId > 0,
+                fn ($q) => $q
+                    ->orderBy('applications.gpa_submitted', 'asc')
+                    ->orderBy('applications.submitted_at', 'asc'),
+                fn ($q) => $q->latest()
+            )
             ->paginate(15)
             ->withQueryString();
 
@@ -77,6 +90,8 @@ class ApplicantVerificationController extends Controller
             ->with('sponsor')
             ->orderBy('program_name')
             ->get();
+
+        $selectedProgram = $programId > 0 ? $programs->firstWhere('id', $programId) : null;
 
         $scoped = Application::query()
             ->whereHas('studentProfile', fn ($q) => $q->where('is_sle_fhe_verified', true));
@@ -96,7 +111,80 @@ class ApplicantVerificationController extends Controller
             'resubmissionCount'    => $resubmissionCount,
             'rejectedCount'        => $rejectedCount,
             'programs'             => $programs,
+            'selectedProgram'      => $selectedProgram,
+            'availableSlots'       => $selectedProgram?->available_slots ?? null,
+            'selectedProgramId'    => $programId,
         ]);
+    }
+
+    public function createBatch(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'batch_name' => ['required', 'string', 'max:150'],
+            'sponsorship_program_id' => ['required', 'integer', 'exists:sponsorship_programs,id'],
+            'selected_applications' => ['required', 'array', 'min:1'],
+            'selected_applications.*' => ['integer'],
+        ]);
+
+        $programId = (int) $validated['sponsorship_program_id'];
+        $applicationIds = array_values(array_unique(array_map('intval', $validated['selected_applications'])));
+
+        $applications = Application::query()
+            ->where('sponsorship_program_id', $programId)
+            ->whereIn('id', $applicationIds)
+            ->with('studentProfile.user')
+            ->get();
+
+        if ($applications->isEmpty()) {
+            return back()->withErrors([
+                'selected_applications' => 'Select at least one application belonging to the target program.',
+            ]);
+        }
+
+        $list = DB::transaction(function () use ($applications, $programId, $request, $validated): FixedList {
+            $list = FixedList::query()->create([
+                'sponsorship_program_id' => $programId,
+                'batch_name' => $validated['batch_name'],
+                'uploaded_by_fassg_id' => $this->actor($request)->id,
+                'total_names' => 0,
+                'status' => FixedListStatus::Saved,
+            ]);
+
+            foreach ($applications as $application) {
+                $profile = $application->studentProfile;
+
+                if ($profile === null) {
+                    continue;
+                }
+
+                $name = $profile->user?->name ?? trim(
+                    ($profile->first_name ?? '') . ' ' . ($profile->middle_name ?? '') . ' ' . ($profile->last_name ?? '')
+                );
+
+                $list->items()->updateOrCreate(
+                    ['application_id' => $application->id],
+                    [
+                        'student_name' => $name !== '' ? $name : 'Unknown',
+                        'student_id_number' => $profile->student_id_number ?: null,
+                        'course' => $profile->course ?: 'Unspecified',
+                        'year_level' => $profile->year_level ?? 1,
+                        'campus' => $profile->campus ?: null,
+                        'is_sle_fhe_verified' => (bool) $profile->is_sle_fhe_verified,
+                        'status' => FixedListItemStatus::Pending,
+                    ],
+                );
+            }
+
+            $list->update(['total_names' => $list->items()->count()]);
+
+            return $list;
+        });
+
+        $this->audit($request, 'fassg.fixed_list.generated_from_applications', 'fixed_lists');
+
+        return redirect()
+            ->route('fassg.fixed-lists.show', $list)
+            ->with('status', "Batch list '{$list->batch_name}' created from {$list->total_names} applicant(s). Review and submit when ready.");
     }
 
     public function show(Request $request, Application $application): View

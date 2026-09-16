@@ -44,7 +44,7 @@ class FixedListController extends Controller
 
     public function show(Request $request, FixedList $fixedList): View
     {
-        $fixedList->load(['sponsorshipProgram', 'items']);
+        $fixedList->load(['sponsorshipProgram', 'items.application']);
 
         return view('fassg.fixed_lists.show', [
             'user' => $this->actor($request),
@@ -317,7 +317,7 @@ class FixedListController extends Controller
     private function assertListEditable(FixedList $fixedList): void
     {
         abort_unless(
-            in_array($fixedList->status, [FixedListStatus::Draft, FixedListStatus::Rejected], true),
+            in_array($fixedList->status, [FixedListStatus::Draft, FixedListStatus::Rejected, FixedListStatus::Saved], true),
             403,
             'This fixed list can no longer be edited.',
         );

@@ -72,7 +72,23 @@
                         </div>
                     </div>
 
-                    @if (in_array($list->status, [\App\Enums\FixedListStatus::Draft, \App\Enums\FixedListStatus::Rejected], true))
+                    @php
+                        $generatedFromQueueCount = $list->items->whereNotNull('application_id')->count();
+                        $generatedFromQueue = $generatedFromQueueCount > 0;
+                    @endphp
+
+                    @if ($generatedFromQueue)
+                        <div class="alert alert-info border-0 mb-3 d-flex align-items-start gap-2 py-2 small">
+                            <i class="bi bi-list-check text-primary mt-1"></i>
+                            <div>
+                                <strong>Generated from Application Queue</strong> — linked to
+                                {{ $generatedFromQueueCount }} application(s). These candidates originate from the FASSG
+                                applicant queue, not manual encoding. You can still encode or import additional names below.
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (in_array($list->status, [\App\Enums\FixedListStatus::Draft, \App\Enums\FixedListStatus::Rejected, \App\Enums\FixedListStatus::Saved], true))
                         <div class="border-top pt-3 mt-3">
                             <h3 class="h6 fw-bold mb-3"><i class="bi bi-person-plus me-1"></i>Encode Student Manually</h3>
                             <form method="POST" action="{{ route('fassg.fixed-lists.items.store', $list) }}"
@@ -146,7 +162,15 @@
                                         <input type="checkbox" class="form-check-input item-checkbox"
                                             value="{{ $item->id }}" aria-label="Select {{ $item->student_name }}">
                                     </td>
-                                    <td class="fw-semibold">{{ $item->student_name }}</td>
+                                    <td class="fw-semibold">
+                                        {{ $item->student_name }}
+                                        @if ($item->application_id)
+                                            <a href="{{ route('fassg.applications.show', $item->application_id) }}"
+                                                class="d-block small text-primary text-decoration-none fw-normal">
+                                                <i class="bi bi-arrow-right-circle me-1"></i>View source application
+                                            </a>
+                                        @endif
+                                    </td>
                                     <td class="sf-mono">{{ $item->student_id_number ?: 'N/A' }}</td>
                                     <td>{{ $item->course }} {{ $item->year_level ? "Year {$item->year_level}" : '' }}</td>
                                     <td>{{ $item->campus ?: 'N/A' }}</td>
@@ -202,7 +226,7 @@
         </div>
 
         <div class="col-md-4">
-            @if (in_array($list->status, [\App\Enums\FixedListStatus::Draft, \App\Enums\FixedListStatus::Rejected], true))
+            @if (in_array($list->status, [\App\Enums\FixedListStatus::Draft, \App\Enums\FixedListStatus::Rejected, \App\Enums\FixedListStatus::Saved], true))
                 <div class="card sf-card mb-4 border-0 shadow-sm">
                     <div class="card-body p-4">
                         <h3 class="h6 fw-bold mb-2"><i class="bi bi-file-earmark-spreadsheet me-1"></i>Import CSV / Excel

@@ -70,6 +70,11 @@
             <span class="stat-pill bg-danger bg-opacity-10 text-danger border border-danger-subtle">
                 <i class="bi bi-x-circle"></i> {{ $rejectedCount ?? 0 }} Rejected
             </span>
+            @if ($selectedProgram && $availableSlots !== null)
+                <span class="stat-pill bg-cyan-50 text-cyan-700 border border-cyan-200">
+                    <i class="bi bi-people"></i> Available Slots: {{ $availableSlots }}
+                </span>
+            @endif
         </div>
     </div>
 
@@ -164,12 +169,34 @@
             </div>
         </div>
     @else
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+            <div class="small text-secondary">
+                <i class="bi bi-stack me-1"></i>
+                Showing {{ $pendingApplications->count() }} of {{ $pendingApplications->total() }} applicant(s)
+                @if ($selectedProgram)
+                    <span class="mx-1">·</span>
+                    <span class="badge bg-cyan-50 text-cyan-700 border border-cyan-200">
+                        <i class="bi bi-sort-numeric-down me-1"></i>Ranked by GWA (best first)
+                    </span>
+                @endif
+            </div>
+            <button type="button" class="btn btn-primary fw-semibold" data-bs-toggle="modal"
+                data-bs-target="#createBatchModal">
+                <i class="bi bi-list-check me-1"></i>Create Batch List from Selected
+            </button>
+        </div>
+
         <div class="card sf-card">
             <div class="table-responsive">
                 <table class="table sf-table mb-0">
                     <thead>
                         <tr>
+                            <th class="ps-3" style="width: 36px;">
+                                <input type="checkbox" class="form-check-input" id="selectAllApps"
+                                    aria-label="Select all applicants on this page">
+                            </th>
                             <th class="ps-4">Applicant</th>
+                            <th>GWA</th>
                             <th>Course &amp; Year Level</th>
                             <th>Program Applied</th>
                             <th>Date Submitted</th>
@@ -182,10 +209,22 @@
                         @foreach ($pendingApplications as $application)
                             @php $profile = $application->studentProfile; @endphp
                             <tr>
+                                {{-- Selection --}}
+                                <td class="ps-3">
+                                    <input type="checkbox" class="form-check-input app-checkbox"
+                                        name="selected_applications[]" value="{{ $application->id }}"
+                                        aria-label="Select {{ $profile->user->name ?? $profile->student_id_number }}">
+                                </td>
+
                                 {{-- Student --}}
                                 <td class="ps-4">
                                     <div class="fw-semibold">{{ $profile->user->name ?? trim($profile->first_name . ' ' . ($profile->middle_name ?? '') . ' ' . $profile->last_name . ($profile->extension_name ? ' ' . $profile->extension_name : '')) }}</div>
                                     <div class="small text-secondary sf-mono">{{ $profile->student_id_number ?: '—' }}</div>
+                                </td>
+
+                                {{-- GWA --}}
+                                <td>
+                                    <span class="fw-semibold sf-mono">{{ number_format($application->gpa_submitted, 2) }}</span>
                                 </td>
 
                                 {{-- Course & Year Level --}}
@@ -249,4 +288,133 @@
             </div>
         @endif
     @endif
+
+    {{-- Create Batch List Modal --}}
+    <div class="modal fade" id="createBatchModal" tabindex="-1" aria-labelledby="createBatchModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <form method="POST" action="{{ route('fassg.applications.create-batch') }}" class="modal-content"
+                id="createBatchForm">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createBatchModalLabel">
+                        <i class="bi bi-list-check me-1"></i>Create Batch List from Selected
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="selectedCountNote" class="alert alert-info py-2 small mb-3">
+                        <i class="bi bi-info-circle me-1"></i>0 applicant(s) selected.
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-dark" for="batch_name">Batch Name</label>
+                        <input type="text" id="batch_name" name="batch_name" class="form-control"
+                            placeholder="e.g., CHED Batch 1 - 2026" required maxlength="150"
+                            value="{{ old('batch_name') }}">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small fw-semibold text-dark" for="batch_program">Target Program</label>
+                        <select id="batch_program" name="sponsorship_program_id" class="form-select" required>
+                            <option value="">Select program…</option>
+                            @foreach ($programs as $prog)
+                                <option value="{{ $prog->id }}" @selected((int) request('program_id') === $prog->id)>
+                                    {{ $prog->program_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-text small text-secondary">
+                        Only applicants applied to the target program will be included in the batch.
+                    </div>
+                    <div id="selectedApplicantsContainer"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary fw-semibold"
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary fw-semibold">
+                        <i class="bi bi-list-check me-1"></i>Create Batch List
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @push('scripts')
+        <script>
+            (function () {
+                const selectAll = document.getElementById('selectAllApps');
+                const checkboxes = Array.from(document.querySelectorAll('.app-checkbox'));
+                const modalForm = document.getElementById('createBatchForm');
+                const container = document.getElementById('selectedApplicantsContainer');
+                const countNote = document.getElementById('selectedCountNote');
+                const availableSlots = {{ $availableSlots ?? 0 }};
+
+                function updateState() {
+                    if (!selectAll) {
+                        return;
+                    }
+                    const checked = checkboxes.filter(chk => chk.checked);
+                    selectAll.checked = checked.length > 0 && checked.length === checkboxes.length;
+                }
+
+                function syncSelected() {
+                    const checked = checkboxes.filter(chk => chk.checked);
+                    if (container) {
+                        container.innerHTML = '';
+                        checked.forEach(chk => {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'selected_applications[]';
+                            input.value = chk.value;
+                            container.appendChild(input);
+                        });
+                    }
+                    if (countNote) {
+                        countNote.className = 'alert alert-info py-2 small mb-3';
+                        countNote.innerHTML = '<i class="bi bi-info-circle me-1"></i>' + checked.length +
+                            ' applicant(s) selected.';
+                    }
+                    return checked.length;
+                }
+
+                if (selectAll) {
+                    selectAll.addEventListener('change', function () {
+                        checkboxes.forEach(chk => { chk.checked = selectAll.checked; });
+                        updateState();
+                    });
+                }
+
+                checkboxes.forEach(chk => chk.addEventListener('change', updateState));
+
+                if (modalForm) {
+                    modalForm.addEventListener('submit', function (e) {
+                        if (syncSelected() === 0) {
+                            e.preventDefault();
+                            if (countNote) {
+                                countNote.className = 'alert alert-danger py-2 small mb-3';
+                                countNote.textContent =
+                                    'Select at least one applicant to include in this batch list.';
+                            }
+                            return;
+                        }
+                    });
+                }
+
+                const modalEl = document.getElementById('createBatchModal');
+                if (modalEl) {
+                    modalEl.addEventListener('show.bs.modal', function () {
+                        syncSelected();
+                    });
+                }
+
+                // Auto-check the top N applicants matching the program's available slots
+                // (only meaningful when a program is selected and the queue is GPA-ranked).
+                if (availableSlots > 0 && checkboxes.length > 0) {
+                    const precheck = Math.min(availableSlots, checkboxes.length);
+                    checkboxes.forEach((chk, index) => { chk.checked = index < precheck; });
+                    updateState();
+                }
+            })();
+        </script>
+    @endpush
 @endsection
