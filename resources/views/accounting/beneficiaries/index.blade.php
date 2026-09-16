@@ -234,13 +234,14 @@
                                     {{ isset($beneficiary['approved_at']) && $beneficiary['approved_at'] ? \Carbon\Carbon::parse($beneficiary['approved_at'])->format('M d, Y') : '—' }}
                                 </td>
                                 <td class="text-end pe-4 no-print">
+                                    <div class="small text-secondary">
+                                        {{ $beneficiary['reference_label'] ?? 'Application' }}
+                                    </div>
                                     @if (!empty($beneficiary['application_id']))
                                         <a href="{{ route('accounting.beneficiaries.show', $beneficiary['application_id']) }}"
-                                            class="btn btn-sm btn-outline-secondary">
+                                            class="btn btn-sm btn-outline-secondary mt-1">
                                             <i class="bi bi-eye me-1"></i>View Reference
                                         </a>
-                                    @else
-                                        <span class="small text-secondary">Fixed list</span>
                                     @endif
                                 </td>
                             </tr>

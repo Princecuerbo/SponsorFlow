@@ -7,6 +7,7 @@ use App\Enums\ConfirmationStatus;
 use App\Enums\FixedListStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
+use App\Models\AcademicProgram;
 use App\Models\Application;
 use App\Models\FixedList;
 use App\Models\FixedListItem;
@@ -27,9 +28,9 @@ class ReferenceController extends Controller
             'user' => $this->actor($request),
             'approvedApplications' => Application::query()->approvedBeneficiaries()->count(),
             'confirmedLists' => FixedListItem::query()
-                ->whereHas('fixedList', fn($query) => $query
+                ->whereHas('fixedList', fn ($query) => $query
                     ->where('status', FixedListStatus::Approved)
-                    ->whereHas('latestApproval', fn($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed)))
+                    ->whereHas('latestApproval', fn ($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed)))
                 ->distinct('fixed_list_id')
                 ->count('fixed_list_id'),
             'latestApprovedAt' => Application::query()->approvedBeneficiaries()->max('approved_at'),
@@ -48,7 +49,7 @@ class ReferenceController extends Controller
                 ->select(['id', 'program_name as name'])
                 ->orderBy('program_name')
                 ->get(),
-            'academicPrograms' => \App\Models\AcademicProgram::query()
+            'academicPrograms' => AcademicProgram::query()
                 ->where('is_active', true)
                 ->orderBy('name')
                 ->get(),
@@ -80,12 +81,12 @@ class ReferenceController extends Controller
         $path = Storage::disk('local')->path($application->sponsor_approval_path);
         abort_unless(is_file($path), 404, 'Confirmation document not found.');
 
-        $fileName = addcslashes(basename($application->sponsor_approval_path), "\\\"");
+        $fileName = addcslashes(basename($application->sponsor_approval_path), '\\"');
         $mimeType = mime_content_type($path) ?: 'application/octet-stream';
 
         return response()->file($path, [
             'Content-Type' => $mimeType,
-            'Content-Disposition' => 'inline; filename="' . $fileName . '"',
+            'Content-Disposition' => 'inline; filename="'.$fileName.'"',
         ]);
     }
 
@@ -100,12 +101,12 @@ class ReferenceController extends Controller
         $path = Storage::disk('local')->path($approval->approval_document_path);
         abort_unless(is_file($path), 404, 'Confirmation document not found.');
 
-        $fileName = addcslashes(basename($approval->approval_document_path), "\\\"");
+        $fileName = addcslashes(basename($approval->approval_document_path), '\\"');
         $mimeType = mime_content_type($path) ?: 'application/octet-stream';
 
         return response()->file($path, [
             'Content-Type' => $mimeType,
-            'Content-Disposition' => 'inline; filename="' . $fileName . '"',
+            'Content-Disposition' => 'inline; filename="'.$fileName.'"',
         ]);
     }
 
@@ -113,7 +114,7 @@ class ReferenceController extends Controller
     {
         $this->audit($request, 'accounting.beneficiaries.exported', 'accounting');
         $rows = $this->beneficiaryRows($request);
-        $filename = 'sponsorflow-beneficiaries-' . now()->format('Ymd-His') . '.csv';
+        $filename = 'sponsorflow-beneficiaries-'.now()->format('Ymd-His').'.csv';
 
         return response()->streamDownload(function () use ($rows): void {
             $handle = fopen('php://output', 'w');
@@ -164,7 +165,7 @@ class ReferenceController extends Controller
     private function sanitizeCsvValue(mixed $value): mixed
     {
         if (is_string($value) && preg_match('/^[=+\-@]/', $value) === 1) {
-            return "'" . $value;
+            return "'".$value;
         }
 
         return $value;
@@ -195,17 +196,17 @@ class ReferenceController extends Controller
         $approvedApplications = Application::query()
             ->approvedBeneficiaries()
             ->with(['studentProfile.user', 'sponsorshipProgram.sponsor'])
-            ->when($sponsorshipProgramId > 0, fn($query) => $query->where('sponsorship_program_id', $sponsorshipProgramId))
-            ->when($academicProgramId > 0, fn($query) => $query->whereHas('studentProfile', fn($profileQuery) => $profileQuery->where('academic_program_id', $academicProgramId)))
+            ->when($sponsorshipProgramId > 0, fn ($query) => $query->where('sponsorship_program_id', $sponsorshipProgramId))
+            ->when($academicProgramId > 0, fn ($query) => $query->whereHas('studentProfile', fn ($profileQuery) => $profileQuery->where('academic_program_id', $academicProgramId)))
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($query) use ($search): void {
                     $query->whereHas('studentProfile', function ($profileQuery) use ($search): void {
                         $profileQuery->where('student_id_number', 'like', "%{$search}%")
                             ->orWhere('course', 'like', "%{$search}%")
-                            ->orWhereHas('user', fn($userQuery) => $userQuery->where('name', 'like', "%{$search}%"));
+                            ->orWhereHas('user', fn ($userQuery) => $userQuery->where('name', 'like', "%{$search}%"));
                     })->orWhereHas('sponsorshipProgram', function ($programQuery) use ($search): void {
                         $programQuery->where('program_name', 'like', "%{$search}%")
-                            ->orWhereHas('sponsor', fn($sponsorQuery) => $sponsorQuery->where('company_organization_name', 'like', "%{$search}%"));
+                            ->orWhereHas('sponsor', fn ($sponsorQuery) => $sponsorQuery->where('company_organization_name', 'like', "%{$search}%"));
                     });
                 });
             })
@@ -243,20 +244,20 @@ class ReferenceController extends Controller
         $confirmedItems = FixedListItem::query()
             ->where('is_sle_fhe_verified', true)
             ->whereNotNull('fassg_assigned_at')
-            ->whereDoesntHave('application', fn($q) => $q->where('status', ApplicationStatus::Rejected))
+            ->whereDoesntHave('application', fn ($q) => $q->where('status', ApplicationStatus::Rejected))
             ->whereHas('fixedList', function ($query) use ($academicProgramId, $sponsorshipProgramId): void {
                 $query->where('status', FixedListStatus::Approved)
-                    ->whereHas('latestApproval', fn($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed))
+                    ->whereHas('latestApproval', fn ($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed))
                     ->whereNotNull('fassg_assigned_at');
                 if ($sponsorshipProgramId > 0) {
                     $query->where('sponsorship_program_id', $sponsorshipProgramId);
                 }
                 if ($academicProgramId > 0) {
-                    $query->whereHas('sponsorshipProgram', fn($programQuery) => $programQuery->whereHas('academicPrograms', fn($programFilter) => $programFilter->where('academic_programs.program_id', $academicProgramId)));
+                    $query->whereHas('sponsorshipProgram', fn ($programQuery) => $programQuery->whereHas('academicPrograms', fn ($programFilter) => $programFilter->where('academic_programs.program_id', $academicProgramId)));
                 }
             })
-            ->with(['fixedList.sponsorshipProgram.sponsor', 'fixedList.latestApproval'])
-            ->when($search !== '', fn($query) => $query->where(function ($query) use ($search): void {
+            ->with(['fixedList.sponsorshipProgram.sponsor', 'fixedList.latestApproval', 'fixedList.items', 'application.studentProfile'])
+            ->when($search !== '', fn ($query) => $query->where(function ($query) use ($search): void {
                 $query->where('student_id_number', 'like', "%{$search}%")
                     ->orWhere('student_name', 'like', "%{$search}%")
                     ->orWhere('course', 'like', "%{$search}%");
@@ -267,9 +268,18 @@ class ReferenceController extends Controller
                 $program = $item->fixedList->sponsorshipProgram;
                 $approval = $item->fixedList->latestApproval;
 
+                // Queue-generated batches carry items linked to an Application;
+                // manual CSV / encoded lists have items with no application_id.
+                $isGenerated = $item->fixedList->items->contains(
+                    fn (FixedListItem $i) => $i->application_id !== null,
+                );
+
+                $application = $item->application;
+                $profile = $application?->studentProfile;
+
                 return [
                     'source' => 'confirmed_fixed_list',
-                    'application_id' => null,
+                    'application_id' => $item->application_id,
                     'student_id_number' => $item->student_id_number,
                     'student_name' => $item->student_name,
                     'course' => $item->course,
@@ -280,8 +290,14 @@ class ReferenceController extends Controller
                     'sponsor' => $program->sponsor->company_organization_name,
                     'billing_contact' => $program->sponsor->contact_person,
                     'gwa' => null,
-                    'address' => null,
-                    'rurality' => null,
+                    'address' => $isGenerated
+                        ? ($application?->address_submitted ?? $profile?->full_address)
+                        : null,
+                    'rurality' => $isGenerated
+                        ? ($application?->is_rural_submitted
+                            ? 'Rural'
+                            : ($profile?->is_rural ? 'Rural' : 'Urban'))
+                        : null,
                     'confirmation_document' => $approval?->approval_document_path,
                     'document_url' => $approval?->approval_document_path
                         ? route('accounting.fixed-lists.document', $item->fixedList)
@@ -289,6 +305,7 @@ class ReferenceController extends Controller
                     'approved_at' => $approval?->created_at,
                     'billing_status' => 'Confirmed for reference',
                     'application_status' => 'List beneficiary',
+                    'reference_label' => $isGenerated ? 'Generated Batch' : 'Fixed list',
                 ];
             });
 

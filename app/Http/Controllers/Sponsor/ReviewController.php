@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Sponsor;
 use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
 use App\Enums\FixedListStatus;
-use App\Enums\ProgramStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
-use App\Models\AcademicProgram;
 use App\Models\Application;
 use App\Models\FixedList;
 use App\Models\Sponsor;
@@ -28,9 +26,9 @@ class ReviewController extends Controller
         $sponsor = $user->sponsor;
         $pendingReviewCount = ($sponsor?->forwardedFixedLists()->count() ?? 0)
             + Application::query()
-            ->whereHas('sponsorshipProgram', fn($query) => $query->where('sponsor_id', $sponsor?->id))
-            ->where('status', ApplicationStatus::Verified)
-            ->count();
+                ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor?->id))
+                ->where('status', ApplicationStatus::Verified)
+                ->count();
 
         return view('sponsor.dashboard', [
             'user' => $user,
@@ -38,7 +36,7 @@ class ReviewController extends Controller
             'connectedPrograms' => $sponsor?->sponsorshipPrograms()->count() ?? 0,
             'listsPendingReview' => $pendingReviewCount,
             'uploadedApprovals' => Application::query()
-                ->whereHas('sponsorshipProgram', fn($query) => $query->where('sponsor_id', $sponsor?->id))
+                ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor?->id))
                 ->whereIn('status', [ApplicationStatus::Approved, ApplicationStatus::Ongoing])
                 ->whereNotNull('sponsor_approval_path')
                 ->count(),
@@ -49,56 +47,37 @@ class ReviewController extends Controller
     {
         $sponsor = $this->sponsorOrganization($request);
 
-        $baseApplicants = Application::query()
-            ->whereHas('sponsorshipProgram', fn($query) => $query
-                ->where('sponsor_id', $sponsor->id)
-                ->where('status', '!=', ProgramStatus::Expired))
-            ->where('status', ApplicationStatus::Verified);
-
-        // Dropdown options always come from master reference data so they are never
-        // emptied out by an active filter (an empty result set still shows all options).
-        $courses = AcademicProgram::query()
-            ->where('is_active', true)
-            ->orderBy('code')
-            ->get()
-            ->mapWithKeys(fn ($ap) => [$ap->name => "{$ap->code} — {$ap->name}"])
-            ->all();
-
-        $campuses = [
-            'Main Campus (City of Mati)',
-            'Baganga Campus',
-            'Banaybanay Campus',
-            'Cateel Campus',
-            'San Isidro Campus',
-            'Tarragona Campus',
-        ];
-
         $programs = $sponsor->sponsorshipPrograms()
             ->orderBy('program_name')
             ->get(['id', 'program_name']);
 
-        $applicants = (clone $baseApplicants)
-            ->when($request->filled('sponsorship_program_id'), fn($query) => $query->where('sponsorship_program_id', $request->integer('sponsorship_program_id')))
-            ->when($request->filled('course'), fn($query) => $query->whereHas('studentProfile', fn($profileQuery) => $profileQuery->where('course', $request->string('course'))))
-            ->when($request->filled('campus'), fn($query) => $query->whereHas('studentProfile', fn($profileQuery) => $profileQuery->where('campus', $request->string('campus'))))
-            ->with(['studentProfile.user', 'sponsorshipProgram'])
-            ->latest('submitted_at')
+        // Lists generated from the FASSG Application Queue carry linked
+        // applications on their items, whereas manually encoded / CSV-imported
+        // lists have items with no application linkage. Keep them isolated so
+        // individual applications cannot bypass the batch workflow.
+        $generatedBatches = FixedList::query()
+            ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor->id))
+            ->where('status', FixedListStatus::Submitted)
+            ->whereHas('items', fn ($query) => $query->whereNotNull('application_id'))
+            ->with(['sponsorshipProgram', 'latestApproval'])
+            ->when($request->filled('sponsorship_program_id'), fn ($query) => $query->where('sponsorship_program_id', $request->integer('sponsorship_program_id')))
+            ->latest()
             ->get();
 
-        $fixedLists = FixedList::query()
-            ->whereHas('sponsorshipProgram', fn($query) => $query->where('sponsor_id', $sponsor->id))
+        $externalLists = FixedList::query()
+            ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor->id))
             ->where('status', FixedListStatus::Submitted)
+            ->whereDoesntHave('items', fn ($query) => $query->whereNotNull('application_id'))
             ->with(['sponsorshipProgram', 'latestApproval'])
+            ->when($request->filled('sponsorship_program_id'), fn ($query) => $query->where('sponsorship_program_id', $request->integer('sponsorship_program_id')))
             ->latest()
             ->get();
 
         return view('sponsor.approvals.index', [
             'user' => $this->actor($request),
             'sponsor' => $sponsor,
-            'applicants' => $applicants,
-            'fixedLists' => $fixedLists,
-            'courses' => $courses,
-            'campuses' => $campuses,
+            'generatedBatches' => $generatedBatches,
+            'externalLists' => $externalLists,
             'programs' => $programs,
         ]);
     }
@@ -178,7 +157,7 @@ class ReviewController extends Controller
         abort_unless(is_file($path), 404, 'Approval document not found.');
 
         return response()->file($path, [
-            'Content-Disposition' => 'inline; filename="' . basename($application->sponsor_approval_path) . '"',
+            'Content-Disposition' => 'inline; filename="'.basename($application->sponsor_approval_path).'"',
         ]);
     }
 
@@ -210,7 +189,7 @@ class ReviewController extends Controller
             ->get();
 
         $approvals = SponsorApproval::query()
-            ->whereHas('sponsorshipProgram', fn($query) => $query->where('sponsor_id', $sponsorId))
+            ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsorId))
             ->where('confirmation_status', ConfirmationStatus::Confirmed)
             ->with(['fixedList.items.application', 'sponsorshipProgram'])
             ->latest()
