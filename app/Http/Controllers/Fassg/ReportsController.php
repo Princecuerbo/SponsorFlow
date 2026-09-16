@@ -153,19 +153,44 @@ class ReportsController extends Controller
             ->whereNotNull('fassg_assigned_at')
             ->whereHas('latestApproval', fn ($query) => $query->where('confirmation_status', ConfirmationStatus::Confirmed))
             ->when($sponsorshipProgramId > 0, fn ($q) => $q->where('sponsorship_program_id', $sponsorshipProgramId))
+            ->when($term !== null, fn ($q) => $q->whereBetween('fassg_assigned_at', $term))
             ->count();
 
-        $confirmedListNames = FixedListItem::query()
-            ->whereHas('fixedList', function ($q) use ($sponsorshipProgramId): void {
+        $confirmedListItems = FixedListItem::query()
+            ->whereHas('fixedList', function ($q) use ($sponsorshipProgramId, $term): void {
                 $q->whereNotNull('fassg_assigned_at');
                 if ($sponsorshipProgramId > 0) {
                     $q->where('sponsorship_program_id', $sponsorshipProgramId);
                 }
+                if ($term !== null) {
+                    $q->whereBetween('fassg_assigned_at', $term);
+                }
             })
             ->whereDoesntHave('application', fn ($q) => $q->where('status', ApplicationStatus::Rejected))
-            ->count();
+            ->when($campus !== '', function ($q) use ($campus): void {
+                $q->where(function ($sub) use ($campus): void {
+                    $sub->where('fixed_list_items.campus', $campus)
+                        ->orWhereHas('application.studentProfile', fn ($sq) => $sq->where('campus', $campus))
+                        ->orWhereHas('studentProfile', fn ($sq) => $sq->where('campus', $campus));
+                });
+            })
+            ->get(['id', 'application_id']);
+
+        $linkedConfirmedAppIds = $confirmedListItems->pluck('application_id')->filter()->all();
+
+        $standaloneApprovedCount = Application::query()
+            ->previouslyApprovedBeneficiaries()
+            ->when($term !== null, $termScope)
+            ->when($campus !== '', $campusScope)
+            ->when($sponsorshipProgramId > 0, $programScope)
+            ->when(!empty($linkedConfirmedAppIds), fn ($q) => $q->whereNotIn('id', $linkedConfirmedAppIds))
+            ->distinct('student_profile_id')
+            ->count('student_profile_id');
+
+        $confirmedListNames = $confirmedListItems->count() + $standaloneApprovedCount;
 
         $categoryBreakdown = SponsorshipProgram::query()
+            ->when($sponsorshipProgramId > 0, fn ($q) => $q->where('id', $sponsorshipProgramId))
             ->select('category', DB::raw('count(*) as programs'))
             ->groupBy('category')
             ->pluck('programs', 'category')
@@ -200,23 +225,37 @@ class ReportsController extends Controller
             ->pluck('student_profile_id');
 
         $confirmedFixedListStudentIds = FixedListItem::query()
-            ->whereHas('fixedList', function ($q) use ($sponsorshipProgramId): void {
+            ->whereHas('fixedList', function ($q) use ($sponsorshipProgramId, $term): void {
                 $q->whereNotNull('fassg_assigned_at');
                 if ($sponsorshipProgramId > 0) {
                     $q->where('sponsorship_program_id', $sponsorshipProgramId);
                 }
+                if ($term !== null) {
+                    $q->whereBetween('fassg_assigned_at', $term);
+                }
             })
             ->whereDoesntHave('application', fn ($q) => $q->where('status', ApplicationStatus::Rejected))
+            ->when($campus !== '', function ($q) use ($campus): void {
+                $q->where(function ($sub) use ($campus): void {
+                    $sub->where('fixed_list_items.campus', $campus)
+                        ->orWhereHas('application.studentProfile', fn ($sq) => $sq->where('campus', $campus))
+                        ->orWhereHas('studentProfile', fn ($sq) => $sq->where('campus', $campus));
+                });
+            })
             ->pluck('student_id_number');
 
         $fixedListProfileIds = StudentProfile::query()
             ->whereIn('student_id_number', $confirmedFixedListStudentIds)
+            ->when($campus !== '', fn ($q) => $q->where('campus', $campus))
             ->pluck('id');
 
         $allProfileIds = $applicantProfileIds->merge($fixedListProfileIds)->unique();
 
-        $genderDistribution = StudentProfile::query()
+        $baseProfileQuery = fn (): Builder => StudentProfile::query()
             ->whereIn('id', $allProfileIds)
+            ->when($campus !== '', fn ($q) => $q->where('campus', $campus));
+
+        $genderDistribution = $baseProfileQuery()
             ->selectRaw("COALESCE(gender, 'Unassigned') as label")
             ->selectRaw('COUNT(*) as total')
             ->groupByRaw("COALESCE(gender, 'Unassigned')")
@@ -224,8 +263,7 @@ class ReportsController extends Controller
             ->pluck('total', 'label')
             ->all();
 
-        $byMunicipality = StudentProfile::query()
-            ->whereIn('id', $allProfileIds)
+        $byMunicipality = $baseProfileQuery()
             ->get(['id', 'province', 'municipality', 'barangay', 'home_address'])
             ->map(function (StudentProfile $profile): string {
                 $municipality = trim((string) ($profile->municipality ?? ''));
@@ -276,19 +314,11 @@ class ReportsController extends Controller
             ->take(10)
             ->all();
 
-        $baseProfileQuery = fn (): Builder => StudentProfile::query()->whereIn('id', $allProfileIds);
-
         $demographics = [
             'rural' => $baseProfileQuery()->where('is_rural', true)->count(),
             'urban' => $baseProfileQuery()->where('is_rural', false)->count(),
             'sle_fhe_verified' => $baseProfileQuery()->where('is_sle_fhe_verified', true)->count(),
-            'by_gender' => $baseProfileQuery()
-                ->selectRaw("COALESCE(gender, 'Unassigned') as label")
-                ->selectRaw('COUNT(*) as total')
-                ->groupByRaw("COALESCE(gender, 'Unassigned')")
-                ->get()
-                ->pluck('total', 'label')
-                ->all(),
+            'by_gender' => $genderDistribution,
             'by_campus' => $baseProfileQuery()
                 ->selectRaw("COALESCE(campus, 'Unassigned') as label")
                 ->selectRaw('COUNT(*) as total')
@@ -312,24 +342,54 @@ class ReportsController extends Controller
                 ->get()
                 ->pluck('total', 'label')
                 ->all(),
-            'by_barangay' => $byMunicipality,
+            'by_barangay' => $baseProfileQuery()
+                ->whereNotNull('barangay')
+                ->where('barangay', '!=', '')
+                ->selectRaw("barangay as label, count(*) as total")
+                ->groupBy('barangay')
+                ->orderByDesc('total')
+                ->limit(10)
+                ->pluck('total', 'label')
+                ->all(),
             'by_municipality' => $byMunicipality,
         ];
 
         $slotUtilization = SponsorshipProgram::query()
+            ->when($sponsorshipProgramId > 0, fn ($q) => $q->where('id', $sponsorshipProgramId))
             ->select('id', 'program_name', 'total_slots', 'available_slots', 'status')
             ->orderBy('program_name')
             ->get()
-            ->map(function (SponsorshipProgram $program): SponsorshipProgram {
-                $filledSlots = FixedListItem::query()
-                    ->whereHas('fixedList', fn ($q) => $q
-                        ->where('sponsorship_program_id', $program->id)
-                        ->whereNotNull('fassg_assigned_at')
-                    )
+            ->map(function (SponsorshipProgram $program) use ($campus, $term, $termScope, $campusScope): SponsorshipProgram {
+                $flItems = FixedListItem::query()
+                    ->whereHas('fixedList', function ($q) use ($program, $term): void {
+                        $q->where('sponsorship_program_id', $program->id)
+                            ->whereNotNull('fassg_assigned_at');
+                        if ($term !== null) {
+                            $q->whereBetween('fassg_assigned_at', $term);
+                        }
+                    })
                     ->whereDoesntHave('application', fn ($q) => $q
                         ->where('status', ApplicationStatus::Rejected)
                     )
+                    ->when($campus !== '', function ($q) use ($campus): void {
+                        $q->where(function ($sub) use ($campus): void {
+                            $sub->where('fixed_list_items.campus', $campus)
+                                ->orWhereHas('application.studentProfile', fn ($sq) => $sq->where('campus', $campus))
+                                ->orWhereHas('studentProfile', fn ($sq) => $sq->where('campus', $campus));
+                        });
+                    })
+                    ->get(['id', 'application_id']);
+
+                $linkedAppIds = $flItems->pluck('application_id')->filter()->all();
+
+                $standaloneApprovedApps = $program->applications()
+                    ->previouslyApprovedBeneficiaries()
+                    ->when($term !== null, $termScope)
+                    ->when($campus !== '', $campusScope)
+                    ->when(!empty($linkedAppIds), fn ($q) => $q->whereNotIn('id', $linkedAppIds))
                     ->count();
+
+                $filledSlots = $flItems->count() + $standaloneApprovedApps;
 
                 $program->setAttribute('approved_count', $filledSlots);
                 $program->setAttribute('available_slots', max(0, (int) $program->total_slots - $filledSlots));
@@ -337,7 +397,9 @@ class ReportsController extends Controller
                 return $program;
             });
 
-        $programSlots = (int) SponsorshipProgram::sum('total_slots');
+        $programSlots = (int) SponsorshipProgram::query()
+            ->when($sponsorshipProgramId > 0, fn ($q) => $q->where('id', $sponsorshipProgramId))
+            ->sum('total_slots');
         $filledSlots = (int) $slotUtilization->sum(fn (SponsorshipProgram $program): int => (int) $program->approved_count);
         $applicantCategoryTotals = $this->categoryTotals($applicantsByCategory);
         $categoryBreakdown = collect($this->categoryTotals($categoryBreakdown))
@@ -436,9 +498,9 @@ class ReportsController extends Controller
         $endYear = (int) $matches[2];
 
         return match ($semester) {
-            'First' => [sprintf('%04d-08-01', $startYear), sprintf('%04d-01-31', $endYear)],
-            'Second' => [sprintf('%04d-02-01', $endYear), sprintf('%04d-06-30', $endYear)],
-            default => [sprintf('%04d-08-01', $startYear), sprintf('%04d-06-30', $endYear)],
+            'First' => [sprintf('%04d-08-01 00:00:00', $startYear), sprintf('%04d-01-31 23:59:59', $endYear)],
+            'Second' => [sprintf('%04d-02-01 00:00:00', $endYear), sprintf('%04d-06-30 23:59:59', $endYear)],
+            default => [sprintf('%04d-08-01 00:00:00', $startYear), sprintf('%04d-06-30 23:59:59', $endYear)],
         };
     }
 

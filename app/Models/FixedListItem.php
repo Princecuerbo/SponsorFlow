@@ -66,10 +66,13 @@ class FixedListItem extends Model
         return $this->belongsTo(User::class, 'fassg_assigned_by_id');
     }
 
+    public function studentProfile(): BelongsTo
+    {
+        return $this->belongsTo(StudentProfile::class, 'student_id_number', 'student_id_number');
+    }
+
     public function matchingStudentProfile(): ?StudentProfile
     {
-        return StudentProfile::query()
-            ->where('student_id_number', $this->student_id_number)
-            ->first();
+        return $this->studentProfile;
     }
 }

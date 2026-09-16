@@ -144,7 +144,7 @@
             <div class="sf-stat-card p-3">
                 <div class="sf-eyebrow mb-1">Confirmed Beneficiaries</div>
                 <div class="h4 sf-heading mb-1">{{ $report['confirmed_beneficiaries'] ?? 0 }}</div>
-                <div class="small text-secondary">Approved applications: {{ $approvedBeneficiaries ?? 0 }}</div>
+                <div class="small text-secondary">Approved/Ongoing applications: {{ $approvedBeneficiaries ?? 0 }}</div>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
