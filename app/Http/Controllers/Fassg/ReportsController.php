@@ -329,11 +329,7 @@ class ReportsController extends Controller
                     ? $program->applications()
                         ->when($term !== null, $termScope)
                         ->when($campus !== '', $campusScope)
-                        ->whereIn('status', [
-                            ApplicationStatus::Verified,
-                            ApplicationStatus::Approved,
-                            ApplicationStatus::Ongoing,
-                        ])
+                        ->where('status', ApplicationStatus::Approved)
                         ->distinct('student_profile_id')
                         ->count('student_profile_id')
                     : $program->applications()

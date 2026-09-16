@@ -117,11 +117,10 @@ class SponsorshipProgram extends Model
         $query = $this->applications();
 
         if ($this->status === ProgramStatus::Open) {
-            $query->whereIn('status', [
-                ApplicationStatus::Verified,
-                ApplicationStatus::Approved,
-                ApplicationStatus::Ongoing,
-            ]);
+            // Only Approved applications consume program capacity. Pending,
+            // Verified, Rejected, and Ongoing applications never reduce the
+            // remaining slot quota.
+            $query->where('status', ApplicationStatus::Approved);
         } else {
             $query->previouslyApprovedBeneficiaries();
         }

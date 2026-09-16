@@ -78,6 +78,16 @@ class ApplicantVerificationController extends Controller
 
         $selectedProgram = $programId > 0 ? $programs->firstWhere('id', $programId) : null;
 
+        // Program capacity minus only Approved applications. Pending, Verified,
+        // and Rejected applications never reduce the remaining slot quota, so
+        // rejecting an applicant instantly frees capacity in the queue.
+        $availableSlots = $selectedProgram !== null
+            ? max(0, $selectedProgram->total_slots - $selectedProgram->applications()
+                ->where('status', ApplicationStatus::Approved)
+                ->distinct('student_profile_id')
+                ->count('student_profile_id'))
+            : null;
+
         $scoped = Application::query()
             ->whereHas('studentProfile', fn ($q) => $q->where('is_sle_fhe_verified', true));
 
@@ -97,7 +107,7 @@ class ApplicantVerificationController extends Controller
             'rejectedCount' => $rejectedCount,
             'programs' => $programs,
             'selectedProgram' => $selectedProgram,
-            'availableSlots' => $selectedProgram?->available_slots ?? null,
+            'availableSlots' => $availableSlots,
             'selectedProgramId' => $programId,
             'selectedStatus' => $statusEnum?->value,
         ]);
