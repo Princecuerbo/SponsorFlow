@@ -6,7 +6,7 @@
 @endphp
 
 <nav class="sf-navbar navbar bg-white border-bottom py-0 sticky-top" style="min-height:60px;">
-    <div class="container-fluid d-flex w-100 align-items-center justify-content-between gap-2 gap-xl-3 py-2 px-3 px-xl-4 flex-nowrap" style="min-width: 0;">
+    <div class="container-xxl d-flex w-100 align-items-center justify-content-between gap-2 gap-xl-3 py-2 flex-nowrap" style="min-width: 0;">
 
         {{-- Brand --}}
         <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-decoration-none flex-shrink-0 sf-nav-brand"
@@ -449,7 +449,7 @@
         display: none !important;
     }
 
-    .sf-navbar .container-fluid {
+    .sf-navbar .container-xxl {
         justify-content: space-between;
     }
 
