@@ -74,6 +74,11 @@ class Application extends Model
         return $this->belongsTo(User::class, 'endorsed_by_id');
     }
 
+    public function fixedListItems(): HasMany
+    {
+        return $this->hasMany(FixedListItem::class);
+    }
+
     public function getStatusAttribute($value): ?ApplicationStatus
     {
         if ($this->sponsorshipProgram?->status === ProgramStatus::Expired) {

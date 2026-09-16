@@ -112,7 +112,7 @@ class DashboardController extends Controller
 
             $statusCounts = Application::query()
                 ->select('status')
-                ->selectRaw('count(distinct student_profile_id) as total')
+                ->selectRaw('count(*) as total')
                 ->groupBy('status')
                 ->pluck('total', 'status')
                 ->all();
@@ -162,15 +162,21 @@ class DashboardController extends Controller
                                         ->orWhere(function ($query): void {
                                             $query->where('status', ApplicationStatus::Expired)
                                                 ->whereNotNull('approved_at');
+                                        })
+                                        ->orWhere(function ($query): void {
+                                            $query->where('status', ApplicationStatus::Verified)
+                                                ->whereHas('fixedListItems.fixedList', fn ($q) => $q->whereNotNull('fassg_assigned_at'));
                                         });
                                 })
-                                ->distinct('student_profile_id')
-                                ->count('student_profile_id'),
+                                ->count(),
+                            ApplicationStatus::Verified => Application::query()
+                                ->where('status', ApplicationStatus::Verified)
+                                ->whereDoesntHave('fixedListItems.fixedList', fn ($q) => $q->whereNotNull('fassg_assigned_at'))
+                                ->count(),
                             ApplicationStatus::Expired => Application::query()
                                 ->where('status', ApplicationStatus::Expired)
                                 ->whereNull('approved_at')
-                                ->distinct('student_profile_id')
-                                ->count('student_profile_id'),
+                                ->count(),
                             default => (int) ($statusCounts[$status->value] ?? 0),
                         };
 

@@ -155,19 +155,29 @@ class ApprovalUploadController extends Controller
 
     private function promoteMatchingApplications(FixedList $fixedList, SponsorshipProgram $program): void
     {
-        $studentIds = $fixedList->items()
+        $eligibleItems = $fixedList->items()
             ->where('is_sle_fhe_verified', true)
-            ->pluck('student_id_number')
-            ->filter();
+            ->whereNotNull('fassg_assigned_at')
+            ->get();
 
-        if ($studentIds->isEmpty()) {
+        $applicationIds = $eligibleItems->pluck('application_id')->filter()->unique();
+        $studentIds = $eligibleItems->pluck('student_id_number')->filter()->unique();
+
+        if ($applicationIds->isEmpty() && $studentIds->isEmpty()) {
             return;
         }
 
         $applications = Application::query()
             ->where('sponsorship_program_id', $fixedList->sponsorship_program_id)
-            ->whereHas('studentProfile', fn ($query) => $query->whereIn('student_id_number', $studentIds))
-            ->where('status', ApplicationStatus::Pending)
+            ->where(function ($query) use ($applicationIds, $studentIds): void {
+                if ($applicationIds->isNotEmpty()) {
+                    $query->whereIn('id', $applicationIds);
+                }
+                if ($studentIds->isNotEmpty()) {
+                    $query->orWhereHas('studentProfile', fn ($subQuery) => $subQuery->whereIn('student_id_number', $studentIds));
+                }
+            })
+            ->whereIn('status', [ApplicationStatus::Pending, ApplicationStatus::Verified])
             ->with('studentProfile')
             ->get();
 
@@ -185,8 +195,9 @@ class ApprovalUploadController extends Controller
                 continue;
             }
 
+            $previousStatus = $application->status;
             $application->update([
-                'status' => ApplicationStatus::Ongoing,
+                'status' => ApplicationStatus::Approved,
                 'approved_at' => now(),
             ]);
 
@@ -194,7 +205,7 @@ class ApprovalUploadController extends Controller
 
             if (! $program->decrementAvailableSlot()) {
                 $application->update([
-                    'status' => ApplicationStatus::Pending,
+                    'status' => $previousStatus,
                     'approved_at' => null,
                 ]);
                 $profile->update(['active_sponsorship_id' => null]);
@@ -204,7 +215,7 @@ class ApprovalUploadController extends Controller
             $studentUser = $application->studentProfile->user ?? null;
 
             if ($studentUser !== null) {
-                $studentUser->notify(new ApplicationStatusUpdated($application, ApplicationStatus::Ongoing));
+                $studentUser->notify(new ApplicationStatusUpdated($application, ApplicationStatus::Approved));
             }
         }
     }
