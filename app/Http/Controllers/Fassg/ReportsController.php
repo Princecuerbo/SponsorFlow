@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Fassg;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
-use App\Enums\FixedListStatus;
 use App\Enums\ProgramCategory;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
@@ -151,20 +150,20 @@ class ReportsController extends Controller
             ->count('student_profile_id');
 
         $confirmedLists = FixedList::query()
-            ->where('status', FixedListStatus::Approved)
+            ->whereNotNull('fassg_assigned_at')
             ->whereHas('latestApproval', fn ($query) => $query->where('confirmation_status', ConfirmationStatus::Confirmed))
             ->when($sponsorshipProgramId > 0, fn ($q) => $q->where('sponsorship_program_id', $sponsorshipProgramId))
             ->count();
 
-        $confirmedListNames = FixedList::query()
-            ->where('status', FixedListStatus::Approved)
-            ->whereHas('latestApproval', fn ($query) => $query->where('confirmation_status', ConfirmationStatus::Confirmed))
-            ->when($sponsorshipProgramId > 0, fn ($q) => $q->where('sponsorship_program_id', $sponsorshipProgramId))
-            ->withCount('items')
-            ->get()
-            ->sum('items_count');
-
-        $totalBeneficiaries = $approvedBeneficiaries + $confirmedListNames;
+        $confirmedListNames = FixedListItem::query()
+            ->whereHas('fixedList', function ($q) use ($sponsorshipProgramId): void {
+                $q->whereNotNull('fassg_assigned_at');
+                if ($sponsorshipProgramId > 0) {
+                    $q->where('sponsorship_program_id', $sponsorshipProgramId);
+                }
+            })
+            ->whereDoesntHave('application', fn ($q) => $q->where('status', ApplicationStatus::Rejected))
+            ->count();
 
         $categoryBreakdown = SponsorshipProgram::query()
             ->select('category', DB::raw('count(*) as programs'))
@@ -202,12 +201,12 @@ class ReportsController extends Controller
 
         $confirmedFixedListStudentIds = FixedListItem::query()
             ->whereHas('fixedList', function ($q) use ($sponsorshipProgramId): void {
-                $q->where('status', FixedListStatus::Approved)
-                    ->whereHas('latestApproval', fn ($sub) => $sub->where('confirmation_status', ConfirmationStatus::Confirmed));
+                $q->whereNotNull('fassg_assigned_at');
                 if ($sponsorshipProgramId > 0) {
                     $q->where('sponsorship_program_id', $sponsorshipProgramId);
                 }
             })
+            ->whereDoesntHave('application', fn ($q) => $q->where('status', ApplicationStatus::Rejected))
             ->pluck('student_id_number');
 
         $fixedListProfileIds = StudentProfile::query()
@@ -386,7 +385,7 @@ class ReportsController extends Controller
             'user' => $this->actor($request),
             'applicantTrends' => $applicantTrends,
             'applicantCounts' => $this->statusTotals($applicantCounts),
-            'approvedBeneficiaries' => $totalBeneficiaries,
+            'approvedBeneficiaries' => $approvedBeneficiaries,
             'confirmedLists' => $confirmedLists,
             'confirmedListNames' => $confirmedListNames,
             'applicantsByCategory' => $this->categoryTotals($applicantsByCategory),
@@ -397,7 +396,7 @@ class ReportsController extends Controller
                 'slots_filled' => $filledSlots,
                 'slots_total' => $programSlots,
                 'total_applicants' => array_sum($this->statusTotals($applicantCounts)),
-                'confirmed_beneficiaries' => $totalBeneficiaries,
+                'confirmed_beneficiaries' => $confirmedListNames,
                 'rural_pct' => $demographics['rural'] + $demographics['urban'] > 0
                     ? round(($demographics['rural'] / ($demographics['rural'] + $demographics['urban'])) * 100, 1)
                     : 0,

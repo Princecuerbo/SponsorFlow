@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ApplicationStatus;
-use App\Enums\ConfirmationStatus;
-use App\Enums\FixedListStatus;
 use App\Enums\ProgramStatus;
 use App\Models\Application;
-use App\Models\FixedList;
+use App\Models\FixedListItem;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
 use Illuminate\Http\Request;
@@ -133,18 +131,10 @@ class DashboardController extends Controller
                 ->whereIn('status', [ProgramStatus::Open->value, ProgramStatus::Closed->value])
                 ->count();
 
-            $confirmedBeneficiaries = Application::previouslyApprovedBeneficiaries()
-                ->distinct('student_profile_id')
-                ->count('student_profile_id');
-
-            $confirmedFixedListNamesCount = FixedList::query()
-                ->where('status', FixedListStatus::Approved)
-                ->whereHas('latestApproval', fn ($q) => $q->where('confirmation_status', ConfirmationStatus::Confirmed))
-                ->withCount('items')
-                ->get()
-                ->sum('items_count');
-
-            $totalConfirmedBeneficiaries = $confirmedBeneficiaries + $confirmedFixedListNamesCount;
+            $confirmedBeneficiaries = FixedListItem::query()
+                ->whereHas('fixedList', fn ($q) => $q->whereNotNull('fassg_assigned_at'))
+                ->whereDoesntHave('application', fn ($q) => $q->where('status', ApplicationStatus::Rejected))
+                ->count();
 
             return view('fassg.dashboard', [
                 'user' => $user,
@@ -161,7 +151,7 @@ class DashboardController extends Controller
                         })
                         ->count(),
                     'active_programs' => $activeProgramsCount,
-                    'confirmed_beneficiaries' => $totalConfirmedBeneficiaries,
+                    'confirmed_beneficiaries' => $confirmedBeneficiaries,
                 ],
                 'applicationStatusBreakdown' => collect(ApplicationStatus::cases())
                     ->mapWithKeys(function (ApplicationStatus $status) use ($statusCounts): array {

@@ -37,10 +37,11 @@ class ReviewController extends Controller
             'listsPendingReview' => $pendingReviewCount,
             'uploadedApprovals' => FixedList::query()
                 ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor?->id))
-                ->where(fn ($query) => $query
-                    ->where('status', FixedListStatus::Approved)
-                    ->orWhereHas('latestApproval', fn ($approval) => $approval->whereNotNull('approval_document_path'))
-                    ->orWhereHas('latestApproval', fn ($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed)))
+                ->where('status', FixedListStatus::Approved)
+                ->whereNotNull('fassg_assigned_at')
+                ->whereHas('latestApproval', fn ($approval) => $approval
+                    ->whereNotNull('approval_document_path')
+                    ->where('confirmation_status', ConfirmationStatus::Confirmed))
                 ->count(),
         ]);
     }
