@@ -35,19 +35,11 @@ class ApplicantVerificationController extends Controller
         $campus    = $request->string('campus')->trim()->toString();
         $status    = $request->string('status')->trim()->toString();
 
-        $actionableStatuses = [
-            ApplicationStatus::Pending,
-            ApplicationStatus::Verified,
-            ApplicationStatus::ResubmissionRequested,
-        ];
-
-        $filterableStatuses = [
-            ApplicationStatus::Pending,
-            ApplicationStatus::Verified,
-            ApplicationStatus::Approved,
-            ApplicationStatus::ResubmissionRequested,
-            ApplicationStatus::Rejected,
-        ];
+        $statusEnum = $status !== ''
+            ? collect(ApplicationStatus::cases())->first(
+                fn ($case) => strcasecmp($case->value, $status) === 0,
+            )
+            : null;
 
         $applications = Application::query()
             ->with(['studentProfile.user', 'sponsorshipProgram.sponsor', 'documents'])
@@ -66,17 +58,10 @@ class ApplicantVerificationController extends Controller
             })
             ->when($programId > 0, fn ($q) => $q->where('sponsorship_program_id', $programId))
             ->when(
-                $status !== '' && in_array(ApplicationStatus::tryFrom($status), $filterableStatuses, true),
-                fn ($q) => $q->where('status', $status)
+                $statusEnum !== null,
+                fn ($q) => $q->where('status', $statusEnum->value),
             )
             ->when(
-                $status === '',
-                fn ($q) => $q->whereIn('status', $actionableStatuses)
-            )
-            ->when(
-                // When a specific program is selected, rank the queue by best GWA first
-                // (ASC = best to lowest) so officers can shortlist the top candidates
-                // against the program's available slots.
                 $programId > 0,
                 fn ($q) => $q
                     ->orderBy('applications.gpa_submitted', 'asc')
@@ -114,6 +99,7 @@ class ApplicantVerificationController extends Controller
             'selectedProgram'      => $selectedProgram,
             'availableSlots'       => $selectedProgram?->available_slots ?? null,
             'selectedProgramId'    => $programId,
+            'selectedStatus'       => $statusEnum?->value,
         ]);
     }
 

@@ -42,6 +42,13 @@
             border-radius: 2rem;
             font-size: 0.8rem;
             font-weight: 600;
+            text-decoration: none;
+            transition: all 0.15s ease-in-out;
+        }
+
+        .stat-pill:hover {
+            opacity: 0.85;
+            text-decoration: none;
         }
     </style>
 @endpush
@@ -55,21 +62,29 @@
             <p class="text-secondary mb-0">Review submitted scholarship applications from SLE-FHE verified students.</p>
         </div>
         <div class="d-flex flex-wrap gap-2">
-            <span class="stat-pill bg-warning bg-opacity-10 text-dark border border-warning-subtle">
-                <i class="bi bi-hourglass-split"></i> {{ $pendingCount ?? 0 }} Pending Applications
-            </span>
-            <span class="stat-pill bg-primary bg-opacity-10 text-primary border border-primary-subtle">
-                <i class="bi bi-patch-check"></i> {{ $verifiedCount ?? 0 }} Verified
-            </span>
-            <span class="stat-pill bg-success bg-opacity-10 text-success border border-success-subtle">
-                <i class="bi bi-award"></i> {{ $approvedCount ?? 0 }} Approved
-            </span>
-            <span class="stat-pill bg-info bg-opacity-10 text-info border border-info-subtle">
-                <i class="bi bi-arrow-counterclockwise"></i> {{ $resubmissionCount ?? 0 }} Resubmission Requested
-            </span>
-            <span class="stat-pill bg-danger bg-opacity-10 text-danger border border-danger-subtle">
-                <i class="bi bi-x-circle"></i> {{ $rejectedCount ?? 0 }} Rejected
-            </span>
+            @php
+                $statusLinks = [
+                    ['label' => 'Pending Applications', 'enum' => 'Pending', 'param' => 'pending', 'icon' => 'bi-hourglass-split', 'activeBg' => 'bg-warning bg-opacity-25 border-warning', 'inactiveBg' => 'bg-warning bg-opacity-10 border-warning-subtle', 'textColor' => 'text-dark'],
+                    ['label' => 'Verified', 'enum' => 'Verified', 'param' => 'verified', 'icon' => 'bi-patch-check', 'activeBg' => 'bg-primary bg-opacity-25 border-primary', 'inactiveBg' => 'bg-primary bg-opacity-10 border-primary-subtle', 'textColor' => 'text-primary'],
+                    ['label' => 'Approved', 'enum' => 'Approved', 'param' => 'approved', 'icon' => 'bi-award', 'activeBg' => 'bg-success bg-opacity-25 border-success', 'inactiveBg' => 'bg-success bg-opacity-10 border-success-subtle', 'textColor' => 'text-success'],
+                    ['label' => 'Resubmission Requested', 'enum' => 'Resubmission Requested', 'param' => 'resubmission requested', 'icon' => 'bi-arrow-counterclockwise', 'activeBg' => 'bg-info bg-opacity-25 border-info', 'inactiveBg' => 'bg-info bg-opacity-10 border-info-subtle', 'textColor' => 'text-info'],
+                    ['label' => 'Rejected', 'enum' => 'Rejected', 'param' => 'rejected', 'icon' => 'bi-x-circle', 'activeBg' => 'bg-danger bg-opacity-25 border-danger', 'inactiveBg' => 'bg-danger bg-opacity-10 border-danger-subtle', 'textColor' => 'text-danger'],
+                ];
+                $counts = [
+                    'Pending' => $pendingCount ?? 0,
+                    'Verified' => $verifiedCount ?? 0,
+                    'Approved' => $approvedCount ?? 0,
+                    'Resubmission Requested' => $resubmissionCount ?? 0,
+                    'Rejected' => $rejectedCount ?? 0,
+                ];
+            @endphp
+            @foreach ($statusLinks as $link)
+                @php $isActive = ($selectedStatus ?? null) === $link['enum']; @endphp
+                <a href="{{ route('fassg.applications.index', array_merge(request()->query(), ['status' => $link['param']])) }}"
+                    class="stat-pill {{ $isActive ? $link['activeBg'] : $link['inactiveBg'] }} border {{ $link['textColor'] }}">
+                    <i class="bi {{ $link['icon'] }}"></i> {{ $counts[$link['enum']] }} {{ $link['label'] }}
+                </a>
+            @endforeach
             @if ($selectedProgram && $availableSlots !== null)
                 <span class="stat-pill bg-cyan-50 text-cyan-700 border border-cyan-200">
                     <i class="bi bi-people"></i> Available Slots: {{ $availableSlots }}
