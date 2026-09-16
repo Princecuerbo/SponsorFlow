@@ -246,19 +246,24 @@ class FixedListController extends Controller
             return back()->withErrors(['list' => 'Encode or upload at least one student before submitting.']);
         }
 
-        $hasPendingApplication = $fixedList->items()
+        $items = $fixedList->items()
             ->with('application')
             ->whereNotNull('application_id')
-            ->get()
-            ->map(static fn (FixedListItem $item) => $item->application)
-            ->filter()
-            ->contains(static fn ($application) => $application->status === ApplicationStatus::Pending);
+            ->get();
 
-        if ($hasPendingApplication) {
+        $applications = $items
+            ->map(static fn (FixedListItem $item) => $item->application)
+            ->filter();
+
+        if ($applications->contains(static fn ($application) => $application->status === ApplicationStatus::Pending)) {
             return back()->withErrors([
                 'list' => 'Cannot submit batch to sponsor. Please review and verify all pending applications first.',
             ]);
         }
+
+        $items
+            ->filter(static fn (FixedListItem $item) => $item->application?->status === ApplicationStatus::Rejected)
+            ->each(static fn (FixedListItem $item) => $item->update(['status' => FixedListItemStatus::Ineligible]));
 
         $fixedList->update(['status' => FixedListStatus::Submitted]);
         $this->refreshTotalNames($fixedList);
@@ -353,6 +358,7 @@ class FixedListController extends Controller
 
             $fixedList->items()
                 ->where('is_sle_fhe_verified', true)
+                ->whereDoesntHave('application', fn($query) => $query->where('status', ApplicationStatus::Rejected))
                 ->update([
                     'fassg_assigned_at' => now(),
                     'fassg_assigned_by_id' => $this->actor($request)->id,
@@ -375,7 +381,11 @@ class FixedListController extends Controller
 
     private function refreshTotalNames(FixedList $fixedList): void
     {
-        $fixedList->update(['total_names' => $fixedList->items()->count()]);
+        $fixedList->update([
+            'total_names' => $fixedList->items()
+                ->where('status', '!=', FixedListItemStatus::Ineligible)
+                ->count(),
+        ]);
     }
 
     private function processCsvImport(FixedList $fixedList, UploadedFile $uploadedFile, array $criteria = []): void

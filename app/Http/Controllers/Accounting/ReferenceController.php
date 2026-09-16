@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Accounting;
 
+use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
 use App\Enums\FixedListStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
@@ -242,6 +243,7 @@ class ReferenceController extends Controller
         $confirmedItems = FixedListItem::query()
             ->where('is_sle_fhe_verified', true)
             ->whereNotNull('fassg_assigned_at')
+            ->whereDoesntHave('application', fn($q) => $q->where('status', ApplicationStatus::Rejected))
             ->whereHas('fixedList', function ($query) use ($academicProgramId, $sponsorshipProgramId): void {
                 $query->where('status', FixedListStatus::Approved)
                     ->whereHas('latestApproval', fn($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed))

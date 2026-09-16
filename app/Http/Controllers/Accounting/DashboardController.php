@@ -8,7 +8,6 @@ use App\Enums\FixedListStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
-use App\Models\FixedList;
 use App\Models\FixedListItem;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -20,15 +19,18 @@ class DashboardController extends Controller
     public function index(Request $request): View
     {
         $approvedApplications = Application::query()
-            ->where('status', ApplicationStatus::Approved)
+            ->approvedBeneficiaries()
             ->with(['studentProfile.user', 'sponsorshipProgram.sponsor'])
             ->latest('approved_at')
             ->get();
 
         $confirmedListItems = FixedListItem::query()
             ->where('is_sle_fhe_verified', true)
+            ->whereNotNull('fassg_assigned_at')
+            ->whereDoesntHave('application', fn($q) => $q->where('status', ApplicationStatus::Rejected))
             ->whereHas('fixedList', function ($query): void {
                 $query->where('status', FixedListStatus::Approved)
+                    ->whereNotNull('fassg_assigned_at')
                     ->whereHas('latestApproval', fn($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed));
             })
             ->with('fixedList.sponsorshipProgram.sponsor')
