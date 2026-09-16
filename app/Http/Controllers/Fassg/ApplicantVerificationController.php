@@ -72,9 +72,14 @@ class ApplicantVerificationController extends Controller
             ->withQueryString();
 
         $programs = SponsorshipProgram::query()
-            ->with('sponsor')
+            ->with(['sponsor', 'fixedLists' => function ($q): void {
+                $q->whereIn('status', [FixedListStatus::Saved, FixedListStatus::Draft])
+                    ->orderBy('batch_name');
+            }])
             ->orderBy('program_name')
             ->get();
+
+        $savedFixedLists = $programs->pluck('fixedLists')->flatten()->values();
 
         $selectedProgram = $programId > 0 ? $programs->firstWhere('id', $programId) : null;
 
@@ -106,6 +111,7 @@ class ApplicantVerificationController extends Controller
             'resubmissionCount' => $resubmissionCount,
             'rejectedCount' => $rejectedCount,
             'programs' => $programs,
+            'savedFixedLists' => $savedFixedLists,
             'selectedProgram' => $selectedProgram,
             'availableSlots' => $availableSlots,
             'selectedProgramId' => $programId,
@@ -116,14 +122,39 @@ class ApplicantVerificationController extends Controller
     public function createBatch(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'batch_name' => ['required', 'string', 'max:150'],
+            'batch_name' => [
+                'nullable',
+                'string',
+                'max:150',
+                Rule::requiredIf($request->filled('existing_fixed_list_id') === false),
+            ],
             'sponsorship_program_id' => ['required', 'integer', 'exists:sponsorship_programs,id'],
             'selected_applications' => ['required', 'array', 'min:1'],
             'selected_applications.*' => ['integer'],
+            'existing_fixed_list_id' => ['nullable', 'integer', 'exists:fixed_lists,id'],
         ]);
 
         $programId = (int) $validated['sponsorship_program_id'];
         $applicationIds = array_values(array_unique(array_map('intval', $validated['selected_applications'])));
+
+        $appendToId = isset($validated['existing_fixed_list_id']) && $validated['existing_fixed_list_id'] !== null
+            ? (int) $validated['existing_fixed_list_id']
+            : null;
+
+        $targetList = null;
+        if ($appendToId !== null) {
+            $targetList = FixedList::query()
+                ->where('id', $appendToId)
+                ->where('sponsorship_program_id', $programId)
+                ->whereIn('status', [FixedListStatus::Saved, FixedListStatus::Draft])
+                ->first();
+
+            if ($targetList === null) {
+                return back()->withErrors([
+                    'existing_fixed_list_id' => 'The selected batch is no longer available for appending. Only Saved or Draft batches from the target program can be modified.',
+                ]);
+            }
+        }
 
         // Pending and Verified applications (plus manually endorsed ones) can be
         // bundled; only Rejected applications are excluded. Pending students are
@@ -141,14 +172,20 @@ class ApplicantVerificationController extends Controller
             ]);
         }
 
-        $list = DB::transaction(function () use ($applications, $programId, $request, $validated): FixedList {
-            $list = FixedList::query()->create([
-                'sponsorship_program_id' => $programId,
-                'batch_name' => $validated['batch_name'],
-                'uploaded_by_fassg_id' => $this->actor($request)->id,
-                'total_names' => 0,
-                'status' => FixedListStatus::Saved,
-            ]);
+        [$list, $added] = DB::transaction(function () use ($applications, $programId, $request, $validated, $targetList): array {
+            $list = $targetList;
+
+            if ($list === null) {
+                $list = FixedList::query()->create([
+                    'sponsorship_program_id' => $programId,
+                    'batch_name' => $validated['batch_name'],
+                    'uploaded_by_fassg_id' => $this->actor($request)->id,
+                    'total_names' => 0,
+                    'status' => FixedListStatus::Saved,
+                ]);
+            }
+
+            $added = 0;
 
             foreach ($applications as $application) {
                 $profile = $application->studentProfile;
@@ -157,28 +194,40 @@ class ApplicantVerificationController extends Controller
                     continue;
                 }
 
+                if ($list->items()->where('student_id_number', $profile->student_id_number)->exists()) {
+                    continue;
+                }
+
                 $name = $profile->user?->name ?? trim(
                     ($profile->first_name ?? '').' '.($profile->middle_name ?? '').' '.($profile->last_name ?? '')
                 );
 
-                $list->items()->updateOrCreate(
-                    ['application_id' => $application->id],
-                    [
-                        'student_name' => $name !== '' ? $name : 'Unknown',
-                        'student_id_number' => $profile->student_id_number ?: null,
-                        'course' => $profile->course ?: 'Unspecified',
-                        'year_level' => $profile->year_level ?? 1,
-                        'campus' => $profile->campus ?: null,
-                        'is_sle_fhe_verified' => (bool) $profile->is_sle_fhe_verified,
-                        'status' => FixedListItemStatus::Pending,
-                    ],
-                );
+                $list->items()->create([
+                    'application_id' => $application->id,
+                    'student_name' => $name !== '' ? $name : 'Unknown',
+                    'student_id_number' => $profile->student_id_number ?: 'Unknown',
+                    'course' => $profile->course ?: 'Unspecified',
+                    'year_level' => $profile->year_level ?? 1,
+                    'campus' => $profile->campus ?: null,
+                    'is_sle_fhe_verified' => (bool) $profile->is_sle_fhe_verified,
+                    'status' => FixedListItemStatus::Pending,
+                ]);
+
+                $added++;
             }
 
             $list->update(['total_names' => $list->items()->count()]);
 
-            return $list;
+            return [$list, $added];
         });
+
+        if ($appendToId !== null) {
+            $this->audit($request, 'fassg.fixed_list.appended_from_applications', 'fixed_lists');
+
+            return redirect()
+                ->route('fassg.generated-batches.show', $list)
+                ->with('status', "Successfully added {$added} student(s) to {$list->batch_name}.");
+        }
 
         $this->audit($request, 'fassg.fixed_list.generated_from_applications', 'fixed_lists');
 

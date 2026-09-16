@@ -323,10 +323,38 @@
                         <i class="bi bi-info-circle me-1"></i>0 applicant(s) selected.
                     </div>
                     <div class="mb-3">
+                        <label class="form-label small fw-semibold text-dark mb-2">Save As</label>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="batch_mode" id="batchModeNew"
+                                value="new" @checked(old('batch_mode', 'new') === 'new')>
+                            <label class="form-check-label small" for="batchModeNew">Create New Batch List</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="batch_mode" id="batchModeAppend"
+                                value="append" @checked(old('batch_mode') === 'append')>
+                            <label class="form-check-label small" for="batchModeAppend">Append to Existing Saved Batch</label>
+                        </div>
+                    </div>
+                    <div id="batchNameGroup" class="mb-3">
                         <label class="form-label small fw-semibold text-dark" for="batch_name">Batch Name</label>
                         <input type="text" id="batch_name" name="batch_name" class="form-control"
                             placeholder="e.g., CHED Batch 1 - 2026" required maxlength="150"
                             value="{{ old('batch_name') }}">
+                    </div>
+                    <div id="appendListGroup" class="mb-3 d-none">
+                        <label class="form-label small fw-semibold text-dark" for="existing_fixed_list_id">Existing Saved Batch</label>
+                        <select id="existing_fixed_list_id" name="existing_fixed_list_id" class="form-select">
+                            <option value="">Select batch…</option>
+                            @foreach ($savedFixedLists as $savedList)
+                                <option value="{{ $savedList->id }}" data-program-id="{{ $savedList->sponsorship_program_id }}"
+                                    @selected((int) old('existing_fixed_list_id') === $savedList->id)>
+                                    {{ $savedList->batch_name }} ({{ $savedList->total_names }} {{ Str::plural('name', $savedList->total_names) }})
+                                </option>
+                            @endforeach
+                        </select>
+                        <div class="form-text small text-secondary">
+                            Only Saved or Draft batches from the target program can be appended to.
+                        </div>
                     </div>
                     <div class="mb-2">
                         <label class="form-label small fw-semibold text-dark" for="batch_program">Target Program</label>
@@ -413,6 +441,15 @@
                             }
                             return;
                         }
+                        const appendChecked = batchModeAppend && batchModeAppend.checked;
+                        if (appendChecked && existingListSelect && existingListSelect.value === '') {
+                            e.preventDefault();
+                            if (countNote) {
+                                countNote.className = 'alert alert-danger py-2 small mb-3';
+                                countNote.textContent =
+                                    'Select the existing saved batch you want to append to.';
+                            }
+                        }
                     });
                 }
 
@@ -432,6 +469,49 @@
                     eligible.forEach((chk, index) => { chk.checked = index < precheck; });
                     updateState();
                 }
+
+                // Batch mode toggle: "Create New Batch List" vs "Append to Existing Saved Batch"
+                const batchModeNew = document.getElementById('batchModeNew');
+                const batchModeAppend = document.getElementById('batchModeAppend');
+                const batchNameGroup = document.getElementById('batchNameGroup');
+                const appendListGroup = document.getElementById('appendListGroup');
+                const batchNameInput = document.getElementById('batch_name');
+                const existingListSelect = document.getElementById('existing_fixed_list_id');
+                const batchProgramSelect = document.getElementById('batch_program');
+
+                function syncBatchMode() {
+                    if (!batchModeNew) return;
+                    const append = batchModeAppend && batchModeAppend.checked;
+                    if (batchNameGroup) {
+                        batchNameGroup.classList.toggle('d-none', append);
+                    }
+                    if (appendListGroup) {
+                        appendListGroup.classList.toggle('d-none', !append);
+                    }
+                    if (batchNameInput) {
+                        batchNameInput.required = !append;
+                    }
+                    if (existingListSelect) {
+                        existingListSelect.required = append;
+                    }
+                }
+
+                function filterAppendOptions() {
+                    if (!batchProgramSelect || !existingListSelect) return;
+                    const pid = batchProgramSelect.value;
+                    Array.from(existingListSelect.options).forEach(opt => {
+                        opt.hidden = opt.value !== '' && opt.dataset.programId !== pid;
+                    });
+                    if (existingListSelect.value && existingListSelect.selectedOptions.length > 0 && existingListSelect.selectedOptions[0].hidden) {
+                        existingListSelect.value = '';
+                    }
+                }
+
+                if (batchModeNew) batchModeNew.addEventListener('change', syncBatchMode);
+                if (batchModeAppend) batchModeAppend.addEventListener('change', syncBatchMode);
+                if (batchProgramSelect) batchProgramSelect.addEventListener('change', filterAppendOptions);
+                syncBatchMode();
+                filterAppendOptions();
             })();
         </script>
     @endpush
