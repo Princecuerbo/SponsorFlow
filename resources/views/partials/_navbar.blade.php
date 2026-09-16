@@ -9,7 +9,7 @@
     <div class="container-fluid d-flex w-100 align-items-center justify-content-between gap-2 gap-xl-3 py-2 px-3 px-xl-4 flex-nowrap" style="min-width: 0;">
 
         {{-- Brand --}}
-        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-decoration-none flex-shrink-0"
+        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-decoration-none flex-shrink-0 sf-nav-brand"
             href="{{ auth()->check() ? route(auth()->user()->homeRoute()) : url('/') }}">
             <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center"
                 style="background-color: #0f294a; width: 36px; height: 36px;">
@@ -19,7 +19,7 @@
         </a>
 
         {{-- Navigation Links --}}
-        <div class="d-none d-md-block sf-navbar-center">
+        <div class="d-none d-md-flex justify-content-center align-items-center flex-grow-1 mx-auto sf-navbar-center">
             <ul class="navbar-nav d-flex flex-row align-items-center gap-1 gap-xl-2 flex-nowrap mb-0"
                 style="width: max-content; margin: 0 auto;">
 
@@ -179,7 +179,7 @@
         </div>
 
         {{-- Notification Bell + User Profile (inline, left-aligned) --}}
-        <div class="d-flex align-items-center gap-3 flex-shrink-0">
+        <div class="d-flex justify-content-end align-items-center gap-3 flex-shrink-0 sf-nav-profile">
 
             {{-- Standalone Notification Bell Direct Link (Desktop, Students only) --}}
             @if ($user->isStudent())
@@ -451,6 +451,29 @@
 
     .sf-navbar .container-fluid {
         justify-content: space-between;
+    }
+
+    .sf-nav-brand,
+    .sf-nav-profile {
+        min-width: 200px;
+    }
+
+    .sf-nav-profile {
+        justify-content: flex-end;
+    }
+
+    @media (max-width: 1199.98px) {
+        .sf-nav-brand,
+        .sf-nav-profile {
+            min-width: 150px;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .sf-nav-brand,
+        .sf-nav-profile {
+            min-width: auto;
+        }
     }
 
     .sf-navbar-center {
