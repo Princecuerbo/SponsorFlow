@@ -228,6 +228,7 @@
                                 <td class="ps-3">
                                     <input type="checkbox" class="form-check-input app-checkbox"
                                         name="selected_applications[]" value="{{ $application->id }}"
+                                        data-status="{{ $application->status->value }}"
                                         aria-label="Select {{ $profile->user->name ?? $profile->student_id_number }}">
                                 </td>
 
@@ -422,11 +423,13 @@
                     });
                 }
 
-                // Auto-check the top N applicants matching the program's available slots
-                // (only meaningful when a program is selected and the queue is GPA-ranked).
-                if (availableSlots > 0 && checkboxes.length > 0) {
-                    const precheck = Math.min(availableSlots, checkboxes.length);
-                    checkboxes.forEach((chk, index) => { chk.checked = index < precheck; });
+                // Auto-check the top available non-rejected applicants matching the
+                // program's available slots (only meaningful when a program is
+                // selected and the queue is GPA-ranked).
+                if (availableSlots > 0) {
+                    const eligible = checkboxes.filter(chk => chk.dataset.status !== 'Rejected');
+                    const precheck = Math.min(availableSlots, eligible.length);
+                    eligible.forEach((chk, index) => { chk.checked = index < precheck; });
                     updateState();
                 }
             })();

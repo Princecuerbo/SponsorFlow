@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Enums\ProgramCategory;
-use App\Enums\ProgramStatus;
 use App\Enums\ApplicationStatus;
 use App\Enums\DocumentType;
+use App\Enums\ProgramCategory;
+use App\Enums\ProgramStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 class SponsorshipProgram extends Model
 {
@@ -80,9 +81,9 @@ class SponsorshipProgram extends Model
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, string>
+     * @return Collection<int, string>
      */
-    public function getEligibleCoursesAttribute(): \Illuminate\Support\Collection
+    public function getEligibleCoursesAttribute(): Collection
     {
         $programs = $this->relationLoaded('courses')
             ? $this->courses
@@ -116,7 +117,11 @@ class SponsorshipProgram extends Model
         $query = $this->applications();
 
         if ($this->status === ProgramStatus::Open) {
-            $query->whereIn('status', [ApplicationStatus::Approved, ApplicationStatus::Ongoing]);
+            $query->whereIn('status', [
+                ApplicationStatus::Verified,
+                ApplicationStatus::Approved,
+                ApplicationStatus::Ongoing,
+            ]);
         } else {
             $query->previouslyApprovedBeneficiaries();
         }
@@ -303,7 +308,7 @@ class SponsorshipProgram extends Model
         $eligibleCampuses = (array) ($this->eligible_campuses ?? []);
 
         if ($eligibleCampuses !== [] && ! in_array($profile->campus, $eligibleCampuses, true)) {
-            $reasons[] = 'Your registered campus (' . ($profile->campus ?? 'Not Assigned') . ') is not eligible for this sponsorship program.';
+            $reasons[] = 'Your registered campus ('.($profile->campus ?? 'Not Assigned').') is not eligible for this sponsorship program.';
         }
 
         if (filled($this->address_requirement)) {
@@ -318,7 +323,7 @@ class SponsorshipProgram extends Model
                 $reasons[] = 'This program requires urban residency.';
             }
 
-            $location = strtolower(trim((string) $profile->full_address . ' ' . $profile->barangay));
+            $location = strtolower(trim((string) $profile->full_address.' '.$profile->barangay));
 
             if (str_contains($requirement, 'davao oriental') && ! str_contains($location, 'davao oriental')) {
                 $reasons[] = 'Your address does not meet the program location requirement.';
@@ -403,7 +408,7 @@ class SponsorshipProgram extends Model
                 $errors[] = 'This program requires urban residency.';
             }
 
-            $location = strtolower(trim($address . ' ' . $profile->barangay));
+            $location = strtolower(trim($address.' '.$profile->barangay));
 
             if (str_contains($requirement, 'davao oriental') && ! str_contains($location, 'davao oriental')) {
                 $errors[] = 'Your address does not meet the program location requirement.';

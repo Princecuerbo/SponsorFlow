@@ -15,7 +15,10 @@ use App\Models\FixedListItem;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -35,20 +38,20 @@ class ReportsController extends Controller
         $pdf = Pdf::loadView('fassg.reports.reports-pdf', $data)
             ->setPaper('a4', 'portrait');
 
-        return $pdf->download('sponsorship-report-' . now()->format('Y-m-d') . '.pdf');
+        return $pdf->download('sponsorship-report-'.now()->format('Y-m-d').'.pdf');
     }
 
-    public function exportCsv(Request $request): \Illuminate\Http\Response
+    public function exportCsv(Request $request): Response
     {
         $data = $this->getReportData($request);
 
         $stream = fopen('php://temp', 'w+');
         fputcsv($stream, ['Program', 'Utilization (%)', 'Filled', 'Available', 'Total Slots']);
         fputcsv($stream, ['', '', '', '', '']);
-        fputcsv($stream, ['Overall Slot Utilization', $data['report']['slot_utilization_pct'] . '%', $data['report']['slots_filled'], $data['report']['slots_total'] - $data['report']['slots_filled'], $data['report']['slots_total']]);
+        fputcsv($stream, ['Overall Slot Utilization', $data['report']['slot_utilization_pct'].'%', $data['report']['slots_filled'], $data['report']['slots_total'] - $data['report']['slots_filled'], $data['report']['slots_total']]);
         fputcsv($stream, ['Total Applicants', $data['report']['total_applicants']]);
         fputcsv($stream, ['Confirmed Beneficiaries', $data['report']['confirmed_beneficiaries']]);
-        fputcsv($stream, ['Rural Applicants Rate', $data['report']['rural_pct'] . '%']);
+        fputcsv($stream, ['Rural Applicants Rate', $data['report']['rural_pct'].'%']);
         fputcsv($stream, ['', '', '', '', '']);
 
         foreach ($data['slotUtilization'] as $program) {
@@ -67,7 +70,7 @@ class ReportsController extends Controller
 
         return response($content, 200, [
             'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="sponsorship-report-' . now()->format('Y-m-d') . '.csv"',
+            'Content-Disposition' => 'attachment; filename="sponsorship-report-'.now()->format('Y-m-d').'.csv"',
         ]);
     }
 
@@ -77,13 +80,13 @@ class ReportsController extends Controller
 
         $dateFormat = match ($driver) {
             'sqlite' => "strftime('%Y-%m', submitted_at)",
-            'pgsql'  => "TO_CHAR(submitted_at, 'YYYY-MM')",
-            default  => "DATE_FORMAT(submitted_at, '%Y-%m')",
+            'pgsql' => "TO_CHAR(submitted_at, 'YYYY-MM')",
+            default => "DATE_FORMAT(submitted_at, '%Y-%m')",
         };
 
-        $campus       = $request->string('campus')->trim()->toString();
+        $campus = $request->string('campus')->trim()->toString();
         $academicYear = $request->string('academic_year')->trim()->toString();
-        $semester     = $request->string('semester')->trim()->toString();
+        $semester = $request->string('semester')->trim()->toString();
         $sponsorshipProgramId = $request->integer('sponsorship_program_id', 0);
 
         $term = $this->resolveTerm($academicYear, $semester);
@@ -150,13 +153,13 @@ class ReportsController extends Controller
 
         $confirmedLists = FixedList::query()
             ->where('status', FixedListStatus::Approved)
-            ->whereHas('latestApproval', fn($query) => $query->where('confirmation_status', ConfirmationStatus::Confirmed))
+            ->whereHas('latestApproval', fn ($query) => $query->where('confirmation_status', ConfirmationStatus::Confirmed))
             ->when($sponsorshipProgramId > 0, fn ($q) => $q->where('sponsorship_program_id', $sponsorshipProgramId))
             ->count();
 
         $confirmedListNames = FixedList::query()
             ->where('status', FixedListStatus::Approved)
-            ->whereHas('latestApproval', fn($query) => $query->where('confirmation_status', ConfirmationStatus::Confirmed))
+            ->whereHas('latestApproval', fn ($query) => $query->where('confirmation_status', ConfirmationStatus::Confirmed))
             ->when($sponsorshipProgramId > 0, fn ($q) => $q->where('sponsorship_program_id', $sponsorshipProgramId))
             ->withCount('items')
             ->get()
@@ -201,7 +204,7 @@ class ReportsController extends Controller
         $confirmedFixedListStudentIds = FixedListItem::query()
             ->whereHas('fixedList', function ($q) use ($sponsorshipProgramId): void {
                 $q->where('status', FixedListStatus::Approved)
-                    ->whereHas('latestApproval', fn($sub) => $sub->where('confirmation_status', ConfirmationStatus::Confirmed));
+                    ->whereHas('latestApproval', fn ($sub) => $sub->where('confirmation_status', ConfirmationStatus::Confirmed));
                 if ($sponsorshipProgramId > 0) {
                     $q->where('sponsorship_program_id', $sponsorshipProgramId);
                 }
@@ -275,7 +278,7 @@ class ReportsController extends Controller
             ->take(10)
             ->all();
 
-        $baseProfileQuery = fn (): \Illuminate\Database\Eloquent\Builder => StudentProfile::query()->whereIn('id', $allProfileIds);
+        $baseProfileQuery = fn (): Builder => StudentProfile::query()->whereIn('id', $allProfileIds);
 
         $demographics = [
             'rural' => $baseProfileQuery()->where('is_rural', true)->count(),
@@ -326,7 +329,11 @@ class ReportsController extends Controller
                     ? $program->applications()
                         ->when($term !== null, $termScope)
                         ->when($campus !== '', $campusScope)
-                        ->whereIn('status', [ApplicationStatus::Approved, ApplicationStatus::Ongoing])
+                        ->whereIn('status', [
+                            ApplicationStatus::Verified,
+                            ApplicationStatus::Approved,
+                            ApplicationStatus::Ongoing,
+                        ])
                         ->distinct('student_profile_id')
                         ->count('student_profile_id')
                     : $program->applications()
@@ -346,7 +353,7 @@ class ReportsController extends Controller
         $filledSlots = (int) $slotUtilization->sum(fn (SponsorshipProgram $program): int => (int) $program->approved_count);
         $applicantCategoryTotals = $this->categoryTotals($applicantsByCategory);
         $categoryBreakdown = collect($this->categoryTotals($categoryBreakdown))
-            ->map(fn(int $programs, string $category): array => [
+            ->map(fn (int $programs, string $category): array => [
                 'category' => $category,
                 'programs' => $programs,
                 'applicants' => $applicantCategoryTotals[$category] ?? 0,
@@ -359,7 +366,7 @@ class ReportsController extends Controller
 
         $chartTrends = [
             'labels' => array_map(
-                fn (string $month): string => \Carbon\Carbon::parse($month . '-01')->format('M Y'),
+                fn (string $month): string => Carbon::parse($month.'-01')->format('M Y'),
                 $trendMonths
             ),
             'applications' => array_map(fn (string $month): int => (int) ($applicantTrends[$month] ?? 0), $trendMonths),
