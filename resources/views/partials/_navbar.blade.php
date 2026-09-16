@@ -5,22 +5,24 @@
     $firstName = $firstName === '' ? '' : explode(' ', $firstName)[0];
 @endphp
 
-<nav class="sf-navbar navbar bg-white border-bottom py-0 sticky-top" style="min-height:60px;">
-    <div class="container d-flex align-items-center justify-content-center py-2">
+<nav class="sf-navbar navbar bg-white border-bottom py-0 sticky-top">
+    <div class="container-fluid px-4 d-flex align-items-center justify-content-between flex-nowrap py-2" style="min-height: 60px;">
 
-        {{-- Brand --}}
-        <a class="navbar-brand d-flex align-items-center gap-2 me-auto me-lg-4 fw-bold text-decoration-none"
-            href="{{ auth()->check() ? route(auth()->user()->homeRoute()) : url('/') }}">
-            <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center"
-                style="background-color: #0f294a; width: 36px; height: 36px;">
-                <i class="fa-solid fa-hand-holding-dollar fs-6"></i>
-            </div>
-            <span style="color: #0f294a;" class="fs-5 fw-bold">SponsorFlow</span>
-        </a>
+        {{-- Left: Brand Logo --}}
+        <div class="d-flex align-items-center flex-shrink-0 me-3">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-decoration-none"
+                href="{{ auth()->check() ? route(auth()->user()->homeRoute()) : url('/') }}">
+                <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center"
+                    style="background-color: #0f294a; width: 36px; height: 36px;">
+                    <i class="fa-solid fa-hand-holding-dollar fs-6"></i>
+                </div>
+                <span style="color: #0f294a;" class="fs-5 fw-bold">SponsorFlow</span>
+            </a>
+        </div>
 
-        {{-- Navigation Links --}}
-        <div class="d-none d-md-flex align-items-center justify-content-center gap-1 gap-lg-2 mx-auto flex-wrap sf-navbar-center">
-            <ul class="navbar-nav d-flex flex-row align-items-center gap-1 gap-lg-2 flex-nowrap mb-0">
+        {{-- Center: Nav Links --}}
+        <div class="d-none d-md-flex align-items-center justify-content-center flex-grow-1 mx-2 overflow-hidden">
+            <ul class="navbar-nav d-flex flex-row align-items-center gap-1 flex-nowrap m-0 p-0">
 
                 {{-- Student --}}
                 @if ($user->isStudent())
@@ -177,8 +179,8 @@
             </ul>
         </div>
 
-        {{-- Notification Bell + User Profile (inline, left-aligned) --}}
-        <div class="d-flex align-items-center gap-3 ms-auto ms-lg-4">
+        {{-- Right: Profile Dropdown --}}
+        <div class="d-flex align-items-center flex-shrink-0 gap-3 ms-3">
 
             {{-- Standalone Notification Bell Direct Link (Desktop, Students only) --}}
             @if ($user->isStudent())
@@ -448,14 +450,19 @@
         display: none !important;
     }
 
+    .sf-navbar .container-fluid,
+    .sf-navbar .navbar-nav {
+        flex-wrap: nowrap !important;
+    }
+
     .sf-topnav-link {
         color: #475569 !important;
         font-weight: 500;
-        font-size: 0.85rem;
+        font-size: 0.78rem;
         line-height: 1.25;
         transition: all 0.15s ease-in-out;
         white-space: nowrap;
-        padding: 0.375rem 0.5rem;
+        padding: 0.25rem 0.5rem;
         border-radius: 6px;
     }
 
