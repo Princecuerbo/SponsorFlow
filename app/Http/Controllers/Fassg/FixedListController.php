@@ -246,6 +246,20 @@ class FixedListController extends Controller
             return back()->withErrors(['list' => 'Encode or upload at least one student before submitting.']);
         }
 
+        $hasPendingApplication = $fixedList->items()
+            ->with('application')
+            ->whereNotNull('application_id')
+            ->get()
+            ->map(static fn (FixedListItem $item) => $item->application)
+            ->filter()
+            ->contains(static fn ($application) => $application->status === ApplicationStatus::Pending);
+
+        if ($hasPendingApplication) {
+            return back()->withErrors([
+                'list' => 'Cannot submit batch to sponsor. Please review and verify all pending applications first.',
+            ]);
+        }
+
         $fixedList->update(['status' => FixedListStatus::Submitted]);
         $this->refreshTotalNames($fixedList);
         $this->audit($request, 'fassg.fixed_list.submitted', 'fixed_lists');

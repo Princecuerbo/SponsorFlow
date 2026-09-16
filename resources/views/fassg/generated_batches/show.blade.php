@@ -47,6 +47,11 @@
 @endpush
 
 @section('content')
+    @php
+        $hasPending = $list->items->contains(
+            fn ($item) => $item->application?->status->value === 'Pending'
+        );
+    @endphp
     <div class="row g-4 mb-4">
         <div class="col-md-8">
             <div class="card sf-card mb-4 border-0 shadow-sm">
@@ -97,7 +102,6 @@
                                 <th>GWA</th>
                                 <th>Application Status</th>
                                 <th>SLE-FHE Status</th>
-                                <th>Endorsed</th>
                                 <th class="text-end pe-4">Action</th>
                             </tr>
                         </thead>
@@ -130,18 +134,6 @@
                                             {{ $item->is_sle_fhe_verified ? 'Verified' : 'Pending Check' }}
                                         </span>
                                     </td>
-                                    <td>
-                                        @if ($item->status === \App\Enums\FixedListItemStatus::Endorsed)
-                                            <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">
-                                                Endorsed
-                                            </span>
-                                        @else
-                                            <button type="submit" form="endorse-{{ $item->id }}"
-                                                class="btn btn-outline-success btn-sm">
-                                                <i class="bi bi-check-lg me-1"></i>Endorse
-                                            </button>
-                                        @endif
-                                    </td>
                                     <td class="text-end pe-4">
                                         @if ($item->application_id)
                                             <a href="{{ route('fassg.applications.show', $item->application_id) }}"
@@ -163,22 +155,14 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="10" class="text-center text-secondary py-4">No applicants in this generated batch yet.</td>
+                                    <td colspan="9" class="text-center text-secondary py-4">No applicants in this generated batch yet.</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
 
-                @foreach ($list->items as $item)
-                    <form method="POST" id="endorse-{{ $item->id }}"
-                        action="{{ route('fassg.fixed-lists.items.endorse', [$list, $item]) }}"
-                        class="d-none">
-                        @csrf
-                        @method('PATCH')
-                    </form>
-                @endforeach
-            </div>
+                </div>
         </div>
 
         <div class="col-md-4">
@@ -188,10 +172,20 @@
                         <h3 class="h6 fw-bold mb-2"><i class="bi bi-send me-1"></i>Submit to Sponsor</h3>
                         <p class="text-secondary small mb-3">Once submitted, this batch will be forwarded to the sponsor for
                             review.</p>
+
+                        @if ($hasPending)
+                            <div class="alert alert-warning text-xs mb-3">
+                                <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                                <strong>Action Required:</strong> Verify all pending student applications below before
+                                submitting this batch to the sponsor.
+                            </div>
+                        @endif
+
                         <form method="POST" action="{{ route('fassg.fixed-lists.submit', $list) }}">
                             @csrf
                             @method('PATCH')
-                            <button type="submit" class="btn btn-navy-primary w-100 py-2" @disabled($list->items->isEmpty())
+                            <button type="submit" class="btn btn-navy-primary w-100 py-2"
+                                @disabled($list->items->isEmpty() || $hasPending)
                                 onClick="if ({{ $list->items->where('is_sle_fhe_verified', true)->count() }} !== {{ $list->items->count() }}) { alert('Verify all students before forwarding this batch to the sponsor.'); return false; } return confirm('All students are verified. Forward this batch to the sponsor?');">
                                 <i class="bi bi-send me-1"></i>Submit Batch
                             </button>
