@@ -6,10 +6,10 @@
 @endphp
 
 <nav class="sf-navbar navbar bg-white border-bottom py-0 sticky-top" style="min-height:60px;">
-    <div class="container-xxl d-flex w-100 align-items-center justify-content-between gap-2 gap-xl-3 py-2 flex-nowrap" style="min-width: 0;">
+    <div class="container d-flex align-items-center justify-content-center py-2">
 
         {{-- Brand --}}
-        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-decoration-none flex-shrink-0 sf-nav-brand"
+        <a class="navbar-brand d-flex align-items-center gap-2 me-auto me-lg-4 fw-bold text-decoration-none"
             href="{{ auth()->check() ? route(auth()->user()->homeRoute()) : url('/') }}">
             <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center"
                 style="background-color: #0f294a; width: 36px; height: 36px;">
@@ -19,9 +19,8 @@
         </a>
 
         {{-- Navigation Links --}}
-        <div class="d-none d-md-flex justify-content-center align-items-center flex-grow-1 mx-auto sf-navbar-center">
-            <ul class="navbar-nav d-flex flex-row align-items-center gap-1 gap-xl-2 flex-nowrap mb-0"
-                style="width: max-content; margin: 0 auto;">
+        <div class="d-none d-md-flex align-items-center justify-content-center gap-1 gap-lg-2 mx-auto flex-wrap sf-navbar-center">
+            <ul class="navbar-nav d-flex flex-row align-items-center gap-1 gap-lg-2 flex-nowrap mb-0">
 
                 {{-- Student --}}
                 @if ($user->isStudent())
@@ -179,7 +178,7 @@
         </div>
 
         {{-- Notification Bell + User Profile (inline, left-aligned) --}}
-        <div class="d-flex justify-content-end align-items-center gap-3 flex-shrink-0 sf-nav-profile">
+        <div class="d-flex align-items-center gap-3 ms-auto ms-lg-4">
 
             {{-- Standalone Notification Bell Direct Link (Desktop, Students only) --}}
             @if ($user->isStudent())
@@ -449,54 +448,10 @@
         display: none !important;
     }
 
-    .sf-navbar .container-xxl {
-        justify-content: space-between;
-    }
-
-    .sf-nav-brand,
-    .sf-nav-profile {
-        min-width: 200px;
-    }
-
-    .sf-nav-profile {
-        justify-content: flex-end;
-    }
-
-    @media (max-width: 1199.98px) {
-        .sf-nav-brand,
-        .sf-nav-profile {
-            min-width: 150px;
-        }
-    }
-
-    @media (max-width: 767.98px) {
-        .sf-nav-brand,
-        .sf-nav-profile {
-            min-width: auto;
-        }
-    }
-
-    .sf-navbar-center {
-        flex: 1 1 auto;
-        min-width: 0;
-        overflow-x: auto;
-        overflow-y: hidden;
-        scrollbar-width: thin;
-    }
-
-    .sf-navbar-center::-webkit-scrollbar {
-        height: 4px;
-    }
-
-    .sf-navbar-center::-webkit-scrollbar-thumb {
-        background-color: rgba(15, 41, 74, 0.25);
-        border-radius: 9999px;
-    }
-
     .sf-topnav-link {
         color: #475569 !important;
         font-weight: 500;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         line-height: 1.25;
         transition: all 0.15s ease-in-out;
         white-space: nowrap;
