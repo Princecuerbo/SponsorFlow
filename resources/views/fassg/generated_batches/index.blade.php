@@ -31,7 +31,7 @@
                 <div class="col-auto">
                     <a href="{{ url()->current() }}"
                         class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
-                        <i class="bi bi-x-lg"></i> Reset Filters
+                        Reset Filters
                     </a>
                 </div>
             </form>

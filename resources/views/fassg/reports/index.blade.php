@@ -116,7 +116,7 @@
                 <div class="col-md-3">
                     <a href="{{ route('fassg.reports.index') }}"
                         class="btn btn-outline-secondary btn-sm w-100">
-                        <i class="bi bi-x-lg"></i> Reset Filters
+                        Reset Filters
                     </a>
                 </div>
             </form>
