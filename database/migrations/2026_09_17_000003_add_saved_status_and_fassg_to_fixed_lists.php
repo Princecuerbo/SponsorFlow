@@ -9,12 +9,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Add 'Saved' to fixed_lists.status enum (backend-compatible with MySQL and PostgreSQL)
+        // Add 'Saved' to fixed_lists.status enum
+        // MySQL: MODIFY COLUMN with expanded ENUM list
+        // PostgreSQL: Laravel enum columns use CHECK constraints, not custom types.
+        //   We drop the old constraint and add a new one with the expanded values.
         $driver = DB::getDriverName();
         if ($driver === 'mysql') {
             DB::statement("ALTER TABLE fixed_lists MODIFY COLUMN status ENUM('Draft','Submitted','Approved','Rejected','Saved') NOT NULL DEFAULT 'Draft'");
         } elseif ($driver === 'pgsql') {
-            DB::statement("ALTER TYPE fixed_lists_status_enum ADD VALUE IF NOT EXISTS 'Saved'");
+            DB::statement("ALTER TABLE fixed_lists DROP CONSTRAINT IF EXISTS fixed_lists_status_check");
+            DB::statement("ALTER TABLE fixed_lists ADD CONSTRAINT fixed_lists_status_check CHECK (status::text = ANY (ARRAY['Draft'::character varying, 'Submitted'::character varying, 'Approved'::character varying, 'Rejected'::character varying, 'Saved'::character varying]::text[]))");
         }
 
         Schema::table('fixed_lists', function (Blueprint $table): void {
@@ -43,6 +47,9 @@ return new class extends Migration
         $driver = DB::getDriverName();
         if ($driver === 'mysql') {
             DB::statement("ALTER TABLE fixed_lists MODIFY COLUMN status ENUM('Draft','Submitted','Approved','Rejected') NOT NULL DEFAULT 'Draft'");
+        } elseif ($driver === 'pgsql') {
+            DB::statement("ALTER TABLE fixed_lists DROP CONSTRAINT IF EXISTS fixed_lists_status_check");
+            DB::statement("ALTER TABLE fixed_lists ADD CONSTRAINT fixed_lists_status_check CHECK (status::text = ANY (ARRAY['Draft'::character varying, 'Submitted'::character varying, 'Approved'::character varying, 'Rejected'::character varying]::text[]))");
         }
     }
 };
