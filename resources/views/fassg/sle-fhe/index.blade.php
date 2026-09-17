@@ -134,8 +134,10 @@
                 <table class="table sf-table mb-0">
                     <thead>
                         <tr>
-                            <th class="ps-4">Student</th>
-                            <th>Course &amp; Year</th>
+                            <th class="ps-4">Student Name</th>
+                            <th>Student ID</th>
+                            <th>Course</th>
+                            <th>Year Level</th>
                             <th>Campus</th>
                             <th>Residency</th>
                             <th>Status</th>
@@ -145,22 +147,28 @@
                     <tbody>
                         @foreach ($pendingProfiles as $profile)
                             <tr>
-                                {{-- Student --}}
+                                {{-- Student Name --}}
                                 <td class="ps-4">
                                     <div class="fw-semibold">{{ $profile->user->name ?? trim($profile->first_name . ' ' . ($profile->middle_name ?? '') . ' ' . $profile->last_name . ($profile->extension_name ? ' ' . $profile->extension_name : '')) }}</div>
-                                    <div class="small text-secondary sf-mono">{{ $profile->student_id_number ?: '—' }}</div>
                                 </td>
 
-                                {{-- Course & Year --}}
+                                {{-- Student ID --}}
+                                <td>
+                                    <span class="small text-secondary sf-mono">{{ $profile->student_id_number ?: '—' }}</span>
+                                </td>
+
+                                {{-- Course --}}
                                 <td>
                                     <div>{{ $profile->course ?: '—' }}</div>
-                                    <div class="small text-secondary">
-                                        @if ($profile->year_level)
-                                            Year {{ $profile->year_level }}
-                                        @else
-                                            <span class="text-muted">Year N/A</span>
-                                        @endif
-                                    </div>
+                                </td>
+
+                                {{-- Year Level --}}
+                                <td>
+                                    @if ($profile->year_level)
+                                        <span>Year {{ $profile->year_level }}</span>
+                                    @else
+                                        <span class="text-muted">Year N/A</span>
+                                    @endif
                                 </td>
 
                                 {{-- Campus --}}
