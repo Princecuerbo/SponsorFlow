@@ -123,4 +123,19 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Hidden Login Gate Paths
+    |--------------------------------------------------------------------------
+    |
+    | These obscured URL segments serve as entry points for staff and admin
+    | login portals. They are read via config() in route definitions so
+    | that route caching works correctly on production (env() returns
+    | null when routes are cached).
+    |
+    */
+
+    'staff_login_path' => env('STAFF_LOGIN_PATH', 'dorsu-staff-gate'),
+    'admin_login_path' => env('ADMIN_LOGIN_PATH', 'dorsu-sysadmin-gate'),
+
 ];
