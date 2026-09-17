@@ -81,8 +81,7 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <a href="{{ route('sponsor.approvals.index') }}" class="btn btn-outline-secondary w-100">Clear
-                        filters</a>
+                    <a href="{{ route('sponsor.approvals.index') }}" class="btn btn-outline-secondary w-100">Reset Filters</a>
                 </div>
             </form>
         </div>
