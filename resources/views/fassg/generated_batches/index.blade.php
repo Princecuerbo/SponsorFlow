@@ -8,15 +8,9 @@
 @endpush
 
 @section('content')
-    <div class="d-flex align-items-center justify-content-between mb-4 gap-3">
-        <div>
-            <h1 class="h3 fw-bold mb-1">Generated Batches</h1>
-            <p class="text-secondary small mb-0">Batch beneficiary lists generated directly from the ranked Application Queue.
-            </p>
-        </div>
-        <a href="{{ route('fassg.applications.index') }}" class="btn btn-primary fw-semibold d-inline-flex align-items-center gap-2 px-3">
-            <i class="bi bi-inboxes me-1"></i>Open Application Queue
-        </a>
+    <div class="mb-4">
+        <h1 class="h3 fw-bold mb-1">Generated Batches</h1>
+        <p class="text-secondary small mb-0">Batch beneficiary lists generated directly from the ranked Application Queue.</p>
     </div>
 
     {{-- Filter Bar --}}
@@ -50,11 +44,8 @@
             <div class="sf-empty-state text-center p-5">
                 <i class="bi bi-boxes text-secondary fs-1 d-block mb-3"></i>
                 <div class="fw-semibold">No generated batches yet</div>
-                <div class="small text-secondary mb-3">Select applicants from the Application Queue and create a batch list to see it here.
+                <div class="small text-secondary mb-0">Select applicants from the Application Queue and create a batch list to see it here.
                 </div>
-                <a href="{{ route('fassg.applications.index') }}" class="btn btn-primary btn-sm px-3">
-                    <i class="bi bi-inboxes me-1"></i>Open Application Queue
-                </a>
             </div>
         </div>
     @else
