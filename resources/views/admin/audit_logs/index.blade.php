@@ -57,9 +57,8 @@
                         <input class="form-control" type="date" name="to" value="{{ request('to') }}"
                             onchange="this.form.submit()">
                     </div>
-                    <div class="col-md-1 text-end">
-                        <a href="{{ route('admin.audit-logs.index') }}" class="btn btn-outline-secondary w-100"
-                            title="Reset Filters">Reset</a>
+                    <div class="col-md-2 text-end">
+                        <a href="{{ route('admin.audit-logs.index') }}" class="btn btn-outline-secondary w-100">Reset Filters</a>
                     </div>
                 </form>
             </div>
