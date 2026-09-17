@@ -56,10 +56,10 @@
         </div>
         <div class="d-flex flex-wrap gap-2">
             <a href="{{ route('fassg.sle-fhe.verified') }}" class="stat-pill bg-success bg-opacity-10 text-success border border-success-subtle text-decoration-none">
-                <i class="bi bi-patch-check"></i> {{ $verifiedCount ?? 0 }} verified
+                <i class="bi bi-patch-check"></i> {{ $verifiedCount ?? 0 }} Verified SLE-FHE
             </a>
             <a href="{{ route('fassg.sle-fhe.index') }}" class="stat-pill bg-warning bg-opacity-10 text-dark border border-warning-subtle text-decoration-none">
-                <i class="bi bi-hourglass-split"></i> {{ $pendingSleFheCount ?? 0 }} pending profiles
+                <i class="bi bi-hourglass-split"></i> {{ $pendingSleFheCount ?? 0 }} Pending SLE-FHE Verification
             </a>
         </div>
     </div>
@@ -190,7 +190,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5" style="width: 0.875rem; height: 0.875rem; flex-shrink: 0;" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                                         </svg>
-                                        Verified
+                                        Verified SLE-FHE
                                     </span>
                                 </td>
                             </tr>

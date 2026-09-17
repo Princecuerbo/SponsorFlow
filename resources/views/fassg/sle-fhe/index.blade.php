@@ -56,10 +56,10 @@
         </div>
         <div class="d-flex flex-wrap gap-2">
             <a href="{{ route('fassg.sle-fhe.index') }}" class="stat-pill bg-warning bg-opacity-10 text-dark border border-warning-subtle text-decoration-none">
-                <i class="bi bi-hourglass-split"></i> {{ $pendingSleFheCount ?? 0 }} pending profiles
+                <i class="bi bi-hourglass-split"></i> {{ $pendingSleFheCount ?? 0 }} Pending SLE-FHE Verification
             </a>
             <a href="{{ route('fassg.sle-fhe.verified') }}" class="stat-pill bg-success bg-opacity-10 text-success border border-success-subtle text-decoration-none">
-                <i class="bi bi-patch-check"></i> {{ $verifiedSleFheCount ?? 0 }} verified
+                <i class="bi bi-patch-check"></i> {{ $verifiedSleFheCount ?? 0 }} Verified SLE-FHE
             </a>
         </div>
     </div>
@@ -189,7 +189,7 @@
                                     <span class="px-2.5 py-1.5 rounded-pill bg-warning bg-opacity-10 text-dark border border-warning border-opacity-25 fw-semibold d-inline-flex align-items-center gap-2"
                                         style="display: inline-flex; align-items: center; gap: 0.375rem; border-radius: 9999px; padding: 0.25rem 0.65rem; font-size: 0.8rem;">
                                         <i class="bi bi-hourglass-split" style="font-size: 0.875rem; flex-shrink: 0;"></i>
-                                        Pending SLE-FHE
+                                        Pending SLE-FHE Verification
                                     </span>
                                 </td>
 
@@ -197,18 +197,18 @@
                                 <td class="text-end pe-4">
                                     <div class="d-flex justify-content-end gap-2">
                                         <form method="POST"
-                                            action="{{ route('fassg.sle-fhe.verify', $profile) }}">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm btn-navy-primary">
-                                                <i class="bi bi-check2-circle me-1"></i>Verify SLE-FHE
-                                            </button>
+                                             action="{{ route('fassg.sle-fhe.verify', $profile) }}">
+                                             @csrf
+                                             <button type="submit" class="btn btn-sm btn-navy-primary">
+                                                 <i class="bi bi-check2-circle me-1"></i>Verify SLE-FHE Student
+                                             </button>
                                         </form>
                                         <form method="POST"
-                                            action="{{ route('fassg.sle-fhe.reject', $profile) }}">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                <i class="bi bi-arrow-return-left me-1"></i>Request Fix
-                                            </button>
+                                             action="{{ route('fassg.sle-fhe.reject', $profile) }}">
+                                             @csrf
+                                             <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                 <i class="bi bi-x-circle me-1"></i>Reject
+                                             </button>
                                         </form>
                                     </div>
                                 </td>
