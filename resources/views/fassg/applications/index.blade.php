@@ -174,6 +174,86 @@
         </div>
     </div>
 
+    {{-- Program Criteria Banner (Visible when a specific program is selected) --}}
+    @if ($selectedProgram)
+        <div class="card sf-card mb-4 border-0 shadow-sm" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-left: 4px solid #0F2942 !important;">
+            <div class="card-body p-3 p-md-4">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3 pb-2 border-bottom">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background: rgba(15, 41, 66, 0.1); color: #0F2942;">
+                            <i class="bi bi-card-checklist"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-0 text-dark">Program Eligibility Criteria: {{ $selectedProgram->program_name }}</h6>
+                            <small class="text-secondary">{{ $selectedProgram->sponsor->company_organization_name ?? 'Sponsor' }}</small>
+                        </div>
+                    </div>
+                    @if ($availableSlots !== null)
+                        <span class="badge bg-primary px-3 py-2">
+                            <i class="bi bi-people-fill me-1"></i> {{ $availableSlots }} Available Slot{{ $availableSlots === 1 ? '' : 's' }}
+                        </span>
+                    @endif
+                </div>
+                <div class="row g-3">
+                    <div class="col-sm-6 col-md-4 col-lg-2">
+                        <div class="small text-muted fw-semibold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">Minimum GWA</div>
+                        <div class="fw-bold fs-6 text-dark mt-1">
+                            @if ($selectedProgram->min_gpa)
+                                <span class="badge bg-light text-dark border">{{ number_format($selectedProgram->min_gpa, 2) }}</span>
+                            @else
+                                <span class="text-secondary fw-normal">No minimum</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-2">
+                        <div class="small text-muted fw-semibold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">Address Requirement</div>
+                        <div class="fw-semibold text-dark mt-1">
+                            {{ $selectedProgram->address_requirement ?: 'No preference' }}
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-2">
+                        <div class="small text-muted fw-semibold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">Eligible Year Levels</div>
+                        <div class="fw-semibold text-dark mt-1">
+                            @if (! empty($selectedProgram->eligible_year_levels))
+                                {{ implode(', ', array_map(fn($y) => "Year {$y}", (array) $selectedProgram->eligible_year_levels)) }}
+                            @else
+                                <span class="text-secondary fw-normal">All Year Levels</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-3">
+                        <div class="small text-muted fw-semibold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">Eligible Campuses</div>
+                        <div class="fw-semibold text-dark mt-1 small">
+                            @if (! empty($selectedProgram->eligible_campuses))
+                                {{ implode(', ', (array) $selectedProgram->eligible_campuses) }}
+                            @else
+                                <span class="text-secondary fw-normal">All Campuses</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-3">
+                        <div class="small text-muted fw-semibold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">Eligible Courses</div>
+                        <div class="fw-semibold text-dark mt-1 small">
+                            @php
+                                $coursesList = collect();
+                                if ($selectedProgram->academicPrograms && $selectedProgram->academicPrograms->isNotEmpty()) {
+                                    $coursesList = $selectedProgram->academicPrograms->map(fn($ap) => $ap->code ?: $ap->name);
+                                } elseif (filled($selectedProgram->target_course)) {
+                                    $coursesList = collect(explode(',', (string) $selectedProgram->target_course))->map('trim');
+                                }
+                            @endphp
+                            @if ($coursesList->isNotEmpty())
+                                {{ $coursesList->implode(', ') }}
+                            @else
+                                <span class="text-secondary fw-normal">All Academic Programs</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     {{-- Queue Table --}}
     @if ($pendingApplications->isEmpty())
         <div class="card sf-card">
@@ -191,7 +271,7 @@
                 @if ($selectedProgram)
                     <span class="mx-1">·</span>
                     <span class="badge bg-cyan-50 text-cyan-700 border border-cyan-200">
-                        <i class="bi bi-sort-numeric-down me-1"></i>Ranked by GWA (best first)
+                        <i class="bi bi-arrow-down-up me-1"></i>Ranked by Submission Date, then GWA
                     </span>
                 @endif
             </div>
@@ -222,8 +302,16 @@
                     </thead>
                     <tbody>
                         @foreach ($pendingApplications as $application)
-                            @php $profile = $application->studentProfile; @endphp
-                            <tr>
+                            @php
+                                $profile = $application->studentProfile;
+                                $slots = $availableSlots ?? ($selectedProgram->available_slots ?? 0);
+                                $rank = ($pendingApplications instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                    ? ($pendingApplications->firstItem() + $loop->index)
+                                    : $loop->iteration;
+                                $isTopCandidate = $selectedProgram && $slots > 0 && $rank <= $slots;
+                            @endphp
+                            <tr class="{{ $isTopCandidate ? 'table-success bg-opacity-10' : '' }}"
+                                style="{{ $isTopCandidate ? 'border-left: 4px solid #16a34a !important; background-color: rgba(22, 163, 74, 0.04);' : '' }}">
                                 {{-- Selection --}}
                                 <td class="ps-3">
                                     <input type="checkbox" class="form-check-input app-checkbox"
@@ -234,13 +322,27 @@
 
                                 {{-- Student --}}
                                 <td class="ps-4">
-                                    <div class="fw-semibold">{{ $profile->user->name ?? trim($profile->first_name . ' ' . ($profile->middle_name ?? '') . ' ' . $profile->last_name . ($profile->extension_name ? ' ' . $profile->extension_name : '')) }}</div>
+                                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                                        <div class="fw-semibold">{{ $profile->user->name ?? trim($profile->first_name . ' ' . ($profile->middle_name ?? '') . ' ' . $profile->last_name . ($profile->extension_name ? ' ' . $profile->extension_name : '')) }}</div>
+                                        @if ($isTopCandidate)
+                                            <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle d-inline-flex align-items-center gap-1" style="font-size: 0.72rem;">
+                                                <i class="bi bi-star-fill text-warning"></i> Top {{ $slots }} Candidate
+                                            </span>
+                                        @endif
+                                    </div>
                                     <div class="small text-secondary sf-mono">{{ $profile->student_id_number ?: '—' }}</div>
                                 </td>
 
                                 {{-- GWA --}}
                                 <td>
-                                    <span class="fw-semibold sf-mono">{{ number_format($application->gpa_submitted, 2) }}</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="fw-semibold sf-mono">{{ number_format($application->gpa_submitted, 2) }}</span>
+                                        @if ($isTopCandidate)
+                                            <span class="badge bg-success bg-opacity-25 text-success-emphasis border border-success-subtle" style="font-size: 0.68rem;" title="Rank in program-filtered queue">
+                                                #{{ $rank }}
+                                            </span>
+                                        @endif
+                                    </div>
                                 </td>
 
                                 {{-- Course & Year Level --}}

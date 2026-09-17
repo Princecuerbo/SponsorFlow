@@ -45,10 +45,13 @@ class FixedListController extends Controller
 
     public function generatedIndex(Request $request): View
     {
+        $programId = $request->integer('sponsorship_program_id', 0);
+
         $lists = FixedList::query()
             ->with('sponsorshipProgram')
             ->withCount('items')
             ->whereHas('items', fn ($query) => $query->whereNotNull('application_id'))
+            ->when($programId > 0, fn ($query) => $query->where('sponsorship_program_id', $programId))
             ->latest()
             ->get();
 
@@ -56,7 +59,9 @@ class FixedListController extends Controller
             'user' => $this->actor($request),
             'lists' => $lists,
             'fixedLists' => $lists,
+            'batches' => $lists,
             'programs' => SponsorshipProgram::query()->orderBy('program_name')->get(),
+            'selectedProgramId' => $programId,
         ]);
     }
 

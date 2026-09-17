@@ -377,6 +377,7 @@ class SponsorshipProgram extends Model
         float $gpa,
         string $address,
         bool $isRural,
+        bool $enforceMinimumGwa = true,
     ): array {
         $errors = [];
 
@@ -388,7 +389,7 @@ class SponsorshipProgram extends Model
             $errors[] = 'This sponsorship program has no remaining slots.';
         }
 
-        if ($this->min_gpa !== null && $gpa > (float) $this->min_gpa) {
+        if ($enforceMinimumGwa && $this->min_gpa !== null && $gpa > (float) $this->min_gpa) {
             $errors[] = "Submitted GWA must be {$this->min_gpa} or better.";
         }
 

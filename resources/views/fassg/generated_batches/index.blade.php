@@ -19,6 +19,32 @@
         </a>
     </div>
 
+    {{-- Filter Bar --}}
+    <div class="card filter-card mb-4 rounded-3 border-0 shadow-sm">
+        <div class="card-body p-3">
+            <form method="GET" action="{{ url()->current() }}" class="row g-2 align-items-end">
+                <div class="col-md-5 col-lg-4">
+                    <label class="form-label small text-secondary fw-semibold mb-1" for="sponsorship_program_id">Filter by Program</label>
+                    <select name="sponsorship_program_id" id="sponsorship_program_id" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All Programs</option>
+                        @foreach ($programs as $prog)
+                            <option value="{{ $prog->id }}" @selected((int) request('sponsorship_program_id', $selectedProgramId ?? 0) === $prog->id)>
+                                {{ $prog->program_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                @if (request('sponsorship_program_id'))
+                    <div class="col-auto">
+                        <a href="{{ url()->current() }}" class="btn btn-outline-secondary btn-sm" title="Clear Filter">
+                            <i class="bi bi-x-lg me-1"></i>Clear Filter
+                        </a>
+                    </div>
+                @endif
+            </form>
+        </div>
+    </div>
+
     @if ($fixedLists->isEmpty())
         <div class="card sf-card border-0 shadow-sm">
             <div class="sf-empty-state text-center p-5">

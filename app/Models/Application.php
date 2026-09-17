@@ -90,6 +90,11 @@ class Application extends Model
             : ApplicationStatus::tryFrom((string) $value);
     }
 
+    public function getGwaAttribute(): mixed
+    {
+        return $this->gpa_submitted;
+    }
+
     public function documents(): HasMany
     {
         return $this->hasMany(ApplicationDocument::class);

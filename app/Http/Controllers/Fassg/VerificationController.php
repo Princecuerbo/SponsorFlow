@@ -286,6 +286,7 @@ class VerificationController extends Controller
             (float) $application->gpa_submitted,
             (string) $application->address_submitted,
             (bool) $application->is_rural_submitted,
+            enforceMinimumGwa: false,
         );
 
         if ($eligibilityErrors !== []) {

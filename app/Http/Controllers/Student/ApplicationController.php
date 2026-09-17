@@ -278,6 +278,7 @@ class ApplicationController extends Controller
             (float) $request->input('current_gpa', $request->input('gpa_submitted')),
             (string) $request->input('current_address', $request->input('address_submitted')),
             $request->boolean('is_rural_submitted'),
+            enforceMinimumGwa: false,
         );
 
         if ($eligibilityErrors !== []) {

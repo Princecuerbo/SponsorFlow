@@ -64,15 +64,16 @@ class ApplicantVerificationController extends Controller
             ->when(
                 $programId > 0,
                 fn ($q) => $q
-                    ->orderBy('applications.gpa_submitted', 'asc')
-                    ->orderBy('applications.submitted_at', 'asc'),
+                    ->select(['applications.*', 'applications.gpa_submitted as gwa'])
+                    ->orderBy('created_at', 'asc')
+                    ->orderBy('gwa', 'asc'),
                 fn ($q) => $q->latest()
             )
             ->paginate(15)
             ->withQueryString();
 
         $programs = SponsorshipProgram::query()
-            ->with(['sponsor', 'fixedLists' => function ($q): void {
+            ->with(['sponsor', 'academicPrograms', 'fixedLists' => function ($q): void {
                 $q->whereIn('status', [FixedListStatus::Saved, FixedListStatus::Draft])
                     ->orderBy('batch_name');
             }])
@@ -284,6 +285,7 @@ class ApplicantVerificationController extends Controller
             (float) $application->gpa_submitted,
             $application->address_submitted,
             (bool) $application->is_rural_submitted,
+            enforceMinimumGwa: false,
         );
 
         if ($eligibilityErrors !== []) {

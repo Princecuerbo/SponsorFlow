@@ -17,6 +17,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Fassg\ApplicantVerificationController;
+use App\Http\Controllers\Fassg\BatchController;
 use App\Http\Controllers\Fassg\FixedListController;
 use App\Http\Controllers\Fassg\ProgramManagementController;
 use App\Http\Controllers\Fassg\ReportsController;
@@ -193,6 +194,7 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
 
         Route::get('/generated-batches', [FixedListController::class, 'generatedIndex'])->name('generated-batches.index');
         Route::get('/generated-batches/{fixedList}', [FixedListController::class, 'showGenerated'])->name('generated-batches.show');
+        Route::get('/batches', [BatchController::class, 'index'])->name('batches.index');
 
         Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
         Route::get('/reports/export-pdf', [ReportsController::class, 'exportPdf'])->name('reports.export-pdf');
