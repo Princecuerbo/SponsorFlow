@@ -126,7 +126,7 @@
                 </div>
 
                 {{-- Campus --}}
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label small text-secondary fw-semibold mb-1">Campus</label>
                     <select name="campus" class="form-select form-select-sm" onchange="this.form.submit()">
                         <option value="">All Campuses</option>
@@ -164,10 +164,10 @@
                 </div>
 
                 {{-- Reset --}}
-                <div class="col-md-1">
+                <div class="col-md-2">
                     <a href="{{ route('fassg.applications.index') }}"
-                        class="btn btn-outline-secondary btn-sm w-100">
-                        <i class="bi bi-x-lg"></i>
+                        class="btn btn-outline-secondary btn-sm w-100 d-flex align-items-center justify-content-center gap-1">
+                        <i class="bi bi-x-lg"></i> Reset Filters
                     </a>
                 </div>
             </form>

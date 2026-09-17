@@ -95,7 +95,7 @@
                 </div>
 
                 {{-- Search --}}
-                <div class="col-md-8">
+                <div class="col-md-7">
                     <label class="form-label small text-secondary fw-semibold mb-1">Search</label>
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white border-end-0">
@@ -109,10 +109,10 @@
                 </div>
 
                 {{-- Reset --}}
-                <div class="col-md-1">
+                <div class="col-md-2">
                     <a href="{{ route('fassg.sle-fhe.verified') }}"
-                        class="btn btn-outline-secondary btn-sm w-100">
-                        <i class="bi bi-x-lg"></i>
+                        class="btn btn-outline-secondary btn-sm w-100 d-flex align-items-center justify-content-center gap-1">
+                        <i class="bi bi-x-lg"></i> Reset Filters
                     </a>
                 </div>
             </form>
@@ -134,8 +134,8 @@
                 <table class="table sf-table mb-0">
                     <thead>
                         <tr>
-                            <th class="ps-4">Student Name</th>
-                            <th>Student ID</th>
+                            <th class="ps-4">Student ID</th>
+                            <th>Student Name</th>
                             <th>Course</th>
                             <th>Year Level</th>
                             <th>Campus</th>
@@ -146,14 +146,14 @@
                     <tbody>
                         @foreach ($verifiedProfiles as $profile)
                             <tr>
-                                {{-- Student Name --}}
+                                {{-- Student ID --}}
                                 <td class="ps-4">
-                                    <div class="fw-semibold">{{ $profile->user->name ?? trim($profile->first_name . ' ' . ($profile->middle_name ?? '') . ' ' . $profile->last_name . ($profile->extension_name ? ' ' . $profile->extension_name : '')) }}</div>
+                                    <span class="small text-secondary sf-mono fw-semibold">{{ $profile->student_id_number ?: '—' }}</span>
                                 </td>
 
-                                {{-- Student ID --}}
+                                {{-- Student Name --}}
                                 <td>
-                                    <span class="small text-secondary sf-mono">{{ $profile->student_id_number ?: '—' }}</span>
+                                    <div class="fw-semibold">{{ $profile->user->name ?? trim($profile->first_name . ' ' . ($profile->middle_name ?? '') . ' ' . $profile->last_name . ($profile->extension_name ? ' ' . $profile->extension_name : '')) }}</div>
                                 </td>
 
                                 {{-- Course --}}

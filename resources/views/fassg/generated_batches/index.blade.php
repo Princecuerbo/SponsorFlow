@@ -28,13 +28,12 @@
                         @endforeach
                     </select>
                 </div>
-                @if (request('sponsorship_program_id'))
-                    <div class="col-auto">
-                        <a href="{{ url()->current() }}" class="btn btn-outline-secondary btn-sm" title="Clear Filter">
-                            <i class="bi bi-x-lg me-1"></i>Clear Filter
-                        </a>
-                    </div>
-                @endif
+                <div class="col-auto">
+                    <a href="{{ url()->current() }}"
+                        class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
+                        <i class="bi bi-x-lg"></i> Reset Filters
+                    </a>
+                </div>
             </form>
         </div>
     </div>
