@@ -34,12 +34,23 @@
 @section('content')
     <div class="row g-4">
         <div class="col-lg-7">
+            @php
+                $eligibleItems = $list->items
+                    ->filter(static fn ($item) => $item->application?->status !== \App\Enums\ApplicationStatus::Rejected)
+                    ->values();
+                $excludedCount = $list->items->count() - $eligibleItems->count();
+            @endphp
+
             <div class="card sf-card border-0 shadow-sm">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
                             <h2 class="h6 sf-heading mb-1 fw-bold">{{ $list->sponsorshipProgram->program_name }}</h2>
-                            <div class="small text-secondary">{{ $list->items->count() }} {{ Str::plural('name', $list->items->count()) }} in this batch</div>
+                            <div class="small text-secondary">{{ $eligibleItems->count() }} {{ Str::plural('name', $eligibleItems->count()) }} in this batch
+                                @if ($excludedCount > 0)
+                                    <span class="text-danger ms-1">({{ $excludedCount }} rejected excluded)</span>
+                                @endif
+                            </div>
                         </div>
                         <x-status-badge :status="$list->status" />
                     </div>
@@ -56,7 +67,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($list->items as $item)
+                                @foreach ($eligibleItems as $item)
                                     <tr>
                                         <td class="ps-4 sf-mono text-secondary">{{ $item->student_id_number }}</td>
                                         <td class="fw-semibold">{{ $item->student_name }}</td>

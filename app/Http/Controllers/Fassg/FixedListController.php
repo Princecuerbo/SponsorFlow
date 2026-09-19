@@ -271,6 +271,9 @@ class FixedListController extends Controller
             ]);
         }
 
+        // Rejected applicants are automatically excluded from the batch forwarded to
+        // the sponsor (see the batch detail filter in the sponsor lists show query),
+        // so flagged as Ineligible here to keep the forwarded items consistent.
         $items
             ->filter(static fn (FixedListItem $item) => $item->application?->status === ApplicationStatus::Rejected)
             ->each(static fn (FixedListItem $item) => $item->update(['status' => FixedListItemStatus::Ineligible]));

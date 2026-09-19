@@ -36,6 +36,8 @@ class ReviewController extends Controller
         $pendingReviewCount = FixedList::query()
             ->whereIn('sponsorship_program_id', $sponsorProgramIds)
             ->where('status', FixedListStatus::Submitted)
+            ->whereHas('items', fn ($query) => $query
+                ->whereHas('application', fn ($applicationQuery) => $applicationQuery->where('status', '!=', ApplicationStatus::Rejected)))
             ->count();
 
         return view('sponsor.dashboard', [
@@ -112,7 +114,14 @@ class ReviewController extends Controller
         $sponsor = $this->sponsorOrganization($request);
         $this->assertOwnsList($sponsor, $fixedList);
 
-        $fixedList->load(['sponsorshipProgram', 'items.application', 'latestApproval', 'uploadedByFassg']);
+        $fixedList->load([
+            'sponsorshipProgram',
+            'items' => fn ($query) => $query
+                ->whereDoesntHave('application', fn ($applicationQuery) => $applicationQuery->where('status', ApplicationStatus::Rejected)),
+            'items.application',
+            'latestApproval',
+            'uploadedByFassg',
+        ]);
 
         return view('sponsor.lists.show', [
             'user' => $this->actor($request),
