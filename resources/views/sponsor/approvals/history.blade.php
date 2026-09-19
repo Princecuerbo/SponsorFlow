@@ -31,7 +31,7 @@
             <p class="text-secondary mb-0">Previously finalized applications and beneficiary lists.</p>
         </div>
         <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-2">
-            {{ $applications->count() + $approvals->count() }} finalized records
+            {{ $approvals->count() }} {{ Str::plural('finalized record', $approvals->count()) }}
         </span>
     </div>
 
