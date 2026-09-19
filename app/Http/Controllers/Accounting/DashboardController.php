@@ -65,7 +65,11 @@ class DashboardController extends Controller
             ];
         });
 
-        $allBeneficiaries = $applicationBeneficiaries->concat($fixedListBeneficiaries);
+        $allBeneficiaries = $applicationBeneficiaries->concat($fixedListBeneficiaries)
+            ->sortByDesc('date_approved')
+            ->unique('student_id')
+            ->sortByDesc('date_approved')
+            ->values();
         $sponsorAllocation = $allBeneficiaries
             ->groupBy('sponsor_name')
             ->map(fn ($beneficiaries, string $sponsor): array => [
