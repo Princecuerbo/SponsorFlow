@@ -267,13 +267,11 @@ Route::middleware(['auth', 'EnsureUserRole:admin'])
         Route::post('/backup', [BackupController::class, 'run'])->name('backup.run');
     });
 
-Route::get('/run-seeders-secret-key-99', function () {
-    try {
-        // Step 1: Run pending migrations (creates localaddress table)
+Route::middleware(['auth', 'EnsureUserRole:admin'])->group(function () {
+    Route::get('/run-seeders-secret-key-99', function () {
         Artisan::call('migrate', ['--force' => true]);
         $migrateOutput = Artisan::output();
 
-        // Step 2: Seed the database (populates localaddress and other tables)
         Artisan::call('db:seed', ['--force' => true]);
         $seedOutput = Artisan::output();
 
@@ -283,21 +281,12 @@ Route::get('/run-seeders-secret-key-99', function () {
             'migrate_output' => $migrateOutput,
             'seed_output' => $seedOutput,
         ]);
-    } catch (\Throwable $e) {
-        return response()->json([
-            'status' => 'error',
-            'message' => $e->getMessage(),
-        ], 500);
-    }
-});
+    });
 
-Route::get('/sync-remote-database-99', function () {
-    try {
-        // Run pending migrations to create missing tables (e.g., localaddress)
+    Route::get('/sync-remote-database-99', function () {
         Artisan::call('migrate', ['--force' => true]);
         $migrateOutput = Artisan::output();
 
-        // Run seeders to populate localaddress and other tables
         Artisan::call('db:seed', ['--force' => true]);
         $seedOutput = Artisan::output();
 
@@ -307,17 +296,9 @@ Route::get('/sync-remote-database-99', function () {
             'migrate_output' => $migrateOutput,
             'seed_output' => $seedOutput,
         ]);
-    } catch (\Throwable $e) {
-        return response()->json([
-            'status' => 'error',
-            'message' => $e->getMessage(),
-        ], 500);
-    }
-});
+    });
 
-Route::get('/force-sync-database-99', function () {
-    try {
-        // 1. Force raw SQL creation if localaddress table is missing in PostgreSQL
+    Route::get('/force-sync-database-99', function () {
         if (! Schema::hasTable('localaddress')) {
             DB::statement("
                 CREATE TABLE IF NOT EXISTS localaddress (
@@ -333,9 +314,7 @@ Route::get('/force-sync-database-99', function () {
             ");
         }
 
-        // 2. Run standard Laravel migrations
         Artisan::call('migrate', ['--force' => true]);
-        // 3. Seed all database records (LocalAddressSeeder, AcademicProgramSeeder, etc.)
         Artisan::call('db:seed', ['--force' => true]);
 
         return response()->json([
@@ -343,11 +322,5 @@ Route::get('/force-sync-database-99', function () {
             'message' => 'localaddress table forcibly created and database seeded!',
             'output' => Artisan::output(),
         ]);
-    } catch (\Throwable $e) {
-        return response()->json([
-            'status' => 'error',
-            'message' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
-        ], 500);
-    }
+    });
 });

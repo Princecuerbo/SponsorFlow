@@ -64,13 +64,12 @@ class ApplicantVerificationController extends Controller
             )
             ->when(
                 $programId > 0,
-                fn ($q) => $q
-                    ->select(['applications.*', 'applications.gpa_submitted as gwa'])
-                    ->orderBy('gwa', 'asc')
-                    ->orderBy('created_at', 'asc'),
-                fn ($q) => $q
-                    ->orderBy('applications.submitted_at', 'asc')
+                fn ($q) => $q->select(['applications.*'])
                     ->orderBy('applications.gpa_submitted', 'asc')
+                    ->orderBy('applications.submitted_at', 'asc'),
+                fn ($q) => $q
+                    ->orderBy('applications.gpa_submitted', 'asc')
+                    ->orderBy('applications.submitted_at', 'asc')
             )
             ->paginate(15)
             ->withQueryString();

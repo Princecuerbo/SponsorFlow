@@ -143,6 +143,9 @@ class ReportsController extends Controller
 
         $rejectedApplicationsCount = Application::query()
             ->where('status', ApplicationStatus::Rejected)
+            ->when($term !== null, $termScope)
+            ->when($campus !== '', $campusScope)
+            ->when($sponsorshipProgramId > 0, $programScope)
             ->count();
 
         $approvedBeneficiaries = Application::query()
