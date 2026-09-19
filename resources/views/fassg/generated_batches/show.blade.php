@@ -50,10 +50,10 @@
     @php
         $blockingStatuses = [
             'Pending',
+            'pending',
             'Resubmission Requested',
             'resubmission_requested',
             'resubmission',
-            'Rejected',
         ];
         $hasPending = $list->items->contains(
             fn ($item) => in_array($item->application?->status?->value, $blockingStatuses, true)
@@ -186,8 +186,8 @@
                             <div class="alert alert-warning text-xs mb-3">
                                 <i class="bi bi-exclamation-triangle-fill me-1"></i>
                                 <strong>Action Required:</strong> All applicants in this batch must be fully verified before
-                                submitting to the sponsor. One or more applicants are currently pending, requested for
-                                resubmission, or rejected. Use the
+                                submitting to the sponsor. One or more applicants are currently pending or requested for
+                                resubmission. Use the
                                 <span class="fw-semibold">View Application</span> link on each affected row below to review
                                 their documents before submitting this batch.
                             </div>

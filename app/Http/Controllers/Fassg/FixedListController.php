@@ -263,7 +263,6 @@ class FixedListController extends Controller
         $blockedStatuses = [
             ApplicationStatus::Pending,
             ApplicationStatus::ResubmissionRequested,
-            ApplicationStatus::Rejected,
         ];
 
         if ($applications->contains(static fn ($application) => in_array($application->status, $blockedStatuses, true))) {
