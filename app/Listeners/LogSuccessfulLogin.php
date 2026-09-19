@@ -15,19 +15,27 @@ class LogSuccessfulLogin
             return;
         }
 
-        $user = $event->user;
-        $role = $user->role instanceof \BackedEnum
-            ? $user->role->value
-            : (string) ($user->role ?? 'user');
+        try {
+            $user = $event->user;
+            $role = $user->role instanceof \BackedEnum
+                ? $user->role->value
+                : (string) ($user->role ?? 'user');
 
-        AuditLog::record(
-            action: $role.'.user.login',
-            targetModule: 'authentication',
-            user: $user,
-            ipAddress: Request::ip(),
-            details: 'User logged into system: '.$user->email,
-            userAgent: Request::userAgent(),
-            role: $role,
-        );
+            $userAgent = Request::userAgent() ?? '';
+            $userAgent = strlen($userAgent) > 255 ? mb_substr($userAgent, 0, 255) : $userAgent;
+
+            AuditLog::record(
+                action: $role.'.user.login',
+                targetModule: 'authentication',
+                user: $user,
+                ipAddress: Request::ip(),
+                details: 'User logged into system: '.$user->email,
+                userAgent: $userAgent !== '' ? $userAgent : null,
+                role: $role,
+            );
+        } catch (\Throwable) {
+            // Login auditing is best-effort: a failed audit write must never
+            // crash the authentication response or drop the browser connection.
+        }
     }
 }

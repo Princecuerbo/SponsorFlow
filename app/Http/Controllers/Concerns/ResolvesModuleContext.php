@@ -51,11 +51,16 @@ trait ResolvesModuleContext
 
     protected function audit(Request $request, string $action, string $targetModule): void
     {
-        AuditLog::record(
-            $action,
-            $targetModule,
-            $this->actor($request),
-            $request->ip(),
-        );
+        try {
+            AuditLog::record(
+                $action,
+                $targetModule,
+                $this->actor($request),
+                $request->ip(),
+            );
+        } catch (\Throwable) {
+            // Auditing is best-effort: a failed log write must never crash
+            // the underlying controller response.
+        }
     }
 }

@@ -19,6 +19,7 @@ class StaffLoginController extends PortalLoginController
             'fassg' => 'fassg.dashboard',
             'sponsor' => 'sponsor.dashboard',
             'accounting' => 'accounting.dashboard',
+            default => $this->redirectRoute,
         };
     }
 }

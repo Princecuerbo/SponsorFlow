@@ -78,7 +78,12 @@ abstract class PortalLoginController extends Controller
         }
 
         $request->session()->regenerate();
-        $user->update(['last_login_at' => now()]);
+
+        try {
+            $user->update(['last_login_at' => now()]);
+        } catch (\Throwable) {
+            // A timestamp write failure must never crash the login response.
+        }
 
         $destination = $this->destinationRoute($user);
         $request->session()->forget('url.intended');
@@ -168,8 +173,19 @@ abstract class PortalLoginController extends Controller
 
         $request->session()->regenerate();
 
-        Auth::loginUsingId($userId);
-        $user->forceFill(['last_login_at' => now(), 'privacy_consent_at' => now()])->save();
+        try {
+            Auth::loginUsingId($userId);
+        } catch (\Throwable) {
+            return response()->json([
+                'message' => 'Your session could not be established. Please sign in again.',
+            ], 422);
+        }
+
+        try {
+            $user->forceFill(['last_login_at' => now(), 'privacy_consent_at' => now()])->save();
+        } catch (\Throwable) {
+            // Timestamp write failures must never crash the consent response.
+        }
 
         $request->session()->forget('pending_user_id');
 
