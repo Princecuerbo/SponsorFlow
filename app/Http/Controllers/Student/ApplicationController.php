@@ -74,6 +74,13 @@ class ApplicationController extends Controller
             ]);
         }
 
+        if ($sponsorshipProgram->hasRejectedApplicationForStudent($profile->id)) {
+            return response()->json([
+                'is_eligible' => false,
+                'reasons' => ['You cannot re-apply to this sponsorship program as your previous application was rejected.'],
+            ]);
+        }
+
         $eligibility = $sponsorshipProgram->checkEligibility($profile);
 
         return response()->json([
@@ -96,6 +103,12 @@ class ApplicationController extends Controller
             return redirect()
                 ->route('student.programs.index')
                 ->with('error', 'The application deadline for this program has passed.');
+        }
+
+        if ($program->hasRejectedApplicationForStudent($student->id)) {
+            return redirect()
+                ->route('student.programs.index')
+                ->with('error', 'You cannot re-apply to this sponsorship program as your previous application was rejected.');
         }
 
         // Check for strictly active grants
@@ -264,6 +277,29 @@ class ApplicationController extends Controller
                 ->withInput();
         }
 
+        $userId = $request->user()?->id ?? auth()->id();
+        $hasRejectedApplication = Application::query()
+            ->where('sponsorship_program_id', $program->id)
+            ->where(function ($q) use ($student, $userId): void {
+                $q->where('student_profile_id', $student->id);
+                if ($userId) {
+                    $q->orWhereHas('studentProfile', fn ($sq) => $sq->where('user_id', $userId));
+                }
+            })
+            ->where(function ($query): void {
+                $query->where('status', ApplicationStatus::Rejected)
+                    ->orWhere('status', 'rejected')
+                    ->orWhere('status', 'REJECTED');
+            })
+            ->exists();
+
+        if ($hasRejectedApplication) {
+            return back()
+                ->withErrors(['application' => 'You cannot re-apply to this sponsorship program as your previous application was rejected.'])
+                ->with('error', 'You cannot re-apply to this sponsorship program as your previous application was rejected.')
+                ->withInput();
+        }
+
         $eligibility = $program->checkEligibility($profile);
 
         if (! $eligibility['is_eligible']) {
@@ -277,7 +313,7 @@ class ApplicationController extends Controller
             (float) $request->input('current_gpa', $request->input('gpa_submitted')),
             (string) $request->input('current_address', $request->input('address_submitted')),
             $request->boolean('is_rural_submitted'),
-            enforceMinimumGwa: false,
+            false,
         );
 
         if ($eligibilityErrors !== []) {

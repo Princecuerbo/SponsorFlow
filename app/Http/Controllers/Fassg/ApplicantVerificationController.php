@@ -16,6 +16,7 @@ use App\Models\FixedList;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
 use App\Notifications\ApplicationStatusUpdated;
+use App\Services\NotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -67,7 +68,9 @@ class ApplicantVerificationController extends Controller
                     ->select(['applications.*', 'applications.gpa_submitted as gwa'])
                     ->orderBy('gwa', 'asc')
                     ->orderBy('created_at', 'asc'),
-                fn ($q) => $q->latest()
+                fn ($q) => $q
+                    ->orderBy('applications.submitted_at', 'asc')
+                    ->orderBy('applications.gpa_submitted', 'asc')
             )
             ->paginate(15)
             ->withQueryString();
@@ -297,6 +300,8 @@ class ApplicantVerificationController extends Controller
             'verified_at' => now(),
         ]);
 
+        NotificationService::notifyApplicationProgress($application, ApplicationStatus::Verified);
+
         $this->audit($request, 'fassg.application.verified', 'applications');
 
         return back()->with('status', 'Application marked as Verified.');
@@ -314,9 +319,12 @@ class ApplicantVerificationController extends Controller
             'status' => ApplicationStatus::Rejected,
         ]);
 
+        $reason = $request->string('reason')->toString();
+
+        NotificationService::notifyApplicationRejected($application, $reason !== '' ? $reason : null);
+
         $this->audit($request, 'fassg.application.rejected', 'applications');
 
-        $reason = $request->string('reason')->toString();
         $message = $reason !== ''
             ? "Application rejected: {$reason}"
             : 'Application marked as Rejected.';
@@ -336,6 +344,7 @@ class ApplicantVerificationController extends Controller
         }
 
         $application->update(['status' => ApplicationStatus::Rejected]);
+        NotificationService::notifyApplicationRejected($application, $validated['reason'] ?? null);
         $this->audit($request, 'fassg.application.rejected', 'applications');
 
         return back()->with('status', 'Application marked as Rejected.');
@@ -365,11 +374,7 @@ class ApplicantVerificationController extends Controller
             'requested_documents' => array_values(array_unique($validated['requested_documents'])),
         ]);
 
-        if ($application->studentProfile->user !== null) {
-            $application->studentProfile->user->notify(
-                new ApplicationStatusUpdated($application, ApplicationStatus::ResubmissionRequested),
-            );
-        }
+        NotificationService::notifyApplicationProgress($application, ApplicationStatus::ResubmissionRequested);
 
         $this->audit($request, 'fassg.application.resubmission_requested', 'applications');
 
@@ -398,6 +403,7 @@ class ApplicantVerificationController extends Controller
         }
 
         $application->update(['status' => ApplicationStatus::Verified, 'verified_at' => now()]);
+        NotificationService::notifyApplicationProgress($application, ApplicationStatus::Verified);
         $this->audit($request, 'fassg.application.verified', 'applications');
 
         return back()->with('status', 'Application marked as Verified.');

@@ -157,6 +157,18 @@ class SponsorshipProgram extends Model
             ->exists();
     }
 
+    public function hasRejectedApplicationForStudent(int $studentProfileId): bool
+    {
+        return $this->applications()
+            ->where('student_profile_id', $studentProfileId)
+            ->where(function ($query): void {
+                $query->where('status', ApplicationStatus::Rejected)
+                    ->orWhere('status', 'rejected')
+                    ->orWhere('status', 'REJECTED');
+            })
+            ->exists();
+    }
+
     public function cascadeExpiredApplications(): void
     {
         $applicationIds = $this->applications()

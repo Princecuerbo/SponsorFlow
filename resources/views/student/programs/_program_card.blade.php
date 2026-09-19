@@ -113,6 +113,11 @@
                     <button type="button" class="btn btn-secondary btn-sm w-100" disabled>
                         <i class="bi bi-check2-circle me-1"></i>Already Applied
                     </button>
+                @elseif ($profile && $program->hasRejectedApplicationForStudent($profile->id))
+                    <button type="button" class="btn btn-outline-danger btn-sm w-100 fw-semibold" disabled
+                        title="You cannot re-apply to this sponsorship program as your previous application was rejected.">
+                        <i class="bi bi-x-circle me-1"></i>Rejected - Re-application Not Allowed
+                    </button>
                 @elseif ($program->available_slots <= 0)
                     <button type="button" class="btn btn-outline-secondary btn-sm w-100" disabled>
                         <i class="bi bi-lock me-1"></i>No Slots Available
