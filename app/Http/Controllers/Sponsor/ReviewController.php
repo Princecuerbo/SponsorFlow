@@ -31,11 +31,12 @@ class ReviewController extends Controller
     {
         $user = $this->actor($request);
         $sponsor = $user->sponsor;
-        $pendingReviewCount = ($sponsor?->forwardedFixedLists()->count() ?? 0)
-            + Application::query()
-                ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor?->id))
-                ->where('status', ApplicationStatus::Verified)
-                ->count();
+        $sponsorProgramIds = $sponsor?->sponsorshipPrograms()->pluck('id') ?? collect();
+
+        $pendingReviewCount = FixedList::query()
+            ->whereIn('sponsorship_program_id', $sponsorProgramIds)
+            ->where('status', FixedListStatus::Submitted)
+            ->count();
 
         return view('sponsor.dashboard', [
             'user' => $user,
