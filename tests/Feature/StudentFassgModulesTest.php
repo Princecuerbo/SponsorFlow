@@ -645,7 +645,7 @@ class StudentFassgModulesTest extends TestCase
             ->delete(route('fassg.fixed-lists.destroy', $list))
             ->assertRedirect(route('fassg.fixed-lists.index'));
 
-        $this->assertDatabaseMissing('fixed_lists', ['id' => $list->id]);
+        $this->assertSoftDeleted('fixed_lists', ['id' => $list->id]);
     }
 
     public function test_submitted_fixed_list_cannot_be_renamed_or_deleted(): void
