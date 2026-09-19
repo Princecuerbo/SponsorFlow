@@ -260,9 +260,15 @@ class FixedListController extends Controller
             ->map(static fn (FixedListItem $item) => $item->application)
             ->filter();
 
-        if ($applications->contains(static fn ($application) => $application->status === ApplicationStatus::Pending)) {
+        $blockedStatuses = [
+            ApplicationStatus::Pending,
+            ApplicationStatus::ResubmissionRequested,
+            ApplicationStatus::Rejected,
+        ];
+
+        if ($applications->contains(static fn ($application) => in_array($application->status, $blockedStatuses, true))) {
             return back()->withErrors([
-                'list' => 'Cannot submit batch to sponsor. Please review and verify all pending applications first.',
+                'list' => 'Cannot submit batch to sponsor. All applications in the batch must be in verified status.',
             ]);
         }
 

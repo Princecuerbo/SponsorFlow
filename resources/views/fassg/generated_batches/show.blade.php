@@ -48,8 +48,15 @@
 
 @section('content')
     @php
+        $blockingStatuses = [
+            'Pending',
+            'Resubmission Requested',
+            'resubmission_requested',
+            'resubmission',
+            'Rejected',
+        ];
         $hasPending = $list->items->contains(
-            fn ($item) => $item->application?->status->value === 'Pending'
+            fn ($item) => in_array($item->application?->status?->value, $blockingStatuses, true)
         );
     @endphp
     <div class="row g-4 mb-4">
@@ -178,9 +185,11 @@
                         @if ($hasPending)
                             <div class="alert alert-warning text-xs mb-3">
                                 <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                                <strong>Action Required:</strong> Pending students cannot be forwarded to the sponsor. Use
-                                the <span class="fw-semibold">View Application</span> link on each pending row below to
-                                verify their documents before submitting this batch.
+                                <strong>Action Required:</strong> All applicants in this batch must be fully verified before
+                                submitting to the sponsor. One or more applicants are currently pending, requested for
+                                resubmission, or rejected. Use the
+                                <span class="fw-semibold">View Application</span> link on each affected row below to review
+                                their documents before submitting this batch.
                             </div>
                         @endif
 
