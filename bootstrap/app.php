@@ -3,7 +3,6 @@
 use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Middleware\CheckRole;
 use App\Http\Middleware\EnsureUserRole;
-use App\Http\Middleware\EnsurePrivacyConsent;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -24,7 +23,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => CheckRole::class,
             'EnsureUserRole' => EnsureUserRole::class,
             'maintenance' => CheckMaintenanceMode::class,
-            'student' => EnsurePrivacyConsent::class,
         ]);
 
         // Add this line to run maintenance mode globally on all web requests

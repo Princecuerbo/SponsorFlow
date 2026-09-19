@@ -27,7 +27,6 @@ use App\Http\Controllers\Sponsor\ReviewController;
 use App\Http\Controllers\Student\ApplicationController as StudentApplicationController;
 use App\Http\Controllers\Student\ProfileController;
 use App\Http\Controllers\Student\VerificationController;
-use App\Http\Controllers\Student\PrivacyConsentController;
 use App\Http\Controllers\Student\NotificationController as StudentNotificationController;
 use App\Models\User;
 use App\Models\SponsorshipProgram;
