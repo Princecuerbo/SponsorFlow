@@ -334,6 +334,9 @@ class ReferenceController extends Controller
                 ];
             });
 
-        return $confirmedItems->concat($approvedApplications)->values()->all();
+        return $confirmedItems->concat($approvedApplications)
+            ->unique('student_id_number')
+            ->values()
+            ->all();
     }
 }
