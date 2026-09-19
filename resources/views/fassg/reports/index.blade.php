@@ -149,6 +149,13 @@
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="sf-stat-card p-3">
+                <div class="sf-eyebrow mb-1 text-danger">Rejected Applications</div>
+                <div class="h4 sf-heading mb-1 text-danger">{{ $rejectedApplicationsCount }}</div>
+                <div class="small text-secondary">Applications not selected</div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="sf-stat-card p-3">
                 <div class="sf-eyebrow mb-1">Rural Applicants Rate</div>
                 <div class="h4 sf-heading mb-1">{{ $report['rural_pct'] ?? 0 }}%</div>
                 <div class="small text-secondary">Of total verified applicants</div>

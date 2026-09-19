@@ -141,6 +141,10 @@ class ReportsController extends Controller
             ->pluck('total', 'status')
             ->all();
 
+        $rejectedApplicationsCount = Application::query()
+            ->where('status', ApplicationStatus::Rejected)
+            ->count();
+
         $approvedBeneficiaries = Application::query()
             ->previouslyApprovedBeneficiaries()
             ->when($term !== null, $termScope)
@@ -448,6 +452,7 @@ class ReportsController extends Controller
             'applicantTrends' => $applicantTrends,
             'applicantCounts' => $this->statusTotals($applicantCounts),
             'approvedBeneficiaries' => $approvedBeneficiaries,
+            'rejectedApplicationsCount' => $rejectedApplicationsCount,
             'confirmedLists' => $confirmedLists,
             'confirmedListNames' => $confirmedListNames,
             'applicantsByCategory' => $this->categoryTotals($applicantsByCategory),
