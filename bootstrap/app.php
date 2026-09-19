@@ -108,7 +108,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
             return redirect()
                 ->route($targetRoute, ['session_expired' => 1])
-                ->with('warning', 'Your session has expired due to inactivity. Please sign in again.');
+                ->with('warning', 'Your session has expired due to inactivity. Please sign in again.')
+                ->withInput()
+                ->withErrors(['email' => 'Your session expired. Please try signing in again.']);
         };
 
         $exceptions->render(function (TokenMismatchException $e, Request $request) use ($handleSessionExpired) {
