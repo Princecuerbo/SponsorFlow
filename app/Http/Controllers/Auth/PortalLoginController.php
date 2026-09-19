@@ -8,11 +8,11 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
-use Illuminate\View\View;
 
 abstract class PortalLoginController extends Controller
 {
@@ -25,9 +25,13 @@ abstract class PortalLoginController extends Controller
 
     protected string $accessDeniedMessage;
 
-    public function showLoginForm(): View
+    public function showLoginForm(): Response
     {
-        return view($this->loginView);
+        return response()
+            ->view($this->loginView)
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', 'Sat, 01 Jan 2000 00:00:00 GMT');
     }
 
     public function login(Request $request): RedirectResponse
@@ -37,7 +41,11 @@ abstract class PortalLoginController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $maxAttempts = (int) SystemSetting::get('max_login_attempts', 5);
+        try {
+            $maxAttempts = (int) SystemSetting::get('max_login_attempts', 5);
+        } catch (\Throwable) {
+            $maxAttempts = 5;
+        }
         $key = strtolower($request->input('email')) . '|' . $request->ip();
 
         if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
@@ -48,7 +56,15 @@ abstract class PortalLoginController extends Controller
             ])->onlyInput('email');
         }
 
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+        try {
+            $authenticated = Auth::attempt($credentials, $request->boolean('remember'));
+        } catch (\Throwable) {
+            return back()
+                ->withErrors(['email' => 'Unable to verify your credentials at this time. Please try again shortly.'])
+                ->onlyInput('email');
+        }
+
+        if (! $authenticated) {
             RateLimiter::hit($key, 60 * 5);
 
             return back()
@@ -104,7 +120,11 @@ abstract class PortalLoginController extends Controller
         ]);
 
         $key = strtolower($request->input('email')) . '|' . $request->ip();
-        $maxAttempts = (int) SystemSetting::get('max_login_attempts', 5);
+        try {
+            $maxAttempts = (int) SystemSetting::get('max_login_attempts', 5);
+        } catch (\Throwable) {
+            $maxAttempts = 5;
+        }
 
         if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
             $seconds = RateLimiter::availableIn($key);
@@ -114,9 +134,16 @@ abstract class PortalLoginController extends Controller
             ]);
         }
 
-        $user = User::query()->where('email', $credentials['email'])->first();
+        try {
+            $user = User::query()->where('email', $credentials['email'])->first();
+            $credentialsValid = $user ? Auth::validate($credentials) : false;
+        } catch (\Throwable) {
+            return response()->json([
+                'message' => 'Unable to verify your credentials at this time. Please try again shortly.',
+            ], 503);
+        }
 
-        if (! $user || ! Auth::validate($credentials)) {
+        if (! $user || ! $credentialsValid) {
             RateLimiter::hit($key, 60 * 5);
 
             return response()->json([
@@ -162,8 +189,13 @@ abstract class PortalLoginController extends Controller
             ], 422);
         }
 
-        /** @var User|null $user */
-        $user = User::query()->find($userId);
+        try {
+            $user = User::query()->find($userId);
+        } catch (\Throwable) {
+            return response()->json([
+                'message' => 'Your account is temporarily unavailable. Please try again shortly.',
+            ], 503);
+        }
 
         if (! $user || ! $user->isActive() || ! $user->hasAnyRole(...$this->allowedRoles)) {
             return response()->json([

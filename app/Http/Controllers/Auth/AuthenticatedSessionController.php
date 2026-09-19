@@ -24,7 +24,13 @@ class AuthenticatedSessionController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+        try {
+            $authenticated = Auth::attempt($credentials, $request->boolean('remember'));
+        } catch (\Throwable) {
+            return back()->withErrors(['email' => 'Unable to verify your credentials at this time. Please try again shortly.'])->onlyInput('email');
+        }
+
+        if (! $authenticated) {
             return back()->withErrors(['email' => 'These credentials do not match our records.'])->onlyInput('email');
         }
 
@@ -37,7 +43,10 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
         $user->timestamps = false;
-        $user->update(['last_login_at' => now()]);
+        try {
+            $user->update(['last_login_at' => now()]);
+        } catch (\Throwable) {
+        }
 
         $dashboardRoute = match ($user->role) {
             UserRole::Admin => route('admin.dashboard'),
