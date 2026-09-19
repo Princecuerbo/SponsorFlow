@@ -39,7 +39,7 @@
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
                             <h2 class="h6 sf-heading mb-1 fw-bold">{{ $list->sponsorshipProgram->program_name }}</h2>
-                            <div class="small text-secondary">{{ $list->total_names }} names in this batch</div>
+                            <div class="small text-secondary">{{ $list->items->count() }} {{ Str::plural('name', $list->items->count()) }} in this batch</div>
                         </div>
                         <x-status-badge :status="$list->status" />
                     </div>
@@ -52,7 +52,7 @@
                                     <th>Student Name</th>
                                     <th>Course</th>
                                     <th>Year Level</th>
-                                    <th>Eligibility</th>
+                                    <th>Verification Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,7 +62,17 @@
                                         <td class="fw-semibold">{{ $item->student_name }}</td>
                                         <td class="text-secondary">{{ $item->course }}</td>
                                         <td class="text-secondary">{{ $item->year_level ? "Year {$item->year_level}" : '—' }}</td>
-                                        <td><x-status-badge :status="$item->status" /></td>
+                                        <td>
+                                            @if ($item->application?->status === \App\Enums\ApplicationStatus::Verified)
+                                                <span class="badge bg-success-subtle text-success">Verified</span>
+                                            @elseif ($item->application?->status === \App\Enums\ApplicationStatus::Rejected)
+                                                <span class="badge bg-danger-subtle text-danger">Rejected</span>
+                                            @elseif ($item->application?->status === \App\Enums\ApplicationStatus::ResubmissionRequested)
+                                                <span class="badge bg-warning-subtle text-warning">Resubmission</span>
+                                            @else
+                                                <span class="badge bg-secondary-subtle text-secondary">{{ $item->application?->status?->value ?? '—' }}</span>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

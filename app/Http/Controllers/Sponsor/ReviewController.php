@@ -112,7 +112,7 @@ class ReviewController extends Controller
         $sponsor = $this->sponsorOrganization($request);
         $this->assertOwnsList($sponsor, $fixedList);
 
-        $fixedList->load(['sponsorshipProgram', 'items', 'latestApproval', 'uploadedByFassg']);
+        $fixedList->load(['sponsorshipProgram', 'items.application', 'latestApproval', 'uploadedByFassg']);
 
         return view('sponsor.lists.show', [
             'user' => $this->actor($request),
