@@ -22,16 +22,41 @@ class CheckMaintenanceMode
             return $next($request);
         }
 
+        // 1. Authenticated administrators bypass maintenance checks across all routes
         $user = $request->user();
-
         if ($user !== null && $user->isAdmin()) {
             return $next($request);
         }
 
-        if ($request->is('login') || $request->is('admin/login') || $request->is('staff/login') || $request->routeIs('login') || $request->routeIs('admin.login') || $request->routeIs('staff.login') || $request->routeIs('logout')) {
+        // 2. Exclude the public landing page
+        if ($request->is('/') || $request->routeIs('landing') || $request->routeIs('home')) {
             return $next($request);
         }
 
-        abort(503, 'The system is currently in maintenance mode.');
+        // 3. Exclude admin login gate and admin routes so administrators can log in and manage settings
+        $adminPath = (string) config('app.admin_login_path', 'dorsu-sysadmin-gate');
+        if (
+            $request->is('admin*') ||
+            $request->is($adminPath . '*') ||
+            $request->is('admin/login*') ||
+            $request->routeIs('admin.*') ||
+            $request->routeIs('admin.login*')
+        ) {
+            return $next($request);
+        }
+
+        // Exclude system health check
+        if ($request->is('up')) {
+            return $next($request);
+        }
+
+        // 4. Enforce maintenance on Student, Staff, and portal routes using the custom friendly view
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'SponsorFlow is currently undergoing scheduled maintenance to improve services. Please check back shortly or contact the FASSG office for urgent inquiries.',
+            ], 503);
+        }
+
+        return response()->view('errors.maintenance', [], 503);
     }
 }
