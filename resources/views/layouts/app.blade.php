@@ -341,8 +341,39 @@
 <body>
 
     @auth
+        @php
+            $currentUser = auth()->user();
+            $userRole = $currentUser?->role?->value ?? 'student';
+
+            // Resolve target login gate URL:
+            // Student: /login
+            // Staff / FASSG / Sponsor / Accounting: /dorsu-staff-gate
+            // Admin: /dorsu-sysadmin-gate
+            $staffGateUrl = url(config('app.staff_login_path', 'dorsu-staff-gate'));
+            $adminGateUrl = url(config('app.admin_login_path', 'dorsu-sysadmin-gate'));
+            $studentGateUrl = route('login');
+
+            if ($currentUser?->isAdmin()) {
+                $loginGateUrl = $adminGateUrl;
+            } elseif ($currentUser?->isFassg() || $currentUser?->isSponsor() || $currentUser?->isAccounting()) {
+                $loginGateUrl = $staffGateUrl;
+            } else {
+                $loginGateUrl = $studentGateUrl;
+            }
+
+            // Get session timeout from database settings, default to 15 if not set
+            $timeoutMinutes = \App\Models\SystemSetting::where('setting_key', 'session_timeout_minutes')->value('setting_value') ?? 15;
+            $totalMilliseconds = (int) $timeoutMinutes * 60 * 1000;
+            // Trigger warning modal 15 seconds before total session expiration
+            $warningDelay = max($totalMilliseconds - 15000, 1000);
+        @endphp
+
         <div id="idle-modal" class="sf-idle-modal d-none" role="dialog" aria-modal="true"
-            aria-labelledby="idle-modal-title" aria-describedby="idle-modal-description">
+            aria-labelledby="idle-modal-title" aria-describedby="idle-modal-description"
+            data-login-gate="{{ $loginGateUrl }}"
+            data-user-role="{{ $userRole }}"
+            data-warning-delay="{{ $warningDelay }}"
+            data-countdown-seconds="15">
             <div class="sf-idle-dialog">
                 <div class="sf-idle-icon" aria-hidden="true">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -355,7 +386,10 @@
                     You have been inactive. You will be logged out in
                     <span id="idle-countdown" class="fw-bold text-warning">15</span> seconds due to inactivity.
                 </p>
-                <button id="stay-logged-in-btn" type="button" class="sf-idle-button">Stay Logged In</button>
+                <div class="d-flex flex-column gap-2">
+                    <button id="stay-logged-in-btn" type="button" class="sf-idle-button">Stay Logged In</button>
+                    <button id="idle-logout-btn" type="button" class="btn btn-link text-secondary text-decoration-none small py-1">Logout</button>
+                </div>
             </div>
         </div>
     @endauth
@@ -423,79 +457,68 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 var idleModal = document.getElementById('idle-modal');
+                if (!idleModal) return;
+
                 var countdown = document.getElementById('idle-countdown');
                 var stayButton = document.getElementById('stay-logged-in-btn');
-                var logoutForm = document.getElementById('logout-form');
+                var logoutButton = document.getElementById('idle-logout-btn');
                 var activityEvents = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
 
-                // ==========================================
-                // DYNAMICALLY FETCH FROM DATABASE SETTINGS:
-                // ==========================================
-                @php
-                    // Get the session timeout minutes from the database, default to 15 if not set
-                    $timeoutMinutes = \App\Models\SystemSetting::where('setting_key', 'session_timeout_minutes')->value('setting_value') ?? 15;
+                var loginGateUrl = idleModal.getAttribute('data-login-gate') || "{{ $loginGateUrl }}";
+                var warningAfter = parseInt(idleModal.getAttribute('data-warning-delay'), 10) || {{ $warningDelay }};
 
-                    // Convert minutes to total milliseconds
-                    $totalMilliseconds = (int) $timeoutMinutes * 60 * 1000;
-
-                    // Trigger the warning modal 15 seconds before the total session time expires
-                    // (Ensures it handles short testing times like 1 minute safely)
-                    $warningDelay = max($totalMilliseconds - 15000, 1000);
-                @endphp
-
-                var warningAfter = {{ $warningDelay }};
-                // ==========================================
-
-                var warningTimer;
-                var countdownTimer;
+                var warningTimer = null;
+                var countdownTimer = null;
                 var warningVisible = false;
 
                 function clearTimers() {
-                    clearTimeout(warningTimer);
-                    clearInterval(countdownTimer);
+                    if (warningTimer) {
+                        clearTimeout(warningTimer);
+                        warningTimer = null;
+                    }
+                    if (countdownTimer) {
+                        clearInterval(countdownTimer);
+                        countdownTimer = null;
+                    }
+                }
+
+                function redirectToLoginGate() {
+                    clearTimers();
+                    var separator = loginGateUrl.indexOf('?') !== -1 ? '&' : '?';
+                    window.location.href = loginGateUrl + separator + 'session_expired=1';
                 }
 
                 function hideWarning() {
                     warningVisible = false;
                     idleModal.classList.add('d-none');
-                    clearInterval(countdownTimer);
-                }
-
-                function logoutForInactivity() {
-                    var logoutForm = document.getElementById('logout-form');
-
-                    if (logoutForm) {
-                        logoutForm.submit();
-                    } else {
-                        var form = document.createElement('form');
-                        form.method = 'POST';
-                        form.action = "{{ route('logout') }}";
-
-                        var csrfToken = document.createElement('input');
-                        csrfToken.type = 'hidden';
-                        csrfToken.name = '_token';
-                        csrfToken.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-                        form.appendChild(csrfToken);
-                        document.body.appendChild(form);
-                        form.submit();
+                    if (countdownTimer) {
+                        clearInterval(countdownTimer);
+                        countdownTimer = null;
                     }
                 }
 
                 function showWarning() {
                     warningVisible = true;
                     idleModal.classList.remove('d-none');
-                    var secondsLeft = 15; // 15-second modal countdown
-                    countdown.textContent = secondsLeft;
+                    var secondsLeft = 15;
+                    if (countdown) {
+                        countdown.textContent = secondsLeft;
+                    }
 
-                    clearInterval(countdownTimer);
+                    if (countdownTimer) {
+                        clearInterval(countdownTimer);
+                    }
+
                     countdownTimer = setInterval(function() {
                         secondsLeft -= 1;
-                        countdown.textContent = Math.max(secondsLeft, 0);
+                        if (countdown) {
+                            countdown.textContent = Math.max(secondsLeft, 0);
+                        }
 
                         if (secondsLeft <= 0) {
                             clearInterval(countdownTimer);
-                            logoutForInactivity();
+                            countdownTimer = null;
+                            redirectToLoginGate();
                         }
                     }, 1000);
                 }
@@ -516,7 +539,20 @@
                     });
                 });
 
-                stayButton.addEventListener('click', resetIdleTimer);
+                if (stayButton) {
+                    stayButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        resetIdleTimer();
+                    });
+                }
+
+                if (logoutButton) {
+                    logoutButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        redirectToLoginGate();
+                    });
+                }
+
                 resetIdleTimer();
             });
         </script>

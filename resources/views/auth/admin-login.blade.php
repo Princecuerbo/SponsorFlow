@@ -76,6 +76,13 @@
             <h3 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.5rem;">Sign In</h3>
             <p class="text-secondary mb-4" style="font-size: 0.8rem; color: #64748b;">Enter your credentials to access the admin dashboard</p>
 
+            @if (session('warning') || request()->has('session_expired'))
+                <div class="alert alert-warning p-2 small mb-3 border-0 text-start d-flex align-items-center gap-2 rounded-3" style="font-size: 0.8rem; background-color: #fff3cd; color: #664d03;">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span>{{ session('warning') ?? 'Your session has expired due to inactivity. Please sign in again.' }}</span>
+                </div>
+            @endif
+
             @if ($errors->any())
                 <div class="alert alert-danger p-2 small mb-3 border-0 text-start" style="font-size: 0.8rem;">
                     {{ $errors->first() }}

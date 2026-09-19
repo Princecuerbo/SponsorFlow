@@ -1,4 +1,6 @@
 import './bootstrap';
+import { initSessionTimeout } from './session-timeout';
+window.initSessionTimeout = initSessionTimeout;
 
 function togglePasswordVisibility(inputId, btn) {
     const input = document.getElementById(inputId);

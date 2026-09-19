@@ -292,6 +292,14 @@
                         These credentials do not match our records.
                     </div>
 
+                    @if (session('warning') || request()->has('session_expired'))
+                        <div class="alert alert-warning p-2.5 small mb-3 border-0 shadow-sm d-flex align-items-center gap-2 rounded-3"
+                            style="background-color: #fff3cd; color: #664d03; font-size: 0.85rem;">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <span>{{ session('warning') ?? 'Your session has expired due to inactivity. Please sign in again.' }}</span>
+                        </div>
+                    @endif
+
                     @if (session('status'))
                         <div class="alert alert-success p-2 small mb-3 border-0 shadow-sm"
                             style="background-color: #d1e7dd; color: #0f5132;">
