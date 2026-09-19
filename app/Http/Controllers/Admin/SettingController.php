@@ -23,6 +23,16 @@ class SettingController extends Controller
             'settings.*' => ['nullable', 'string', 'max:5000'],
         ]);
 
+        // Normalize maintenance_mode: checkbox submits 'true' when checked,
+        // hidden fallback submits 'false' when unchecked
+        if (array_key_exists('maintenance_mode', $validated['settings'])) {
+            $validated['settings']['maintenance_mode'] = in_array(
+                strtolower((string) $validated['settings']['maintenance_mode']),
+                ['true', '1', 'yes', 'on'],
+                true
+            ) ? 'true' : 'false';
+        }
+
         foreach ($validated['settings'] as $key => $value) {
             SystemSetting::query()->where('setting_key', $key)->update(['setting_value' => $value]);
         }
