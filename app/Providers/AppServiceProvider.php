@@ -29,10 +29,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Register anonymous component namespace for Laravel exception renderer views
-        Blade::anonymousComponentPath(
-            base_path('vendor/laravel/framework/src/Illuminate/Foundation/resources/exceptions/renderer'),
-            'laravel-exceptions-renderer',
-        );
+        $rendererPath = base_path('vendor/laravel/framework/src/Illuminate/Foundation/resources/exceptions/renderer');
+        if (is_dir($rendererPath)) {
+            Blade::anonymousComponentPath(
+                $rendererPath,
+                'laravel-exceptions-renderer',
+            );
+        }
 
         // Force HTTPS URL generation in production
         if (config('app.env') === 'production' || env('APP_ENV') === 'production') {

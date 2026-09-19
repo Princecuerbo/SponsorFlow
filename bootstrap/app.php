@@ -3,6 +3,7 @@
 use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Middleware\CheckRole;
 use App\Http\Middleware\EnsureUserRole;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -118,5 +119,46 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($e->getStatusCode() === 419) {
                 return $handleSessionExpired($request);
             }
+        });
+
+        $exceptions->render(function (Throwable $e, Request $request) {
+            if (! app()->environment('production') && config('app.debug')) {
+                return;
+            }
+
+            if ($e instanceof AuthenticationException) {
+                return;
+            }
+
+            $status = $e instanceof HttpException ? $e->getStatusCode() : 500;
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'An unexpected server error occurred. Please try again.',
+                    'status' => $status,
+                ], $status);
+            }
+
+            if (view()->exists('errors.' . $status)) {
+                try {
+                    return response()->view('errors.' . $status, ['exception' => $e], $status);
+                } catch (Throwable) {
+                }
+            }
+
+            $title = match (true) {
+                $status === 404 => 'Not Found',
+                $status === 403 => 'Forbidden',
+                $status === 503 => 'Service Unavailable',
+                default => 'Server Error',
+            };
+
+            return response(
+                '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>' . $status . ' - ' . $title . '</title>'
+                . '<style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f8fafc;color:#1e293b;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}.wrap{text-align:center}.code{font-size:5rem;font-weight:700;color:#0f172a}.msg{color:#64748b;margin-top:.5rem}</style></head>'
+                . '<body><div class="wrap"><div class="code">' . $status . '</div><div class="msg">' . $title . '. Please try again.</div></div></body></html>',
+                $status,
+                ['Content-Type' => 'text/html'],
+            );
         });
     })->create();
