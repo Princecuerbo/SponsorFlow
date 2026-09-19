@@ -32,6 +32,7 @@ class StudentRegistrationTest extends TestCase
             'municipality' => 'Baganga',
             'barangay' => 'Lambajon',
             'home_address' => '123 Main Street',
+            'privacy_consent' => 1,
             // Intentionally omit 'is_rural' — it is now auto-computed
         ]);
 
@@ -74,6 +75,7 @@ class StudentRegistrationTest extends TestCase
             'municipality' => 'Davao City',
             'barangay' => 'Buhangin',
             'home_address' => '456 Roxas Ave',
+            'privacy_consent' => 1,
         ]);
 
         $response->assertRedirect(route('login'));
@@ -147,6 +149,7 @@ class StudentRegistrationTest extends TestCase
             'municipality' => 'Mati City',
             'barangay' => 'Dahican',
             'home_address' => '654 Central Avenue',
+            'privacy_consent' => 1,
         ]);
 
         $response->assertRedirect(route('login'));
@@ -251,6 +254,7 @@ class StudentRegistrationTest extends TestCase
             'municipality' => 'Quezon City',
             'barangay' => 'Diliman',
             'home_address' => '123 Test Street',
+            'privacy_consent' => 1,
         ]);
 
         $response->assertRedirect(route('login'));

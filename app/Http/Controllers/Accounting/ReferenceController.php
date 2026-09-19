@@ -71,7 +71,6 @@ class ReferenceController extends Controller
     public function showFixedListReference(Request $request, FixedList $fixedList): View
     {
         abort_unless($fixedList->status === FixedListStatus::Approved, 404);
-        abort_unless($fixedList->fassg_assigned_at !== null, 404);
 
         $approval = $fixedList->latestApproval;
         abort_unless($approval?->confirmation_status === ConfirmationStatus::Confirmed, 404);
@@ -269,12 +268,10 @@ class ReferenceController extends Controller
 
         $confirmedItems = FixedListItem::query()
             ->where('is_sle_fhe_verified', true)
-            ->whereNotNull('fassg_assigned_at')
             ->whereDoesntHave('application', fn ($q) => $q->where('status', ApplicationStatus::Rejected))
             ->whereHas('fixedList', function ($query) use ($academicProgramId, $sponsorshipProgramId): void {
                 $query->where('status', FixedListStatus::Approved)
-                    ->whereHas('latestApproval', fn ($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed))
-                    ->whereNotNull('fassg_assigned_at');
+                    ->whereHas('latestApproval', fn ($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed));
                 if ($sponsorshipProgramId > 0) {
                     $query->where('sponsorship_program_id', $sponsorshipProgramId);
                 }

@@ -271,7 +271,7 @@
                 @if ($selectedProgram)
                     <span class="mx-1">·</span>
                     <span class="badge bg-cyan-50 text-cyan-700 border border-cyan-200">
-                        <i class="bi bi-arrow-down-up me-1"></i>Ranked by Submission Date, then GWA
+                        <i class="bi bi-arrow-down-up me-1"></i>Ranked by GWA, then Submission Date
                     </span>
                 @endif
             </div>
@@ -290,9 +290,11 @@
                                 <input type="checkbox" class="form-check-input" id="selectAllApps"
                                     aria-label="Select all applicants on this page">
                             </th>
-                            <th class="ps-4">Applicant</th>
+                            <th class="ps-4">Student ID</th>
+                            <th>Student Name</th>
+                            <th>Course</th>
+                            <th>Year Level</th>
                             <th>GWA</th>
-                            <th>Course &amp; Year Level</th>
                             <th>Program Applied</th>
                             <th>Date Submitted</th>
                             <th>Documents</th>
@@ -320,8 +322,13 @@
                                         aria-label="Select {{ $profile->user->name ?? $profile->student_id_number }}">
                                 </td>
 
-                                {{-- Student --}}
+                                {{-- Student ID --}}
                                 <td class="ps-4">
+                                    <span class="small text-secondary sf-mono fw-semibold">{{ $profile->student_id_number ?: '—' }}</span>
+                                </td>
+
+                                {{-- Student Name --}}
+                                <td>
                                     <div class="d-flex align-items-center gap-2 flex-wrap">
                                         <div class="fw-semibold">{{ $profile->user->name ?? trim($profile->first_name . ' ' . ($profile->middle_name ?? '') . ' ' . $profile->last_name . ($profile->extension_name ? ' ' . $profile->extension_name : '')) }}</div>
                                         @if ($isTopCandidate)
@@ -330,7 +337,20 @@
                                             </span>
                                         @endif
                                     </div>
-                                    <div class="small text-secondary sf-mono">{{ $profile->student_id_number ?: '—' }}</div>
+                                </td>
+
+                                {{-- Course --}}
+                                <td>
+                                    <div>{{ $profile->course ?: '—' }}</div>
+                                </td>
+
+                                {{-- Year Level --}}
+                                <td>
+                                    @if ($profile->year_level)
+                                        <span>Year {{ $profile->year_level }}</span>
+                                    @else
+                                        <span class="text-muted">Year N/A</span>
+                                    @endif
                                 </td>
 
                                 {{-- GWA --}}
@@ -341,18 +361,6 @@
                                             <span class="badge bg-success bg-opacity-25 text-success-emphasis border border-success-subtle" style="font-size: 0.68rem;" title="Rank in program-filtered queue">
                                                 #{{ $rank }}
                                             </span>
-                                        @endif
-                                    </div>
-                                </td>
-
-                                {{-- Course & Year Level --}}
-                                <td style="min-width:150px;">
-                                    <div>{{ $profile->course ?: '—' }}</div>
-                                    <div class="small text-secondary">
-                                        @if ($profile->year_level)
-                                            Year {{ $profile->year_level }}
-                                        @else
-                                            <span class="text-muted">Year N/A</span>
                                         @endif
                                     </div>
                                 </td>

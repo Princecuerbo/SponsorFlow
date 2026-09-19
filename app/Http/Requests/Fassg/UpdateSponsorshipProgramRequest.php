@@ -13,6 +13,19 @@ class UpdateSponsorshipProgramRequest extends FormRequest
         return $this->user()?->isFassg() ?? false;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $merge = [];
+        if (! $this->filled('total_slots') && $this->filled('available_slots')) {
+            $merge['total_slots'] = $this->input('available_slots');
+        } elseif (! $this->filled('available_slots') && $this->filled('total_slots')) {
+            $merge['available_slots'] = $this->input('total_slots');
+        }
+        if (! empty($merge)) {
+            $this->merge($merge);
+        }
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -38,7 +51,7 @@ class UpdateSponsorshipProgramRequest extends FormRequest
             'academic_program_ids' => ['nullable', 'array'],
             'academic_program_ids.*' => ['exists:academic_programs,program_id'],
             'eligible_year_levels' => ['nullable', 'array'],
-            'eligible_year_levels.*' => ['in:1,2,3,4'],
+            'eligible_year_levels.*' => ['in:1,2,3,4,5'],
             'eligible_campuses' => ['nullable', 'array'],
             'eligible_campuses.*' => ['distinct', 'string', 'max:150'],
             'required_documents' => ['nullable', 'array'],

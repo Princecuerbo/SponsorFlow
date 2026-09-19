@@ -26,11 +26,9 @@ class DashboardController extends Controller
 
         $confirmedListItems = FixedListItem::query()
             ->where('is_sle_fhe_verified', true)
-            ->whereNotNull('fassg_assigned_at')
             ->whereDoesntHave('application', fn ($q) => $q->where('status', ApplicationStatus::Rejected))
             ->whereHas('fixedList', function ($query): void {
                 $query->where('status', FixedListStatus::Approved)
-                    ->whereNotNull('fassg_assigned_at')
                     ->whereHas('latestApproval', fn ($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed));
             })
             ->with('fixedList.sponsorshipProgram.sponsor')

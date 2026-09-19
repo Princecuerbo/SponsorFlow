@@ -58,50 +58,19 @@
                         oninput="clearTimeout(window.searchTimer); window.searchTimer = setTimeout(() => this.form.submit(), 600)">
                 </div>
                 <div class="col-md-2">
-                    <input type="hidden" name="role" id="filterRole" value="{{ request('role') }}">
-                    <div class="dropdown filter-dropdown" id="roleFilterDropdown">
-                        <button type="button"
-                            class="btn btn-light border w-100 text-start d-flex align-items-center justify-content-between"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <span>{{ request('role') ? \App\Enums\UserRole::tryFrom(request('role'))?->label() : 'All roles' }}</span>
-                            <i class="bi bi-chevron-down text-muted"></i>
-                        </button>
-                        <ul class="dropdown-menu w-100">
-                            <li><button type="button" class="dropdown-item {{ request('role') === '' ? 'active' : '' }}"
-                                    onclick="setFilter('filterRole', '', 'All roles', 'roleFilterDropdown')">All
-                                    roles</button></li>
-                            @foreach (\App\Enums\UserRole::cases() as $role)
-                                <li><button type="button"
-                                        class="dropdown-item {{ request('role') === $role->value ? 'active' : '' }}"
-                                        onclick="setFilter('filterRole', '{{ $role->value }}', '{{ $role->label() }}', 'roleFilterDropdown')">{{ $role->label() }}</button>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
+                    <select name="role" class="form-select" onchange="this.form.submit()">
+                        <option value="">All roles</option>
+                        @foreach (\App\Enums\UserRole::cases() as $role)
+                            <option value="{{ $role->value }}" @selected(request('role') === $role->value)>{{ $role->label() }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col-md-2">
-                    <input type="hidden" name="status" id="filterStatus" value="{{ request('status') }}">
-                    <div class="dropdown filter-dropdown" id="statusFilterDropdown">
-                        <button type="button"
-                            class="btn btn-light border w-100 text-start d-flex align-items-center justify-content-between"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <span>{{ request('status') === 'active' ? 'Active' : (request('status') === 'inactive' ? 'Deactivated' : 'All statuses') }}</span>
-                            <i class="bi bi-chevron-down text-muted"></i>
-                        </button>
-                        <ul class="dropdown-menu w-100">
-                            <li><button type="button" class="dropdown-item {{ request('status') === '' ? 'active' : '' }}"
-                                    onclick="setFilter('filterStatus', '', 'All statuses', 'statusFilterDropdown')">All
-                                    statuses</button></li>
-                            <li><button type="button"
-                                    class="dropdown-item {{ request('status') === 'active' ? 'active' : '' }}"
-                                    onclick="setFilter('filterStatus', 'active', 'Active', 'statusFilterDropdown')">Active</button>
-                            </li>
-                            <li><button type="button"
-                                    class="dropdown-item {{ request('status') === 'inactive' ? 'active' : '' }}"
-                                    onclick="setFilter('filterStatus', 'inactive', 'Deactivated', 'statusFilterDropdown')">Deactivated</button>
-                            </li>
-                        </ul>
-                    </div>
+                    <select name="status" class="form-select" onchange="this.form.submit()">
+                        <option value="">All statuses</option>
+                        <option value="active" @selected(request('status') === 'active')>Active</option>
+                        <option value="inactive" @selected(request('status') === 'inactive')>Deactivated</option>
+                    </select>
                 </div>
                 <div class="col-md-3">
                     <button type="button"

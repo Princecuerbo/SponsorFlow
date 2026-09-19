@@ -5,14 +5,21 @@ namespace App\Http\Controllers\Sponsor;
 use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
 use App\Enums\FixedListStatus;
+use App\Enums\ProgramStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
+use App\Models\AcademicProgram;
 use App\Models\Application;
 use App\Models\FixedList;
 use App\Models\Sponsor;
 use App\Models\SponsorApproval;
+use App\Models\SponsorshipProgram;
+use App\Models\StudentProfile;
+use App\Notifications\ApplicationStatusUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -115,12 +122,122 @@ class ReviewController extends Controller
 
     public function applicants(Request $request): View
     {
-        return $this->index($request);
+        $sponsor = $this->sponsorOrganization($request);
+
+        $academicProgramId = $request->integer('academic_program_id', 0);
+        $course = $request->string('course')->trim()->toString();
+        $status = $request->string('status')->trim()->toString();
+
+        $applicants = Application::query()
+            ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor->id))
+            ->where('status', ApplicationStatus::Verified)
+            ->when($academicProgramId > 0, fn ($query) => $query->whereHas('studentProfile', fn ($pq) => $pq->where('academic_program_id', $academicProgramId)))
+            ->when($course !== '', fn ($query) => $query->whereHas('studentProfile', fn ($pq) => $pq->where('course', $course)))
+            ->with(['studentProfile.user', 'sponsorshipProgram'])
+            ->latest('created_at')
+            ->get();
+
+        $fixedLists = FixedList::query()
+            ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor->id))
+            ->where('status', FixedListStatus::Submitted)
+            ->with(['sponsorshipProgram', 'latestApproval'])
+            ->latest()
+            ->get();
+
+        $academicPrograms = AcademicProgram::query()
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        $courses = StudentProfile::query()
+            ->whereNotNull('course')
+            ->distinct()
+            ->pluck('course')
+            ->filter()
+            ->values();
+
+        return view('sponsor.applicants.index', [
+            'user' => $this->actor($request),
+            'sponsor' => $sponsor,
+            'applicants' => $applicants,
+            'fixedLists' => $fixedLists,
+            'academicPrograms' => $academicPrograms,
+            'courses' => $courses,
+        ]);
     }
 
     public function confirmApplication(Request $request, Application $application): RedirectResponse
     {
-        abort(403, 'Individual application confirmation is disabled. Please use the Batch List workflow instead.');
+        $sponsor = $this->sponsorOrganization($request);
+        $application->load(['studentProfile', 'sponsorshipProgram']);
+
+        abort_unless($sponsor->ownsProgram($application->sponsorshipProgram), 403);
+
+        $validated = $request->validate([
+            'approval_document' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+        ]);
+
+        if ($application->status !== ApplicationStatus::Verified) {
+            return back()->withErrors(['application' => 'Only FASSG-verified applications can be confirmed.']);
+        }
+
+        $path = $validated['approval_document']->store('sponsor-approvals/applications', 'local');
+
+        $approved = DB::transaction(function () use ($application, $path): bool {
+            $program = SponsorshipProgram::query()
+                ->lockForUpdate()
+                ->findOrFail($application->sponsorship_program_id);
+            $profile = StudentProfile::query()
+                ->lockForUpdate()
+                ->findOrFail($application->student_profile_id);
+
+            if ($program->available_slots < 1 || $profile->hasActiveSponsorship()) {
+                return false;
+            }
+
+            $application->update([
+                'status' => ApplicationStatus::Approved,
+                'approved_at' => now(),
+                'sponsor_approval_path' => $path,
+            ]);
+
+            $profile->update(['active_sponsorship_id' => $application->id]);
+            $program->decrementAvailableSlot();
+            $program->refresh();
+
+            if ($program->status === ProgramStatus::Closed || (int) $program->getRawOriginal('available_slots') <= 0 || $program->available_slots <= 0) {
+                $program->update(['status' => ProgramStatus::Closed]);
+
+                $pendingApplications = $program->applications()
+                    ->whereIn('status', [ApplicationStatus::Pending, ApplicationStatus::Verified])
+                    ->get();
+
+                foreach ($pendingApplications as $pendingApp) {
+                    $pendingApp->update([
+                        'status' => ApplicationStatus::Rejected,
+                        'rejection_reason' => 'Program capacity reached (0 slots remaining).',
+                    ]);
+                }
+            }
+
+            return true;
+        });
+
+        if (! $approved) {
+            Storage::disk('local')->delete($path);
+
+            return back()->withErrors(['application' => 'This student already has an active sponsorship or the program has no remaining slots.']);
+        }
+
+        $this->audit($request, 'sponsor.application.confirmed', 'applications');
+
+        $studentUser = $application->studentProfile->user ?? null;
+
+        if ($studentUser !== null) {
+            $studentUser->notify(new ApplicationStatusUpdated($application, ApplicationStatus::Approved));
+        }
+
+        return redirect()->route('sponsor.applicants.index')->with('status', 'Application confirmed and forwarded to Accounting.');
     }
 
     public function reject(Request $request, Application $application): RedirectResponse

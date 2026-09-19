@@ -95,9 +95,10 @@
                         <thead>
                             <tr>
                                 <th class="ps-4" style="width: 48px;">Rank</th>
-                                <th>Student Name</th>
                                 <th>Student ID</th>
-                                <th>Course &amp; Year</th>
+                                <th>Student Name</th>
+                                <th>Course</th>
+                                <th>Year Level</th>
                                 <th>Campus</th>
                                 <th>GWA</th>
                                 <th>Application Status</th>
@@ -113,11 +114,12 @@
                                             class="d-inline-flex align-items-center justify-content-center rounded-circle bg-cyan-50 text-cyan-700 border border-cyan-200 fw-bold"
                                             style="width: 30px; height: 30px;">{{ $loop->iteration }}</span>
                                     </td>
+                                    <td class="sf-mono text-secondary fw-semibold">{{ $item->student_id_number ?: 'N/A' }}</td>
                                     <td class="fw-semibold">
                                         {{ $item->student_name }}
                                     </td>
-                                    <td class="sf-mono">{{ $item->student_id_number ?: 'N/A' }}</td>
-                                    <td>{{ $item->course }} {{ $item->year_level ? "Year {$item->year_level}" : '' }}</td>
+                                    <td>{{ $item->course ?: '—' }}</td>
+                                    <td>{{ $item->year_level ? "Year {$item->year_level}" : '—' }}</td>
                                     <td>{{ $item->campus ?: 'N/A' }}</td>
                                     <td class="fw-semibold">
                                         {{ $item->application?->gpa_submitted !== null ? number_format((float) $item->application->gpa_submitted, 2) : '—' }}

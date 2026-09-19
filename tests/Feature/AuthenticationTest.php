@@ -24,7 +24,7 @@ class AuthenticationTest extends TestCase
             'email' => 'student@dorsu.edu.ph',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
-            'student_id_number' => '2026-00001',
+            'student_id_number' => '2026-0001',
             'academic_program_id' => $program->program_id,
             'campus' => 'Main Campus (City of Mati)',
             'contact_number' => '09123456789',
@@ -34,14 +34,15 @@ class AuthenticationTest extends TestCase
             'municipality' => 'Mati City',
             'barangay' => 'Central',
             'home_address' => '123 Rizal St',
+            'privacy_consent' => 1,
         ]);
 
         $response->assertRedirect(route('login'));
         $this->assertGuest();
         $this->assertDatabaseHas('users', ['email' => 'student@dorsu.edu.ph', 'role' => UserRole::Student->value]);
-        $this->assertDatabaseHas('student_profiles', ['student_id_number' => '2026-00001', 'is_sle_fhe_verified' => false, 'academic_program_id' => $program->program_id]);
+        $this->assertDatabaseHas('student_profiles', ['student_id_number' => '2026-0001', 'is_sle_fhe_verified' => false, 'academic_program_id' => $program->program_id]);
 
-        $profile = StudentProfile::query()->where('student_id_number', '2026-00001')->firstOrFail();
+        $profile = StudentProfile::query()->where('student_id_number', '2026-0001')->firstOrFail();
         $this->assertSame('Davao Oriental', $profile->province);
         $this->assertSame('Mati City', $profile->municipality);
         $this->assertSame('Central', $profile->barangay);

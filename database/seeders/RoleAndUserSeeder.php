@@ -56,6 +56,7 @@ class RoleAndUserSeeder extends Seeder
         }
 
         $this->seedStudentProfile($users[UserRole::Student->value]);
+        $this->call(SponsorshipProgramSeeder::class);
     }
 
     private function seedStudentProfile(User $student): void

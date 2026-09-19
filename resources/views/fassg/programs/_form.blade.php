@@ -133,7 +133,7 @@
                         : []);
             @endphp
             <div class="d-flex flex-wrap gap-3">
-                @foreach ([1, 2, 3, 4] as $yr)
+                @foreach ([1, 2, 3, 4, 5] as $yr)
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox"
                             name="eligible_year_levels[]"

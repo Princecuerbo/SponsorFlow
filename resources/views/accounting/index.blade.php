@@ -75,7 +75,7 @@
     <div class="card sf-card mb-4 no-print">
         <div class="card-body p-3">
             <form method="GET" action="{{ route('accounting.beneficiaries.index') }}" class="row g-2">
-<div class="col-md-3">
+                <div class="col-md-3">
                     <select name="sponsorship_program_id" class="form-select" onchange="this.form.submit()">
                         <option value="">All Sponsorship Programs</option>
                         @foreach ($programs as $program)
@@ -93,7 +93,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="input-group">
                         <span class="input-group-text bg-white border-end-0">
                             <i class="bi bi-search text-secondary"></i>
@@ -102,6 +102,9 @@
                             value="{{ request('q') }}" placeholder="Search student, ID, course, program, or sponsor"
                             oninput="clearTimeout(window.searchTimer); window.searchTimer = setTimeout(() => this.form.submit(), 600)">
                     </div>
+                </div>
+                <div class="col-md-2 text-end">
+                    <a href="{{ route('accounting.beneficiaries.index') }}" class="btn btn-outline-secondary w-100">Reset Filters</a>
                 </div>
             </form>
         </div>
@@ -114,7 +117,8 @@
                     <tr>
                         <th class="ps-4">Student ID Number</th>
                         <th>Full Name</th>
-                        <th>Course &amp; Year</th>
+                        <th>Course</th>
+                        <th>Year Level</th>
                         <th>Campus</th>
                         <th>Program &amp; Category</th>
                         <th>Sponsor / Organization</th>
@@ -129,8 +133,13 @@
                         <tr>
                             <td class="ps-4 sf-mono">{{ $beneficiary['student_id_number'] }}</td>
                             <td class="fw-semibold">{{ $beneficiary['student_name'] }}</td>
-                            <td>{{ $beneficiary['course'] }}<div class="small text-secondary">Year
-                                    {{ $beneficiary['year_level'] }}</div>
+                            <td>{{ $beneficiary['course'] }}</td>
+                            <td>
+                                @if (!empty($beneficiary['year_level']))
+                                    Year {{ $beneficiary['year_level'] }}
+                                @else
+                                    <span class="text-secondary">—</span>
+                                @endif
                             </td>
                             <td>{{ $beneficiary['campus'] ?: 'N/A' }}</td>
                             <td>{{ $beneficiary['program'] }}<div class="small text-secondary">

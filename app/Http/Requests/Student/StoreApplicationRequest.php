@@ -134,12 +134,7 @@ class StoreApplicationRequest extends FormRequest
                 return;
             }
 
-            // Known urban municipalities in Davao Oriental where rural grants don't apply.
-            // Keep in sync with the front-end list in create.blade.php.
-            $urbanMunicipalities = ['Mati City', 'Mati', 'Matiao'];
-            $profileMunicipality = trim((string) ($profile->municipality ?? ''));
-            $profileIsUrban = ! $profile->is_rural
-                || in_array($profileMunicipality, $urbanMunicipalities, true);
+            $profileIsUrban = ! (bool) $profile->is_rural;
 
             $programAddressReq = strtolower((string) ($program->address_requirement ?? ''));
             $programRequiresRural = filled($program->address_requirement)

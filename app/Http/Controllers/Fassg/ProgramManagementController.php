@@ -84,14 +84,17 @@ class ProgramManagementController extends Controller
         $academicProgramIds = array_values(array_map('intval', $request->input('academic_program_ids', []) ?: []));
 
         $program = DB::transaction(function () use ($request, $slots, $academicProgramIds): SponsorshipProgram {
+            $data = $request->validated();
+            $data['eligible_year_levels'] = $request->input('eligible_year_levels', []);
+            $data['eligible_campuses'] = $request->input('eligible_campuses', []);
+            $data['required_documents'] = $request->input('required_documents', []);
+
             $program = SponsorshipProgram::query()->create([
-                ...$request->validated(),
+                ...$data,
                 'total_slots' => $slots,
                 'available_slots' => $slots,
                 'target_course' => $this->resolveTargetCourse($academicProgramIds),
                 'requires_relative_verification' => $request->boolean('requires_relative_verification'),
-                'eligible_campuses' => $request->validated('eligible_campuses') ?? [],
-                'required_documents' => $request->validated('required_documents') ?? [],
                 'status' => ProgramStatus::Open,
             ]);
 
@@ -141,8 +144,9 @@ class ProgramManagementController extends Controller
             }
 
             $attributes['requires_relative_verification'] = $request->boolean('requires_relative_verification');
-            $attributes['eligible_campuses'] = $request->validated('eligible_campuses') ?? [];
-            $attributes['required_documents'] = $request->validated('required_documents') ?? [];
+            $attributes['eligible_year_levels'] = $request->input('eligible_year_levels', []);
+            $attributes['eligible_campuses'] = $request->input('eligible_campuses', []);
+            $attributes['required_documents'] = $request->input('required_documents', []);
 
             $approvedCount = $sponsorshipProgram->applications()
                 ->previouslyApprovedBeneficiaries()

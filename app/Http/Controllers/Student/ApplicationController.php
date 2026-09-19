@@ -89,9 +89,7 @@ class ApplicationController extends Controller
         $student = $profile;
 
         if (! $profile->is_sle_fhe_verified) {
-            return redirect()
-                ->route('student.verification.show')
-                ->withErrors(['application' => 'Complete SLE-FHE verification before applying.']);
+            abort(403, 'Complete SLE-FHE verification before applying.');
         }
 
         if ($program->isApplicationClosed()) {
@@ -138,10 +136,7 @@ class ApplicationController extends Controller
 
         $program->load('sponsor');
 
-        $urbanMunicipalities = ['Mati City', 'Mati', 'Matiao'];
-        $profileMunicipality = trim((string) ($profile->municipality ?? ''));
-        $profileIsUrban = ! $profile->is_rural
-            || in_array($profileMunicipality, $urbanMunicipalities, true);
+        $profileIsUrban = ! (bool) $profile->is_rural;
 
         $programRequiresRural = filled($program->address_requirement)
             && str_contains(strtolower($program->address_requirement), 'rural');
@@ -225,7 +220,9 @@ class ApplicationController extends Controller
             ->exists();
 
         if ($hasActiveGrant) {
-            return back()->with('error', 'You already have an active sponsorship. New applications are disabled until your current grant expires.');
+            return back()
+                ->withErrors(['application' => 'You already have an active sponsorship. New applications are disabled until your current grant expires.'])
+                ->withInput();
         }
 
         if ($this->hasBlockingApplication($profile)) {
@@ -262,7 +259,9 @@ class ApplicationController extends Controller
             ])->exists();
 
         if ($alreadyAppliedToProgram) {
-            return back()->with('error', 'You have an active or pending application for this program.');
+            return back()
+                ->withErrors(['application' => 'You have an active or pending application for this program.'])
+                ->withInput();
         }
 
         $eligibility = $program->checkEligibility($profile);
@@ -299,51 +298,28 @@ class ApplicationController extends Controller
                     'submitted_at' => now(),
                 ]);
 
-                $requiredDocuments = (array) ($program->required_documents ?? []);
-
-                $uploadFields = [
-                    'Report Card / Certificate of Grades' => [
-                        'grade_slip' => DocumentType::CertificateOfGrades,
-                        'certificate_of_grades' => DocumentType::CertificateOfGrades,
-                    ],
-                    'Certificate of Indigency' => [
-                        'indigency_doc' => DocumentType::CertificateOfIndigency,
-                    ],
-                    'Certificate of Registration (COR)' => [
-                        'cor_doc' => DocumentType::CertificateOfRegistration,
-                    ],
-                    'Proof of Residence / Barangay Cert' => [
-                        'proof_of_residence' => DocumentType::ProofOfResidence,
-                        'barangay_certification' => DocumentType::BarangayCertificate,
-                        'barangay_cert' => DocumentType::BarangayCertificate,
-                    ],
-                    'Employee ID / Proof of Kinship' => [
-                        'employee_id_doc' => DocumentType::EmployeeProofOfKinship,
-                    ],
+                $fileMappings = [
+                    'grade_slip' => DocumentType::CertificateOfGrades,
+                    'certificate_of_grades' => DocumentType::CertificateOfGrades,
+                    'indigency_doc' => DocumentType::CertificateOfIndigency,
+                    'cor_doc' => DocumentType::CertificateOfRegistration,
+                    'proof_of_residence' => DocumentType::ProofOfResidence,
+                    'barangay_certification' => DocumentType::BarangayCertificate,
+                    'barangay_cert' => DocumentType::BarangayCertificate,
+                    'employee_id_doc' => DocumentType::EmployeeProofOfKinship,
                 ];
 
-                $uploads = [];
-                foreach ($uploadFields as $label => $fields) {
-                    if (! in_array($label, $requiredDocuments, true)) {
-                        continue;
+                foreach ($fileMappings as $field => $type) {
+                    if ($request->hasFile($field)) {
+                        $file = $request->file($field);
+                        $path = $file->store('applications/documents', 'local');
+
+                        $application->documents()->create([
+                            'document_type' => $type->value,
+                            'file_path' => $path,
+                            'file_name' => $file->getClientOriginalName(),
+                        ]);
                     }
-
-                    foreach ($fields as $field => $type) {
-                        if ($request->hasFile($field)) {
-                            $uploads[$type->value] = $request->file($field);
-                            break;
-                        }
-                    }
-                }
-
-                foreach ($uploads as $type => $file) {
-                    $path = $file->store('applications/documents', 'local');
-
-                    $application->documents()->create([
-                        'document_type' => $type,
-                        'file_path' => $path,
-                        'file_name' => $file->getClientOriginalName(),
-                    ]);
                 }
 
                 return $application;

@@ -65,8 +65,8 @@ class ApplicantVerificationController extends Controller
                 $programId > 0,
                 fn ($q) => $q
                     ->select(['applications.*', 'applications.gpa_submitted as gwa'])
-                    ->orderBy('created_at', 'asc')
-                    ->orderBy('gwa', 'asc'),
+                    ->orderBy('gwa', 'asc')
+                    ->orderBy('created_at', 'asc'),
                 fn ($q) => $q->latest()
             )
             ->paginate(15)

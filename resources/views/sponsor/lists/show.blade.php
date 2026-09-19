@@ -48,20 +48,20 @@
                         <table class="table sf-table mb-0 align-middle">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Student ID</th>
+                                    <th class="ps-4">Student ID</th>
+                                    <th>Student Name</th>
                                     <th>Course</th>
-                                    <th>Year</th>
+                                    <th>Year Level</th>
                                     <th>Eligibility</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($list->items as $item)
                                     <tr>
-                                        <td>{{ $item->student_name }}</td>
-                                        <td class="sf-mono text-secondary">{{ $item->student_id_number }}</td>
+                                        <td class="ps-4 sf-mono text-secondary">{{ $item->student_id_number }}</td>
+                                        <td class="fw-semibold">{{ $item->student_name }}</td>
                                         <td class="text-secondary">{{ $item->course }}</td>
-                                        <td class="text-secondary">{{ $item->year_level }}</td>
+                                        <td class="text-secondary">{{ $item->year_level ? "Year {$item->year_level}" : '—' }}</td>
                                         <td><x-status-badge :status="$item->status" /></td>
                                     </tr>
                                 @endforeach

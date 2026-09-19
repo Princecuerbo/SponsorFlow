@@ -175,7 +175,8 @@
                         <tr>
                             <th class="ps-4">Student ID Number</th>
                             <th>Full Name</th>
-                            <th>Course & Year</th>
+                            <th>Course</th>
+                            <th>Year Level</th>
                             <th>Campus</th>
                             <th>Program & Category</th>
                             <th>Sponsor / Organization</th>
@@ -196,8 +197,12 @@
                                 </td>
                                 <td>
                                     {{ $beneficiary['course'] ?? '—' }}
-                                    @if (isset($beneficiary['year_level']))
-                                        <div class="small text-secondary">Year {{ $beneficiary['year_level'] }}</div>
+                                </td>
+                                <td>
+                                    @if (isset($beneficiary['year_level']) && $beneficiary['year_level'])
+                                        Year {{ $beneficiary['year_level'] }}
+                                    @else
+                                        <span class="text-secondary">—</span>
                                     @endif
                                 </td>
                                 <td>

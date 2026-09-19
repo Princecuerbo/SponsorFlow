@@ -57,7 +57,7 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <a href="{{ route('student.programs.index') }}" class="btn btn-outline-secondary w-100">Reset</a>
+                        <a href="{{ route('student.programs.index') }}" class="btn btn-outline-secondary w-100">Reset Filters</a>
                     </div>
                 </div>
             </div>

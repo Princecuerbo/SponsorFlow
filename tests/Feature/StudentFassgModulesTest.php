@@ -711,6 +711,88 @@ class StudentFassgModulesTest extends TestCase
         );
     }
 
+    public function test_application_queue_ranks_by_gwa_primary_then_submission_date(): void
+    {
+        $fassg = User::factory()->create(['role' => UserRole::Fassg]);
+        $program = SponsorshipProgram::factory()->create(['available_slots' => 5]);
+
+        $studentA = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
+        $studentB = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
+        $studentC = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
+
+        // Student A: Earlier submission, higher GWA (2.25)
+        $appA = Application::factory()->create([
+            'student_profile_id' => $studentA->id,
+            'sponsorship_program_id' => $program->id,
+            'gpa_submitted' => 2.25,
+            'status' => ApplicationStatus::Pending,
+            'created_at' => now()->subHours(5),
+        ]);
+
+        // Student B: Later submission, lower GWA (1.25) - Should be #1
+        $appB = Application::factory()->create([
+            'student_profile_id' => $studentB->id,
+            'sponsorship_program_id' => $program->id,
+            'gpa_submitted' => 1.25,
+            'status' => ApplicationStatus::Pending,
+            'created_at' => now()->subHours(2),
+        ]);
+
+        // Student C: Same GWA as Student B (1.25), but even later submission - Should be #2
+        $appC = Application::factory()->create([
+            'student_profile_id' => $studentC->id,
+            'sponsorship_program_id' => $program->id,
+            'gpa_submitted' => 1.25,
+            'status' => ApplicationStatus::Pending,
+            'created_at' => now()->subHours(1),
+        ]);
+
+        $response = $this->actingAs($fassg)
+            ->get(route('fassg.applications.index', ['program_id' => $program->id]))
+            ->assertOk()
+            ->assertSee('Ranked by GWA, then Submission Date');
+
+        $apps = $response->viewData('pendingApplications');
+        $this->assertSame($appB->id, $apps[0]->id);
+        $this->assertSame($appC->id, $apps[1]->id);
+        $this->assertSame($appA->id, $apps[2]->id);
+    }
+
+    public function test_program_can_save_year_5_and_unchecking_checkboxes_persists_empty_arrays(): void
+    {
+        $fassg = User::factory()->create(['role' => UserRole::Fassg]);
+        $sponsor = Sponsor::factory()->create();
+
+        $this->actingAs($fassg)->post(route('fassg.programs.store'), [
+            'sponsor_id' => $sponsor->id,
+            'program_name' => 'Engineering 5-Year Grant',
+            'category' => ProgramCategory::Individual->value,
+            'available_slots' => 10,
+            'eligible_year_levels' => ['4', '5'],
+            'eligible_campuses' => ['Main Campus (City of Mati)'],
+            'required_documents' => ['Report Card / Certificate of Grades'],
+        ])->assertRedirect(route('fassg.programs.index'));
+
+        $program = SponsorshipProgram::query()->where('program_name', 'Engineering 5-Year Grant')->firstOrFail();
+        $this->assertSame(['4', '5'], $program->eligible_year_levels);
+        $this->assertSame(['Main Campus (City of Mati)'], $program->eligible_campuses);
+
+        // Update program without passing checkboxes (all unchecked)
+        $this->actingAs($fassg)->put(route('fassg.programs.update', $program), [
+            'sponsor_id' => $sponsor->id,
+            'program_name' => 'Engineering 5-Year Grant',
+            'category' => ProgramCategory::Individual->value,
+            'available_slots' => 10,
+            'status' => ProgramStatus::Open->value,
+            // Omit eligible_year_levels, eligible_campuses, required_documents
+        ])->assertRedirect(route('fassg.programs.index'));
+
+        $program->refresh();
+        $this->assertSame([], $program->eligible_year_levels);
+        $this->assertSame([], $program->eligible_campuses);
+        $this->assertSame([], $program->required_documents);
+    }
+
     /**
      * @return array<string, mixed>
      */

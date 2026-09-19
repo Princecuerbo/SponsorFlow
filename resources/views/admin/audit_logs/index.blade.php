@@ -23,30 +23,14 @@
                             oninput="clearTimeout(window.searchTimer); window.searchTimer = setTimeout(() => this.form.submit(), 600)">
                     </div>
 
-                    {{-- Custom Role Filter Dropdown --}}
+                    {{-- Role Filter Select --}}
                     <div class="col-md-3">
-                        <div class="dropdown">
-                            <button
-                                class="form-select text-start bg-white d-flex justify-content-between align-items-center"
-                                type="button" id="roleFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span
-                                    id="selectedRoleLabel">{{ request('role') ? $roles[request('role')] ?? request('role') : 'All roles' }}</span>
-                            </button>
-                            <ul class="dropdown-menu shadow-sm border w-100 mt-1 p-1" aria-labelledby="roleFilterDropdown">
-                                <li>
-                                    <a class="dropdown-item rounded py-2 {{ request('role') == '' ? 'active-filter' : '' }}"
-                                        href="javascript:void(0)" onclick="setRoleFilter('', 'All roles')">All roles</a>
-                                </li>
-                                @foreach ($roles as $key => $label)
-                                    <li>
-                                        <a class="dropdown-item rounded py-2 {{ request('role') === $key ? 'active-filter' : '' }}"
-                                            href="javascript:void(0)"
-                                            onclick="setRoleFilter('{{ $key }}', '{{ $label }}')">{{ $label }}</a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                            <input type="hidden" name="role" id="roleInput" value="{{ request('role') }}">
-                        </div>
+                        <select name="role" class="form-select bg-white" onchange="this.form.submit()">
+                            <option value="">All roles</option>
+                            @foreach ($roles as $key => $label)
+                                <option value="{{ $key }}" @selected(request('role') === $key)>{{ $label }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <div class="col-md-2">

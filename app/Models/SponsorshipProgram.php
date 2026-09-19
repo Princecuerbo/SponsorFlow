@@ -242,8 +242,8 @@ class SponsorshipProgram extends Model
         $this->decrement('available_slots');
         $this->refresh();
 
-        // After decrement, use the live accessor to decide if the program is now full.
-        if ($this->available_slots <= 0) {
+        // After decrement, check if either the DB column or live accessor reached 0 or less.
+        if ((int) $this->getRawOriginal('available_slots') <= 0 || $this->available_slots <= 0) {
             $this->update(['status' => ProgramStatus::Closed]);
         }
 

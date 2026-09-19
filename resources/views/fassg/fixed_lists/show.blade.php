@@ -146,9 +146,10 @@
                                     <input type="checkbox" class="form-check-input" id="selectAllCheckbox"
                                         aria-label="Select all candidates">
                                 </th>
-                                <th>Student Name</th>
                                 <th>Student ID</th>
-                                <th>Course &amp; Year</th>
+                                <th>Student Name</th>
+                                <th>Course</th>
+                                <th>Year Level</th>
                                 <th>Campus</th>
                                 <th>SLE-FHE Status</th>
                                 <th>Endorsed</th>
@@ -162,6 +163,7 @@
                                         <input type="checkbox" class="form-check-input item-checkbox"
                                             value="{{ $item->id }}" aria-label="Select {{ $item->student_name }}">
                                     </td>
+                                    <td class="sf-mono text-secondary fw-semibold">{{ $item->student_id_number ?: 'N/A' }}</td>
                                     <td class="fw-semibold">
                                         {{ $item->student_name }}
                                         @if ($item->application_id)
@@ -171,8 +173,8 @@
                                             </a>
                                         @endif
                                     </td>
-                                    <td class="sf-mono">{{ $item->student_id_number ?: 'N/A' }}</td>
-                                    <td>{{ $item->course }} {{ $item->year_level ? "Year {$item->year_level}" : '' }}</td>
+                                    <td>{{ $item->course ?: '—' }}</td>
+                                    <td>{{ $item->year_level ? "Year {$item->year_level}" : '—' }}</td>
                                     <td>{{ $item->campus ?: 'N/A' }}</td>
                                     <td>
                                         <span

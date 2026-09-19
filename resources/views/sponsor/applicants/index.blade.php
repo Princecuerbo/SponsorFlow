@@ -102,7 +102,10 @@
                     <table class="table sf-table mb-0 align-middle">
                         <thead>
                             <tr>
-                                <th class="ps-4">Student</th>
+                                <th class="ps-4">Student ID</th>
+                                <th>Student Name</th>
+                                <th>Course</th>
+                                <th>Year Level</th>
                                 <th>Program</th>
                                 <th>GWA</th>
                                 <th>Status</th>
@@ -113,14 +116,23 @@
                             @foreach ($applicants as $application)
                                 <tr>
                                     <td class="ps-4">
+                                        <span class="small text-secondary sf-mono fw-semibold">{{ $application->studentProfile->student_id_number }}</span>
+                                    </td>
+                                    <td>
                                         <div class="fw-semibold">{{ $application->studentProfile->user->name }}</div>
-                                        <div class="small text-secondary sf-mono">
-                                            {{ $application->studentProfile->student_id_number }}</div>
-                                        <div class="small text-secondary">{{ $application->studentProfile->course }} · Year
-                                            {{ $application->studentProfile->year_level }}</div>
+                                    </td>
+                                    <td>
+                                        <div>{{ $application->studentProfile->course ?: '—' }}</div>
+                                    </td>
+                                    <td>
+                                        @if ($application->studentProfile->year_level)
+                                            <span>Year {{ $application->studentProfile->year_level }}</span>
+                                        @else
+                                            <span class="text-secondary">—</span>
+                                        @endif
                                     </td>
                                     <td>{{ $application->sponsorshipProgram->program_name }}</td>
-                                    <td>{{ number_format($application->gpa_submitted, 2) }}</td>
+                                    <td><span class="sf-mono fw-semibold">{{ number_format($application->gpa_submitted, 2) }}</span></td>
                                     <td><x-status-badge :status="$application->status" /></td>
                                     <td class="text-end pe-4">
                                         <a href="{{ route('sponsor.applicants.show', $application) }}"

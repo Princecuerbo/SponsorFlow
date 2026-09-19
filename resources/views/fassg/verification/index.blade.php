@@ -213,8 +213,10 @@
                 <table class="table sf-table mb-0">
                     <thead>
                         <tr>
-                            <th class="ps-4">Student</th>
-                            <th>Course &amp; Year</th>
+                            <th class="ps-4">Student ID</th>
+                            <th>Student Name</th>
+                            <th>Course</th>
+                            <th>Year Level</th>
                             <th>Program</th>
                             <th>Category</th>
                             <th>Documents</th>
@@ -229,22 +231,28 @@
                                 $application = $item['application'];
                             @endphp
                             <tr>
-                                {{-- Student --}}
+                                {{-- Student ID --}}
                                 <td class="ps-4">
-                                    <div class="fw-semibold">{{ $profile->user->name }}</div>
-                                    <div class="small text-secondary sf-mono">{{ $profile->student_id_number ?: '—' }}</div>
+                                    <span class="small text-secondary sf-mono fw-semibold">{{ $profile->student_id_number ?: '—' }}</span>
                                 </td>
 
-                                {{-- Course & Year --}}
+                                {{-- Student Name --}}
+                                <td>
+                                    <div class="fw-semibold">{{ $profile->user->name }}</div>
+                                </td>
+
+                                {{-- Course --}}
                                 <td>
                                     <div>{{ $profile->course ?: '—' }}</div>
-                                    <div class="small text-secondary">
-                                        @if ($profile->year_level)
-                                            Year {{ $profile->year_level }}
-                                        @else
-                                            <span class="text-muted">Year N/A</span>
-                                        @endif
-                                    </div>
+                                </td>
+
+                                {{-- Year Level --}}
+                                <td>
+                                    @if ($profile->year_level)
+                                        <span>Year {{ $profile->year_level }}</span>
+                                    @else
+                                        <span class="text-muted">Year N/A</span>
+                                    @endif
                                 </td>
 
                                 {{-- Program --}}
@@ -308,7 +316,7 @@
                                                 action="{{ route('fassg.verification.students.verify', $profile) }}">
                                                 @csrf
                                                 <button type="submit" class="btn btn-sm btn-navy-primary">
-                                                    <i class="bi bi-check2-circle me-1"></i>Verify SLE-FHE
+                                                    <i class="bi bi-check2-circle me-1"></i>Verify &amp; Approve SLE-FHE
                                                 </button>
                                             </form>
                                             <form method="POST"

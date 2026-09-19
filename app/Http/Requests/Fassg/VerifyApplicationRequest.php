@@ -13,6 +13,20 @@ class VerifyApplicationRequest extends FormRequest
         return $this->user()?->isFassg() ?? false;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $merge = [];
+        if ($this->has('grades_verified') && ! $this->has('confirm_gwa')) {
+            $merge['confirm_gwa'] = $this->input('grades_verified');
+        }
+        if ($this->has('address_verified') && ! $this->has('confirm_address')) {
+            $merge['confirm_address'] = $this->input('address_verified');
+        }
+        if (! empty($merge)) {
+            $this->merge($merge);
+        }
+    }
+
     /**
      * @return array<string, mixed>
      */
