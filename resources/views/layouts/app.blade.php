@@ -279,27 +279,31 @@
             }
         }
 
+        .btn-sf-navy {
+            background-color: var(--sf-navy, #0F2537) !important;
+            border-color: var(--sf-navy, #0F2537) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+
+        .btn-sf-navy:hover,
+        .btn-sf-navy:focus {
+            background-color: var(--sf-navy-deep, #0A1E31) !important;
+            border-color: var(--sf-navy-deep, #0A1E31) !important;
+            color: #ffffff !important;
+        }
+
         .btn-outline-sf-navy {
-            --bs-btn-color: var(--sf-navy);
-            --bs-btn-border-color: var(--sf-navy);
-            --bs-btn-hover-color: #ffffff;
-            --bs-btn-hover-bg: var(--sf-navy);
-            --bs-btn-hover-border-color: var(--sf-navy);
-            --bs-btn-focus-shadow-rgb: 15, 37, 55;
-            --bs-btn-active-color: #ffffff;
-            --bs-btn-active-bg: var(--sf-navy-deep);
-            --bs-btn-active-border-color: var(--sf-navy-deep);
-            color: var(--sf-navy) !important;
-            border-color: var(--sf-navy) !important;
+            background-color: transparent !important;
+            border-color: var(--sf-navy, #0F2537) !important;
+            color: var(--sf-navy, #0F2537) !important;
             font-weight: 600;
         }
 
         .btn-outline-sf-navy:hover,
-        .btn-outline-sf-navy:focus,
-        .btn-outline-sf-navy:active,
-        .btn-outline-sf-navy.active {
-            background-color: var(--sf-navy) !important;
-            border-color: var(--sf-navy) !important;
+        .btn-outline-sf-navy:focus {
+            background-color: var(--sf-navy, #0F2537) !important;
+            border-color: var(--sf-navy, #0F2537) !important;
             color: #ffffff !important;
         }
     /* Hide native browser password reveal toggle in Edge/IE */
