@@ -4,33 +4,6 @@
 @section('eyebrow', 'Sponsor Portal · Forwarded Applicants')
 @section('page-title', $list->batch_name)
 
-@push('styles')
-    <style>
-        .btn-navy-primary,
-        a.btn-navy-primary,
-        button.btn-navy-primary {
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
-            color: #ffffff !important;
-            font-weight: 600;
-            box-shadow: none !important;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .btn-navy-primary:hover,
-        .btn-navy-primary:focus,
-        a.btn-navy-primary:hover,
-        a.btn-navy-primary:focus,
-        button.btn-navy-primary:hover,
-        button.btn-navy-primary:focus {
-            background-color: #0A1E31 !important;
-            border-color: #0A1E31 !important;
-            color: #ffffff !important;
-            box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
-        }
-    </style>
-@endpush
-
 @section('content')
     <div class="row g-4">
         <div class="col-lg-7">
@@ -141,7 +114,7 @@
                     <form method="POST" action="{{ route('sponsor.approvals.confirm', $list) }}">
                         @csrf
                         @method('PATCH')
-                        <button type="submit" class="btn btn-navy-primary w-100 py-2"
+                        <button type="submit" class="btn btn-sf-navy w-100 py-2"
                             {{ !$list->latestApproval?->approval_document_path || $list->status->value === 'Approved' ? 'disabled' : '' }}>
                             <i class="bi bi-check-circle me-1"></i>
                             {{ $list->status->value === 'Approved' ? 'Already Confirmed' : 'Confirm Final List' }}

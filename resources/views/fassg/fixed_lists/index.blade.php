@@ -6,28 +6,6 @@
 
 @push('styles')
     <style>
-        .btn-navy-primary,
-        a.btn-navy-primary,
-        button.btn-navy-primary {
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
-            color: #ffffff !important;
-            font-weight: 600;
-            box-shadow: none !important;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .btn-navy-primary:hover,
-        .btn-navy-primary:focus,
-        a.btn-navy-primary:hover,
-        a.btn-navy-primary:focus,
-        button.btn-navy-primary:hover,
-        button.btn-navy-primary:focus {
-            background-color: #0A1E31 !important;
-            border-color: #0A1E31 !important;
-            color: #ffffff !important;
-            box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
-        }
 
         .badge-info-custom {
             background-color: #e0f2fe !important;
@@ -43,7 +21,7 @@
             <h1 class="h3 fw-bold mb-1">Sponsor-Provided Fixed Lists</h1>
             <p class="text-secondary small mb-0">Manage and process batch beneficiary lists forwarded by sponsors.</p>
         </div>
-        <button type="button" class="btn btn-navy-primary fw-semibold d-inline-flex align-items-center gap-2 px-3"
+        <button type="button" class="btn btn-sf-navy fw-semibold d-inline-flex align-items-center gap-2 px-3"
             data-bs-toggle="modal" data-bs-target="#newFixedListModal">
             <i class="bi bi-plus-lg"></i>Upload / Encode List
         </button>
@@ -56,7 +34,7 @@
                 <div class="fw-semibold">No fixed lists yet</div>
                 <div class="small text-secondary mb-3">Upload a sponsor-provided beneficiary list, or encode names manually.
                 </div>
-                <button type="button" class="btn btn-navy-primary btn-sm px-3" data-bs-toggle="modal"
+                <button type="button" class="btn btn-sf-navy btn-sm px-3" data-bs-toggle="modal"
                     data-bs-target="#newFixedListModal">Upload / Encode List</button>
             </div>
         </div>
@@ -231,7 +209,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal"><i class="bi bi-x-lg me-1"></i> Cancel</button>
-                        <button type="submit" class="btn btn-navy-primary"><i class="bi bi-upload me-1"></i>Create
+                        <button type="submit" class="btn btn-sf-navy"><i class="bi bi-upload me-1"></i>Create
                             Batch</button>
                     </div>
                 </form>

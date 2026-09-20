@@ -4,25 +4,6 @@
 @section('eyebrow', 'Sponsor Portal')
 @section('page-title', 'Review Beneficiary Lists')
 
-@push('styles')
-    <style>
-        .btn-navy-primary,
-        button.btn-navy-primary {
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
-            color: #ffffff !important;
-            font-weight: 600;
-        }
-
-        .btn-navy-primary:hover,
-        button.btn-navy-primary:hover {
-            background-color: #0A1E31 !important;
-            border-color: #0A1E31 !important;
-            color: #ffffff !important;
-        }
-    </style>
-@endpush
-
 @section('content')
     <div class="mb-4">
         <h1 class="h3 fw-bold mb-1">Sponsor Review &amp; Document Upload Portal</h1>
@@ -66,7 +47,7 @@
                                 <td class="text-end">
                                     <div class="d-flex justify-content-end gap-2">
                                         <button type="submit" form="upload-form-{{ $list->id }}"
-                                            class="btn btn-navy-primary btn-sm">
+                                            class="btn btn-sf-navy btn-sm">
                                             Upload
                                         </button>
                                         <a href="{{ route('sponsor.lists.show', $list) }}"

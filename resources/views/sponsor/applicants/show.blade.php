@@ -4,33 +4,6 @@
 @section('eyebrow', 'Sponsor Portal')
 @section('page-title', 'Review Applicant')
 
-@push('styles')
-    <style>
-        .btn-navy-primary,
-        a.btn-navy-primary,
-        button.btn-navy-primary {
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
-            color: #ffffff !important;
-            font-weight: 600;
-            box-shadow: none !important;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .btn-navy-primary:hover,
-        .btn-navy-primary:focus,
-        a.btn-navy-primary:hover,
-        a.btn-navy-primary:focus,
-        button.btn-navy-primary:hover,
-        button.btn-navy-primary:focus {
-            background-color: #0A1E31 !important;
-            border-color: #0A1E31 !important;
-            color: #ffffff !important;
-            box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
-        }
-    </style>
-@endpush
-
 @section('content')
     <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
         <div>
@@ -89,7 +62,7 @@
                                 accept=".pdf,.jpg,.jpeg,.png" required>
                             <div class="form-text mb-4">PDF, JPG, or PNG up to 5 MB.</div>
 
-                            <button type="submit" class="btn btn-navy-primary w-100 py-2">
+                            <button type="submit" class="btn btn-sf-navy w-100 py-2">
                                 <i class="bi bi-check2-circle me-1"></i>Upload &amp; Confirm Application
                             </button>
                         </form>

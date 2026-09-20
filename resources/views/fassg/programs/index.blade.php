@@ -6,26 +6,6 @@
 
 @push('styles')
     <style>
-        /* Primary Navy Styling for Create Program Buttons */
-        .btn-navy-primary,
-        a.btn-navy-primary {
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
-            color: #ffffff !important;
-            box-shadow: none !important;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .btn-navy-primary:hover,
-        .btn-navy-primary:focus,
-        a.btn-navy-primary:hover,
-        a.btn-navy-primary:focus {
-            background-color: #0A1E31 !important;
-            border-color: #0A1E31 !important;
-            color: #ffffff !important;
-            box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
-        }
-
         /* Active Filter Pill Tab Accent */
         .sf-filter-pill-active {
             background-color: #0F2942 !important;
@@ -57,7 +37,7 @@
             </a>
         </div>
         <a href="{{ route('fassg.programs.create') }}"
-            class="btn btn-navy-primary fw-semibold d-inline-flex align-items-center gap-2 px-3">
+            class="btn btn-sf-navy fw-semibold d-inline-flex align-items-center gap-2 px-3">
             <i class="bi bi-plus-lg"></i>Create Program
         </a>
     </div>
@@ -68,7 +48,7 @@
                 <i class="bi bi-briefcase"></i>
                 <div class="fw-semibold">No sponsorship programs yet</div>
                 <div class="small mb-3">Create your first program to start accepting student applications.</div>
-                <a href="{{ route('fassg.programs.create') }}" class="btn btn-navy-primary btn-sm px-3">Create Program</a>
+                <a href="{{ route('fassg.programs.create') }}" class="btn btn-sf-navy btn-sm px-3">Create Program</a>
             </div>
         </div>
     @else

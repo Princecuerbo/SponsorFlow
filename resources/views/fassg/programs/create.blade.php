@@ -7,25 +7,6 @@
 @push('styles')
     <style>
         /* Primary Navy Styling for Create Button */
-        .btn-navy-primary,
-        button.btn-navy-primary {
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
-            color: #ffffff !important;
-            font-weight: 600;
-            box-shadow: none !important;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .btn-navy-primary:hover,
-        .btn-navy-primary:focus,
-        button.btn-navy-primary:hover,
-        button.btn-navy-primary:focus {
-            background-color: #0A1E31 !important;
-            border-color: #0A1E31 !important;
-            color: #ffffff !important;
-            box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
-        }
 
         /* Active Checkbox Accent */
         .form-check-input:checked {
@@ -315,7 +296,7 @@
 
                 <div class="card-footer bg-white border-top p-4 d-flex justify-content-end gap-2">
                     <a href="{{ route('fassg.programs.index') }}" class="btn btn-outline-danger"><i class="bi bi-x-lg me-1"></i> Cancel</a>
-                    <button type="submit" class="btn btn-navy-primary"><i class="bi bi-check-lg me-1"></i>Create &amp; Open
+                    <button type="submit" class="btn btn-sf-navy"><i class="bi bi-check-lg me-1"></i>Create &amp; Open
                         Program</button>
                 </div>
             </form>

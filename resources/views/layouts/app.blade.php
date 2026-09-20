@@ -20,8 +20,9 @@
 
     <style>
         :root {
-            --sf-navy: #1e3a8a;
-            --sf-navy-deep: #172554;
+            --sf-navy: #0F2537;
+            --sf-navy-deep: #0A1E31;
+            --sf-navy-ink: #0F2942;
             --sf-slate: #0f172a;
             --sf-gold: #f59e0b;
             --sf-gold-soft: #fef3c7;
@@ -156,19 +157,6 @@
             color: #1a1300;
         }
 
-        .btn-sf-navy {
-            background: var(--sf-navy);
-            border-color: var(--sf-navy);
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .btn-sf-navy:hover {
-            background: var(--sf-navy-deep);
-            border-color: var(--sf-navy-deep);
-            color: #fff;
-        }
-
         .btn-outline-danger {
             color: #dc3545;
             border-color: #dc3545;
@@ -291,19 +279,27 @@
             }
         }
 
-        .btn-sf-navy {
-            --bs-btn-color: #ffffff;
-            --bs-btn-bg: #1e3a8a;
-            --bs-btn-border-color: #1e3a8a;
+        .btn-outline-sf-navy {
+            --bs-btn-color: var(--sf-navy);
+            --bs-btn-border-color: var(--sf-navy);
             --bs-btn-hover-color: #ffffff;
-            --bs-btn-hover-bg: #172554;
-            --bs-btn-hover-border-color: #172554;
-            --bs-btn-focus-shadow-rgb: 30, 58, 138;
+            --bs-btn-hover-bg: var(--sf-navy);
+            --bs-btn-hover-border-color: var(--sf-navy);
+            --bs-btn-focus-shadow-rgb: 15, 37, 55;
             --bs-btn-active-color: #ffffff;
-            --bs-btn-active-bg: #172554;
-            --bs-btn-active-border-color: #172554;
-            background-color: #1e3a8a !important;
-            border-color: #1e3a8a !important;
+            --bs-btn-active-bg: var(--sf-navy-deep);
+            --bs-btn-active-border-color: var(--sf-navy-deep);
+            color: var(--sf-navy) !important;
+            border-color: var(--sf-navy) !important;
+            font-weight: 600;
+        }
+
+        .btn-outline-sf-navy:hover,
+        .btn-outline-sf-navy:focus,
+        .btn-outline-sf-navy:active,
+        .btn-outline-sf-navy.active {
+            background-color: var(--sf-navy) !important;
+            border-color: var(--sf-navy) !important;
             color: #ffffff !important;
         }
     /* Hide native browser password reveal toggle in Edge/IE */
@@ -325,9 +321,13 @@
         .text-indigo-700 { color: #4338ca !important; }
         .border-indigo-200 { border-color: #c7d2fe !important; }
 
+        .bg-red-50    { background-color: #FEF2F2 !important; }
+        .text-red-700 { color: #991B1B !important; }
+        .border-red-200 { border-color: #FCA5A5 !important; }
+
         /* ---- Cream / Gold "Pending Review" palette ---- */
         .bg-cream          { background-color: #FFF8E7 !important; }
-        .border-cream-gold { border-color: #FDE68A !important; }
+        .border-cream-gold { border-color: #FCD34D !important; }
         .text-slate-900    { color: #0f172a !important; }
 
         /* Password toggle eye feedback colors */

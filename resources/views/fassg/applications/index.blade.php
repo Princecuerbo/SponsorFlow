@@ -6,28 +6,6 @@
 
 @push('styles')
     <style>
-        .btn-navy-primary,
-        a.btn-navy-primary,
-        button.btn-navy-primary {
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
-            color: #ffffff !important;
-            font-weight: 600;
-            box-shadow: none !important;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .btn-navy-primary:hover,
-        .btn-navy-primary:focus,
-        a.btn-navy-primary:hover,
-        a.btn-navy-primary:focus,
-        button.btn-navy-primary:hover,
-        button.btn-navy-primary:focus {
-            background-color: #0A1E31 !important;
-            border-color: #0A1E31 !important;
-            color: #ffffff !important;
-            box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
-        }
 
         .btn-batch-nav,
         a.btn-batch-nav,
@@ -450,7 +428,7 @@
                                 {{-- Actions --}}
                                 <td class="text-end pe-4">
                                     <a href="{{ route('fassg.applications.show', $application) }}"
-                                        class="btn btn-sm btn-navy-primary">
+                                        class="btn btn-sm btn-sf-navy">
                                         Review Application <i class="bi bi-chevron-right"></i>
                                     </a>
                                 </td>

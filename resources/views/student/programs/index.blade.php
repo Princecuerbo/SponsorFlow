@@ -7,22 +7,7 @@
 @push('styles')
     <style>
         /* Primary Navy Styling for Apply Now Button */
-        .btn-navy-primary,
-        a.btn-navy-primary {
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
-            color: #ffffff !important;
-            box-shadow: none !important;
-        }
 
-        .btn-navy-primary:hover,
-        .btn-navy-primary:focus,
-        a.btn-navy-primary:hover,
-        a.btn-navy-primary:focus {
-            background-color: #0A1E31 !important;
-            border-color: #0A1E31 !important;
-            color: #ffffff !important;
-        }
     </style>
 @endpush
 
@@ -77,7 +62,7 @@
                     masterlist.
                 </p>
                 <div>
-                    <a href="{{ route('student.sle-fhe') }}" class="btn btn-navy-primary px-4 py-2 fw-semibold rounded-3">
+                    <a href="{{ route('student.sle-fhe') }}" class="btn btn-sf-navy px-4 py-2 fw-semibold rounded-3">
                         Check Verification Status
                     </a>
                 </div>
@@ -120,7 +105,7 @@
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                    <a href="{{ route('student.programs.index') }}" class="btn btn-navy-primary">
+                    <a href="{{ route('student.programs.index') }}" class="btn btn-sf-navy">
                         <i class="bi bi-grid-fill me-1"></i>View Other Opportunities
                     </a>
                 </div>

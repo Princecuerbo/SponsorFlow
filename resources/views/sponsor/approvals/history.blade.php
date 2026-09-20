@@ -4,25 +4,6 @@
 @section('eyebrow', 'Sponsor Portal')
 @section('page-title', 'Approval History')
 
-@push('styles')
-    <style>
-        .btn-navy-primary,
-        a.btn-navy-primary {
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
-            color: #fff !important;
-            font-weight: 600;
-        }
-
-        .btn-navy-primary:hover,
-        .btn-navy-primary:focus {
-            background-color: #0A1E31 !important;
-            border-color: #0A1E31 !important;
-            color: #fff !important;
-        }
-    </style>
-@endpush
-
 @section('content')
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
@@ -69,7 +50,7 @@
                                 <td class="text-end pe-4">
                                     @if ($approval->approval_document_path)
                                         <a href="{{ route('sponsor.approvals.download', $approval) }}" target="_blank"
-                                            rel="noopener" class="btn btn-sm btn-navy-primary">
+                                            rel="noopener" class="btn btn-sm btn-sf-navy">
                                             <i class="bi bi-file-earmark-text me-1"></i>View File
                                         </a>
                                     @else

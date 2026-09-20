@@ -7,9 +7,9 @@
 @push('styles')
     <style>
         .badge-pill-outline {
-            border: 1px solid rgba(30, 58, 138, 0.25);
-            background-color: rgba(30, 58, 138, 0.06);
-            color: var(--sf-navy, #1e3a8a);
+            border: 1px solid rgba(15, 37, 55, 0.25);
+            background-color: rgba(15, 37, 55, 0.06);
+            color: var(--sf-navy);
             font-weight: 600;
         }
 
@@ -58,7 +58,7 @@
         </div>
 
         <div class="alert border-0 border-start border-4 rounded-3 p-3 mb-4 no-print d-flex align-items-center gap-2"
-            style="background-color: rgba(30, 58, 138, 0.05); color: #1e3a8a; border-color: #1e3a8a !important;">
+            style="background-color: rgba(15, 37, 55, 0.05); color: var(--sf-navy); border-color: var(--sf-navy) !important;">
             <i class="bi bi-lock-fill fs-5"></i>
             <span class="small fw-semibold">Accounting access is strictly read-only. Approval, editing, and deletion are
                 handled by FASSG and sponsors.</span>

@@ -6,21 +6,9 @@
 
 @push('styles')
     <style>
-        .btn-navy-primary,
-        a.btn-navy-primary,
-        button.btn-navy-primary {
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
-            color: #fff !important;
-            font-weight: 600;
-        }
 
-        .btn-navy-primary:hover,
-        .btn-navy-primary:focus {
-            background-color: #0A1E31 !important;
-            border-color: #0A1E31 !important;
-            color: #fff !important;
-        }
+
+
 
         /* Custom Navy Styles for Bootstrap Nav Tabs */
         .nav-tabs-navy {
@@ -155,7 +143,7 @@
                                     </td>
                                     <td class="text-end pe-4">
                                         <a href="{{ route('sponsor.lists.show', $list) }}"
-                                            class="btn btn-sm btn-navy-primary">
+                                            class="btn btn-sm btn-sf-navy">
                                             <i class="bi bi-check2-circle me-1"></i>Review &amp; Confirm
                                         </a>
                                     </td>
@@ -219,7 +207,7 @@
                                     </td>
                                     <td class="text-end pe-4">
                                         <a href="{{ route('sponsor.lists.show', $list) }}"
-                                            class="btn btn-sm btn-navy-primary">
+                                            class="btn btn-sm btn-sf-navy">
                                             <i class="bi bi-check2-circle me-1"></i>Review &amp; Confirm
                                         </a>
                                     </td>

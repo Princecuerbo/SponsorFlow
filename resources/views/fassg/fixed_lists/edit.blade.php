@@ -4,30 +4,6 @@
 @section('eyebrow', 'FASSG Office')
 @section('page-title', 'Rename Fixed List')
 
-@push('styles')
-    <style>
-        .btn-navy-primary,
-        button.btn-navy-primary {
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
-            color: #ffffff !important;
-            font-weight: 600;
-            box-shadow: none !important;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .btn-navy-primary:hover,
-        .btn-navy-primary:focus,
-        button.btn-navy-primary:hover,
-        button.btn-navy-primary:focus {
-            background-color: #0A1E31 !important;
-            border-color: #0A1E31 !important;
-            color: #ffffff !important;
-            box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
-        }
-    </style>
-@endpush
-
 @section('content')
     @php
         $fallbackUrl = route('fassg.fixed-lists.show', $fixedList->id);
@@ -61,7 +37,7 @@
 
                         <div class="d-flex justify-content-end gap-2">
                             <a href="{{ $backUrl }}" class="btn btn-outline-danger"><i class="bi bi-x-lg me-1"></i> Cancel</a>
-                            <button type="submit" class="btn btn-navy-primary"><i class="bi bi-check2 me-1"></i>Save
+                            <button type="submit" class="btn btn-sf-navy"><i class="bi bi-check2 me-1"></i>Save
                                 Name</button>
                         </div>
                     </form>

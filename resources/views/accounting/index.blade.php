@@ -8,14 +8,14 @@
     <style>
         .dropdown-item.active-filter {
             background-color: #ffffff !important;
-            color: var(--sf-navy, #1e3a8a) !important;
+            color: var(--sf-navy) !important;
             font-weight: 600;
         }
 
         .dropdown-item:hover,
         .dropdown-item:focus {
-            background-color: rgba(30, 58, 138, 0.08) !important;
-            color: var(--sf-navy, #1e3a8a) !important;
+            background-color: rgba(15, 37, 55, 0.08) !important;
+            color: var(--sf-navy) !important;
         }
 
         @media print {

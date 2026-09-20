@@ -141,7 +141,7 @@
                     </div>
                 @else
                     <a href="{{ route('student.applications.create', ['sponsorshipProgram' => $program->id]) }}"
-                        class="btn btn-navy-primary btn-sm w-100 fw-semibold apply-now-btn"
+                        class="btn btn-sf-navy btn-sm w-100 fw-semibold apply-now-btn"
                         data-check-url="{{ route('api.programs.check-eligibility', ['sponsorshipProgram' => $program->id]) }}"
                         data-apply-url="{{ route('student.applications.create', ['sponsorshipProgram' => $program->id]) }}">
                         <i class="bi bi-pencil-square me-1"></i>Apply Now

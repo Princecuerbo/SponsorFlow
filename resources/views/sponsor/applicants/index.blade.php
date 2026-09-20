@@ -4,33 +4,6 @@
 @section('eyebrow', 'Sponsor Portal')
 @section('page-title', 'Forwarded Applicants & Lists')
 
-@push('styles')
-    <style>
-        .btn-navy-primary,
-        a.btn-navy-primary,
-        button.btn-navy-primary {
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
-            color: #ffffff !important;
-            font-weight: 600;
-            box-shadow: none !important;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .btn-navy-primary:hover,
-        .btn-navy-primary:focus,
-        a.btn-navy-primary:hover,
-        a.btn-navy-primary:focus,
-        button.btn-navy-primary:hover,
-        button.btn-navy-primary:focus {
-            background-color: #0A1E31 !important;
-            border-color: #0A1E31 !important;
-            color: #ffffff !important;
-            box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
-        }
-    </style>
-@endpush
-
 @section('content')
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
@@ -136,7 +109,7 @@
                                     <td><x-status-badge :status="$application->status" /></td>
                                     <td class="text-end pe-4">
                                         <a href="{{ route('sponsor.applicants.show', $application) }}"
-                                            class="btn btn-sm btn-navy-primary">
+                                            class="btn btn-sm btn-sf-navy">
                                             <i class="bi bi-eye me-1"></i>Review &amp; Confirm
                                         </a>
                                     </td>

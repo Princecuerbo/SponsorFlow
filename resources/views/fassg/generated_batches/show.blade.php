@@ -6,28 +6,6 @@
 
 @push('styles')
     <style>
-        .btn-navy-primary,
-        a.btn-navy-primary,
-        button.btn-navy-primary {
-            background-color: #0F2942 !important;
-            border-color: #0F2942 !important;
-            color: #ffffff !important;
-            font-weight: 600;
-            box-shadow: none !important;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .btn-navy-primary:hover,
-        .btn-navy-primary:focus,
-        a.btn-navy-primary:hover,
-        a.btn-navy-primary:focus,
-        button.btn-navy-primary:hover,
-        button.btn-navy-primary:focus {
-            background-color: #0A1E31 !important;
-            border-color: #0A1E31 !important;
-            color: #ffffff !important;
-            box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
-        }
 
         .btn-outline-navy {
             color: #0F2942 !important;
@@ -197,7 +175,7 @@
                         <form method="POST" action="{{ route('fassg.fixed-lists.submit', $list) }}">
                             @csrf
                             @method('PATCH')
-                            <button type="submit" class="btn btn-navy-primary w-100 py-2"
+                            <button type="submit" class="btn btn-sf-navy w-100 py-2"
                                 @disabled($list->items->isEmpty() || $hasPending)
                                 onClick="if ({{ $list->items->where('is_sle_fhe_verified', true)->count() }} !== {{ $list->items->count() }}) { alert('Verify all students before forwarding this batch to the sponsor.'); return false; } return confirm('All students are verified. Forward this batch to the sponsor?');">
                                 <i class="bi bi-send me-1"></i>Submit Batch

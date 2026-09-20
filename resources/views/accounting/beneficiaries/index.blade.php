@@ -8,14 +8,14 @@
     <style>
         .dropdown-item.active-filter {
             background-color: #ffffff !important;
-            color: var(--sf-navy, #1e3a8a) !important;
+            color: var(--sf-navy) !important;
             font-weight: 600;
         }
 
         .dropdown-item:hover,
         .dropdown-item:focus {
-            background-color: rgba(30, 58, 138, 0.08) !important;
-            color: var(--sf-navy, #1e3a8a) !important;
+            background-color: rgba(15, 37, 55, 0.08) !important;
+            color: var(--sf-navy) !important;
         }
 
         .pagination {
@@ -24,18 +24,18 @@
         }
 
         .pagination .page-item.active .page-link {
-            background-color: var(--sf-navy, #1e3a8a) !important;
-            border-color: var(--sf-navy, #1e3a8a) !important;
+            background-color: var(--sf-navy) !important;
+            border-color: var(--sf-navy) !important;
             color: #ffffff !important;
         }
 
         .pagination .page-link {
-            color: var(--sf-navy, #1e3a8a);
+            color: var(--sf-navy);
         }
 
         .pagination .page-link:hover {
-            color: var(--sf-navy-deep, #172554);
-            background-color: rgba(30, 58, 138, 0.08);
+            color: var(--sf-navy-deep);
+            background-color: rgba(15, 37, 55, 0.08);
         }
 
         @media print {
@@ -88,7 +88,7 @@
 
         {{-- Notice Banner --}}
         <div class="alert border-0 border-start border-4 rounded-3 p-3 mb-4 no-print d-flex align-items-center gap-2"
-            style="background-color: rgba(30, 58, 138, 0.05); color: #1e3a8a; border-color: #1e3a8a !important;">
+            style="background-color: rgba(15, 37, 55, 0.05); color: var(--sf-navy); border-color: var(--sf-navy) !important;">
             <i class="bi bi-lock-fill fs-5"></i>
             <span class="small fw-semibold">Accounting access is strictly read-only. Approval, editing, and deletion are
                 handled by FASSG and sponsors.</span>
