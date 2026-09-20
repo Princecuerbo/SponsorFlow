@@ -215,7 +215,7 @@
                         <tr>
                             <th class="ps-4">Student ID</th>
                             <th>Student Name</th>
-                            <th>Course</th>
+                            <th>Academic Program</th>
                             <th>Year Level</th>
                             <th>Program</th>
                             <th>Category</th>
@@ -241,9 +241,9 @@
                                     <div class="fw-semibold">{{ $profile->user->name }}</div>
                                 </td>
 
-                                {{-- Course --}}
+                                {{-- Academic Program --}}
                                 <td>
-                                    <div>{{ $profile->course ?: '—' }}</div>
+                                    <div>{{ $profile->display_course }}</div>
                                 </td>
 
                                 {{-- Year Level --}}

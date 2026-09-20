@@ -126,7 +126,7 @@
                                     <tr>
                                         <th>Student Name</th>
                                         <th>Student ID</th>
-                                        <th>Course</th>
+                                        <th>Academic Program</th>
                                         <th>Year</th>
                                         <th>SLE-FHE Check</th>
                                         <th>Status</th>
@@ -208,7 +208,7 @@
                                 </label>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label small text-secondary">Course</label>
+                                <label class="form-label small text-secondary">Academic Program</label>
                                 <input type="text" name="criteria_course" class="form-control"
                                     placeholder="e.g. BSIT" value="{{ old('criteria_course') }}">
                             </div>

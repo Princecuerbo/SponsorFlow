@@ -56,6 +56,7 @@ class VerificationController extends Controller
                     $query->where(function ($query) use ($search): void {
                         $query->where('student_id_number', 'like', "%{$search}%")
                             ->orWhere('course', 'like', "%{$search}%")
+                            ->orWhereHas('academicProgram', fn ($ap) => $ap->where('name', 'like', "%{$search}%"))
                             ->orWhereHas('user', fn ($uq) => $uq->where('name', 'like', "%{$search}%"));
                     });
                 })
@@ -152,6 +153,7 @@ class VerificationController extends Controller
                 $query->where(function ($query) use ($search): void {
                     $query->where('student_id_number', 'like', "%{$search}%")
                         ->orWhere('course', 'like', "%{$search}%")
+                        ->orWhereHas('academicProgram', fn ($ap) => $ap->where('name', 'like', "%{$search}%"))
                         ->orWhere('first_name', 'like', "%{$search}%")
                         ->orWhere('last_name', 'like', "%{$search}%")
                         ->orWhereHas('user', fn ($uq) => $uq->where('name', 'like', "%{$search}%"));
@@ -181,6 +183,7 @@ class VerificationController extends Controller
                 $query->where(function ($query) use ($search): void {
                     $query->where('student_id_number', 'like', "%{$search}%")
                         ->orWhere('course', 'like', "%{$search}%")
+                        ->orWhereHas('academicProgram', fn ($ap) => $ap->where('name', 'like', "%{$search}%"))
                         ->orWhere('first_name', 'like', "%{$search}%")
                         ->orWhere('last_name', 'like', "%{$search}%")
                         ->orWhereHas('user', fn ($uq) => $uq->where('name', 'like', "%{$search}%"));

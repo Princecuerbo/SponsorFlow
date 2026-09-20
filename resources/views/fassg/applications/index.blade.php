@@ -201,7 +201,7 @@
                         </span>
                         <input type="text" name="q" value="{{ request('q') }}"
                             class="form-control border-start-0 ps-0"
-                            placeholder="Name, student ID, course…"
+                            placeholder="Name, student ID, academic program…"
                             oninput="clearTimeout(window.searchTimer); window.searchTimer = setTimeout(() => this.form.submit(), 600)">
                     </div>
                 </div>
@@ -275,7 +275,7 @@
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-6 col-lg-3">
-                        <div class="small text-muted fw-semibold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">Eligible Courses</div>
+                        <div class="small text-muted fw-semibold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">Eligible Academic Programs</div>
                         <div class="fw-semibold text-dark mt-1 small">
                             @php
                                 $coursesList = collect();
@@ -336,7 +336,7 @@
                             </th>
                             <th class="ps-4">Student ID</th>
                             <th>Student Name</th>
-                            <th>Course</th>
+                            <th>Academic Program</th>
                             <th>Year Level</th>
                             <th>GWA</th>
                             <th>Program Applied</th>
@@ -392,9 +392,9 @@
                                     </div>
                                 </td>
 
-                                {{-- Course --}}
+                                {{-- Academic Program --}}
                                 <td>
-                                    <div>{{ $profile->course ?: '—' }}</div>
+                                    <div>{{ $profile->display_course }}</div>
                                 </td>
 
                                 {{-- Year Level --}}

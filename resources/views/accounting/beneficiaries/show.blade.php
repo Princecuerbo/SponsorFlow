@@ -149,7 +149,7 @@
                         <tr>
                             <th class="ps-4">Student ID Number</th>
                             <th>Full Name</th>
-                            <th>Course &amp; Year</th>
+                            <th>Academic Program &amp; Year</th>
                             <th>GWA / GPA</th>
                             <th>Campus</th>
                             <th>Source</th>
@@ -163,7 +163,7 @@
                                 <td class="ps-4 font-monospace small" style="color: #475569;">{{ $item->student_id_number }}</td>
                                 <td class="fw-semibold text-dark">{{ $item->student_name }}</td>
                                 <td>
-                                    {{ $item->course ?: '—' }}
+                                    {{ $item->display_course }}
                                     @if ($item->year_level)
                                         <div class="small text-secondary">Year {{ $item->year_level }}</div>
                                     @endif

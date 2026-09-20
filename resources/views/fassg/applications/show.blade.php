@@ -181,8 +181,8 @@
                         </div>
                         <div class="col-sm-6 col-md-4">
                             <div class="stat-highlight">
-                                <div class="detail-label"><i class="bi bi-book me-1"></i> Course / Degree</div>
-                                <div class="detail-value fs-6">{{ $profile->course ?: '—' }}</div>
+                                <div class="detail-label"><i class="bi bi-book me-1"></i> Academic Program</div>
+                                <div class="detail-value fs-6">{{ $profile->display_course }}</div>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-4">

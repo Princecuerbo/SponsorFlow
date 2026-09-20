@@ -117,9 +117,9 @@
 
                             <div class="col-6 pb-2 border-bottom">
                                 <span class="text-secondary extra-small text-uppercase d-block mb-1"
-                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">Course</span>
+                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">Academic Program</span>
                                 <span class="fw-semibold text-dark"
-                                    style="font-size: 0.875rem;">{{ $profile?->course ?? '—' }}</span>
+                                    style="font-size: 0.875rem;">{{ $profile?->display_course ?? '—' }}</span>
                             </div>
 
                             <div class="col-6 pb-2 border-bottom">

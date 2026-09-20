@@ -263,9 +263,9 @@
                             </tr>
                         @endforelse
 
-                        <!-- Course -->
+                        <!-- Academic Program -->
                         <tr>
-                            <td colspan="2" style="background-color: #eee; font-weight: bold;">Course</td>
+                            <td colspan="2" style="background-color: #eee; font-weight: bold;">Academic Program</td>
                         </tr>
                         @forelse ($demographics['by_course'] ?? [] as $label => $count)
                             <tr>

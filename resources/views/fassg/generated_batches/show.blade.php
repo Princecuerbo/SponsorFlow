@@ -104,7 +104,7 @@
                                 <th class="ps-4" style="width: 48px;">Rank</th>
                                 <th style="white-space: nowrap;">Student ID</th>
                                 <th>Student Name</th>
-                                <th>Course</th>
+                                <th>Academic Program</th>
                                 <th>Year Level</th>
                                 <th>Campus</th>
                                 <th>GWA</th>

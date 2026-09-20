@@ -45,8 +45,8 @@
                         <dt class="col-sm-4 text-secondary fw-normal small py-2 border-top">Full Name</dt>
                         <dd class="col-sm-8 py-2 mb-0 border-top">{{ $profile->user->name }}</dd>
 
-                        <dt class="col-sm-4 text-secondary fw-normal small py-2 border-top">Course</dt>
-                        <dd class="col-sm-8 py-2 mb-0 border-top">{{ $profile->course }}</dd>
+                        <dt class="col-sm-4 text-secondary fw-normal small py-2 border-top">Academic Program</dt>
+                        <dd class="col-sm-8 py-2 mb-0 border-top">{{ $profile->display_course }}</dd>
 
                         <dt class="col-sm-4 text-secondary fw-normal small py-2 border-top">Year Level</dt>
                         <dd class="col-sm-8 py-2 mb-0 border-top">Year {{ $profile->year_level }}</dd>

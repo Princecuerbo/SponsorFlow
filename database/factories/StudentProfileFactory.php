@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\UserRole;
+use App\Models\AcademicProgram;
 use App\Models\StudentProfile;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -17,6 +18,7 @@ class StudentProfileFactory extends Factory
         return [
             'user_id' => User::factory()->state(['role' => UserRole::Student]),
             'student_id_number' => fake()->unique()->numerify('2024-#####'),
+            'academic_program_id' => AcademicProgram::factory(),
             'course' => 'Bachelor of Science in Information Technology',
             'year_level' => 3,
             'gender' => 'Female',

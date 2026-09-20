@@ -2,21 +2,20 @@
 
 namespace Database\Factories;
 
+use App\Models\AcademicProgram;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AcademicProgram>
+ * @extends Factory<AcademicProgram>
  */
 class AcademicProgramFactory extends Factory
 {
-    protected $model = \App\Models\AcademicProgram::class;
-
     public function definition(): array
     {
         return [
-            'code' => strtoupper($this->faker->unique()->bothify('??###')),
-            'name' => $this->faker->unique()->sentence(3),
-            'short_name' => $this->faker->word(),
+            'code' => 'BSIT',
+            'name' => 'Bachelor of Science in Information Technology',
+            'short_name' => 'BSIT',
             'is_board_program' => false,
             'is_undergraduate' => true,
             'is_active' => true,

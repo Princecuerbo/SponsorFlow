@@ -1,5 +1,5 @@
 @php
-    // Determine the eligible courses list from $program->courses, $program->eligible_courses, pivot relation, or target_course
+    // Determine the eligible academic programs list from $program->courses, $program->eligible_courses, pivot relation, or target_course
     $coursesCollection = collect();
 
     if (isset($program->eligible_courses) && filled($program->eligible_courses)) {
@@ -58,12 +58,12 @@
                     </li>
                 @endif
                 <li class="d-flex justify-content-between gap-3 py-1 border-bottom">
-                    <span class="text-secondary">Target course</span>
+                    <span class="text-secondary">Academic program</span>
                     <span class="fw-semibold text-end text-break">
                         @if ($courseDisplayNames->isNotEmpty())
                             {{ $courseDisplayNames->implode(', ') }}
                         @else
-                            <span class="text-success fw-semibold">All Courses Allowed</span>
+                            <span class="text-success fw-semibold">All Academic Programs</span>
                         @endif
                     </span>
                 </li>

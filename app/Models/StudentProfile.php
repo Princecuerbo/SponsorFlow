@@ -77,6 +77,11 @@ class StudentProfile extends Model
         return "{$this->home_address}, Brgy. {$this->barangay}, {$this->municipality}, {$this->province}";
     }
 
+    public function getDisplayCourseAttribute(): string
+    {
+        return $this->academicProgram?->name ?? $this->course ?? 'Unspecified';
+    }
+
     public function academicProgram(): BelongsTo
     {
         return $this->belongsTo(AcademicProgram::class, 'academic_program_id', 'program_id');
@@ -150,7 +155,7 @@ class StudentProfile extends Model
     public function hasCompleteIdentity(): bool
     {
         return filled($this->student_id_number)
-            && filled($this->course)
+            && (filled($this->academic_program_id) || filled($this->course))
             && $this->year_level !== null;
     }
 

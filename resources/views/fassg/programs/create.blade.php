@@ -266,9 +266,9 @@
                     </div>
 
                     <div class="mt-4">
-                        <label class="form-label fw-bold">Eligible Courses / Academic Programs</label>
-                        <p class="text-muted small mb-2">Select the courses eligible for this sponsorship program (leave
-                            empty to allow all courses).</p>
+                        <label class="form-label fw-bold">Eligible Academic Programs</label>
+                        <p class="text-muted small mb-2">Select the academic programs eligible for this sponsorship program (leave
+                            empty to allow all academic programs).</p>
 
                         @php
                             $selectedProgramIds = is_array(old('academic_program_ids'))

@@ -249,8 +249,8 @@
                             <div class="small text-secondary">{{ $profile->user->email }}</div>
                         </div>
                         <div class="col-md-6">
-                            <div class="detail-label">Course / Degree</div>
-                            <div class="detail-value">{{ $profile->course ?: '—' }}</div>
+                            <div class="detail-label">Academic Program</div>
+                            <div class="detail-value">{{ $profile->display_course }}</div>
                         </div>
                         <div class="col-md-6">
                             <div class="detail-label">SLE-FHE Status</div>

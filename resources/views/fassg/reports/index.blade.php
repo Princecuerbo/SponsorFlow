@@ -252,7 +252,7 @@
         <div class="col-lg-7">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Applicants by Course</h2>
+                    <h2 class="h6 sf-heading mb-3">Applicants by Academic Program</h2>
                     @if (! empty($chartCourse['data'] ?? []) && array_sum($chartCourse['data']) > 0)
                         <div style="position: relative; height: 300px;">
                             <canvas id="courseChart"></canvas>
@@ -260,7 +260,7 @@
                     @else
                         <div class="sf-empty-state py-4">
                             <i class="bi bi-book"></i>
-                            <div class="small">No course data available.</div>
+                            <div class="small">No academic program data available.</div>
                         </div>
                     @endif
                 </div>

@@ -59,7 +59,7 @@
                 </div>
                 <div class="col-md-3">
                     <select name="course" class="form-select" onchange="this.form.submit()">
-                        <option value="">All courses</option>
+                        <option value="">All academic programs</option>
                         @foreach ($courses as $course)
                             <option value="{{ $course }}" @selected(request('course') === $course)>{{ $course }}</option>
                         @endforeach
@@ -104,7 +104,7 @@
                             <tr>
                                 <th class="ps-4">Student ID</th>
                                 <th>Student Name</th>
-                                <th>Course</th>
+                                <th>Academic Program</th>
                                 <th>Year Level</th>
                                 <th>Program</th>
                                 <th>GWA</th>
@@ -122,7 +122,7 @@
                                         <div class="fw-semibold">{{ $application->studentProfile->user->name }}</div>
                                     </td>
                                     <td>
-                                        <div>{{ $application->studentProfile->course ?: '—' }}</div>
+                                        <div>{{ $application->studentProfile->display_course }}</div>
                                     </td>
                                     <td>
                                         @if ($application->studentProfile->year_level)

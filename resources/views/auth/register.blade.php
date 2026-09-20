@@ -370,11 +370,11 @@
                             <div class="row g-3">
                                 <div class="col-sm-7">
                                     <label for="academic_program_id"
-                                        class="form-label small fw-semibold text-secondary mb-1">Academic Program / Course</label>
+                                        class="form-label small fw-semibold text-secondary mb-1">Academic Program</label>
                                     <select id="academic_program_id" name="academic_program_id"
                                         class="form-select form-select-md bg-light border-1 @error('academic_program_id') is-invalid @enderror"
                                         required style="font-size: 0.875rem; border-radius: 8px;">
-                                        <option value="" disabled selected>Search or select your course/program...</option>
+                                        <option value="" disabled selected>Search or select your academic program...</option>
                                         @foreach ($programs as $program)
                                             <option value="{{ $program->program_id }}" @selected(old('academic_program_id') == $program->program_id)>
                                                 {{ $program->code }} — {{ $program->name }}
@@ -512,7 +512,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Tom Select: searchable academic program dropdown
             new TomSelect('#academic_program_id', {
-                placeholder: 'Search or select your course/program...',
+                placeholder: 'Search or select your academic program...',
                 allowEmptyOption: true,
                 sortField: { field: 'text', direction: 'asc' },
             });

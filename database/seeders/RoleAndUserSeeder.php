@@ -65,6 +65,9 @@ class RoleAndUserSeeder extends Seeder
             ['user_id' => $student->id],
             [
                 'student_id_number' => '2024-00001',
+                'academic_program_id' => \App\Models\AcademicProgram::query()
+                    ->where('name', 'Bachelor of Science in Information Technology')
+                    ->value('program_id'),
                 'course' => 'Bachelor of Science in Information Technology',
                 'year_level' => 3,
                 'gender' => 'Male',

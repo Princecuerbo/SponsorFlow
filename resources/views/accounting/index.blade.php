@@ -86,7 +86,7 @@
                 </div>
                 <div class="col-md-3">
                     <select name="academic_program_id" class="form-select" onchange="this.form.submit()">
-                        <option value="">All Academic Courses</option>
+                        <option value="">All Academic Programs</option>
                         @foreach ($academicPrograms as $academicProgram)
                             <option value="{{ $academicProgram->program_id }}" @selected((int) request('academic_program_id') === (int) $academicProgram->program_id)>
                                 {{ $academicProgram->name }}</option>
@@ -99,7 +99,7 @@
                             <i class="bi bi-search text-secondary"></i>
                         </span>
                         <input class="form-control border-start-0 ps-0" type="search" name="q"
-                            value="{{ request('q') }}" placeholder="Search student, ID, course, program, or sponsor"
+                            value="{{ request('q') }}" placeholder="Search student, ID, academic program, program, or sponsor"
                             oninput="clearTimeout(window.searchTimer); window.searchTimer = setTimeout(() => this.form.submit(), 600)">
                     </div>
                 </div>
@@ -117,7 +117,7 @@
                     <tr>
                         <th class="ps-4">Student ID Number</th>
                         <th>Full Name</th>
-                        <th>Course</th>
+                        <th>Academic Program</th>
                         <th>Year Level</th>
                         <th>Campus</th>
                         <th>Program &amp; Category</th>

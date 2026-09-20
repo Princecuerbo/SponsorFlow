@@ -42,7 +42,7 @@
                                 <td class="text-secondary">
                                     {{ $program->address_requirement ?: 'No additional address requirement' }}
                                     @if ($program->target_course)
-                                        <div class="small">Course: {{ $program->target_course }}</div>
+                                        <div class="small">Academic Program: {{ $program->target_course }}</div>
                                     @endif
                                 </td>
                                 <td><x-status-badge :status="$program->status" /></td>

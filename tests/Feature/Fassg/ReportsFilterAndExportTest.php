@@ -53,7 +53,11 @@ class ReportsFilterAndExportTest extends TestCase
         ]);
 
         // Student 1: Unassigned Campus (like Maria Santos in canonical DB), Urban, Female, BSIT
+        $bsitProgram = \App\Models\AcademicProgram::factory()->create(['name' => 'Bachelor of Science in Information Technology']);
+        $polSciProgram = \App\Models\AcademicProgram::factory()->create(['name' => 'Bachelor of Arts in Political Science']);
+
         $profile1 = StudentProfile::factory()->create([
+            'academic_program_id' => $bsitProgram->program_id,
             'campus' => null,
             'is_rural' => false,
             'gender' => 'Female',
@@ -63,6 +67,7 @@ class ReportsFilterAndExportTest extends TestCase
 
         // Student 2: Tarragona Campus, Rural, Male, BSIT
         $profile2 = StudentProfile::factory()->create([
+            'academic_program_id' => $bsitProgram->program_id,
             'campus' => 'Tarragona Campus',
             'is_rural' => true,
             'gender' => 'Male',
@@ -72,6 +77,7 @@ class ReportsFilterAndExportTest extends TestCase
 
         // Student 3: Mati Campus, Urban, Male, PolSci
         $profile3 = StudentProfile::factory()->create([
+            'academic_program_id' => $polSciProgram->program_id,
             'campus' => 'Main Campus (City of Mati)',
             'is_rural' => false,
             'gender' => 'Male',

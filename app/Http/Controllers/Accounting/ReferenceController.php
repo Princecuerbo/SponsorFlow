@@ -228,6 +228,7 @@ class ReferenceController extends Controller
                     $query->whereHas('studentProfile', function ($profileQuery) use ($search): void {
                         $profileQuery->where('student_id_number', 'like', "%{$search}%")
                             ->orWhere('course', 'like', "%{$search}%")
+                            ->orWhereHas('academicProgram', fn ($ap) => $ap->where('name', 'like', "%{$search}%"))
                             ->orWhereHas('user', fn ($userQuery) => $userQuery->where('name', 'like', "%{$search}%"));
                     })->orWhereHas('sponsorshipProgram', function ($programQuery) use ($search): void {
                         $programQuery->where('program_name', 'like', "%{$search}%")
@@ -246,7 +247,7 @@ class ReferenceController extends Controller
                     'application_id' => $application->id,
                     'student_id_number' => $profile->student_id_number,
                     'student_name' => $profile->user->name,
-                    'course' => $profile->course,
+                    'course' => $profile->academicProgram?->name ?? $profile->course ?? 'Unspecified',
                     'year_level' => $profile->year_level,
                     'campus' => $profile->campus,
                     'program' => $program->program_name,
@@ -283,7 +284,8 @@ class ReferenceController extends Controller
             ->when($search !== '', fn ($query) => $query->where(function ($query) use ($search): void {
                 $query->where('student_id_number', 'like', "%{$search}%")
                     ->orWhere('student_name', 'like', "%{$search}%")
-                    ->orWhere('course', 'like', "%{$search}%");
+                    ->orWhere('course', 'like', "%{$search}%")
+                    ->orWhereHas('application.studentProfile.academicProgram', fn ($ap) => $ap->where('name', 'like', "%{$search}%"));
             }))
             ->latest()
             ->get()
@@ -307,7 +309,7 @@ class ReferenceController extends Controller
                     'application_id' => $item->application_id,
                     'student_id_number' => $item->student_id_number,
                     'student_name' => $item->student_name,
-                    'course' => $item->course,
+                    'course' => $profile?->academicProgram?->name ?? $item->course ?? 'Unspecified',
                     'year_level' => $item->year_level,
                     'campus' => $item->campus,
                     'program' => $program->program_name,

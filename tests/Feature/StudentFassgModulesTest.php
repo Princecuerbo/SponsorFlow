@@ -52,9 +52,11 @@ class StudentFassgModulesTest extends TestCase
     public function test_student_can_save_id_and_sync_sle_fhe_from_fixed_list(): void
     {
         $student = User::factory()->create(['role' => UserRole::Student]);
+        $program = \App\Models\AcademicProgram::factory()->create();
 
         $this->actingAsStudent($student)->put(route('student.verification.update'), [
             'student_id_number' => '2024-00099',
+            'academic_program_id' => $program->program_id,
             'course' => 'Bachelor of Science in Information Technology',
             'year_level' => 3,
             'birthdate' => '2004-06-15',
@@ -94,7 +96,10 @@ class StudentFassgModulesTest extends TestCase
     {
         Storage::fake('public');
 
+        $academicProgram = \App\Models\AcademicProgram::factory()->create(['name' => 'BSHM']);
+
         $profile = StudentProfile::factory()->create([
+            'academic_program_id' => $academicProgram->program_id,
             'course' => 'BSHM',
             'is_sle_fhe_verified' => true,
         ]);

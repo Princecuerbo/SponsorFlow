@@ -179,7 +179,7 @@
                 </div>
                 <h3 class="text-base font-bold text-slate-900 mb-2">Group Sponsorship</h3>
                 <p class="text-sm leading-relaxed text-slate-500">Apply to open programs filtered by academic grades,
-                    address, rurality, and course.</p>
+                    address, rurality, and academic program.</p>
             </article>
             <article class="bg-white rounded-3 border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
                 <div class="w-11 h-11 mb-5 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">

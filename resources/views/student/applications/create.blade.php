@@ -192,8 +192,8 @@
                                 <input type="text" class="form-control" value="{{ $user?->name ?? auth()->user()?->name ?? '—' }}" disabled>
                             </div>
                             <div class="col-sm-6">
-                                <label class="form-label small text-secondary">Course</label>
-                                <input type="text" class="form-control" value="{{ $profile->course }}" disabled>
+                                <label class="form-label small text-secondary">Academic Program</label>
+                                <input type="text" class="form-control" value="{{ $profile->display_course }}" disabled>
                             </div>
                             <div class="col-sm-6">
                                 <label class="form-label small text-secondary">Campus</label>

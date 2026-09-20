@@ -142,7 +142,9 @@ class ReviewController extends Controller
             ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor->id))
             ->where('status', ApplicationStatus::Verified)
             ->when($academicProgramId > 0, fn ($query) => $query->whereHas('studentProfile', fn ($pq) => $pq->where('academic_program_id', $academicProgramId)))
-            ->when($course !== '', fn ($query) => $query->whereHas('studentProfile', fn ($pq) => $pq->where('course', $course)))
+            ->when($course !== '', fn ($query) => $query->whereHas('studentProfile', fn ($pq) => $pq
+                ->where('course', $course)
+                ->orWhereHas('academicProgram', fn ($ap) => $ap->where('name', $course))))
             ->with(['studentProfile.user', 'sponsorshipProgram'])
             ->latest('created_at')
             ->get();
@@ -159,11 +161,16 @@ class ReviewController extends Controller
             ->orderBy('name')
             ->get();
 
-        $courses = StudentProfile::query()
-            ->whereNotNull('course')
-            ->distinct()
-            ->pluck('course')
+        $courses = AcademicProgram::query()
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->pluck('name')
+            ->concat(StudentProfile::query()
+                ->whereNotNull('course')
+                ->distinct()
+                ->pluck('course'))
             ->filter()
+            ->unique()
             ->values();
 
         return view('sponsor.applicants.index', [

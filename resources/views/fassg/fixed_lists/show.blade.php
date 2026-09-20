@@ -104,7 +104,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <input type="text" name="course" class="form-control form-control-sm"
-                                        placeholder="Course" required value="{{ old('course') }}">
+                                        placeholder="Academic Program" required value="{{ old('course') }}">
                                 </div>
                                 <div class="col-md-1">
                                     <input type="number" name="year_level" class="form-control form-control-sm"
@@ -148,7 +148,7 @@
                                 </th>
                                 <th>Student ID</th>
                                 <th>Student Name</th>
-                                <th>Course</th>
+                                <th>Academic Program</th>
                                 <th>Year Level</th>
                                 <th>Campus</th>
                                 <th>SLE-FHE Status</th>

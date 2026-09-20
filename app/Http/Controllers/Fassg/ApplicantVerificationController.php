@@ -54,6 +54,7 @@ class ApplicantVerificationController extends Controller
                 $q->whereHas('studentProfile', function ($pq) use ($search): void {
                     $pq->where('student_id_number', 'like', "%{$search}%")
                         ->orWhere('course', 'like', "%{$search}%")
+                        ->orWhereHas('academicProgram', fn ($ap) => $ap->where('name', 'like', "%{$search}%"))
                         ->orWhereHas('user', fn ($uq) => $uq->where('name', 'like', "%{$search}%"));
                 });
             })
@@ -228,7 +229,7 @@ class ApplicantVerificationController extends Controller
                     'application_id' => $application->id,
                     'student_name' => $name !== '' ? $name : 'Unknown',
                     'student_id_number' => $profile->student_id_number ?: 'Unknown',
-                    'course' => $profile->course ?: 'Unspecified',
+                    'course' => $profile->academicProgram?->name ?? $profile->course ?: 'Unspecified',
                     'year_level' => $profile->year_level ?? 1,
                     'campus' => $profile->campus ?: null,
                     'is_sle_fhe_verified' => (bool) $profile->is_sle_fhe_verified,

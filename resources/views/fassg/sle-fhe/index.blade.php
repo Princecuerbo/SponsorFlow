@@ -103,7 +103,7 @@
                         </span>
                         <input type="text" name="q" value="{{ request('q') }}"
                             class="form-control border-start-0 ps-0"
-                            placeholder="Name, student ID, course…"
+                            placeholder="Name, student ID, academic program…"
                             oninput="clearTimeout(window.searchTimer); window.searchTimer = setTimeout(() => this.form.submit(), 600)">
                     </div>
                 </div>
@@ -136,7 +136,7 @@
                         <tr>
                             <th class="ps-4">Student ID</th>
                             <th>Student Name</th>
-                            <th>Course</th>
+                            <th>Academic Program</th>
                             <th>Year Level</th>
                             <th>Campus</th>
                             <th>Residency</th>
@@ -157,9 +157,9 @@
                                     <div class="fw-semibold">{{ $profile->user->name ?? trim($profile->first_name . ' ' . ($profile->middle_name ?? '') . ' ' . $profile->last_name . ($profile->extension_name ? ' ' . $profile->extension_name : '')) }}</div>
                                 </td>
 
-                                {{-- Course --}}
+                                {{-- Academic Program --}}
                                 <td>
-                                    <div>{{ $profile->course ?: '—' }}</div>
+                                    <div>{{ $profile->display_course }}</div>
                                 </td>
 
                                 {{-- Year Level --}}

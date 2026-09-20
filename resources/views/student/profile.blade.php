@@ -9,7 +9,7 @@
     $middleName = $studentProfile?->middle_name;
     $lastName = $studentProfile?->last_name;
     $extensionName = $studentProfile?->extension_name;
-    $course = $studentProfile?->course ?? $studentProfile?->program?->name;
+    $course = $studentProfile?->display_course;
     $initials = mb_strtoupper(mb_substr($firstName ?? ($user->name[0] ?? ''), 0, 1))
         . mb_strtoupper(mb_substr($lastName ?? (substr($user->name, -1) ?? ''), 0, 1));
     $initials = $initials ?: 'S';
@@ -126,7 +126,7 @@
                                 value="{{ $studentProfile?->student_id_number ?? 'N/A' }}" readonly>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label text-muted small fw-bold" for="course">COURSE</label>
+                            <label class="form-label text-muted small fw-bold" for="course">ACADEMIC PROGRAM</label>
                             <input id="course" class="form-control bg-light rounded-3"
                                 value="{{ $course ?? 'N/A' }}" readonly>
                         </div>

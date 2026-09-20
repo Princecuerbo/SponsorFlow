@@ -90,12 +90,15 @@ class StudentRegistrationTest extends TestCase
 
     public function test_student_registration_fails_with_non_dorsu_email(): void
     {
+        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Information Technology']);
+
         $response = $this->post(route('register.store'), [
             'name' => 'Invalid User',
             'email' => 'invalid@gmail.com',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
             'student_id_number' => '2024-0003',
+            'academic_program_id' => $program->program_id,
             'course' => 'Information Technology',
             'year_level' => 1,
             'birthdate' => '2001-03-10',
@@ -112,12 +115,15 @@ class StudentRegistrationTest extends TestCase
 
     public function test_student_registration_fails_with_yahoo_email(): void
     {
+        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Engineering']);
+
         $response = $this->post(route('register.store'), [
             'name' => 'Yahoo User',
             'email' => 'user@yahoo.com',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
             'student_id_number' => '2024-0004',
+            'academic_program_id' => $program->program_id,
             'course' => 'Engineering',
             'year_level' => 2,
             'birthdate' => '2000-11-25',
@@ -160,12 +166,15 @@ class StudentRegistrationTest extends TestCase
 
     public function test_student_registration_requires_valid_student_id_format(): void
     {
+        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Medicine']);
+
         $response = $this->post(route('register.store'), [
             'name' => 'Invalid ID User',
             'email' => 'invalid.id@dorsu.edu.ph',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
             'student_id_number' => 'INVALID-ID',
+            'academic_program_id' => $program->program_id,
             'course' => 'Medicine',
             'year_level' => 1,
             'birthdate' => '2001-12-01',

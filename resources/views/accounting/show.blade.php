@@ -20,7 +20,7 @@
                 <h2 class="h5 sf-heading mb-4">Beneficiary Details</h2>
                 <dl class="row mb-0">
                     <dt class="col-sm-4 text-secondary fw-normal py-2">Student ID</dt><dd class="col-sm-8 sf-mono py-2 mb-0">{{ $application->studentProfile->student_id_number }}</dd>
-                    <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Course &amp; Year</dt><dd class="col-sm-8 py-2 mb-0 border-top">{{ $application->studentProfile->course }} · Year {{ $application->studentProfile->year_level }}</dd>
+                    <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Academic Program &amp; Year</dt><dd class="col-sm-8 py-2 mb-0 border-top">{{ $application->studentProfile->display_course }} · Year {{ $application->studentProfile->year_level }}</dd>
                     <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Submitted GWA / GPA</dt><dd class="col-sm-8 py-2 mb-0 border-top">{{ number_format($application->gpa_submitted, 2) }}</dd>
                     <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Address &amp; Rurality</dt><dd class="col-sm-8 py-2 mb-0 border-top">{{ $application->address_submitted }} · {{ $application->is_rural_submitted ? 'Rural' : 'Urban' }}</dd>
                     <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Sponsor</dt><dd class="col-sm-8 py-2 mb-0 border-top">{{ $application->sponsorshipProgram->sponsor->company_organization_name }}</dd>

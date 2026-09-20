@@ -53,8 +53,8 @@
                         <dt class="col-sm-4 text-secondary fw-normal py-2">Student ID</dt>
                         <dd class="col-sm-8 sf-mono py-2 mb-0 fw-semibold">
                             {{ $application->studentProfile->student_id_number }}</dd>
-                        <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Course &amp; Year</dt>
-                        <dd class="col-sm-8 py-2 mb-0 border-top">{{ $application->studentProfile->course }} · Year
+                        <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Academic Program &amp; Year</dt>
+                        <dd class="col-sm-8 py-2 mb-0 border-top">{{ $application->studentProfile->display_course }} · Year
                             {{ $application->studentProfile->year_level }}</dd>
                         <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">GWA</dt>
                         <dd class="col-sm-8 py-2 mb-0 border-top fw-semibold">

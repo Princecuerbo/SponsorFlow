@@ -53,12 +53,15 @@ class AuthenticationTest extends TestCase
 
     public function test_registration_rejects_non_dorsu_email(): void
     {
+        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'BS Information Technology']);
+
         $this->post(route('register.store'), [
             'name' => 'External User',
             'email' => 'student@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
             'student_id_number' => '2026-00002',
+            'academic_program_id' => $program->program_id,
             'course' => 'BS Information Technology',
             'year_level' => 2,
             'birthdate' => '2005-01-15',

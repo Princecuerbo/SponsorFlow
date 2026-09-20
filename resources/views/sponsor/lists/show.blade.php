@@ -61,7 +61,7 @@
                                 <tr>
                                     <th class="ps-4">Student ID</th>
                                     <th>Student Name</th>
-                                    <th>Course</th>
+                                    <th>Academic Program</th>
                                     <th>Year Level</th>
                                     <th>Verification Status</th>
                                 </tr>

@@ -71,6 +71,11 @@ class FixedListItem extends Model
         return $this->belongsTo(StudentProfile::class, 'student_id_number', 'student_id_number');
     }
 
+    public function getDisplayCourseAttribute(): string
+    {
+        return $this->studentProfile?->academicProgram?->name ?? $this->course ?? 'Unspecified';
+    }
+
     public function matchingStudentProfile(): ?StudentProfile
     {
         return $this->studentProfile;
