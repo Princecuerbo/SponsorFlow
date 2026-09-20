@@ -158,7 +158,7 @@
                             review.</p>
 
                         @if ($hasPending)
-                            <div class="alert alert-warning text-xs mb-3">
+                            <div class="alert alert-warning small mb-3">
                                 <i class="bi bi-exclamation-triangle-fill me-1"></i>
                                 <strong>Action Required:</strong> All applicants in this batch must be fully verified before
                                 submitting to the sponsor. One or more applicants are currently pending or requested for

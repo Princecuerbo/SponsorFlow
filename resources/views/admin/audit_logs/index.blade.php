@@ -79,7 +79,7 @@
                                     </code>
                                 </td>
                                 <td>
-                                    <span class="badge bg-secondary-subtle text-secondary rounded-pill px-2.5 py-1">
+                                    <span class="badge bg-secondary-subtle text-secondary rounded-pill px-2 py-1">
                                         {{ $log->target_module }}
                                     </span>
                                 </td>

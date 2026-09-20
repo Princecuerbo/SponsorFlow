@@ -87,7 +87,7 @@
                                 </td>
                                 <td class="text-secondary">{{ $program->sponsor->company_organization_name }}</td>
                                 <td>
-                                    <span class="badge rounded-2 px-2.5 py-1.5 fw-medium"
+                                    <span class="badge rounded-2 px-2 py-1 fw-medium"
                                         style="background-color: rgba(15, 41, 66, 0.08) !important; color: #0F2942 !important;">
                                         {{ $program->category?->value ?? $program->category }}
                                     </span>

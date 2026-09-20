@@ -39,7 +39,7 @@
                 <i class="bi bi-arrow-left me-1"></i>Back to Master List
             </a>
             <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
-                <span class="text-uppercase fw-bold text-muted extra-small tracking-wider d-block">
+                <span class="text-uppercase fw-bold text-muted extra-small d-block">
                     Tuition Adjustment Reference
                 </span>
                 <x-status-badge :status="$fixedList->status" />

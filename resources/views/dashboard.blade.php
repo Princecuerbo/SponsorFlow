@@ -45,7 +45,7 @@
         $userName = auth()->user()->first_name ?? explode(' ', auth()->user()->name ?? 'Student')[0];
     @endphp
 
-    <div class="container-fluid px-3 px-md-4 py-4" style="min-height: calc(100vh - 60px);">
+    <div>
 
         <!-- Welcome Title -->
         <div class="mb-4">
@@ -63,7 +63,7 @@
             <div class="col-12 col-md-4">
                 <div class="card border-0 shadow-sm rounded-3 p-3 bg-white h-100">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center"
+                        <div class="rounded-3 p-2 d-flex align-items-center justify-content-center"
                             style="background-color: #eff6ff; color: #2563eb; width: 44px; height: 44px; flex-shrink: 0;">
                             <i class="bi bi-journal-text fs-5"></i>
                         </div>
@@ -80,7 +80,7 @@
             <div class="col-12 col-md-4">
                 <div class="card border-0 shadow-sm rounded-3 p-3 bg-white h-100">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center"
+                        <div class="rounded-3 p-2 d-flex align-items-center justify-content-center"
                             style="background-color: #ecfdf5; color: #059669; width: 44px; height: 44px; flex-shrink: 0;">
                             <i class="bi bi-award fs-5"></i>
                         </div>
@@ -136,9 +136,9 @@
                     </div>
                     <div>
                         <h6 class="fw-bold mb-1 text-slate-900" style="font-size: 0.925rem;">Complete your SLE-FHE verification setup.</h6>
-                        <p class="mb-2.5 small" style="color: #475569; font-size: 0.85rem;">Your request is pending review. Update your verification details before applying for sponsorship programs.</p>
+                        <p class="mb-2 small" style="color: #475569; font-size: 0.85rem;">Your request is pending review. Update your verification details before applying for sponsorship programs.</p>
                         <a href="{{ route('student.verification.show') }}"
-                            class="btn btn-sm fw-semibold shadow-sm px-3 py-1.5"
+                            class="btn btn-sm fw-semibold shadow-sm px-3 py-1"
                             style="background-color: #0f172a; color: #fff; border: none; border-radius: 6px; font-size: 0.8rem;">
                             Go to SLE-FHE Verification
                         </a>
@@ -170,7 +170,7 @@
 
         <!-- My Applications Table Section -->
         <div class="card border-0 shadow-sm rounded-3 bg-white mb-4">
-            <div class="card-header bg-white border-0 pt-3.5 px-4 pb-0">
+            <div class="card-header bg-white border-0 pt-3 px-4 pb-0">
                 <h6 class="fw-bold text-dark mb-0" style="font-size: 0.95rem;">My Applications</h6>
             </div>
             <div class="card-body px-4 pt-2 pb-4">
@@ -178,10 +178,10 @@
                     <table class="table align-middle mb-0">
                         <thead class="text-secondary extra-small text-uppercase border-bottom" style="font-size: 0.72rem;">
                             <tr>
-                                <th class="py-2.5 fw-bold border-0 text-secondary" style="width: 40%;">PROGRAM</th>
-                                <th class="py-2.5 fw-bold border-0 text-secondary" style="width: 25%;">SUBMITTED</th>
-                                <th class="py-2.5 fw-bold border-0 text-secondary" style="width: 20%;">STATUS</th>
-                                <th class="py-2.5 fw-bold border-0 text-secondary text-end" style="width: 15%;">VIEW</th>
+                                <th class="py-2 fw-bold border-0 text-secondary" style="width: 40%;">PROGRAM</th>
+                                <th class="py-2 fw-bold border-0 text-secondary" style="width: 25%;">SUBMITTED</th>
+                                <th class="py-2 fw-bold border-0 text-secondary" style="width: 20%;">STATUS</th>
+                                <th class="py-2 fw-bold border-0 text-secondary text-end" style="width: 15%;">VIEW</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -195,7 +195,7 @@
                                     </td>
                                     <td class="text-end">
                                         <a href="{{ route('student.applications.show', $app) }}"
-                                            class="btn btn-light btn-sm rounded-2 border px-2.5 py-1 small">View</a>
+                                            class="btn btn-light btn-sm rounded-2 border px-2 py-1 small">View</a>
                                     </td>
                                 </tr>
                             @empty
@@ -213,7 +213,7 @@
         {{-- Application Status Timeline --}}
         @if ($activeApplication)
             <div class="card border-0 shadow-sm rounded-3 bg-white mb-4">
-                <div class="card-header bg-white border-0 pt-3.5 px-4 pb-2.5">
+                <div class="card-header bg-white border-0 pt-3 px-4 pb-2">
                     <h6 class="fw-bold text-dark mb-0" style="font-size: 0.95rem;">
                         <i class="bi bi-clock-history me-2 text-primary"></i>Application Status Timeline
                     </h6>
@@ -250,7 +250,7 @@
 
         <!-- Document Verification Check Section -->
         <div class="card border-0 shadow-sm rounded-3 bg-white mb-4">
-            <div class="card-header bg-white border-0 pt-3.5 px-4 pb-2">
+            <div class="card-header bg-white border-0 pt-3 px-4 pb-2">
                 <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-size: 0.95rem;">
                     <i class="bi bi-file-earmark-text text-secondary"></i> Document Verification Check
                 </h6>
@@ -265,23 +265,23 @@
                         @php
                             $uploaded = $hasDocument($document['type']);
                         @endphp
-                        <div class="list-group-item px-0 py-2.5 d-flex align-items-center justify-content-between border-bottom">
+                        <div class="list-group-item px-0 py-2 d-flex align-items-center justify-content-between border-bottom">
                             <span class="small fw-medium text-dark" style="font-size: 0.875rem;">{{ $document['label'] }}</span>
                             <div class="d-flex align-items-center gap-2">
                                 @if ($latestStatus === 'needs_resubmission')
-                                    <span class="badge px-2.5 py-1 rounded-2 fw-normal"
+                                    <span class="badge px-2 py-1 rounded-2 fw-normal"
                                         style="font-size: 0.7rem; background-color: #fef3c7; color: #b45309;">Re-upload Required</span>
                                 @elseif ($uploaded)
-                                    <span class="badge px-2.5 py-1 rounded-2 fw-normal"
+                                    <span class="badge px-2 py-1 rounded-2 fw-normal"
                                         style="font-size: 0.7rem; background-color: #dcfce7; color: #166534;">
                                         <i class="bi bi-check-lg me-1"></i>Uploaded
                                     </span>
                                 @else
-                                    <span class="badge bg-secondary px-2.5 py-1 rounded-2 fw-normal"
+                                    <span class="badge bg-secondary px-2 py-1 rounded-2 fw-normal"
                                         style="font-size: 0.7rem; background-color: #64748b !important;">Not Uploaded</span>
                                 @endif
                                 <a href="{{ route('student.verification.show') }}"
-                                    class="btn btn-sm btn-outline-primary rounded-2 px-2.5 py-1 fw-medium" style="font-size: 0.72rem;">
+                                    class="btn btn-sm btn-outline-primary rounded-2 px-2 py-1 fw-medium" style="font-size: 0.72rem;">
                                     <i class="bi bi-upload me-1"></i>Upload
                                 </a>
                             </div>
@@ -295,7 +295,7 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class="card border-0 shadow-sm rounded-3 bg-white">
-                    <div class="card-header bg-white border-bottom pt-3.5 px-4 pb-2.5">
+                    <div class="card-header bg-white border-bottom pt-3 px-4 pb-2">
                         <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-size: 0.95rem;">
                             <i class="bi bi-info-circle text-primary"></i> FASSG Announcements &amp; Policy
                         </h6>

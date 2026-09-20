@@ -302,7 +302,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer border-top bg-light-subtle py-2.5 px-3">
+                    <div class="modal-footer border-top bg-light-subtle py-2 px-3">
                         <button type="button" class="btn btn-outline-danger px-3"
                             data-bs-dismiss="modal"><i class="bi bi-x-lg me-1"></i> Cancel</button>
                         <button type="submit" class="btn text-white px-4 fw-semibold"

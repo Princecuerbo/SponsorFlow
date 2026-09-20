@@ -175,7 +175,7 @@
             {{-- Institutional Eligibility Status Card --}}
             <div class="col-12 col-lg-7">
                 <div class="card h-100 shadow-sm border-0 rounded-3 bg-white">
-                    <div class="card-header bg-white border-bottom pt-3.5 px-4 pb-3">
+                    <div class="card-header bg-white border-bottom pt-3 px-4 pb-3">
                         <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-size: 0.95rem;">
                             <i class="bi bi-shield-check text-primary"></i> Institutional Eligibility Status
                         </h6>

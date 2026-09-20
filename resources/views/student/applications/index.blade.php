@@ -39,28 +39,28 @@
         </div>
     @else
         <div class="card sf-card">
-            <div class="table-responsive overflow-x-auto w-full -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div class="table-responsive overflow-auto w-100">
                 <table class="table sf-table mb-0">
                     <thead>
                         <tr>
-                            <th class="ps-4 whitespace-nowrap">Program</th>
-                            <th class="whitespace-nowrap">Sponsor</th>
-                            <th class="whitespace-nowrap">Submitted</th>
-                            <th class="whitespace-nowrap">Status</th>
-                            <th class="text-end pe-4 whitespace-nowrap">Action</th>
+                            <th class="ps-4 text-nowrap">Program</th>
+                            <th class="text-nowrap">Sponsor</th>
+                            <th class="text-nowrap">Submitted</th>
+                            <th class="text-nowrap">Status</th>
+                            <th class="text-end pe-4 text-nowrap">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($applications as $application)
                             <tr>
-                                <td class="ps-4 fw-semibold whitespace-nowrap">
+                                <td class="ps-4 fw-semibold text-nowrap">
                                     {{ $application->sponsorshipProgram->program_name }}</td>
-                                <td class="text-secondary whitespace-nowrap">
+                                <td class="text-secondary text-nowrap">
                                     {{ $application->sponsorshipProgram->sponsor->company_organization_name }}</td>
-                                <td class="text-secondary whitespace-nowrap">
+                                <td class="text-secondary text-nowrap">
                                     {{ optional($application->submitted_at)->format('M d, Y, h:i A') ?? '—' }}</td>
-                                <td class="whitespace-nowrap"><x-status-badge :status="$application->status" /></td>
-                                <td class="text-end pe-4 whitespace-nowrap">
+                                <td class="text-nowrap"><x-status-badge :status="$application->status" /></td>
+                                <td class="text-end pe-4 text-nowrap">
                                     <a href="{{ route('student.applications.show', $application) }}"
                                         class="btn btn-sm btn-outline-secondary">
                                         View <i class="bi bi-chevron-right"></i>

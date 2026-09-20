@@ -171,9 +171,9 @@
 
                                 {{-- Status --}}
                                 <td>
-                                    <span class="px-2.5 py-1 rounded-full bg-success bg-opacity-10 text-success border border-success-subtle d-inline-flex align-items-center"
+                                    <span class="px-2 py-1 rounded-full bg-success bg-opacity-10 text-success border border-success-subtle d-inline-flex align-items-center"
                                         style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.25rem 0.65rem; font-weight: 500; font-size: 0.8rem;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5" style="width: 0.875rem; height: 0.875rem; flex-shrink: 0;" aria-hidden="true">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 0.875rem; height: 0.875rem; flex-shrink: 0;" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                                         </svg>
                                         Verified SLE-FHE

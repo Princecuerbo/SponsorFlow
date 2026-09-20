@@ -172,7 +172,7 @@
 
                                 {{-- Status --}}
                                 <td>
-                                    <span class="px-2.5 py-1.5 rounded-pill bg-warning bg-opacity-10 text-dark border border-warning border-opacity-25 fw-semibold d-inline-flex align-items-center gap-2"
+                                    <span class="px-2 py-1 rounded-pill bg-warning bg-opacity-10 text-dark border border-warning border-opacity-25 fw-semibold d-inline-flex align-items-center gap-2"
                                         style="display: inline-flex; align-items: center; gap: 0.375rem; border-radius: 9999px; padding: 0.25rem 0.65rem; font-size: 0.8rem;">
                                         <i class="bi bi-hourglass-split" style="font-size: 0.875rem; flex-shrink: 0;"></i>
                                         Pending SLE-FHE Verification

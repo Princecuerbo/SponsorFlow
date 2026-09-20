@@ -34,7 +34,7 @@
     <div class="card sf-card h-100">
         <div class="card-body p-4 d-flex flex-column min-w-0">
             <div class="d-flex justify-content-between align-items-start mb-2">
-                <span class="badge rounded-2 px-2.5 py-1.5 fw-medium"
+                <span class="badge rounded-2 px-2 py-1 fw-medium"
                     style="background-color: rgba(15, 41, 66, 0.08) !important; color: #0F2942 !important;">
                     {{ $program->category->value }}
                 </span>

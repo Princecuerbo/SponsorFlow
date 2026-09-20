@@ -3,7 +3,7 @@
 @section('title', 'Notifications')
 
 @section('content')
-<div class="container-fluid px-0 px-md-3" style="max-width: 900px; margin: 0 auto;">
+<div style="max-width: 900px; margin: 0 auto;">
 
     {{-- Header Section --}}
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
@@ -11,7 +11,7 @@
             <div class="d-flex align-items-center gap-2 mb-1">
                 <h1 class="h4 fw-bold mb-0 text-dark">Notifications</h1>
                 @if ($user->unreadNotifications->count() > 0)
-                    <span class="badge bg-danger rounded-pill px-2.5 py-1 small fw-semibold">
+                    <span class="badge bg-danger rounded-pill px-2 py-1 small fw-semibold">
                         {{ $user->unreadNotifications->count() }} new
                     </span>
                 @endif
@@ -24,7 +24,7 @@
             <div>
                 <form method="POST" action="{{ route('notifications.readAll') }}" class="m-0">
                     @csrf
-                    <button type="submit" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1.5 rounded-3 px-3 py-1.5 fw-semibold shadow-sm">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-2 rounded-3 px-3 py-1 fw-semibold shadow-sm">
                         <i class="bi bi-check2-all fs-6"></i>
                         <span>Mark all as read</span>
                     </button>
@@ -119,7 +119,7 @@
                                     <form method="POST" action="{{ route('notifications.read', $notification->id) }}" class="m-0">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="btn btn-sm btn-white border shadow-sm text-secondary d-inline-flex align-items-center gap-1.5 rounded-3 px-3 py-1.5"
+                                        <button type="submit" class="btn btn-sm btn-white border shadow-sm text-secondary d-inline-flex align-items-center gap-2 rounded-3 px-3 py-1"
                                             title="Mark as read" style="font-size: 0.8rem; background: #ffffff;">
                                             <i class="bi bi-check2 text-primary"></i>
                                             <span class="fw-semibold">Mark as read</span>

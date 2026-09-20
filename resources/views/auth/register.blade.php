@@ -160,7 +160,7 @@
                     </div>
 
                     <div class="mb-4 text-center text-lg-start">
-                        <span class="badge bg-white text-primary border mb-2 px-3 py-1.5 rounded-pill fw-semibold shadow-sm"
+                        <span class="badge bg-white text-primary border mb-2 px-3 py-1 rounded-pill fw-semibold shadow-sm"
                             style="font-size: 0.72rem; color: #0F2537 !important; border-color: #cbd5e1 !important;">SLE-FHE
                             STUDENT ACCESS</span>
                         <h2 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.75rem;">Create your account</h2>
@@ -478,7 +478,7 @@
 
                         <!-- Register Submit Button -->
                         <button type="submit"
-                            class="btn w-100 py-2.5 fw-bold shadow-sm mb-3 btn-custom-register rounded-3"
+                            class="btn w-100 py-2 fw-bold shadow-sm mb-3 btn-custom-register rounded-3"
                             style="border-radius: 10px; font-size: 0.95rem;">
                             <i class="bi bi-person-plus me-1.5"></i> Create account and proceed
                         </button>
