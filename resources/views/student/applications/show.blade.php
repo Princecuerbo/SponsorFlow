@@ -277,15 +277,15 @@
                     <ul class="list-unstyled small mb-0">
                         <li class="d-flex justify-content-between py-2 border-top">
                             <span class="text-secondary">Submitted</span>
-                            <span>{{ optional($application->submitted_at ?? $application->created_at)->format('M d, Y') ?? '—' }}</span>
+                            <span>{{ optional($application->submitted_at ?? $application->created_at)->format('M d, Y, h:i A') ?? '—' }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-top">
                             <span class="text-secondary">Verified</span>
-                            <span>{{ optional($application->verified_at)->format('M d, Y') ?? '—' }}</span>
+                            <span>{{ optional($application->verified_at)->format('M d, Y, h:i A') ?? '—' }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-top">
                             <span class="text-secondary">Approved</span>
-                            <span>{{ optional($application->approved_at)->format('M d, Y') ?? '—' }}</span>
+                            <span>{{ optional($application->approved_at)->format('M d, Y, h:i A') ?? '—' }}</span>
                         </li>
                     </ul>
                 </div>

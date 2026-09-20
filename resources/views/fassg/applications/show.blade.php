@@ -150,7 +150,7 @@
                             </div>
                         </div>
                         <span class="badge bg-light text-dark border">
-                            <i class="bi bi-clock me-1"></i> Submitted {{ $application->submitted_at?->diffForHumans() ?? 'recently' }}
+                            <i class="bi bi-clock me-1"></i> Submitted {{ $application->submitted_at?->format('M d, Y, h:i A') ?? 'recently' }}
                         </span>
                     </div>
 
@@ -249,15 +249,15 @@
                     <div class="row g-3 small">
                         <div class="col-md-4">
                             <div class="detail-label">Submitted</div>
-                            <div>{{ $application->submitted_at?->format('M d, Y · h:i A') ?? '—' }}</div>
+                            <div>{{ $application->submitted_at?->format('M d, Y, h:i A') ?? '—' }}</div>
                         </div>
                         <div class="col-md-4">
                             <div class="detail-label">Verified At</div>
-                            <div>{{ $application->verified_at?->format('M d, Y · h:i A') ?? 'Not yet verified' }}</div>
+                            <div>{{ $application->verified_at?->format('M d, Y, h:i A') ?? 'Not yet verified' }}</div>
                         </div>
                         <div class="col-md-4">
                             <div class="detail-label">Approved At</div>
-                            <div>{{ $application->approved_at?->format('M d, Y · h:i A') ?? 'Not yet approved' }}</div>
+                            <div>{{ $application->approved_at?->format('M d, Y, h:i A') ?? 'Not yet approved' }}</div>
                         </div>
                         @if ($application->rejection_reason)
                             <div class="col-12 mt-2">
@@ -524,7 +524,7 @@
                             <h3 class="h5 sf-heading mb-2">Application Verified</h3>
                             <p class="small text-secondary mb-0">
                                 This application was verified on
-                                <strong>{{ $application->verified_at?->format('F j, Y') ?? '—' }}</strong>
+                                <strong>{{ $application->verified_at?->format('M d, Y, h:i A') ?? '—' }}</strong>
                                 and no further review decisions can be submitted.
                             </p>
                         </div>

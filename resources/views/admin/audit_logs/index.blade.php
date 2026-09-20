@@ -63,7 +63,7 @@
                         @forelse($logs as $log)
                             <tr>
                                 <td class="ps-4" style="color: #475569;">
-                                    {{ $log->created_at?->timezone('Asia/Manila')->format('M d, Y h:i A') }}
+                                    {{ $log->created_at?->timezone('Asia/Manila')->format('M d, Y, h:i A') }}
                                 </td>
                                 <td>
                                     <div>{{ $log->user?->name ?? 'System' }}</div>

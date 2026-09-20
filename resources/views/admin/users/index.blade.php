@@ -112,7 +112,7 @@
                             <td>
                                 @if ($account->last_login_at)
                                     <span class="small"
-                                        style="color: #475569;">{{ $account->last_login_at->diffForHumans() }}</span>
+                                        style="color: #475569;">{{ $account->last_login_at->format('M d, Y, h:i A') }}</span>
                                 @else
                                     <span class="badge bg-light text-secondary fw-normal">Never</span>
                                 @endif

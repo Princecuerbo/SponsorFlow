@@ -190,7 +190,7 @@
                                 <tr>
                                     <td class="fw-semibold text-dark">
                                         {{ $app->sponsorshipProgram?->program_name ?? 'Unknown Program' }}</td>
-                                    <td class="text-secondary small">{{ $app->submitted_at?->format('M d, Y') ?? '—' }}</td>
+                                    <td class="text-secondary small">{{ $app->submitted_at?->format('M d, Y, h:i A') ?? '—' }}</td>
                                     <td>
                                         @php $statusVal = $app->status?->value ?? $app->status; @endphp
                                         @if (in_array($statusVal, ['Approved', 'Confirmed'], true))
@@ -238,7 +238,7 @@
                     <div class="d-flex justify-content-between position-relative my-2">
                         <div class="position-absolute top-50 start-0 end-0 translate-middle-y bg-light" style="height: 2px;"></div>
                         @foreach ([
-                            ['label' => 'Submitted', 'done' => $isStep1Done, 'status' => $isStep1Done ? optional($activeApplication->created_at)->format('M d, Y') : 'Pending', 'icon' => 'bi-send'],
+                            ['label' => 'Submitted', 'done' => $isStep1Done, 'status' => $isStep1Done ? optional($activeApplication->created_at)->format('M d, Y, h:i A') : 'Pending', 'icon' => 'bi-send'],
                             ['label' => 'FASSG Review', 'done' => $isStep2Done, 'status' => $isStep2Done ? 'Completed' : ($isStep1Done ? 'In Progress' : 'Pending'), 'icon' => 'bi-search'],
                             ['label' => 'Sponsor Review', 'done' => $isStep3Done, 'status' => $isStep3Done ? 'Completed' : ($isStep2Done ? 'In Progress' : 'Pending'), 'icon' => 'bi-building'],
                             ['label' => 'Final Approval', 'done' => $isStep4Done, 'status' => $isStep4Done ? 'Approved & Confirmed' : 'Pending', 'icon' => 'bi-award'],
@@ -253,7 +253,7 @@
                                     $step['label'] === 'Final Approval' &&
                                         strtolower((string) ($activeApplication->status?->value ?? $activeApplication->status)) === 'approved')
                                     <div class="fw-bold text-success">Approved &amp; Confirmed</div>
-                                    <small class="text-muted">{{ $activeApplication->updated_at?->format('M d, Y') ?? '—' }}</small>
+                                    <small class="text-muted">{{ $activeApplication->updated_at?->format('M d, Y, h:i A') ?? '—' }}</small>
                                 @else
                                     <small class="{{ $step['done'] ? 'text-success' : 'text-muted' }}">{{ $step['status'] }}</small>
                                 @endif

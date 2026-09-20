@@ -53,7 +53,7 @@
             <p class="text-muted small mb-0">
                 {{ $fixedList->sponsorshipProgram?->program_name ?? 'Unspecified Program' }} ·
                 {{ $fixedList->total_names }} {!! \Illuminate\Support\Str::plural('beneficiary', $fixedList->total_names) !!} ·
-                Confirmed {{ $approval?->created_at?->format('M d, Y') ?? '—' }}
+                Confirmed {{ $approval?->created_at?->format('M d, Y, h:i A') ?? '—' }}
             </p>
         </div>
 
@@ -92,12 +92,12 @@
                             @if ($fixedList->fassg_assigned_at)
                                 <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">FASSG Assigned</dt>
                                 <dd class="col-sm-8 py-2 mb-0 border-top">
-                                    {{ $fixedList->fassg_assigned_at->format('M d, Y') }}</dd>
+                                    {{ $fixedList->fassg_assigned_at->format('M d, Y, h:i A') }}</dd>
                             @endif
                             @if ($approval?->created_at)
                                 <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Sponsor Confirmed</dt>
                                 <dd class="col-sm-8 py-2 mb-0 border-top">
-                                    {{ $approval->created_at->format('M d, Y') }}</dd>
+                                    {{ $approval->created_at->format('M d, Y, h:i A') }}</dd>
                             @endif
                         </dl>
                     </div>
@@ -116,7 +116,7 @@
                             <div class="small text-secondary mt-3 d-flex align-items-center gap-2">
                                 <i class="bi bi-file-earmark-pdf"></i>
                                 Sponsor-signed beneficiary list
-                                {{ $approval->created_at?->format('M d, Y') ? '· uploaded '.$approval->created_at->format('M d, Y') : '' }}
+                                {{ $approval->created_at?->format('M d, Y, h:i A') ? '· uploaded '.$approval->created_at->format('M d, Y, h:i A') : '' }}
                             </div>
                         @else
                             <div class="text-secondary small">No signed approval document has been uploaded for this

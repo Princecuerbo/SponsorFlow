@@ -34,7 +34,7 @@
                 <dl class="row mb-0">
                     <dt class="col-6 text-secondary fw-normal py-2">Grant Amount</dt><dd class="col-6 text-end py-2 mb-0">Not recorded</dd>
                     <dt class="col-6 text-secondary fw-normal py-2 border-top">Coverage Term</dt><dd class="col-6 text-end py-2 mb-0 border-top">Not recorded</dd>
-                    <dt class="col-6 text-secondary fw-normal py-2 border-top">Approved by Sponsor</dt><dd class="col-6 text-end py-2 mb-0 border-top">{{ $application->approved_at?->format('M d, Y') ?? '—' }}</dd>
+                    <dt class="col-6 text-secondary fw-normal py-2 border-top">Approved by Sponsor</dt><dd class="col-6 text-end py-2 mb-0 border-top">{{ $application->approved_at?->format('M d, Y, h:i A') ?? '—' }}</dd>
                 </dl>
                 @if ($application->sponsor_approval_path)
                     <div class="border-top mt-3 pt-3"><div class="small text-secondary mb-2">Sponsor confirmation document</div><a href="{{ route('accounting.documents.view', $application->id) }}" target="_blank" rel="noopener" class="btn btn-outline-secondary w-100"><i class="bi bi-file-earmark-check me-1"></i>View Confirmation File</a></div>

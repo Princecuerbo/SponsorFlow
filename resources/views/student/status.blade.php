@@ -20,7 +20,7 @@
                     <div>
                         <h2 class="h5 fw-bold mb-1">{{ $application->sponsorshipProgram->program_name }}</h2>
                         <p class="text-secondary small mb-0">Submitted
-                            {{ $application->submitted_at?->format('M d, Y') ?? 'recently' }}</p>
+                            {{ $application->submitted_at?->format('M d, Y, h:i A') ?? 'recently' }}</p>
                     </div>
                     <x-status-badge :status="$application->status" class="align-self-start px-3 py-2 rounded-pill" />
                 </div>
@@ -32,9 +32,9 @@
                                     class="bi {{ $index < $current ? 'bi-check-circle-fill text-success' : ($index === $current ? 'bi-record-circle text-success' : 'bi-circle text-secondary') }}"></i>
                             </div><strong class="small">{{ $step }}</strong>
                             @if ($step === 'Verified' && $application->verified_at)
-                                <div class="text-secondary small mt-1">{{ $application->verified_at->format('M d') }}</div>
+                                <div class="text-secondary small mt-1">{{ $application->verified_at->format('M d, Y, h:i A') }}</div>
                             @elseif ($step === 'Approved' && $application->approved_at)
-                                <div class="text-secondary small mt-1">{{ $application->approved_at->format('M d') }}</div>
+                                <div class="text-secondary small mt-1">{{ $application->approved_at->format('M d, Y, h:i A') }}</div>
                             @endif
                         </div>
                     @endforeach

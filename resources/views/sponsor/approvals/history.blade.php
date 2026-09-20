@@ -65,7 +65,7 @@
                                 </td>
                                 <td>{{ $approval->sponsorshipProgram->program_name }}</td>
                                 <td><span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200">Confirmed</span></td>
-                                <td>{{ $approval->updated_at?->format('M d, Y') ?? '—' }}</td>
+                                <td>{{ $approval->updated_at?->format('M d, Y, h:i A') ?? '—' }}</td>
                                 <td class="text-end pe-4">
                                     @if ($approval->approval_document_path)
                                         <a href="{{ route('sponsor.approvals.download', $approval) }}" target="_blank"

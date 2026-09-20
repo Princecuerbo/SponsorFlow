@@ -154,7 +154,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="small text-muted mb-1">DATE REGISTERED</div>
-                            <div class="fw-semibold text-dark">{{ $studentProfile?->created_at?->format('M d, Y') ?? 'N/A' }}</div>
+                            <div class="fw-semibold text-dark">{{ $studentProfile?->created_at?->format('M d, Y, h:i A') ?? 'N/A' }}</div>
                         </div>
                     </div>
 

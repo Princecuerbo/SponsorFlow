@@ -51,7 +51,7 @@
                                 <td class="text-secondary whitespace-nowrap">
                                     {{ $application->sponsorshipProgram->sponsor->company_organization_name }}</td>
                                 <td class="text-secondary whitespace-nowrap">
-                                    {{ optional($application->submitted_at)->format('M d, Y') ?? '—' }}</td>
+                                    {{ optional($application->submitted_at)->format('M d, Y, h:i A') ?? '—' }}</td>
                                 <td class="whitespace-nowrap"><x-status-badge :status="$application->status" /></td>
                                 <td class="text-end pe-4 whitespace-nowrap">
                                     <a href="{{ route('student.applications.show', $application) }}"

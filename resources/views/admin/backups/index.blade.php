@@ -41,7 +41,7 @@
                         <tr>
                             <td class="ps-4 fw-semibold">{{ $backup->file_name }}</td>
                             <td style="color: #475569;">{{ number_format($backup->file_size / 1024, 1) }} KB</td>
-                            <td style="color: #475569;">{{ $backup->created_at?->format('M d, Y h:i A') }}</td>
+                            <td style="color: #475569;">{{ $backup->created_at?->format('M d, Y, h:i A') }}</td>
                             <td><span class="badge text-bg-success">{{ ucfirst($backup->status) }}</span></td>
                             <td class="text-end pe-4">
                                 <a class="btn btn-sm btn-outline-secondary"

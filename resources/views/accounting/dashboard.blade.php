@@ -121,7 +121,7 @@
                                 </td>
                                 <td>{{ $beneficiary['program_name'] }}</td>
                                 <td>{{ $beneficiary['sponsor_name'] }}</td>
-                                <td>{{ $beneficiary['date_approved']?->format('M d, Y') ?? '—' }}</td>
+                                <td>{{ $beneficiary['date_approved']?->format('M d, Y, h:i A') ?? '—' }}</td>
                         </tr>@empty<tr>
                                 <td colspan="4" class="text-center py-4">
                                     <i class="bi bi-folder-x display-6 text-muted opacity-50 mb-2 d-block"></i>

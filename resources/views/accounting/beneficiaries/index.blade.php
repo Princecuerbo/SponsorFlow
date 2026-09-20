@@ -235,7 +235,7 @@
                                     @endif
                                 </td>
                                 <td class="text-secondary small">
-                                    {{ isset($beneficiary['approved_at']) && $beneficiary['approved_at'] ? \Carbon\Carbon::parse($beneficiary['approved_at'])->format('M d, Y') : '—' }}
+                                    {{ isset($beneficiary['approved_at']) && $beneficiary['approved_at'] ? \Carbon\Carbon::parse($beneficiary['approved_at'])->format('M d, Y, h:i A') : '—' }}
                                 </td>
                                 <td class="text-end pe-4 no-print">
                                     <span

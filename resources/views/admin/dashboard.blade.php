@@ -40,7 +40,7 @@
                             <div class="list-group-item px-0">
                                 <div class="d-flex justify-content-between">
                                     <strong class="small">{{ $log->action }}</strong>
-                                    <span class="small" style="color: #475569;">{{ $log->created_at?->diffForHumans() }}</span>
+                                    <span class="small" style="color: #475569;">{{ $log->created_at?->format('M d, Y, h:i A') }}</span>
                                 </div>
                                 <div class="small" style="color: #475569;">{{ $log->user?->name ?? 'System' }} · {{ $log->target_module }} · {{ $log->ip_address ?? '—' }}</div>
                             </div>

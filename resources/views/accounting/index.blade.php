@@ -157,7 +157,7 @@
                                     </div>
                                 @endif
                             </td>
-                            <td>{{ $beneficiary['approved_at']?->format('M d, Y') ?? '—' }}</td>
+                            <td>{{ $beneficiary['approved_at']?->format('M d, Y, h:i A') ?? '—' }}</td>
                             <td class="text-end pe-4 no-print">
                                 <span
                                     class="badge {{ !empty($beneficiary['application_id']) ? 'bg-primary-subtle text-primary-emphasis border border-primary-subtle' : 'bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle' }} fw-semibold">

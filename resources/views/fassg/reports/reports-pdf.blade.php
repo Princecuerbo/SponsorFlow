@@ -95,7 +95,7 @@
 <body>
 
     <h1>Sponsorship Reports Summary</h1>
-    <div class="subtitle">Generated on {{ now()->format('F d, Y h:i A') }}</div>
+    <div class="subtitle">Generated on {{ now()->format('M d, Y, h:i A') }}</div>
 
     <table class="stats-table">
         <tr>

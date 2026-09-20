@@ -416,7 +416,7 @@
 
                                 {{-- Date Submitted --}}
                                 <td>
-                                    <div class="small">{{ optional($application->submitted_at ?? $application->created_at)->format('M d, Y') }}</div>
+                                    <div class="small">{{ optional($application->submitted_at ?? $application->created_at)->format('M d, Y, h:i A') }}</div>
                                 </td>
 
                                 {{-- Documents --}}

@@ -102,7 +102,7 @@
 
                                 <div class="d-flex align-items-center gap-3 text-muted small" style="font-size: 0.8rem;">
                                     <span>
-                                        <i class="bi bi-clock me-1"></i>{{ $notification->created_at->diffForHumans() }}
+                                        <i class="bi bi-clock me-1"></i>{{ $notification->created_at->format('M d, Y, h:i A') }}
                                     </span>
                                     @if (!empty($url))
                                         <span>·</span>
