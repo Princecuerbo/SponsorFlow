@@ -9,10 +9,7 @@
             <h1 class="display-6 fw-bold mb-1">Verify your identity</h1>
             <p class="text-secondary mb-0">Keep your student details current before submitting an application.</p>
         </div>
-        <span class="badge rounded-pill {{ $profile?->is_sle_fhe_verified ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' : 'text-bg-warning text-dark' }} px-3 py-2">
-            <i class="bi {{ $profile?->is_sle_fhe_verified ? 'bi-patch-check' : 'bi-hourglass-split' }} me-1"></i>
-            SLE-FHE {{ $profile?->is_sle_fhe_verified ? 'verified' : 'pending' }}
-        </span>
+        <x-status-badge :status="$profile?->is_sle_fhe_verified ? 'Verified' : 'Pending'" />
     </div>
 
     <div class="row g-4">

@@ -9,7 +9,7 @@
         body, html {
             height: 100%;
             margin: 0;
-            background-color: #0a1b30 !important;
+            background-color: #0A1E31 !important;
         }
 
         .staff-login-wrapper {
@@ -19,7 +19,7 @@
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
-            background: radial-gradient(circle at center, #143561 0%, #0a1b30 100%);
+            background: radial-gradient(circle at center, #143561 0%, #0A1E31 100%);
         }
 
         .staff-login-card {
@@ -36,7 +36,7 @@
             align-items: center;
             gap: 0.6rem;
             padding: 0.5rem 1.1rem;
-            background-color: #0f294a;
+            background-color: #0F2537;
             border-radius: 10px;
             color: #ffffff;
             font-weight: 700;
@@ -57,7 +57,7 @@
 
             <div class="mb-3">
 <div class="staff-logo-box shadow-sm">
-    <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center" style="background-color: #0f294a; width: 36px; height: 36px;">
+    <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center" style="background-color: #0F2537; width: 36px; height: 36px;">
         <i class="fa-solid fa-hand-holding-dollar fs-6"></i>
     </div>
     <span class="fw-bold text-white">SponsorFlow</span>
@@ -110,7 +110,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100 fw-semibold shadow-sm mb-4" style="background-color: #0f294a; border: none; border-radius: 8px; height: 44px; font-size: 0.875rem;">
+                <button type="submit" class="btn btn-primary w-100 fw-semibold shadow-sm mb-4" style="background-color: #0F2537; border: none; border-radius: 8px; height: 44px; font-size: 0.875rem;">
                     Sign In
                 </button>
 

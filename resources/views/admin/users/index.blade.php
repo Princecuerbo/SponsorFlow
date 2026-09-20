@@ -104,10 +104,7 @@
                             <td style="color: #475569;">{{ $account->email }}</td>
                             <td><span class="badge bg-light text-dark">{{ $account->role->label() }}</span></td>
                             <td>
-                                <span
-                                    class="badge {{ $account->isActive() ? 'bg-success-subtle text-success-emphasis' : 'bg-secondary-subtle text-secondary-emphasis' }}">
-                                    {{ $account->isActive() ? 'Active' : 'Deactivated' }}
-                                </span>
+                                <x-status-badge :status="$account->isActive() ? 'Active' : $account->status" />
                             </td>
                             <td>
                                 @if ($account->last_login_at)

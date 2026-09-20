@@ -66,28 +66,8 @@
                                 </div>
                             </div>
                             <div class="d-flex align-items-center gap-2">
-                                @php($listStatus = strtolower($list->status->value ?? (string) $list->status))
-                                @if ($listStatus === 'saved' || $listStatus === 'draft')
-                                    <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle px-2 py-2 fw-semibold d-inline-flex align-items-center gap-1">
-                                        <i class="bi bi-pencil-square"></i>Saved
-                                    </span>
-                                @elseif ($listStatus === 'submitted')
-                                    <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle px-2 py-2 fw-semibold d-inline-flex align-items-center gap-1">
-                                        <i class="bi bi-send me-1"></i>Submitted to Sponsor
-                                    </span>
-                                @elseif ($listStatus === 'approved')
-                                    <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-2 py-2 fw-semibold d-inline-flex align-items-center gap-1">
-                                        <i class="bi bi-check-circle me-1"></i>Approved by Sponsor
-                                    </span>
-                                @elseif ($listStatus === 'rejected')
-                                    <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle px-2 py-2 fw-semibold d-inline-flex align-items-center gap-1">
-                                        <i class="bi bi-x-circle me-1"></i>Rejected
-                                    </span>
-                                @else
-                                    <span class="badge bg-light text-secondary border px-2 py-2 fw-semibold">
-                                        {{ ucfirst($listStatus) }}
-                                    </span>
-                                @endif
+                                @php($listStatus = $list->status->value ?? (string) $list->status)
+                                <x-status-badge :status="$listStatus" />
 
                                 <a href="{{ route('fassg.generated-batches.show', $list) }}" class="btn btn-outline-primary btn-sm"
                                     title="View Generated Batch" aria-label="View Generated Batch">

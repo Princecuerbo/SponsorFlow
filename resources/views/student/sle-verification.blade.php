@@ -193,7 +193,7 @@
                             <div>
                                 <h6 class="fw-bold text-dark mb-1">Masterlist Verification</h6>
                                 @if ($profile?->is_sle_fhe_verified)
-                                    <span class="badge bg-cyan-50 text-cyan-700 border border-cyan-200 mb-2">Verified</span>
+                                    <x-status-badge :status="'Verified'" class="mb-2" />
                                     <p class="text-secondary small mb-0">Your profile is active and verified for the current
                                         academic term.</p>
                                 @else

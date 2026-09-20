@@ -45,7 +45,7 @@
                                     <div class="small text-secondary">{{ $approval->fixedList->items->reject(fn($item) => $item->application?->status->value === 'Rejected')->count() }} beneficiary(ies)</div>
                                 </td>
                                 <td>{{ $approval->sponsorshipProgram->program_name }}</td>
-                                <td><span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200">Confirmed</span></td>
+                                <td><x-status-badge :status="'Confirmed'" /></td>
                                 <td>{{ $approval->updated_at?->format('M d, Y, h:i A') ?? '—' }}</td>
                                 <td class="text-end pe-4">
                                     @if ($approval->approval_document_path)

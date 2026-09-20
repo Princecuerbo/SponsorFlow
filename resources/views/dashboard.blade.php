@@ -110,8 +110,7 @@
                                 <div class="text-secondary fw-semibold text-uppercase extra-small mb-1"
                                     style="font-size: 0.72rem; letter-spacing: 0.05em;">SLE-FHE Verification</div>
                                 @if ($isVerified)
-                                    <span class="badge rounded-pill fw-semibold bg-cyan-50 text-cyan-700 border border-cyan-200"
-                                        style="font-size: 0.72rem; padding: 0.375rem 0.75rem;">Verified</span>
+                                    <x-status-badge :status="'Verified'" />
                                 @else
                                     <span class="badge rounded-pill d-inline-flex align-items-center gap-1 fw-semibold bg-cream border text-slate-900"
                                         style="font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.75rem; border-color: #FCD34D;">
@@ -192,22 +191,7 @@
                                         {{ $app->sponsorshipProgram?->program_name ?? 'Unknown Program' }}</td>
                                     <td class="text-secondary small">{{ $app->submitted_at?->format('M d, Y, h:i A') ?? '—' }}</td>
                                     <td>
-                                        @php $statusVal = $app->status?->value ?? $app->status; @endphp
-                                        @if (in_array($statusVal, ['Approved', 'Confirmed'], true))
-                                            <span
-                                                class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-pill fw-semibold"
-                                                style="font-size: 0.72rem;">Approved</span>
-                                        @elseif (in_array($statusVal, ['Verified', 'verified'], true))
-                                            <span
-                                                class="badge bg-cyan-50 text-cyan-700 border border-cyan-200 px-2.5 py-1 rounded-pill fw-semibold"
-                                                style="font-size: 0.72rem;">Verified</span>
-                                        @elseif (in_array($statusVal, ['Pending', 'pending'], true))
-                                            <span
-                                                class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2.5 py-1 rounded-pill fw-semibold"
-                                                style="font-size: 0.72rem;">Pending</span>
-                                        @else
-                                            <x-status-badge :status="$statusVal" />
-                                        @endif
+                                        <x-status-badge :status="$app->status" />
                                     </td>
                                     <td class="text-end">
                                         <a href="{{ route('student.applications.show', $app) }}"

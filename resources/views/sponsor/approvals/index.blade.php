@@ -128,7 +128,7 @@
                                         </div>
                                     </td>
                                     <td>{{ $list->total_names }} {{ Str::plural('student', $list->total_names) }}</td>
-                                    <td><span class="badge bg-info-subtle text-info-emphasis">Submitted</span></td>
+                                    <td><x-status-badge :status="'Submitted'" /></td>
                                     <td>
                                         @if (!empty($list->approval_document_path))
                                             <span
@@ -192,7 +192,7 @@
                                         </div>
                                     </td>
                                     <td>{{ $list->total_names }} {{ Str::plural('student', $list->total_names) }}</td>
-                                    <td><span class="badge bg-info-subtle text-info-emphasis">Submitted</span></td>
+                                    <td><x-status-badge :status="'Submitted'" /></td>
                                     <td>
                                         @if (!empty($list->approval_document_path))
                                             <span

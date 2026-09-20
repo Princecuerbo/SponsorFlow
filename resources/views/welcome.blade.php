@@ -21,27 +21,27 @@
                 <a href="/" class="flex items-center gap-2 text-decoration-none min-w-0">
                     <!-- Navy Badge with hand-holding-dollar icon -->
                     <div
-                        class="w-9 h-9 rounded-lg bg-[#0f294a] flex items-center justify-center text-white shadow-sm flex-shrink-0">
+                        class="w-9 h-9 rounded-lg bg-[#0F2537] flex items-center justify-center text-white shadow-sm flex-shrink-0">
                         <i class="fa-solid fa-hand-holding-dollar text-sm"></i>
                     </div>
                     <!-- Brand Name -->
-                    <span class="text-lg sm:text-xl font-bold tracking-tight text-[#0f294a] truncate">SponsorFlow</span>
+                    <span class="text-lg sm:text-xl font-bold tracking-tight text-[#0F2537] truncate">SponsorFlow</span>
                 </a>
 
                 {{-- Auth Buttons --}}
                 <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
                     @auth
                         <a href="{{ route('dashboard') }}"
-                            class="px-3 sm:px-5 py-2 text-xs sm:text-sm font-bold text-white bg-[#0f294a] hover:bg-[#0a1b30] rounded-lg shadow transition whitespace-nowrap">
+                            class="px-3 sm:px-5 py-2 text-xs sm:text-sm font-bold text-white bg-[#0F2537] hover:bg-[#0A1E31] rounded-lg shadow transition whitespace-nowrap">
                             Dashboard &rarr;
                         </a>
                     @else
                         <a href="{{ route('login') }}"
-                            class="px-2 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-[#0f294a] transition whitespace-nowrap">
+                            class="px-2 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-[#0F2537] transition whitespace-nowrap">
                             Log in
                         </a>
                         <a href="{{ route('register') }}"
-                            class="px-3 sm:px-5 py-2 text-xs sm:text-sm font-bold text-white bg-[#0f294a] hover:bg-[#0a1b30] rounded-lg shadow transition whitespace-nowrap">
+                            class="px-3 sm:px-5 py-2 text-xs sm:text-sm font-bold text-white bg-[#0F2537] hover:bg-[#0A1E31] rounded-lg shadow transition whitespace-nowrap">
                             Apply now
                         </a>
                     @endauth
@@ -51,7 +51,7 @@
     </nav>
 
     {{-- Hero Section --}}
-    <section class="bg-[#0f294a] text-white py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <section class="bg-[#0F2537] text-white py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
             {{-- Left Content --}}
@@ -126,7 +126,7 @@
     <section id="programs" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="mb-8 border-b border-slate-200 pb-4">
             <div>
-                <span class="text-xs font-bold uppercase tracking-wider text-[#0f294a]">Open Opportunities</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-[#0F2537]">Open Opportunities</span>
                 <h2 class="text-2xl font-black text-slate-900 mt-1">Active sponsorship programs</h2>
             </div>
         </div>
@@ -138,7 +138,7 @@
                     <div>
                         <div class="flex justify-between items-center mb-4">
                             <span
-                                class="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-50 text-[#0f294a] border border-blue-100">
+                                class="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-50 text-[#0F2537] border border-blue-100">
                                 {{ $program->category ?? 'General' }}
                             </span>
                             <span
@@ -152,7 +152,7 @@
                     </div>
 
                     <a href="{{ route('login') }}"
-                        class="w-full py-2.5 px-4 bg-[#0f294a] hover:bg-[#0a1b30] text-white text-xs font-bold rounded-xl text-center shadow transition block">
+                        class="w-full py-2.5 px-4 bg-[#0F2537] hover:bg-[#0A1E31] text-white text-xs font-bold rounded-xl text-center shadow transition block">
                         View eligibility &rarr;
                     </a>
                 </div>
@@ -169,7 +169,7 @@
     {{-- Sponsorship Category Highlights --}}
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div class="mb-8">
-            <span class="text-xs font-bold uppercase tracking-wider text-[#0f294a]">Program pathways</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-[#0F2537]">Program pathways</span>
             <h2 class="text-2xl font-black text-slate-900 mt-1">Sponsorship categories</h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -202,7 +202,7 @@
 
     {{-- Footer --}}
     <footer
-        class="mt-auto bg-[#0f294a] border-t border-slate-800 text-slate-400 py-8 px-4 text-center text-xs font-medium">
+        class="mt-auto bg-[#0F2537] border-t border-slate-800 text-slate-400 py-8 px-4 text-center text-xs font-medium">
         <p class="max-w-7xl mx-auto">&copy; {{ date('Y') }} Davao Oriental State University – SponsorFlow. All
             rights reserved.</p>
     </footer>

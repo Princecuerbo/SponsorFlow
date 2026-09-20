@@ -167,15 +167,7 @@
                             <div class="stat-highlight">
                                 <div class="detail-label"><i class="bi bi-tree me-1"></i> SLE-FHE Status</div>
                                 <div>
-                                    @if ($profile->is_sle_fhe_verified)
-                                        <span class="badge bg-cyan-50 text-cyan-700 border border-cyan-200 px-2 py-1">
-                                            <i class="bi bi-patch-check me-1"></i> Verified
-                                        </span>
-                                    @else
-                                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2 py-1">
-                                            <i class="bi bi-hourglass-split me-1"></i> Pending
-                                        </span>
-                                    @endif
+                                    <x-status-badge :status="$profile->is_sle_fhe_verified ? 'Verified' : 'Pending'" />
                                 </div>
                             </div>
                         </div>

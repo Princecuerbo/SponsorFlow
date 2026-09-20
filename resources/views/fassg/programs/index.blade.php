@@ -96,27 +96,7 @@
                                         $status = $program->status?->value ?? $program->status;
                                         $statusLower = strtolower($program->effective_status->value);
                                     @endphp
-                                    @if ($statusLower === 'open')
-                                        <span
-                                            class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
-                                            <i class="bi bi-check-circle-fill me-1"></i> Open
-                                        </span>
-                                    @elseif($statusLower === 'closed')
-                                        <span
-                                            class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1">
-                                            <i class="bi bi-slash-circle me-1"></i> Closed
-                                        </span>
-                                    @elseif($statusLower === 'expired')
-                                        <span
-                                            class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">
-                                            <i class="bi bi-clock-history me-1"></i> Expired
-                                        </span>
-                                    @else
-                                        <span
-                                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-                                            <i class="bi bi-question-circle"></i> {{ $status }}
-                                        </span>
-                                    @endif
+                                    <x-status-badge :status="$program->effective_status" />
                                 </td>
                                 <td class="text-end pe-4">
                                     @if ($statusLower === 'open')

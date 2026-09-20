@@ -19,10 +19,10 @@
         <div class="w-full max-w-md">
             <header class="mb-6 text-center">
                 <div
-                    class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#FFC72C] bg-white p-1 text-sm font-black tracking-tighter text-[#002B66] shadow-md">
+                    class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#FFC72C] bg-white p-1 text-sm font-black tracking-tighter text-[#0F2537] shadow-md">
                     DORSu
                 </div>
-                <h1 class="text-2xl font-black tracking-tight text-[#002B66]">SponsorFlow</h1>
+                <h1 class="text-2xl font-black tracking-tight text-[#0F2537]">SponsorFlow</h1>
                 <p class="mt-1 text-xs font-semibold uppercase tracking-widest text-slate-500">Davao Oriental State
                     University · SLE-FHE</p>
             </header>
@@ -49,7 +49,7 @@
                             email</label>
                         <input type="email" name="email" id="email" required autofocus
                             value="{{ old('email') }}" autocomplete="email" placeholder="student@dorsu.edu.ph"
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-[#002B66] focus:ring-2 focus:ring-[#002B66]/20">
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-[#0F2537] focus:ring-2 focus:ring-[#0F2537]/20">
                     </div>
 
                     <div>
@@ -58,7 +58,7 @@
                         <div class="relative">
                             <input type="password" name="password" id="password" required
                                 autocomplete="current-password" placeholder="Password"
-                                class="w-full rounded-xl border border-slate-300 px-4 py-3 pr-12 text-sm outline-none transition focus:border-[#002B66] focus:ring-2 focus:ring-[#002B66]/20">
+                                class="w-full rounded-xl border border-slate-300 px-4 py-3 pr-12 text-sm outline-none transition focus:border-[#0F2537] focus:ring-2 focus:ring-[#0F2537]/20">
                             <button type="button"
                                 onclick="togglePasswordVisibility('password', this)"
                                 class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-gray-400 transition hover:text-slate-600 focus:outline-none z-10 cursor-pointer"
@@ -75,12 +75,12 @@
 
                     <label class="flex cursor-pointer items-center gap-2 text-sm text-slate-600">
                         <input type="checkbox" name="remember" value="1"
-                            class="h-4 w-4 rounded border-slate-300 text-[#002B66] focus:ring-[#002B66]">
+                            class="h-4 w-4 rounded border-slate-300 text-[#0F2537] focus:ring-[#0F2537]">
                         Remember me
                     </label>
 
                     <button type="submit"
-                        class="flex w-full items-center justify-center gap-2 rounded-xl bg-[#002B66] px-4 py-3 text-sm font-bold text-white shadow-md transition hover:bg-[#001f4d]">
+                        class="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0F2537] px-4 py-3 text-sm font-bold text-white shadow-md transition hover:bg-[#0A1E31]">
                         <span>Log in</span>
                         <span aria-hidden="true">&rarr;</span>
                     </button>

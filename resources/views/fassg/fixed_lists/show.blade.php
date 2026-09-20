@@ -34,10 +34,7 @@
                             class="btn btn-outline-secondary btn-sm fw-semibold d-inline-flex align-items-center gap-2">
                             <i class="bi bi-arrow-left"></i>Back to Fixed Lists
                         </a>
-                        <span
-                            class="badge bg-secondary-subtle text-secondary px-3 py-2 fw-semibold border border-secondary-subtle">
-                            {{ ucfirst($list->status->value ?? $list->status) }} Status
-                        </span>
+                        <x-status-badge :status="$list->status" />
                     </div>
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
@@ -155,17 +152,11 @@
                                     <td>{{ $item->year_level ? "Year {$item->year_level}" : '—' }}</td>
                                     <td>{{ $item->campus ?: 'N/A' }}</td>
                                     <td>
-                                        <span
-                                            class="badge {{ $item->is_sle_fhe_verified ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' : 'bg-warning-subtle text-warning-emphasis border border-warning-subtle' }}">
-                                            {{ $item->is_sle_fhe_verified ? 'Verified' : 'Pending Check' }}
-                                        </span>
+                                        <x-status-badge :status="$item->is_sle_fhe_verified ? 'Verified' : 'Pending'" />
                                     </td>
                                     <td>
                                         @if ($item->status === \App\Enums\FixedListItemStatus::Endorsed)
-                                            <span
-                                                class="badge bg-success-subtle text-success-emphasis border border-success-subtle">
-                                                Endorsed
-                                            </span>
+                                            <x-status-badge :status="'Endorsed'" />
                                         @else
                                             <button type="submit" form="endorse-{{ $item->id }}"
                                                 class="btn btn-outline-success btn-sm">

@@ -12,7 +12,7 @@
         }
 
         .link-text-hover:hover {
-            color: #0f294a !important;
+            color: #0F2537 !important;
         }
 
         .sf-content {
@@ -43,7 +43,7 @@
         .section-badge {
             width: 26px;
             height: 26px;
-            background-color: #0f294a;
+            background-color: #0F2537;
             color: #ffffff;
             font-size: 0.75rem;
             font-weight: 700;
@@ -92,22 +92,22 @@
 
         .ts-dropdown .option.active,
         .ts-dropdown .option:hover {
-            background-color: #0f294a;
+            background-color: #0F2537;
             color: #fff;
         }
 
         /* Custom Register Submit Button Style Matching Login */
         .btn-custom-register {
-            background-color: #0f294a;
+            background-color: #0F2537;
             color: #ffffff;
             border: 1px solid #cbd5e1;
             transition: all 0.2s ease-in-out;
         }
 
         .btn-custom-register:hover {
-            background-color: #0f294a !important;
+            background-color: #0F2537 !important;
             color: #ffffff !important;
-            border-color: #0f294a !important;
+            border-color: #0F2537 !important;
         }
     </style>
 @endpush
@@ -118,7 +118,7 @@
 
             <!-- Fixed / Sticky Left Sidebar -->
             <div class="col-lg-6 d-none d-lg-flex flex-column justify-content-between text-white p-5 position-relative overflow-hidden h-100 position-lg-sticky top-0"
-                style="background-color: #0f294a;">
+                style="background-color: #0F2537;">
                 <div class="position-absolute rounded-circle"
                     style="width: 450px; height: 450px; background: rgba(255, 255, 255, 0.03); top: -120px; right: -120px; pointer-events: none;">
                 </div>
@@ -128,7 +128,7 @@
                     <div class="d-inline-flex align-items-center gap-2 mb-4 px-3 py-2 rounded-3"
                         style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.2);">
                         <div class="rounded-2 p-2 text-white d-flex align-items-center justify-content-center"
-                            style="background-color: #0f294a;">
+                            style="background-color: #0F2537;">
                             <i class="fa-solid fa-hand-holding-dollar fs-6"></i>
                         </div>
                         <span class="fw-bold text-white fs-6">SponsorFlow</span>
@@ -152,16 +152,16 @@
                     <div class="d-block d-lg-none text-center mb-4">
                         <div class="d-inline-flex align-items-center gap-2 mb-2">
                             <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center"
-                                style="background-color: #0f294a;">
+                                style="background-color: #0F2537;">
                                 <i class="fa-solid fa-hand-holding-dollar fs-20"></i>
                             </div>
-                            <span class="fs-4 fw-bold" style="color: #0f294a;">SponsorFlow</span>
+                            <span class="fs-4 fw-bold" style="color: #0F2537;">SponsorFlow</span>
                         </div>
                     </div>
 
                     <div class="mb-4 text-center text-lg-start">
                         <span class="badge bg-white text-primary border mb-2 px-3 py-1.5 rounded-pill fw-semibold shadow-sm"
-                            style="font-size: 0.72rem; color: #0f294a !important; border-color: #cbd5e1 !important;">SLE-FHE
+                            style="font-size: 0.72rem; color: #0F2537 !important; border-color: #cbd5e1 !important;">SLE-FHE
                             STUDENT ACCESS</span>
                         <h2 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.75rem;">Create your account</h2>
                         <p class="text-secondary small mb-0" style="font-size: 0.875rem;">Use your institutional DOrSU

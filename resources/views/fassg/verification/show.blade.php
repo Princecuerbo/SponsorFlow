@@ -180,13 +180,9 @@
                                     Year {{ $profile->year_level ?? '—' }}
                                     @if ($yearLevelRestricted)
                                         @if ($yearLevelMeets)
-                                            <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle ms-1" style="font-size: 0.7rem;">
-                                                Eligible
-                                            </span>
+                                            <x-status-badge :status="'Eligible'" class="ms-1" />
                                         @else
-                                            <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle ms-1" style="font-size: 0.7rem;">
-                                                Ineligible
-                                            </span>
+                                            <x-status-badge :status="'Ineligible'" class="ms-1" />
                                         @endif
                                     @endif
                                 </div>
@@ -233,15 +229,7 @@
                         <div class="col-md-6">
                             <div class="detail-label">SLE-FHE Status</div>
                             <div>
-                                @if ($profile->is_sle_fhe_verified)
-                                    <span class="badge bg-cyan-50 text-cyan-700 border border-cyan-200 px-2 py-1">
-                                        <i class="bi bi-patch-check me-1"></i> SLE-FHE Verified
-                                    </span>
-                                @else
-                                    <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2 py-1">
-                                        <i class="bi bi-hourglass-split me-1"></i> SLE-FHE Pending
-                                    </span>
-                                @endif
+                                <x-status-badge :status="$profile->is_sle_fhe_verified ? 'Verified' : 'Pending'" />
                             </div>
                         </div>
                         <div class="col-md-6">

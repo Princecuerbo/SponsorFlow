@@ -42,9 +42,7 @@
                 <span class="text-uppercase fw-bold text-muted extra-small tracking-wider d-block">
                     Tuition Adjustment Reference
                 </span>
-                <span class="badge bg-success-subtle text-success-emphasis fw-semibold">
-                    {{ $fixedList->status->value }}
-                </span>
+                <x-status-badge :status="$fixedList->status" />
                 <span class="badge bg-primary-subtle text-primary-emphasis fw-semibold">
                     Sponsor Confirmed
                 </span>
@@ -202,11 +200,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($item->is_sle_fhe_verified)
-                                        <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle fw-semibold">SLE-FHE</span>
-                                    @else
-                                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle fw-semibold">Unverified</span>
-                                    @endif
+                                    <x-status-badge :status="$item->is_sle_fhe_verified ? 'SLE-FHE' : 'Pending'" />
                                 </td>
                             </tr>
                         @empty

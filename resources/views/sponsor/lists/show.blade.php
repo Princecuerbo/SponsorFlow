@@ -47,14 +47,10 @@
                                         <td class="text-secondary">{{ $item->course }}</td>
                                         <td class="text-secondary">{{ $item->year_level ? "Year {$item->year_level}" : '—' }}</td>
                                         <td>
-                                            @if ($item->application?->status === \App\Enums\ApplicationStatus::Verified)
-                                                <span class="badge bg-success-subtle text-success">Verified</span>
-                                            @elseif ($item->application?->status === \App\Enums\ApplicationStatus::Rejected)
-                                                <span class="badge bg-danger-subtle text-danger">Rejected</span>
-                                            @elseif ($item->application?->status === \App\Enums\ApplicationStatus::ResubmissionRequested)
-                                                <span class="badge bg-warning-subtle text-warning">Resubmission</span>
+                                            @if ($item->application)
+                                                <x-status-badge :status="$item->application->status" />
                                             @else
-                                                <span class="badge bg-secondary-subtle text-secondary">{{ $item->application?->status?->value ?? '—' }}</span>
+                                                <span class="badge bg-secondary-subtle text-secondary">—</span>
                                             @endif
                                         </td>
                                     </tr>

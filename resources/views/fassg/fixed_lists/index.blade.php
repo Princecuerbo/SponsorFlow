@@ -57,22 +57,8 @@
                                 </div>
                             </div>
                             <div class="d-flex align-items-center gap-2">
-                                @php($listStatus = strtolower($list->status->value ?? (string) $list->status))
-                                @if ($listStatus === 'draft')
-                                    <span
-                                        class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-2 fw-semibold d-inline-flex align-items-center gap-1">
-                                        <i class="bi bi-pencil-square"></i>Draft
-                                    </span>
-                                @elseif ($listStatus === 'submitted')
-                                    <span
-                                        class="badge badge-info-custom px-2 py-2 fw-semibold d-inline-flex align-items-center gap-1">
-                                        <i class="bi bi-send me-1"></i>Forwarded to Sponsor
-                                    </span>
-                                @else
-                                    <span class="badge bg-light text-secondary border px-2 py-2 fw-semibold">
-                                        {{ ucfirst($listStatus) }}
-                                    </span>
-                                @endif
+                                @php($listStatus = $list->status->value ?? (string) $list->status)
+                                <x-status-badge :status="$listStatus" />
 
                                 <a href="{{ route('fassg.fixed-lists.show', $list) }}" class="btn btn-outline-primary btn-sm"
                                     title="View &amp; Manage Fixed List" aria-label="View &amp; Manage Fixed List">
@@ -119,15 +105,9 @@
                                             <td class="text-secondary">{{ $item->year_level ?: '—' }}</td>
                                             <td>
                                                 @if ($item->is_sle_fhe_verified)
-                                                    <span
-                                                        class="badge bg-cyan-50 text-cyan-700 border border-cyan-200 px-2 py-1">
-                                                        <i class="bi bi-check-lg me-1"></i>Verified SLE-FHE
-                                                    </span>
+                                                    <x-status-badge :status="'Verified'" />
                                                 @else
-                                                    <span
-                                                        class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2 py-1">
-                                                        <i class="bi bi-exclamation-circle me-1"></i>Needs Checking
-                                                    </span>
+                                                    <x-status-badge :status="'Pending'" />
                                                 @endif
                                             </td>
                                             <td><x-status-badge :status="$item->status" /></td>

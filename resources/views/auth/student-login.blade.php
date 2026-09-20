@@ -25,22 +25,22 @@
         }
 
         .btn-back-home:hover {
-            color: #0f294a !important;
+            color: #0F2537 !important;
             transform: translateX(-3px);
         }
 
         /* Custom Sign In Button Hover Transition */
         .btn-custom-login {
-            background-color: #0f294a;
+            background-color: #0F2537;
             color: #ffffff;
             border: 1px solid #cbd5e1;
             transition: all 0.2s ease-in-out;
         }
 
         .btn-custom-login:hover {
-            background-color: #0f294a !important;
+            background-color: #0F2537 !important;
             color: #ffffff !important;
-            border-color: #0f294a !important;
+            border-color: #0F2537 !important;
         }
 
         /* Custom Create Account Button Hover Transition */
@@ -52,9 +52,9 @@
         }
 
         .btn-custom-outline:hover {
-            background-color: #0f294a !important;
+            background-color: #0F2537 !important;
             color: #ffffff !important;
-            border-color: #0f294a !important;
+            border-color: #0F2537 !important;
         }
 
         /* ===== Privacy Modal – Modern Redesign ===== */
@@ -72,7 +72,7 @@
 
         /* Gradient navy header */
         .privacy-card-header {
-            background: linear-gradient(135deg, #0f294a 0%, #1e3a8a 100%);
+            background: linear-gradient(135deg, #0F2537 0%, #0A1E31 100%);
             padding: 1.75rem 2rem;
             color: #ffffff;
             display: flex;
@@ -182,7 +182,7 @@
             height: 18px;
             flex-shrink: 0;
             cursor: pointer;
-            accent-color: #0f294a;
+            accent-color: #0F2537;
         }
 
         /* Modal footer */
@@ -236,7 +236,7 @@
 
             <!-- Left Hero Brand Column -->
             <div class="col-lg-6 d-none d-lg-flex flex-column justify-content-between text-white p-5 position-relative overflow-hidden"
-                style="background-color: #0f294a;">
+                style="background-color: #0F2537;">
                 <div class="position-absolute rounded-circle"
                     style="width: 450px; height: 450px; background: rgba(255, 255, 255, 0.03); top: -120px; right: -120px; pointer-events: none;">
                 </div>
@@ -245,7 +245,7 @@
                     <div class="d-inline-flex align-items-center gap-2 mb-4 px-3 py-2 rounded-3"
                         style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.2);">
                         <div class="rounded-2 p-2 text-white d-flex align-items-center justify-content-center"
-                            style="background-color: #0f294a;">
+                            style="background-color: #0F2537;">
                             <i class="fa-solid fa-hand-holding-dollar fs-6"></i>
                         </div>
                         <span class="fw-bold text-white fs-6">SponsorFlow</span>
@@ -275,10 +275,10 @@
                     <div class="d-block d-lg-none text-center mb-4">
                         <div class="d-inline-flex align-items-center gap-2 mb-2">
                             <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center"
-                                style="background-color: #0f294a;">
+                                style="background-color: #0F2537;">
                                 <i class="fa-solid fa-hand-holding-dollar fs-20"></i>
                             </div>
-                            <span class="fs-4 fw-bold" style="color: #0f294a;">SponsorFlow</span>
+                            <span class="fs-4 fw-bold" style="color: #0F2537;">SponsorFlow</span>
                         </div>
                     </div>
                     <div class="mb-4 text-center text-lg-start">
@@ -343,7 +343,7 @@
                                     style="font-size: 0.8rem;">Remember Me</label>
                             </div>
                             <a href="#" class="small text-decoration-none fw-semibold"
-                                style="color: #0f294a; font-size: 0.8rem;">Forgot Password?</a>
+                                style="color: #0F2537; font-size: 0.8rem;">Forgot Password?</a>
                         </div>
                         <!-- AJAX Trigger Button with Custom Grey/Black Styling & Hover -->
                         <button type="submit" id="sign-in-btn"
@@ -485,7 +485,7 @@
                     <button type="button" id="privacy-continue-btn"
                         class="btn btn-sm px-5 fw-bold text-white" disabled
                         onclick="submitConsentFinal()"
-                        style="background-color: #0f294a; border-radius: 8px; opacity: 0.55;">
+                        style="background-color: #0F2537; border-radius: 8px; opacity: 0.55;">
                         <i class="bi bi-check2-circle me-1"></i> Continue
                     </button>
                 </div>

@@ -46,9 +46,7 @@
                             class="btn btn-outline-secondary btn-sm fw-semibold d-inline-flex align-items-center gap-2">
                             <i class="bi bi-arrow-left"></i>Back to Generated Batches
                         </a>
-                        <span class="badge bg-secondary-subtle text-secondary px-3 py-2 fw-semibold border border-secondary-subtle">
-                            {{ ucfirst($list->status->value ?? $list->status) }} Status
-                        </span>
+                        <x-status-badge :status="$list->status" />
                     </div>
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
@@ -117,9 +115,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <span class="badge {{ $item->is_sle_fhe_verified ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' : 'bg-warning-subtle text-warning-emphasis border border-warning-subtle' }}">
-                                            {{ $item->is_sle_fhe_verified ? 'Verified' : 'Pending Check' }}
-                                        </span>
+                                        <x-status-badge :status="$item->is_sle_fhe_verified ? 'Verified' : 'Pending'" />
                                     </td>
                                     <td class="text-end pe-4" style="white-space: nowrap;">
                                         @if ($item->application_id)
