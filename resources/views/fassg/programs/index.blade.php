@@ -170,7 +170,7 @@
                                         </form>
                                     @endif
                                     <a href="{{ route('fassg.programs.edit', $program) }}"
-                                        class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip"
+                                        class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
                                         title="Edit program criteria">
                                         <i class="bi bi-pencil"></i>
                                     </a>
