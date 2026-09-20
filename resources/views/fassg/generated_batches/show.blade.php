@@ -60,7 +60,7 @@
         );
     @endphp
     <div class="row g-4 mb-4">
-        <div class="col-md-8">
+        <div class="col-12 col-lg-9">
             <div class="card sf-card mb-4 border-0 shadow-sm">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center justify-content-between mb-3 gap-3">
@@ -102,7 +102,7 @@
                         <thead>
                             <tr>
                                 <th class="ps-4" style="width: 48px;">Rank</th>
-                                <th>Student ID</th>
+                                <th style="white-space: nowrap;">Student ID</th>
                                 <th>Student Name</th>
                                 <th>Course</th>
                                 <th>Year Level</th>
@@ -110,7 +110,7 @@
                                 <th>GWA</th>
                                 <th>Application Status</th>
                                 <th>SLE-FHE Status</th>
-                                <th class="text-end pe-4">Action</th>
+                                <th class="text-end pe-4" style="white-space: nowrap;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -121,7 +121,7 @@
                                             class="d-inline-flex align-items-center justify-content-center rounded-circle bg-cyan-50 text-cyan-700 border border-cyan-200 fw-bold"
                                             style="width: 30px; height: 30px;">{{ $loop->iteration }}</span>
                                     </td>
-                                    <td class="sf-mono text-secondary fw-semibold">{{ $item->student_id_number ?: 'N/A' }}</td>
+                                    <td class="sf-mono text-secondary fw-semibold" style="white-space: nowrap;">{{ $item->student_id_number ?: 'N/A' }}</td>
                                     <td class="fw-semibold">
                                         {{ $item->student_name }}
                                     </td>
@@ -143,12 +143,13 @@
                                             {{ $item->is_sle_fhe_verified ? 'Verified' : 'Pending Check' }}
                                         </span>
                                     </td>
-                                    <td class="text-end pe-4">
+                                    <td class="text-end pe-4" style="white-space: nowrap;">
                                         @if ($item->application_id)
                                             <a href="{{ route('fassg.applications.show', $item->application_id) }}"
-                                                class="btn btn-sm btn-outline-primary fw-semibold"
+                                                class="btn btn-sm text-white fw-semibold d-inline-flex align-items-center gap-1"
+                                                style="background-color: #0F2537; border-color: #0F2537; white-space: nowrap;"
                                                 title="View Source Application">
-                                                <i class="bi bi-file-earmark-person me-1"></i>View Application
+                                                <i class="bi bi-file-earmark-text text-white"></i>View Application
                                             </a>
                                         @endif
                                         @if (!$item->is_sle_fhe_verified && $item->status !== \App\Enums\FixedListItemStatus::Endorsed)
@@ -164,7 +165,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center text-secondary py-4">No applicants in this generated batch yet.</td>
+                                    <td colspan="10" class="text-center text-secondary py-4">No applicants in this generated batch yet.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -174,7 +175,7 @@
                 </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-12 col-lg-3">
             @if (in_array($list->status, [\App\Enums\FixedListStatus::Draft, \App\Enums\FixedListStatus::Rejected, \App\Enums\FixedListStatus::Saved], true))
                 <div class="card sf-card border-0 shadow-sm">
                     <div class="card-body p-4 text-center">
