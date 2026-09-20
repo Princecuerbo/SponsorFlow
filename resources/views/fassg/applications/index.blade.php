@@ -67,6 +67,11 @@
             pointer-events: none;
         }
 
+        .app-checkbox:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
         .filter-card {
             background: #f8f9fa;
             border: 1px solid #e9ecef;
@@ -350,6 +355,13 @@
                                     ? ($pendingApplications->firstItem() + $loop->index)
                                     : $loop->iteration;
                                 $isTopCandidate = $selectedProgram && $slots > 0 && $rank <= $slots;
+                                // Only Pending / Verified applications that are not yet
+                                // linked to another batch may be selected for batching.
+                                $isBatchable = in_array(
+                                    $application->status,
+                                    [\App\Enums\ApplicationStatus::Pending, \App\Enums\ApplicationStatus::Verified],
+                                    true,
+                                ) && $application->fixedListItems()->doesntExist();
                             @endphp
                             <tr class="{{ $isTopCandidate ? 'table-success bg-opacity-10' : '' }}"
                                 style="{{ $isTopCandidate ? 'border-left: 4px solid #16a34a !important; background-color: rgba(22, 163, 74, 0.04);' : '' }}">
@@ -357,7 +369,9 @@
                                 <td class="ps-3">
                                     <input type="checkbox" class="form-check-input app-checkbox"
                                         name="selected_applications[]" value="{{ $application->id }}"
-                                        data-status="{{ $application->status->value }}"
+                                        data-status="{{ $application->status?->value }}"
+                                        @disabled(! $isBatchable)
+                                        @if (! $isBatchable) title="Application already processed or batched" @endif
                                         aria-label="Select {{ $profile->user->name ?? $profile->student_id_number }}">
                                 </td>
 
@@ -537,6 +551,7 @@
             (function () {
                 const selectAll = document.getElementById('selectAllApps');
                 const checkboxes = Array.from(document.querySelectorAll('.app-checkbox'));
+                const selectable = () => checkboxes.filter(chk => !chk.disabled);
                 const modalForm = document.getElementById('createBatchForm');
                 const container = document.getElementById('selectedApplicantsContainer');
                 const countNote = document.getElementById('selectedCountNote');
@@ -546,8 +561,9 @@
                     if (!selectAll) {
                         return;
                     }
-                    const checked = checkboxes.filter(chk => chk.checked);
-                    selectAll.checked = checked.length > 0 && checked.length === checkboxes.length;
+                    const active = selectable();
+                    const checked = active.filter(chk => chk.checked);
+                    selectAll.checked = checked.length > 0 && checked.length === active.length;
 
                     const batchBtn = document.getElementById('createBatchBtn');
                     const batchLabel = document.getElementById('createBatchBtnLabel');
@@ -584,7 +600,7 @@
 
                 if (selectAll) {
                     selectAll.addEventListener('change', function () {
-                        checkboxes.forEach(chk => { chk.checked = selectAll.checked; });
+                        selectable().forEach(chk => { chk.checked = selectAll.checked; });
                         updateState();
                     });
                 }
@@ -621,11 +637,11 @@
                     });
                 }
 
-                // Auto-check the top available non-rejected applicants matching the
+                // Auto-check the top available non-disabled applicants matching the
                 // program's available slots (only meaningful when a program is
                 // selected and the queue is GPA-ranked).
                 if (availableSlots > 0) {
-                    const eligible = checkboxes.filter(chk => chk.dataset.status !== 'Rejected');
+                    const eligible = selectable();
                     const precheck = Math.min(availableSlots, eligible.length);
                     eligible.forEach((chk, index) => { chk.checked = index < precheck; });
                     updateState();

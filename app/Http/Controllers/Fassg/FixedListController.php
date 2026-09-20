@@ -83,6 +83,24 @@ class FixedListController extends Controller
         ]);
     }
 
+    public function destroyGenerated(Request $request, FixedList $fixedList): RedirectResponse
+    {
+        $this->assertListEditable($fixedList);
+
+        DB::transaction(function () use ($fixedList): void {
+            // Hard-delete the linked items so the source applications are
+            // released back into the eligible Application Queue.
+            $fixedList->items()->delete();
+            $fixedList->delete();
+        });
+
+        $this->audit($request, 'fassg.generated_batch.deleted', 'fixed_lists');
+
+        return redirect()
+            ->route('fassg.generated-batches.index')
+            ->with('status', 'Generated batch deleted successfully. All linked applications have been unbatched and returned to the queue.');
+    }
+
     public function show(Request $request, FixedList $fixedList): View
     {
         $fixedList->load(['sponsorshipProgram', 'items.application']);

@@ -159,23 +159,42 @@ class ApplicantVerificationController extends Controller
             }
         }
 
-        // Pending and Verified applications (plus manually endorsed ones) can be
-        // bundled; only Rejected applications are excluded. Pending students are
-        // held back at the sponsor-submission gate, not at batch creation.
+        // Only Pending and Verified applications with no active batch link can be
+        // bundled. Approved, Rejected, or already-batched applications are guarded
+        // out here and surfaced to the user as a friendly validation error.
         $applications = Application::query()
             ->where('sponsorship_program_id', $programId)
             ->whereIn('id', $applicationIds)
-            ->whereNotIn('status', [ApplicationStatus::Rejected])
             ->with('studentProfile.user')
             ->get();
 
-        if ($applications->isEmpty()) {
+        if ($applications->count() !== count($applicationIds)) {
             return back()->withErrors([
-                'selected_applications' => 'Select at least one eligible application belonging to the target program. Rejected applications cannot be bundled into a batch.',
+                'selected_applications' => 'One or more of the selected applications no longer belongs to the target program. Please refresh the queue and reselect.',
+            ])->withInput();
+        }
+
+        $eligible = $applications->filter(
+            static fn (Application $application): bool => in_array(
+                $application->status,
+                [ApplicationStatus::Pending, ApplicationStatus::Verified],
+                true,
+            ) && $application->fixedListItems()->doesntExist(),
+        );
+
+        if ($eligible->count() !== $applications->count()) {
+            return back()->withErrors([
+                'selected_applications' => 'Some selected applications are already approved, rejected, or assigned to a batch and cannot be included. Please deselect them and try again.',
+            ])->withInput();
+        }
+
+        if ($eligible->isEmpty()) {
+            return back()->withErrors([
+                'selected_applications' => 'Select at least one eligible application belonging to the target program. Only pending or verified, unbatched applications can be bundled into a batch list.',
             ]);
         }
 
-        [$list, $added] = DB::transaction(function () use ($applications, $programId, $request, $validated, $targetList): array {
+        [$list, $added] = DB::transaction(function () use ($eligible, $programId, $request, $validated, $targetList): array {
             $list = $targetList;
 
             if ($list === null) {
@@ -190,7 +209,7 @@ class ApplicantVerificationController extends Controller
 
             $added = 0;
 
-            foreach ($applications as $application) {
+            foreach ($eligible as $application) {
                 $profile = $application->studentProfile;
 
                 if ($profile === null) {

@@ -193,6 +193,7 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
 
         Route::get('/generated-batches', [FixedListController::class, 'generatedIndex'])->name('generated-batches.index');
         Route::get('/generated-batches/{fixedList}', [FixedListController::class, 'showGenerated'])->name('generated-batches.show');
+        Route::delete('/generated-batches/{fixedList}', [FixedListController::class, 'destroyGenerated'])->name('generated-batches.destroy');
         Route::get('/batches', [BatchController::class, 'index'])->name('batches.index');
 
         Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');

@@ -203,6 +203,17 @@
                                 <i class="bi bi-send me-1"></i>Submit Batch
                             </button>
                         </form>
+
+                        <div class="border-top pt-3 mt-3">
+                            <p class="small text-secondary mb-2"><i
+                                    class="bi bi-arrow-counterclockwise me-1"></i>Deleting this batch unlinks its
+                                applicants and returns them to the Application Queue.</p>
+                            <button type="button"
+                                class="btn btn-outline-danger w-100 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-2"
+                                data-bs-toggle="modal" data-bs-target="#deleteBatchModal">
+                                <i class="bi bi-trash"></i>Delete Batch
+                            </button>
+                        </div>
                     </div>
                 </div>
             @elseif ($list->status === \App\Enums\FixedListStatus::Submitted)
@@ -227,6 +238,37 @@
                     </div>
                 </div>
             @endif
+        </div>
+    </div>
+
+    {{-- Delete Batch Confirmation Modal --}}
+    <div class="modal fade" id="deleteBatchModal" tabindex="-1" aria-labelledby="deleteBatchModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <form method="POST" action="{{ route('fassg.generated-batches.destroy', $list) }}">
+                @csrf
+                @method('DELETE')
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-danger" id="deleteBatchModalLabel">
+                            <i class="bi bi-trash3 me-1"></i>Delete Batch
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-2">Are you sure you want to delete this batch?</p>
+                        <p class="small text-secondary mb-0">All linked applications will be unbatched and returned to
+                            the queue. This action cannot be undone.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary fw-semibold"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger fw-semibold">
+                            <i class="bi bi-trash me-1"></i>Delete Batch
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 @endsection
