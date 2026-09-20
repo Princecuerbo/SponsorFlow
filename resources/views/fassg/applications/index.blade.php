@@ -29,6 +29,44 @@
             box-shadow: 0 4px 12px rgba(15, 41, 66, 0.15) !important;
         }
 
+        .btn-batch-nav,
+        a.btn-batch-nav,
+        button.btn-batch-nav {
+            background-color: #0F2537 !important;
+            border-color: #0F2537 !important;
+            color: #ffffff !important;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 1px 3px rgba(15, 37, 55, 0.15) !important;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-batch-nav:hover,
+        .btn-batch-nav:focus,
+        a.btn-batch-nav:hover,
+        a.btn-batch-nav:focus,
+        button.btn-batch-nav:hover,
+        button.btn-batch-nav:focus {
+            background-color: #0A1E31 !important;
+            border-color: #0A1E31 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(15, 37, 55, 0.15) !important;
+        }
+
+        .btn-batch-nav:disabled {
+            background-color: #f1f5f9 !important;
+            border-color: #e2e8f0 !important;
+            color: #94a3b8 !important;
+            box-shadow: none !important;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
         .filter-card {
             background: #f8f9fa;
             border: 1px solid #e9ecef;
@@ -275,9 +313,10 @@
                     </span>
                 @endif
             </div>
-            <button type="button" class="btn btn-primary fw-semibold" data-bs-toggle="modal"
-                data-bs-target="#createBatchModal">
-                <i class="bi bi-list-check me-1"></i>Create Batch List from Selected
+            <button type="button" id="createBatchBtn" class="btn btn-batch-nav"
+                data-bs-toggle="modal" data-bs-target="#createBatchModal" disabled>
+                <i class="bi bi-list-check text-white"></i>
+                <span id="createBatchBtnLabel">Create Batch List from Selected</span>
             </button>
         </div>
 
@@ -509,6 +548,18 @@
                     }
                     const checked = checkboxes.filter(chk => chk.checked);
                     selectAll.checked = checked.length > 0 && checked.length === checkboxes.length;
+
+                    const batchBtn = document.getElementById('createBatchBtn');
+                    const batchLabel = document.getElementById('createBatchBtnLabel');
+                    if (batchBtn) {
+                        const count = checked.length;
+                        batchBtn.disabled = count === 0;
+                        if (batchLabel) {
+                            batchLabel.textContent = count > 0
+                                ? 'Create Batch List (' + count + ' Selected)'
+                                : 'Create Batch List from Selected';
+                        }
+                    }
                 }
 
                 function syncSelected() {
