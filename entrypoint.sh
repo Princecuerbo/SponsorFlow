@@ -19,11 +19,13 @@ php artisan migrate --force
 echo "Seeding lookup data..."
 php artisan db:seed --force
 
-# Cache application state for production
-echo "Caching config, routes, and views for production..."
+# Cache application state for production.
+# view:cache is intentionally skipped: pre-compiling vendor Blade views (e.g.
+# Laravel's exception renderer) fails with "Unable to locate a class or view for
+# component", so views are compiled on demand at runtime instead (view:clear above).
+echo "Caching config and routes for production..."
 php artisan config:cache
 php artisan route:cache
-php artisan view:cache
 
 # Start Nginx and PHP-FPM
 service nginx start

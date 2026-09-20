@@ -28,13 +28,21 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Register anonymous component namespace for Laravel exception renderer views
-        $rendererPath = base_path('vendor/laravel/framework/src/Illuminate/Foundation/resources/exceptions/renderer');
-        if (is_dir($rendererPath)) {
-            Blade::anonymousComponentPath(
-                $rendererPath,
-                'laravel-exceptions-renderer',
-            );
+        // Register the Laravel exception renderer's anonymous components so debug
+        // error pages render in non-production environments. Skipped when debug
+        // mode is disabled so `view:cache` never pre-compiles fragile vendor
+        // exception-renderer views (e.g. laravel-exceptions-renderer::icons.sun)
+        // during production deployments.
+        if (app()->hasDebugModeEnabled()) {
+            $rendererPath = base_path('vendor/laravel/framework/src/Illuminate/Foundation/resources/exceptions/renderer');
+
+            if (is_dir($rendererPath.'/components')) {
+                $rendererPath .= '/components';
+            }
+
+            if (is_dir($rendererPath)) {
+                Blade::anonymousComponentPath($rendererPath, 'laravel-exceptions-renderer');
+            }
         }
 
         // Force HTTPS URL generation in production
