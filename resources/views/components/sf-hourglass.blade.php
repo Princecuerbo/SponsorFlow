@@ -1,24 +1,12 @@
-@props(['filled' => false])
+@props(['filled' => true])
 
 <svg
-    fill-rule="{{ $filled ? 'evenodd' : 'nonzero' }}"
     {{ $attributes->merge([
-        'viewBox' => '0 0 24 24',
-        'fill' => $filled ? 'currentColor' : 'none',
-        'stroke' => $filled ? 'none' : 'currentColor',
-        'stroke-width' => '2',
-        'stroke-linecap' => 'round',
-        'stroke-linejoin' => 'round',
+        'viewBox' => '0 0 16 16',
+        'fill' => 'currentColor',
         'aria-hidden' => 'true',
         'style' => 'width:24px;height:24px',
     ]) }}>
-    @if ($filled)
-        <path
-            d="M5 2h14v3.414L13.414 12 19 17.586V22H5v-4.414L10.586 12 5 5.414V2zm2 2v2.586L13 13l-6 6.414V20h10v-.586L11 13l6-6.414V4H7z" />
-    @else
-        <path d="M5 22h14" />
-        <path d="M5 2h14" />
-        <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" />
-        <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" />
-    @endif
+    <path
+        d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z" />
 </svg>
