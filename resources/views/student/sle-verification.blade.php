@@ -182,7 +182,7 @@
                     <div class="card-body p-4">
                         <div class="d-flex align-items-start gap-3 mb-4">
                             <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
-                                style="width: 44px; height: 44px; background-color: {{ $profile?->is_sle_fhe_verified ? '#ecfeff' : '#FFF8E7' }}; color: {{ $profile?->is_sle_fhe_verified ? '#0e7490' : '#0f172a' }}; {{ $profile?->is_sle_fhe_verified ? '' : 'border: 1px solid #FDE68A;' }}">
+                                style="width: 48px; height: 48px; background-color: {{ $profile?->is_sle_fhe_verified ? '#ecfeff' : '#FFF8E7' }}; color: {{ $profile?->is_sle_fhe_verified ? '#0e7490' : '#0f172a' }}; {{ $profile?->is_sle_fhe_verified ? '' : 'border: 1px solid #FDE68A;' }}">
                                 @if ($profile?->is_sle_fhe_verified)
                                     <i class="bi bi-patch-check fs-5"></i>
                                 @else
@@ -263,9 +263,9 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content border-0 shadow rounded-4">
                     <div class="modal-body p-4 text-center">
-                        <div class="mb-3 d-inline-flex align-items-center justify-content-center rounded-circle"
-                            style="width: 60px; height: 60px; background-color: #FFF8E7; color: #0f172a; border: 1px solid #FDE68A;">
-                            <x-sf-hourglass class="fs-2" />
+                        <div class="mb-3 d-inline-flex align-items-center justify-content-center rounded-3"
+                            style="width: 48px; height: 48px; background-color: #FFF8E7; color: #0f172a; border: 1px solid #FDE68A;">
+                            <x-sf-hourglass />
                         </div>
                         <h5 class="fw-bold text-dark mb-2" id="verificationPendingModalLabel">Verification Underway</h5>
                         <p class="text-secondary small mb-4">

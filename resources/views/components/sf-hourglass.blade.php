@@ -7,7 +7,7 @@
         'stroke-linecap' => 'round',
         'stroke-linejoin' => 'round',
         'aria-hidden' => 'true',
-        'style' => 'width:1.25em;height:1.25em',
+        'style' => 'width:24px;height:24px',
     ]) }}>
     <path d="M5 22h14" />
     <path d="M5 2h14" />

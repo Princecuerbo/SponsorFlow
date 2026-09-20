@@ -99,7 +99,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center gap-3">
                             <div class="rounded-3 d-flex align-items-center justify-content-center me-3"
-                                style="background-color: {{ $isVerified ? '#ecfeff' : '#FFF8E7' }}; color: {{ $isVerified ? '#0e7490' : '#0f172a' }}; {{ $isVerified ? '' : 'border: 1px solid #FDE68A;' }} width: 44px; height: 44px; flex-shrink: 0;">
+                                style="background-color: {{ $isVerified ? '#ecfeff' : '#FFF8E7' }}; color: {{ $isVerified ? '#0e7490' : '#0f172a' }}; {{ $isVerified ? '' : 'border: 1px solid #FDE68A;' }} width: 48px; height: 48px; flex-shrink: 0;">
                                 @if ($isVerified)
                                     <i class="bi bi-patch-check fs-5"></i>
                                 @else
@@ -131,8 +131,8 @@
             <div class="card border-0 rounded-3 mb-4"
                 style="background-color: #FFF8E7; border-left: 4px solid #fbbf24;">
                 <div class="d-flex align-items-start gap-3 p-4">
-                    <div class="d-flex align-items-center justify-content-center fs-4 lh-1"
-                        style="color: #0f172a; width: 44px; height: 44px; background-color: #FDE68A; border-radius: 10px; flex-shrink: 0;">
+                    <div class="d-flex align-items-center justify-content-center flex-shrink-0"
+                        style="color: #0f172a; width: 48px; height: 48px; background-color: #FFF8E7; border: 1px solid #FDE68A; border-radius: 1rem;">
                         <x-sf-hourglass class="fs-5" />
                     </div>
                     <div>
