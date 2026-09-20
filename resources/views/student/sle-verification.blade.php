@@ -37,12 +37,13 @@
 
         {{-- Main Banner Notification --}}
         @if ($profile?->is_sle_fhe_verified)
-            <div class="alert alert-success-subtle border-0 border-start border-4 border-success rounded-3 p-3 mb-4">
+            <div class="alert border-0 border-start border-4 rounded-3 p-3 mb-4"
+                style="background-color: #ECFEFF; border-left-color: #06b6d4;">
                 <div class="d-flex align-items-center gap-2 mb-1">
-                    <i class="bi bi-check-circle-fill fs-5 text-success"></i>
-                    <h6 class="fw-bold mb-0 text-success-emphasis">Verification Status: Verified</h6>
+                    <i class="bi bi-patch-check-fill fs-5" style="color: #0891b2;"></i>
+                    <h6 class="fw-bold mb-0" style="color: #164e63;">Verification Status: Verified</h6>
                 </div>
-                <p class="small text-secondary mb-0 ms-md-4">
+                <p class="small mb-0 ms-md-4" style="color: #475569;">
                     Your SLE-FHE status has been verified. You are eligible to apply for open sponsorship programs.
                 </p>
             </div>
