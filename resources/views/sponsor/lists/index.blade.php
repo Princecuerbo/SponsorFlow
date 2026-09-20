@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<h3 class="fw-bold mb-4">Sponsor Review & Document Upload Portal</h3>
+<span class="sf-eyebrow d-block mb-1">Sponsor Portal</span>
+<h2 class="h2 sf-heading mb-1 fw-bold">Sponsor Review & Document Upload Portal</h2>
 
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white py-3">

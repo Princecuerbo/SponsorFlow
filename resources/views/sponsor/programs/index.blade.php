@@ -6,8 +6,8 @@
 
 @section('content')
     <div class="mb-4">
-        <p class="text-uppercase small fw-semibold text-secondary mb-2">Sponsor programs</p>
-        <h1 class="h2 sf-heading mb-1 fw-bold">Connected Programs</h1>
+        <span class="sf-eyebrow d-block mb-1">Sponsor programs</span>
+        <h2 class="h2 sf-heading mb-1 fw-bold">Connected Programs</h2>
         <p class="text-secondary mb-0">Programs created for your organization and their current review activity.</p>
     </div>
 

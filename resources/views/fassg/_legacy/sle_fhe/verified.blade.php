@@ -1,0 +1,2 @@
+{{-- DEPRECATED: Legacy view under `fassg/sle_fhe/` (underscore). Canonical pages live at `fassg/sle-fhe/` and are rendered by FassgVerificationController. This shim is kept for archive only. --}}
+@include('fassg.sle-fhe.verified')

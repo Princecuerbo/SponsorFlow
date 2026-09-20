@@ -48,14 +48,16 @@
                                 <td><x-status-badge :status="'Confirmed'" /></td>
                                 <td>{{ $approval->updated_at?->format('M d, Y, h:i A') ?? '—' }}</td>
                                 <td class="text-end pe-4">
-                                    @if ($approval->approval_document_path)
-                                        <a href="{{ route('sponsor.approvals.download', $approval) }}" target="_blank"
-                                            rel="noopener" class="btn btn-sm btn-sf-navy">
-                                            <i class="bi bi-file-earmark-text me-1"></i>View File
-                                        </a>
-                                    @else
-                                        <span class="small text-secondary">Not available</span>
-                                    @endif
+                                    <div class="d-inline-flex flex-nowrap gap-2 align-items-center justify-content-end">
+                                        @if ($approval->approval_document_path)
+                                            <a href="{{ route('sponsor.approvals.download', $approval) }}"
+                                                target="_blank" rel="noopener" class="btn btn-sm btn-sf-navy">
+                                                <i class="bi bi-file-earmark-text me-1"></i>View File
+                                            </a>
+                                        @else
+                                            <span class="small text-secondary">Not available</span>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @empty
@@ -66,6 +68,13 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+            <div class="card-footer bg-white border-top px-4 py-3 d-flex flex-wrap align-items-center justify-content-between gap-2 no-print">
+                <span class="small text-secondary">
+                    <i class="bi bi-archive me-1"></i><strong>{{ $approvals->count() }}</strong>
+                    finalized record{{ $approvals->count() === 1 ? '' : 's' }}
+                </span>
+                <span class="small text-secondary">Download the signed approval document for each confirmed batch.</span>
             </div>
         </div>
     </section>

@@ -7,9 +7,8 @@
 @section('content')
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
-            <span class="fw-bold small text-uppercase" style="color: #0F2942; letter-spacing: 0.5px;">ACCOUNTING
-                WORKSPACE</span>
-            <h1 class="h2 sf-heading mb-1">Accounting Dashboard</h1>
+            <span class="sf-eyebrow d-block mb-1">ACCOUNTING OFFICE · DASHBOARD</span>
+            <h2 class="h2 sf-heading mb-1 fw-bold">Accounting Dashboard</h2>
             <p class="text-secondary mb-0">Read-only financial reference overview for sponsor-confirmed beneficiaries.</p>
         </div><a href="{{ route('accounting.beneficiaries.index') }}" class="btn btn-sf-navy"><i
                 class="bi bi-table me-1"></i>View Full Master List</a>
@@ -48,8 +47,8 @@
             <div class="sf-stat-card p-4">
                 <div class="sf-stat-icon mb-3" style="background-color: rgba(15, 41, 66, 0.08); color: #0F2942;"><i
                         class="bi bi-clock-history"></i></div>
-                <div class="h3 sf-heading mb-1">{{ number_format($recentApprovals->count()) }}</div>
-                <div class="small text-secondary">Recent approvals shown</div>
+                <div class="h3 sf-heading mb-1">{{ number_format($recentApprovalCount) }}</div>
+                <div class="small text-secondary">Approvals in the last 30 days</div>
             </div>
         </div>
     </div>
@@ -99,39 +98,13 @@
             </div>
         </div>
     </div>
-    <div class="card sf-card mt-4">
-        <div class="card-body p-4">
-            <h2 class="h5 sf-heading mb-3">Recent Beneficiary Approvals</h2>
-            <div class="table-responsive">
-                <table class="table sf-table mb-0">
-                    <thead class="table-light text-muted small text-uppercase">
-                        <tr>
-                            <th>Student</th>
-                            <th>Program</th>
-                            <th>Sponsor</th>
-                            <th>Date Approved</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($recentApprovals as $beneficiary)
-                            <tr>
-                                <td>
-                                    <div class="fw-semibold">{{ $beneficiary['student_name'] }}</div>
-                                    <div class="small text-secondary sf-mono">{{ $beneficiary['student_id'] }}</div>
-                                </td>
-                                <td>{{ $beneficiary['program_name'] }}</td>
-                                <td>{{ $beneficiary['sponsor_name'] }}</td>
-                                <td>{{ $beneficiary['date_approved']?->format('M d, Y, h:i A') ?? '—' }}</td>
-                        </tr>@empty<tr>
-                                <td colspan="4" class="text-center py-4">
-                                    <i class="bi bi-folder-x display-6 text-muted opacity-50 mb-2 d-block"></i>
-                                    <span class="text-muted">No beneficiary approvals yet.</span>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+    <div class="d-flex align-items-center justify-content-between gap-3 mt-4 mb-3">
+        <div>
+            <h2 class="h5 sf-heading mb-1">Beneficiary Master List</h2>
+            <p class="small text-secondary mb-0">Detailed per-beneficiary records live on the master list page.</p>
         </div>
+        <a href="{{ route('accounting.beneficiaries.index') }}" class="btn btn-sf-navy">
+            <i class="bi bi-table me-1"></i>View Full Master List
+        </a>
     </div>
 @endsection

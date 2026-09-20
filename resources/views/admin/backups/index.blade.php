@@ -12,7 +12,8 @@
 
     <div class="d-flex align-items-center justify-content-between mb-3">
         <div>
-            <h4 class="fw-bold mb-0">Database Snapshots</h4>
+            <span class="sf-eyebrow d-block mb-1">System Administrator</span>
+            <h2 class="h2 sf-heading mb-1 fw-bold">Database Snapshots</h2>
             <p class="text-muted small mb-0">Manage and restore system backup files.</p>
         </div>
         <form action="{{ route('admin.backups.store') }}" method="POST">

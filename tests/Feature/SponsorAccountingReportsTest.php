@@ -373,9 +373,10 @@ class SponsorAccountingReportsTest extends TestCase
         $this->actingAs($accounting)
             ->get(route('accounting.dashboard'))
             ->assertOk()
-            ->assertSee('Fixed List Scholar')
+            ->assertSee('Approved beneficiaries')
             ->assertSee('Sponsor Allocation Summary')
-            ->assertSee('2');
+            ->assertSee('2')
+            ->assertDontSee('Fixed List Scholar');
     }
 
     public function test_accounting_dashboard_is_separate_and_can_view_confirmation_file_inline(): void

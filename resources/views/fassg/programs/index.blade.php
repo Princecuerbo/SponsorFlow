@@ -16,6 +16,13 @@
 @endpush
 
 @section('content')
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+        <div>
+            <span class="sf-eyebrow d-block mb-1">FASSG Office · Programs</span>
+            <h2 class="h2 sf-heading mb-1 fw-bold">Sponsorship Programs</h2>
+            <p class="text-secondary mb-0">Manage open, closed, and expired sponsorship programs across the portal.</p>
+        </div>
+    </div>
 
     <div class="d-flex align-items-center justify-content-between mb-4 gap-3">
         <div class="d-flex align-items-center gap-2 p-1 bg-light rounded-3 border no-print" role="group">

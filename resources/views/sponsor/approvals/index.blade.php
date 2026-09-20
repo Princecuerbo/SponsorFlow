@@ -7,9 +7,6 @@
 @push('styles')
     <style>
 
-
-
-
         /* Custom Navy Styles for Bootstrap Nav Tabs */
         .nav-tabs-navy {
             border-bottom: 1px solid #e5e7eb;
@@ -42,8 +39,8 @@
 @section('content')
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
-            <p class="text-uppercase small fw-semibold text-secondary mb-2">Sponsor review</p>
-            <h1 class="h2 sf-heading mb-1 fw-bold">Review Queue</h1>
+            <span class="sf-eyebrow d-block mb-1">Sponsor review</span>
+            <h2 class="h2 sf-heading mb-1 fw-bold">Review Queue</h2>
             <p class="text-secondary mb-0">Review submitted beneficiary batches from the FASSG Application Queue and
                 external fixed lists.</p>
         </div>
@@ -142,10 +139,12 @@
                                         @endif
                                     </td>
                                     <td class="text-end pe-4">
-                                        <a href="{{ route('sponsor.lists.show', $list) }}"
-                                            class="btn btn-sm btn-sf-navy">
-                                            <i class="bi bi-check2-circle me-1"></i>Review &amp; Confirm
-                                        </a>
+                                        <div class="d-inline-flex flex-nowrap gap-2 align-items-center justify-content-end">
+                                            <a href="{{ route('sponsor.lists.show', $list) }}"
+                                                class="btn btn-sm btn-sf-navy">
+                                                <i class="bi bi-check2-circle me-1"></i>Review &amp; Confirm
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
@@ -156,6 +155,13 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+                <div class="card-footer bg-white border-top px-4 py-3 d-flex flex-wrap align-items-center justify-content-between gap-2 no-print">
+                    <span class="small text-secondary">
+                        <i class="bi bi-people me-1"></i><strong>{{ $generatedBatches->count() }}</strong>
+                        generated batch{{ $generatedBatches->count() === 1 ? '' : 'es' }} awaiting approval
+                    </span>
+                    <span class="small text-secondary">Upload the signed approval document to confirm each list.</span>
                 </div>
             </div>
         </div>
@@ -206,10 +212,12 @@
                                         @endif
                                     </td>
                                     <td class="text-end pe-4">
-                                        <a href="{{ route('sponsor.lists.show', $list) }}"
-                                            class="btn btn-sm btn-sf-navy">
-                                            <i class="bi bi-check2-circle me-1"></i>Review &amp; Confirm
-                                        </a>
+                                        <div class="d-inline-flex flex-nowrap gap-2 align-items-center justify-content-end">
+                                            <a href="{{ route('sponsor.lists.show', $list) }}"
+                                                class="btn btn-sm btn-sf-navy">
+                                                <i class="bi bi-check2-circle me-1"></i>Review &amp; Confirm
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
@@ -220,6 +228,13 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+                <div class="card-footer bg-white border-top px-4 py-3 d-flex flex-wrap align-items-center justify-content-between gap-2 no-print">
+                    <span class="small text-secondary">
+                        <i class="bi bi-file-earmark-text me-1"></i><strong>{{ $externalLists->count() }}</strong>
+                        external list{{ $externalLists->count() === 1 ? '' : 's' }} awaiting approval
+                    </span>
+                    <span class="small text-secondary">Review each external list before uploading the signed document.</span>
                 </div>
             </div>
         </div>

@@ -18,7 +18,8 @@
 @section('content')
     <div class="d-flex align-items-center justify-content-between mb-4 gap-3">
         <div>
-            <h1 class="h3 fw-bold mb-1">Sponsor-Provided Fixed Lists</h1>
+            <span class="sf-eyebrow d-block mb-1">FASSG Office</span>
+            <h2 class="h2 sf-heading mb-1 fw-bold">Sponsor-Provided Fixed Lists</h2>
             <p class="text-secondary small mb-0">Manage and process batch beneficiary lists forwarded by sponsors.</p>
         </div>
         <button type="button" class="btn btn-sf-navy fw-semibold d-inline-flex align-items-center gap-2 px-3"

@@ -7,8 +7,8 @@
 @section('content')
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
-            <p class="text-uppercase small fw-semibold text-secondary mb-2">Sponsor review</p>
-            <h1 class="h2 sf-heading mb-1 fw-bold">Forwarded Applicants &amp; Lists</h1>
+            <span class="sf-eyebrow d-block mb-1">Sponsor review</span>
+            <h2 class="h2 sf-heading mb-1 fw-bold">Forwarded Applicants &amp; Lists</h2>
             <p class="text-secondary mb-0">Review FASSG-verified applications and sponsor-provided beneficiary lists.</p>
         </div>
         <div class="d-flex gap-2">

@@ -28,8 +28,8 @@
     {{-- Page Header --}}
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
-            <p class="text-uppercase small fw-semibold text-secondary mb-2">FASSG Office · SLE-FHE Verification</p>
-            <h1 class="display-6 fw-bold mb-1">SLE-FHE Verification</h1>
+            <span class="sf-eyebrow d-block mb-1">FASSG Office · SLE-FHE Verification</span>
+            <h2 class="h2 sf-heading mb-1 fw-bold">SLE-FHE Verification</h2>
             <p class="text-secondary mb-0">Verify student profiles awaiting secondary board eligibility confirmation.</p>
         </div>
         <div class="d-flex flex-wrap gap-2">

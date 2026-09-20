@@ -78,8 +78,8 @@
     {{-- Page Header --}}
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
-            <p class="text-uppercase small fw-semibold text-secondary mb-2">FASSG Office · Applications</p>
-            <h1 class="display-6 fw-bold mb-1">Application Queue</h1>
+            <span class="sf-eyebrow d-block mb-1">FASSG Office · Applications</span>
+            <h2 class="h2 sf-heading mb-1 fw-bold">Application Queue</h2>
             <p class="text-secondary mb-0">Review submitted scholarship applications from SLE-FHE verified students.</p>
         </div>
         <div class="d-flex flex-wrap gap-2">
@@ -308,9 +308,15 @@
                 <table class="table sf-table mb-0">
                     <thead>
                         <tr>
-                            <th class="ps-3" style="width: 36px;">
-                                <input type="checkbox" class="form-check-input" id="selectAllApps"
-                                    aria-label="Select all applicants on this page">
+                            <th class="ps-3" style="width: 40px;">
+                                <div class="d-flex flex-column align-items-center gap-1">
+                                    <input type="checkbox" class="form-check-input" id="selectAllApps"
+                                        aria-label="Select all applicants on this page">
+                                    <span id="selectAllAppsBadge"
+                                        class="badge rounded-pill d-none align-items-center justify-content-center"
+                                        style="background-color: #0F2537; font-size: 0.62rem; min-width: 20px; padding: 0.15rem 0.4rem;"
+                                        title="Applicants selected">0</span>
+                                </div>
                             </th>
                             <th class="ps-4">Student ID</th>
                             <th>Student Name</th>
@@ -545,6 +551,7 @@
 
                     const batchBtn = document.getElementById('createBatchBtn');
                     const batchLabel = document.getElementById('createBatchBtnLabel');
+                    const selectAllBadge = document.getElementById('selectAllAppsBadge');
                     if (batchBtn) {
                         const count = checked.length;
                         batchBtn.disabled = count === 0;
@@ -553,6 +560,12 @@
                                 ? 'Create Batch List (' + count + ' Selected)'
                                 : 'Create Batch List from Selected';
                         }
+                    }
+                    if (selectAllBadge) {
+                        const count = checked.length;
+                        selectAllBadge.textContent = count;
+                        selectAllBadge.classList.toggle('d-none', count === 0);
+                        selectAllBadge.classList.toggle('d-inline-flex', count > 0);
                     }
                 }
 

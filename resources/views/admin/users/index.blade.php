@@ -50,6 +50,14 @@
 @endpush
 
 @section('content')
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+        <div>
+            <span class="sf-eyebrow d-block mb-1">System Administrator · Accounts</span>
+            <h2 class="h2 sf-heading mb-1 fw-bold">User Account Management</h2>
+            <p class="text-secondary mb-0">Manage user accounts, roles, and access across the portal.</p>
+        </div>
+    </div>
+
     <div class="card sf-card mb-4">
         <div class="card-body p-3">
             <form method="GET" action="{{ route('admin.users.index') }}" class="row g-2">

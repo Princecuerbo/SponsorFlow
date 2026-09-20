@@ -34,7 +34,8 @@
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 gap-3">
         <div>
-            <h3 class="fw-bold mb-0">Sponsorship Reports</h3>
+            <span class="sf-eyebrow d-block mb-1">FASSG Office</span>
+            <h2 class="h2 sf-heading mb-1 fw-bold">Sponsorship Reports</h2>
             <p class="text-muted small mb-0">Institutional analytics and slot utilization breakdown.</p>
         </div>
         <div class="d-flex align-items-center gap-2 no-print">

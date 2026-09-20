@@ -16,8 +16,9 @@
 
 @section('content')
     <div class="mb-4">
-        <h1 class="h2 sf-heading mb-1">Welcome back,
-            {{ auth()->user()->sponsor?->company_organization_name ?? auth()->user()->name }}!</h1>
+        <span class="sf-eyebrow d-block mb-1">Sponsor Portal</span>
+        <h2 class="h2 sf-heading mb-1 fw-bold">Welcome back,
+            {{ auth()->user()->sponsor?->company_organization_name ?? auth()->user()->name }}!</h2>
         <p class="text-secondary mb-0">Authorized Sponsor Portal · Davao Oriental State University</p>
     </div>
 

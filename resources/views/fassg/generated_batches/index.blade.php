@@ -9,7 +9,8 @@
 
 @section('content')
     <div class="mb-4">
-        <h1 class="h3 fw-bold mb-1">Generated Batches</h1>
+        <span class="sf-eyebrow d-block mb-1">FASSG Office</span>
+        <h2 class="h2 sf-heading mb-1 fw-bold">Generated Batches</h2>
         <p class="text-secondary small mb-0">Batch beneficiary lists generated directly from the ranked Application Queue.</p>
     </div>
 

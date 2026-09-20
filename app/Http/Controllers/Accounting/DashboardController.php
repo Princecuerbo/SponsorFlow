@@ -92,10 +92,9 @@ class DashboardController extends Controller
             ])
             ->values();
 
-        $recentApprovals = $allBeneficiaries
-            ->sortByDesc('date_approved')
-            ->take(5)
-            ->values();
+        $recentApprovalCount = $allBeneficiaries
+            ->filter(fn ($beneficiary): bool => ($beneficiary['date_approved'] ?? null) >= now()->subDays(30))
+            ->count();
 
         return view('accounting.dashboard', [
             'user' => $this->actor($request),
@@ -103,7 +102,7 @@ class DashboardController extends Controller
             'activeSponsors' => $activeSponsors,
             'sponsorAllocation' => $sponsorAllocation,
             'programBreakdown' => $programBreakdown,
-            'recentApprovals' => $recentApprovals,
+            'recentApprovalCount' => $recentApprovalCount,
         ]);
     }
 }

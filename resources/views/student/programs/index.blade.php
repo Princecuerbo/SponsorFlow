@@ -16,7 +16,8 @@
         $isVerified = (bool) ($profile?->is_sle_fhe_verified ?? false);
     @endphp
 
-    <h4 class="fw-bold text-dark mb-1">Sponsorship Opportunities</h4>
+    <span class="sf-eyebrow d-block mb-1">Student Portal</span>
+    <h2 class="h2 sf-heading mb-1 fw-bold">Sponsorship Opportunities</h2>
     <p class="text-muted small mb-3">Browse and apply for available university sponsorship programs.</p>
 
     @if ($isVerified)

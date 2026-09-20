@@ -44,10 +44,10 @@
 @section('content')
     <div class="d-flex align-items-center justify-content-between mb-4 accounting-reference gap-3">
         <div>
-            <span class="text-uppercase fw-bold text-muted extra-small tracking-wider d-block mb-1">
+            <span class="sf-eyebrow d-block mb-1">
                 Tuition Adjustment Reference
             </span>
-            <h3 class="fw-bold mb-0">Approved Beneficiaries</h3>
+            <h2 class="h2 sf-heading mb-1 fw-bold">Approved Beneficiaries</h2>
             <p class="text-muted small mb-0">Read-only sponsor-confirmed and approved SLE-FHE beneficiary records.</p>
         </div>
         <div class="d-flex align-items-center gap-2 no-print">

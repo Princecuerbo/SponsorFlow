@@ -7,7 +7,8 @@
     <div class="container-fluid px-4 py-4">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
             <div>
-                <h4 class="fw-bold text-dark mb-1">Audit Logs</h4>
+                <span class="sf-eyebrow d-block mb-1">System Administrator</span>
+                <h2 class="h2 sf-heading mb-1 fw-bold">Audit Logs</h2>
                 <p class="text-muted small mb-0">Track and review system activities, user authentications, and record
                     modifications.</p>
             </div>
