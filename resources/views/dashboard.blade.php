@@ -113,9 +113,9 @@
                                     <span class="badge rounded-pill fw-semibold bg-cyan-50 text-cyan-700 border border-cyan-200"
                                         style="font-size: 0.72rem; padding: 0.375rem 0.75rem;">Verified</span>
                                 @else
-                                    <span class="badge rounded-pill d-inline-flex align-items-center gap-1 fw-semibold bg-cream border border-cream-gold text-slate-900"
-                                        style="font-size: 0.72rem; padding: 0.375rem 0.75rem;">
-                                        <x-sf-hourglass style="width: 0.9em; height: 0.9em;" />
+                                    <span class="badge rounded-pill d-inline-flex align-items-center gap-1 fw-semibold bg-cream border text-slate-900"
+                                        style="font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.75rem; border-color: #FCD34D;">
+                                        <x-sf-hourglass filled style="color: #B45309; width: 0.85em; height: 0.85em;" />
                                         Pending Review
                                     </span>
                                 @endif

@@ -196,9 +196,9 @@
                                     <p class="text-secondary small mb-0">Your profile is active and verified for the current
                                         academic term.</p>
                                 @else
-                                    <span class="badge rounded-pill d-inline-flex align-items-center gap-1 fw-semibold bg-cream border border-cream-gold text-slate-900"
-                                        style="font-size: 0.72rem; padding: 0.375rem 0.75rem; margin-bottom: 0.5rem;">
-                                        <x-sf-hourglass style="width: 0.85em; height: 0.85em;" />
+                                    <span class="badge rounded-pill d-inline-flex align-items-center gap-1 fw-semibold bg-cream border text-slate-900"
+                                        style="font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.75rem; border-color: #FCD34D; margin-bottom: 0.5rem;">
+                                        <x-sf-hourglass filled style="color: #B45309; width: 0.85em; height: 0.85em;" />
                                         Pending Review
                                     </span>
                                 @endif
