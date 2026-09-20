@@ -325,6 +325,11 @@
         .text-indigo-700 { color: #4338ca !important; }
         .border-indigo-200 { border-color: #c7d2fe !important; }
 
+        /* ---- Cream / Gold "Pending Review" palette ---- */
+        .bg-cream          { background-color: #FFF8E7 !important; }
+        .border-cream-gold { border-color: #FDE68A !important; }
+        .text-slate-900    { color: #0f172a !important; }
+
         /* Password toggle eye feedback colors */
         .text-indigo-600 { color: #4f46e5 !important; }
         .text-gray-400   { color: #94a3b8 !important; }

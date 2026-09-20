@@ -99,19 +99,25 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center gap-3">
                             <div class="rounded-3 d-flex align-items-center justify-content-center me-3"
-                                style="background-color: {{ $isVerified ? '#ecfeff' : '#fffbeb' }}; color: {{ $isVerified ? '#0e7490' : '#d97706' }}; width: 44px; height: 44px; flex-shrink: 0;">
-                                <i class="bi bi-shield-check fs-5"></i>
+                                style="background-color: {{ $isVerified ? '#ecfeff' : '#FFF8E7' }}; color: {{ $isVerified ? '#0e7490' : '#0f172a' }}; {{ $isVerified ? '' : 'border: 1px solid #FDE68A;' }} width: 44px; height: 44px; flex-shrink: 0;">
+                                @if ($isVerified)
+                                    <i class="bi bi-patch-check fs-5"></i>
+                                @else
+                                    <x-sf-hourglass class="fs-5" />
+                                @endif
                             </div>
                             <div>
                                 <div class="text-secondary fw-semibold text-uppercase extra-small mb-1"
                                     style="font-size: 0.72rem; letter-spacing: 0.05em;">SLE-FHE Verification</div>
                                 @if ($isVerified)
-                                    <span class="badge rounded-pill fw-semibold px-2.5 py-1 bg-cyan-50 text-cyan-700 border border-cyan-200"
-                                        style="font-size: 0.72rem;">Verified</span>
+                                    <span class="badge rounded-pill fw-semibold bg-cyan-50 text-cyan-700 border border-cyan-200"
+                                        style="font-size: 0.72rem; padding: 0.375rem 0.75rem;">Verified</span>
                                 @else
-                                    <span class="badge rounded-pill fw-semibold px-2.5 py-1"
-                                        style="background-color: #fef3c7; color: #b45309; font-size: 0.72rem;">Pending
-                                        Review</span>
+                                    <span class="badge rounded-pill d-inline-flex align-items-center gap-1 fw-semibold bg-cream border border-cream-gold text-slate-900"
+                                        style="font-size: 0.72rem; padding: 0.375rem 0.75rem;">
+                                        <x-sf-hourglass style="width: 0.9em; height: 0.9em;" />
+                                        Pending Review
+                                    </span>
                                 @endif
                             </div>
                         </div>
@@ -122,18 +128,19 @@
 
         {{-- Verification Action Banner --}}
         @if ($studentProfile && !$isVerified)
-            <div class="card border-0 rounded-3 mb-4 p-3.5"
-                style="background-color: #fef9c3; border-left: 4px solid #eab308 !important;">
-                <div class="d-flex align-items-start gap-3">
-                    <div class="fs-4 lh-1 mt-0.5" style="color: #ca8a04;">
-                        <i class="bi bi-exclamation-triangle-fill"></i>
+            <div class="card border-0 rounded-3 mb-4"
+                style="background-color: #FFF8E7; border-left: 4px solid #fbbf24;">
+                <div class="d-flex align-items-start gap-3 p-4">
+                    <div class="d-flex align-items-center justify-content-center fs-4 lh-1"
+                        style="color: #0f172a; width: 44px; height: 44px; background-color: #FDE68A; border-radius: 10px; flex-shrink: 0;">
+                        <x-sf-hourglass class="fs-5" />
                     </div>
                     <div>
-                        <h6 class="fw-bold mb-1" style="color: #713f12; font-size: 0.925rem;">Complete your SLE-FHE verification setup.</h6>
-                        <p class="mb-2.5 small" style="color: #854d0e; font-size: 0.85rem;">Update your verification details before applying for sponsorship programs.</p>
+                        <h6 class="fw-bold mb-1 text-slate-900" style="font-size: 0.925rem;">Complete your SLE-FHE verification setup.</h6>
+                        <p class="mb-2.5 small" style="color: #475569; font-size: 0.85rem;">Your request is pending review. Update your verification details before applying for sponsorship programs.</p>
                         <a href="{{ route('student.verification.show') }}"
                             class="btn btn-sm fw-semibold shadow-sm px-3 py-1.5"
-                            style="background-color: #eab308; color: #422006; border: none; border-radius: 6px; font-size: 0.8rem;">
+                            style="background-color: #0f172a; color: #fff; border: none; border-radius: 6px; font-size: 0.8rem;">
                             Go to SLE-FHE Verification
                         </a>
                     </div>

@@ -47,12 +47,13 @@
                 </p>
             </div>
         @else
-            <div class="alert alert-primary-subtle border-0 border-start border-4 border-primary rounded-3 p-3 mb-4">
+            <div class="alert border-0 border-start border-4 rounded-3 p-4 mb-4"
+                style="background-color: #FFF8E7; border-left-color: #fbbf24;">
                 <div class="d-flex align-items-center gap-2 mb-1">
-                    <i class="bi bi-clock-history fs-5 text-primary"></i>
-                    <h6 class="fw-bold mb-0 text-primary-emphasis">Verification Status: Pending Review</h6>
+                    <span class="d-inline-flex text-slate-900"><x-sf-hourglass class="fs-5" /></span>
+                    <h6 class="fw-bold mb-0 text-slate-900">Verification Status: Pending Review</h6>
                 </div>
-                <p class="small text-secondary mb-0 ms-md-4">
+                <p class="small mb-0 ms-md-4" style="color: #475569;">
                     Your records are being evaluated by FASSG. Your Student ID is being cross-checked against the
                     institutional masterlist.
                 </p>
@@ -181,9 +182,12 @@
                     <div class="card-body p-4">
                         <div class="d-flex align-items-start gap-3 mb-4">
                             <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
-                                style="width: 44px; height: 44px; background-color: {{ $profile?->is_sle_fhe_verified ? '#ecfeff' : '#fef3c7' }}; color: {{ $profile?->is_sle_fhe_verified ? '#0e7490' : '#d97706' }};">
-                                <i
-                                    class="bi {{ $profile?->is_sle_fhe_verified ? 'bi-check-circle-fill' : 'bi-hourglass-split' }} fs-5"></i>
+                                style="width: 44px; height: 44px; background-color: {{ $profile?->is_sle_fhe_verified ? '#ecfeff' : '#FFF8E7' }}; color: {{ $profile?->is_sle_fhe_verified ? '#0e7490' : '#0f172a' }}; {{ $profile?->is_sle_fhe_verified ? '' : 'border: 1px solid #FDE68A;' }}">
+                                @if ($profile?->is_sle_fhe_verified)
+                                    <i class="bi bi-patch-check fs-5"></i>
+                                @else
+                                    <x-sf-hourglass class="fs-5" />
+                                @endif
                             </div>
                             <div>
                                 <h6 class="fw-bold text-dark mb-1">Masterlist Verification</h6>
@@ -192,9 +196,11 @@
                                     <p class="text-secondary small mb-0">Your profile is active and verified for the current
                                         academic term.</p>
                                 @else
-                                    <span class="badge rounded-pill fw-semibold px-2.5 py-1"
-                                        style="background-color: #fef3c7; color: #b45309; font-size: 0.72rem;">Pending
-                                        Review</span>
+                                    <span class="badge rounded-pill d-inline-flex align-items-center gap-1 fw-semibold bg-cream border border-cream-gold text-slate-900"
+                                        style="font-size: 0.72rem; padding: 0.375rem 0.75rem; margin-bottom: 0.5rem;">
+                                        <x-sf-hourglass style="width: 0.85em; height: 0.85em;" />
+                                        Pending Review
+                                    </span>
                                 @endif
                             </div>
                         </div>
@@ -257,9 +263,9 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content border-0 shadow rounded-4">
                     <div class="modal-body p-4 text-center">
-                        <div class="mb-3 d-inline-flex align-items-center justify-content-center bg-warning-subtle text-warning rounded-circle"
-                            style="width: 60px; height: 60px;">
-                            <i class="bi bi-hourglass-split fs-2"></i>
+                        <div class="mb-3 d-inline-flex align-items-center justify-content-center rounded-circle"
+                            style="width: 60px; height: 60px; background-color: #FFF8E7; color: #0f172a; border: 1px solid #FDE68A;">
+                            <x-sf-hourglass class="fs-2" />
                         </div>
                         <h5 class="fw-bold text-dark mb-2" id="verificationPendingModalLabel">Verification Underway</h5>
                         <p class="text-secondary small mb-4">
