@@ -409,6 +409,24 @@
 
     <main class="sf-content">
         @include('partials._flash')
+        @hasSection('page-title')
+            <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+                <div>
+                    @hasSection('eyebrow')
+                        <span class="sf-eyebrow d-block mb-1">@yield('eyebrow')</span>
+                    @endif
+                    <h2 class="h2 sf-heading mb-1 fw-bold">@yield('page-title')</h2>
+                    @hasSection('subtitle')
+                        <p class="text-secondary mb-0">@yield('subtitle')</p>
+                    @endif
+                </div>
+                @hasSection('header-actions')
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        @yield('header-actions')
+                    </div>
+                @endif
+            </div>
+        @endif
         @yield('content')
     </main>
 

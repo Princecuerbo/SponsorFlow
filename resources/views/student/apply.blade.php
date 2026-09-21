@@ -1,22 +1,23 @@
 @extends('layouts.app')
 
 @section('title', 'Apply | ' . $program->program_name)
+@section('eyebrow', 'Student Portal · Application Form')
+@section('page-title', $program->program_name)
+@section('subtitle', $program->sponsor->company_organization_name . ' · ' . $program->category->value)
+
+@section('header-actions')
+    <a class="text-success text-decoration-none small" href="{{ route('student.programs.index') }}"><i
+            class="bi bi-arrow-left me-1"></i>Back to programs</a>
+@endsection
 
 @section('content')
-    <div class="mb-4"><a class="text-success text-decoration-none small" href="{{ route('student.programs.index') }}"><i
-                class="bi bi-arrow-left me-1"></i>Back to programs</a>
-        <p class="text-uppercase small fw-semibold text-success mt-4 mb-2">Application form</p>
-        <h1 class="display-6 fw-bold mb-1">{{ $program->program_name }}</h1>
-        <p class="text-secondary mb-0">{{ $program->sponsor->company_organization_name }} · {{ $program->category->value }}
-        </p>
-    </div>
     <div class="row g-4">
         <div class="col-xl-8">
             <form class="card border-0 shadow-sm rounded-4" method="POST" action="{{ route('student.applications.store') }}"
                 enctype="multipart/form-data">
                 <div class="card-body p-4 p-lg-5">@csrf<input type="hidden" name="sponsorship_program_id"
                         value="{{ $program->id }}">
-                    <h2 class="h5 fw-bold mb-3">Academic and financial profile</h2>
+                    <h3 class="h6 sf-heading mb-3">Academic and financial profile</h3>
                     <div class="row g-3">
                         <div class="col-md-6"><label class="form-label" for="gpa_submitted">Current GWA</label><input
                                 class="form-control" id="gpa_submitted" name="gpa_submitted" type="number" step="0.01"
@@ -35,7 +36,7 @@
                         </div>
                     </div>
                     <hr class="my-4">
-                    <h2 class="h5 fw-bold mb-3">Required documents</h2>
+                    <h3 class="h6 sf-heading mb-3">Required documents</h3>
                     <div class="row g-3">
                         <div class="col-md-4"><label class="form-label" for="certificate_of_grades">Certificate of
                                 Grades</label><input class="form-control" id="certificate_of_grades"
@@ -53,7 +54,7 @@
         </div>
         <div class="col-xl-4">
             <div class="bg-white border rounded-4 p-4">
-                <h2 class="h5 fw-bold">Before you submit</h2>
+                <h3 class="h6 sf-heading mb-3">Before you submit</h3>
                 <ul class="text-secondary ps-3 mb-0">
                     <li class="mb-2">Review your GWA and address carefully.</li>
                     <li class="mb-2">Upload clear, readable files.</li>

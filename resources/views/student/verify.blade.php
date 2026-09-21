@@ -36,7 +36,7 @@
         <div class="col-lg-7">
             <div class="card sf-card">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Profile on record</h2>
+                    <h3 class="h6 sf-heading mb-3">Profile on record</h3>
 
                     <dl class="row mb-0">
                         <dt class="col-sm-4 text-secondary fw-normal small py-2">Student ID Number</dt>
@@ -78,7 +78,7 @@
         <div class="col-lg-5">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3"><i class="bi bi-info-circle text-secondary me-1"></i> How verification works</h2>
+                    <h3 class="h6 sf-heading mb-3"><i class="bi bi-info-circle text-secondary me-1"></i> How verification works</h3>
                     <ol class="small text-secondary ps-3 mb-0" style="line-height:1.9;">
                         <li>FASSG receives the official SLE-FHE fixed list from the sponsor or the school's beneficiary registry.</li>
                         <li>Your student ID number is cross-checked against that list (hybrid verification).</li>

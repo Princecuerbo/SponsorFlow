@@ -1,18 +1,14 @@
 @extends('layouts.app')
 
 @section('title', 'Sponsor Approvals')
-@section('eyebrow', 'Sponsor Portal')
-@section('page-title', 'Review Beneficiary Lists')
+@section('eyebrow', 'Sponsor Portal · Document Upload')
+@section('page-title', 'Sponsor Review & Document Upload Portal')
+@section('subtitle', 'Upload signed endorsement files to confirm beneficiary lists.')
 
 @section('content')
-    <div class="mb-4">
-        <h1 class="h3 fw-bold mb-1">Sponsor Review &amp; Document Upload Portal</h1>
-        <p class="text-secondary mb-0">Upload signed endorsement files to confirm beneficiary lists.</p>
-    </div>
-
     <div class="card border-0 shadow-sm">
         <div class="card-header bg-white py-3 border-bottom">
-            <h2 class="h5 mb-0 fw-bold">Forwarded Applicant Lists for Approval</h2>
+            <h3 class="h6 sf-heading mb-0">Forwarded Applicant Lists for Approval</h3>
         </div>
         <div class="card-body p-4">
             <div class="table-responsive">

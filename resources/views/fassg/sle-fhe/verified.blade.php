@@ -1,8 +1,18 @@
 @extends('layouts.app')
 
 @section('title', 'Verified SLE-FHE Students')
-@section('eyebrow', 'FASSG Office')
+@section('eyebrow', 'FASSG Office · SLE-FHE Verification')
 @section('page-title', 'Verified SLE-FHE Students')
+@section('subtitle', 'Masterlist of student profiles confirmed for secondary board eligibility.')
+
+@section('header-actions')
+    <a href="{{ route('fassg.sle-fhe.verified') }}" class="stat-pill bg-success bg-opacity-10 text-success border border-success-subtle text-decoration-none">
+        <i class="bi bi-patch-check"></i> {{ $verifiedCount ?? 0 }} Verified SLE-FHE
+    </a>
+    <a href="{{ route('fassg.sle-fhe.index') }}" class="stat-pill bg-warning bg-opacity-10 text-dark border border-warning-subtle text-decoration-none">
+        <i class="bi bi-hourglass-split"></i> {{ $pendingSleFheCount ?? 0 }} Pending SLE-FHE Verification
+    </a>
+@endsection
 
 @push('styles')
     <style>
@@ -25,23 +35,6 @@
 @endpush
 
 @section('content')
-    {{-- Page Header --}}
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
-        <div>
-            <p class="text-uppercase small fw-semibold text-secondary mb-2">FASSG Office · SLE-FHE Verification</p>
-            <h1 class="display-6 fw-bold mb-1">Verified SLE-FHE Students</h1>
-            <p class="text-secondary mb-0">Masterlist of student profiles confirmed for secondary board eligibility.</p>
-        </div>
-        <div class="d-flex flex-wrap gap-2">
-            <a href="{{ route('fassg.sle-fhe.verified') }}" class="stat-pill bg-success bg-opacity-10 text-success border border-success-subtle text-decoration-none">
-                <i class="bi bi-patch-check"></i> {{ $verifiedCount ?? 0 }} Verified SLE-FHE
-            </a>
-            <a href="{{ route('fassg.sle-fhe.index') }}" class="stat-pill bg-warning bg-opacity-10 text-dark border border-warning-subtle text-decoration-none">
-                <i class="bi bi-hourglass-split"></i> {{ $pendingSleFheCount ?? 0 }} Pending SLE-FHE Verification
-            </a>
-        </div>
-    </div>
-
     {{-- Flash Messages --}}
     @if (session('status'))
         <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">

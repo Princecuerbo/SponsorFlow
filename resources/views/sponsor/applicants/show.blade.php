@@ -1,27 +1,25 @@
 @extends('layouts.app')
 
 @section('title', 'Review Applicant')
-@section('eyebrow', 'Sponsor Portal')
-@section('page-title', 'Review Applicant')
+@section('eyebrow', 'Sponsor Portal · Applicant Review')
+@section('page-title', $application->studentProfile->user->name)
+@section('subtitle', $application->sponsorshipProgram->program_name)
 
-@section('content')
-    <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
-        <div>
-            <a href="{{ route('sponsor.applicants.index') }}" class="btn btn-sm btn-outline-secondary mb-3">
-                <i class="bi bi-arrow-left me-1"></i>Back to Applicants
-            </a>
-            <p class="text-uppercase small fw-semibold text-secondary mb-2">Sponsor review</p>
-            <h1 class="h2 sf-heading mb-1 fw-bold">{{ $application->studentProfile->user->name }}</h1>
-            <p class="text-secondary mb-0">{{ $application->sponsorshipProgram->program_name }}</p>
-        </div>
+@section('header-actions')
+    <div class="d-flex align-items-center gap-2">
+        <a href="{{ route('sponsor.applicants.index') }}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Back to Applicants
+        </a>
         <x-status-badge :status="$application->status" />
     </div>
+@endsection
 
+@section('content')
     <div class="row g-4">
         <div class="col-lg-7">
             <div class="card sf-card border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <h2 class="h5 sf-heading mb-4 fw-bold">Applicant Profile</h2>
+                    <h3 class="h6 sf-heading mb-3 fw-bold">Applicant Profile</h3>
                     <dl class="row mb-0">
                         <dt class="col-sm-4 text-secondary fw-normal py-2">Student ID</dt>
                         <dd class="col-sm-8 sf-mono py-2 mb-0 fw-semibold">
@@ -43,7 +41,7 @@
         <div class="col-lg-5">
             <div class="card sf-card border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <h2 class="h5 sf-heading mb-2 fw-bold">Sponsor Confirmation</h2>
+                    <h3 class="h6 sf-heading mb-3 fw-bold">Sponsor Confirmation</h3>
                     <p class="small text-secondary mb-4">Upload the signed endorsement to confirm this FASSG-verified
                         application.</p>
 

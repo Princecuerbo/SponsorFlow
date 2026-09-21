@@ -58,7 +58,7 @@
             <div class="card sf-card mb-4">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="h6 sf-heading mb-0">Application Progress</h2>
+                        <h3 class="h6 sf-heading mb-0">Application Progress</h3>
                         <x-status-badge :status="$status" />
                     </div>
 
@@ -103,7 +103,7 @@
             {{-- Submitted Details --}}
             <div class="card sf-card mb-4">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Submitted Details</h2>
+                    <h3 class="h6 sf-heading mb-3">Submitted Details</h3>
                     <dl class="row mb-0">
                         <dt class="col-sm-4 small text-secondary fw-normal py-2">GPA Submitted</dt>
                         <dd class="col-sm-8 py-2 mb-0">
@@ -129,7 +129,7 @@
             {{-- Uploaded Documents --}}
             <div class="card sf-card mb-4 overflow-hidden">
                 <div class="card-header bg-white border-bottom py-3 px-3 px-sm-4">
-                    <h3 class="h6 mb-0 fw-bold text-dark">Uploaded Documents</h3>
+                    <h3 class="h6 sf-heading mb-3">Uploaded Documents</h3>
                 </div>
                 <div class="card-body p-3 p-sm-4">
                     <div class="d-flex flex-column gap-3">
@@ -214,7 +214,7 @@
 
                 <div class="card sf-card mb-4 border-warning border-2">
                     <div class="card-header bg-white border-bottom py-3 px-3 px-sm-4">
-                        <h3 class="h6 mb-0 fw-bold text-dark">
+                        <h3 class="h6 sf-heading mb-0">
                             <i class="bi bi-arrow-counterclockwise text-warning me-2"></i>Re-upload Corrected Documents
                         </h3>
                     </div>
@@ -268,7 +268,7 @@
         <div class="col-lg-4">
             <div class="card sf-card">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Program</h2>
+                    <h3 class="h6 sf-heading mb-3">Program</h3>
                     <div class="fw-semibold">{{ $application->sponsorshipProgram->program_name ?? 'Sponsorship Program' }}
                     </div>
                     <div class="small text-secondary mb-3">

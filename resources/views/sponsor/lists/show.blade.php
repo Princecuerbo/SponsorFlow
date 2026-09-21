@@ -18,7 +18,7 @@
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
-                            <h2 class="h6 sf-heading mb-1 fw-bold">{{ $list->sponsorshipProgram->program_name }}</h2>
+                            <h3 class="h6 sf-heading mb-3 fw-bold">{{ $list->sponsorshipProgram->program_name }}</h3>
                             <div class="small text-secondary">{{ $eligibleItems->count() }} {{ Str::plural('name', $eligibleItems->count()) }} in this batch
                                 @if ($excludedCount > 0)
                                     <span class="text-danger ms-1">({{ $excludedCount }} rejected excluded)</span>
@@ -66,7 +66,7 @@
             {{-- Upload approval document --}}
             <div class="card sf-card mb-4 border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3 fw-bold">Signed Approval Document</h2>
+                    <h3 class="h6 sf-heading mb-3 fw-bold">Signed Approval Document</h3>
 
                     @if ($list->latestApproval?->approval_document_path)
                         <div class="d-flex align-items-center gap-2 mb-3 p-3 border rounded-3 bg-light">
@@ -96,7 +96,7 @@
             {{-- Confirm list --}}
             <div class="card sf-card border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-2 fw-bold">Confirm Beneficiary List</h2>
+                    <h3 class="h6 sf-heading mb-3 fw-bold">Confirm Beneficiary List</h3>
                     <p class="small text-secondary">Confirming finalizes this batch as approved beneficiaries. Accounting
                         will be able to view them for tuition adjustment.</p>
 

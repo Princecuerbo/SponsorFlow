@@ -34,7 +34,7 @@
         <div class="col-lg-7">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Recent system access</h2>
+                    <h3 class="h6 sf-heading mb-3">Recent system access</h3>
                     <div class="list-group list-group-flush">
                         @forelse($recentLogs as $log)
                             <div class="list-group-item px-0">
@@ -54,7 +54,7 @@
         <div class="col-lg-5">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Active role access summary</h2>
+                    <h3 class="h6 sf-heading mb-3">Active role access summary</h3>
                     @foreach (\App\Enums\UserRole::cases() as $role)
                         <div class="d-flex justify-content-between border-bottom py-2">
                             <span>{{ $role->label() }}</span>

@@ -1,23 +1,17 @@
 @extends('layouts.app')
 
 @section('title', 'Forwarded Applicants')
-@section('eyebrow', 'Sponsor Portal')
+@section('eyebrow', 'Sponsor Portal · Forwarded Applicants')
 @section('page-title', 'Forwarded Applicants & Lists')
+@section('subtitle', 'Review FASSG-verified applications and sponsor-provided beneficiary lists.')
+
+@section('header-actions')
+    <span class="badge px-3 py-2 text-white" style="background-color: #0F2942;">{{ $applicants->count() }}
+        applications</span>
+    <span class="badge text-bg-light border text-dark px-3 py-2">{{ $fixedLists->count() }} fixed lists</span>
+@endsection
 
 @section('content')
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
-        <div>
-            <span class="sf-eyebrow d-block mb-1">Sponsor review</span>
-            <h2 class="h2 sf-heading mb-1 fw-bold">Forwarded Applicants &amp; Lists</h2>
-            <p class="text-secondary mb-0">Review FASSG-verified applications and sponsor-provided beneficiary lists.</p>
-        </div>
-        <div class="d-flex gap-2">
-            <span class="badge px-3 py-2 text-white" style="background-color: #0F2942;">{{ $applicants->count() }}
-                applications</span>
-            <span class="badge text-bg-light border text-dark px-3 py-2">{{ $fixedLists->count() }} fixed lists</span>
-        </div>
-    </div>
-
     <div class="card sf-card mb-4 border-0 shadow-sm">
         <div class="card-body p-3">
             <form method="GET" action="{{ route('sponsor.applicants.index') }}" class="row g-2">
@@ -54,7 +48,7 @@
     <section class="mb-5">
         <div class="d-flex align-items-center justify-content-between mb-3">
             <div>
-                <h2 class="h5 sf-heading mb-1 fw-bold">Forwarded Applications</h2>
+                <h3 class="h6 sf-heading mb-3 fw-bold">Forwarded Applications</h3>
                 <p class="small text-secondary mb-0">Individual students verified by FASSG and awaiting sponsor
                     confirmation.</p>
             </div>
@@ -125,7 +119,7 @@
     <section>
         <div class="d-flex align-items-center justify-content-between mb-3">
             <div>
-                <h2 class="h5 sf-heading mb-1 fw-bold">Submitted Beneficiary Batches</h2>
+                <h3 class="h6 sf-heading mb-3 fw-bold">Submitted Beneficiary Batches</h3>
                 <p class="small text-secondary mb-0">Batch lists forwarded by FASSG for sponsor confirmation.</p>
             </div>
             <i class="bi bi-people fs-3" style="color: #0F2942;"></i>

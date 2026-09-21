@@ -2,19 +2,10 @@
 @section('title', 'Audit Logs')
 @section('eyebrow', 'System Administrator')
 @section('page-title', 'Security Audit Logs')
+@section('subtitle', 'Track and review system activities, user authentications, and record modifications.')
 
 @section('content')
-    <div class="container-fluid px-4 py-4">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
-            <div>
-                <span class="sf-eyebrow d-block mb-1">System Administrator</span>
-                <h2 class="h2 sf-heading mb-1 fw-bold">Audit Logs</h2>
-                <p class="text-muted small mb-0">Track and review system activities, user authentications, and record
-                    modifications.</p>
-            </div>
-        </div>
-
-        <div class="card sf-card border-0 shadow-sm rounded-3 overflow-hidden mb-4">
+    <div class="card sf-card border-0 shadow-sm rounded-3 overflow-hidden mb-4">
             <div class="card-header bg-white border-bottom p-3">
                 <form id="auditLogFilterForm" method="GET" action="{{ route('admin.audit-logs.index') }}"
                     class="row g-2 align-items-center">

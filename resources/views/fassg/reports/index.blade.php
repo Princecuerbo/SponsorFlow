@@ -3,6 +3,23 @@
 @section('title', 'Reports')
 @section('eyebrow', 'FASSG Office')
 @section('page-title', 'Sponsorship Reports')
+@section('subtitle', 'Institutional analytics and slot utilization breakdown.')
+
+@section('header-actions')
+    <button type="button" onclick="window.print()"
+        class="btn btn-outline-secondary fw-semibold d-inline-flex align-items-center gap-2">
+        <i class="bi bi-printer"></i> Print Report
+    </button>
+    <a href="{{ route('fassg.reports.export-pdf', request()->query()) }}"
+        class="btn fw-semibold d-inline-flex align-items-center gap-2 text-white"
+        style="background-color: #0F2942; border-color: #0F2942;">
+        <i class="bi bi-file-earmark-pdf"></i> Export PDF
+    </a>
+    <a href="{{ route('fassg.reports.export-csv', request()->query()) }}"
+        class="btn btn-outline-success fw-semibold d-inline-flex align-items-center gap-2">
+        <i class="bi bi-file-earmark-spreadsheet"></i> Export Excel / CSV
+    </a>
+@endsection
 
 @push('styles')
     <style>
@@ -30,30 +47,6 @@
 @endpush
 
 @section('content')
-
-    {{-- Page Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4 gap-3">
-        <div>
-            <span class="sf-eyebrow d-block mb-1">FASSG Office</span>
-            <h2 class="h2 sf-heading mb-1 fw-bold">Sponsorship Reports</h2>
-            <p class="text-muted small mb-0">Institutional analytics and slot utilization breakdown.</p>
-        </div>
-        <div class="d-flex align-items-center gap-2 no-print">
-            <button type="button" onclick="window.print()"
-                class="btn btn-outline-secondary fw-semibold d-inline-flex align-items-center gap-2">
-                <i class="bi bi-printer"></i> Print Report
-            </button>
-            <a href="{{ route('fassg.reports.export-pdf', request()->query()) }}"
-                class="btn fw-semibold d-inline-flex align-items-center gap-2 text-white"
-                style="background-color: #0F2942; border-color: #0F2942;">
-                <i class="bi bi-file-earmark-pdf"></i> Export PDF
-            </a>
-            <a href="{{ route('fassg.reports.export-csv', request()->query()) }}"
-                class="btn btn-outline-success fw-semibold d-inline-flex align-items-center gap-2">
-                <i class="bi bi-file-earmark-spreadsheet"></i> Export Excel / CSV
-            </a>
-        </div>
-    </div>
 
     {{-- Analytical Filter Bar --}}
     @php
@@ -174,7 +167,7 @@
             <div class="card sf-card">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h2 class="h6 sf-heading mb-0">Monthly Applicant Trends</h2>
+                        <h3 class="h6 sf-heading mb-0">Monthly Applicant Trends</h3>
                         <span class="small text-secondary">Applications vs. approvals per month</span>
                     </div>
                     @if ($trendsAvailable)
@@ -197,7 +190,7 @@
         <div class="col-lg-4">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Residency Distribution</h2>
+                    <h3 class="h6 sf-heading mb-3">Residency Distribution</h3>
                     @if (! empty($chartRuralUrban['data'] ?? []) && array_sum($chartRuralUrban['data']) > 0)
                         <div style="position: relative; height: 280px;">
                             <canvas id="ruralUrbanChart"></canvas>
@@ -215,7 +208,7 @@
         <div class="col-lg-4">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Gender Distribution</h2>
+                    <h3 class="h6 sf-heading mb-3">Gender Distribution</h3>
                     @if (! empty($chartGender['data'] ?? []) && array_sum($chartGender['data']) > 0)
                         <div style="position: relative; height: 280px;">
                             <canvas id="genderChart"></canvas>
@@ -233,7 +226,7 @@
         <div class="col-lg-4">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Applicants by Campus</h2>
+                    <h3 class="h6 sf-heading mb-3">Applicants by Campus</h3>
                     @if (! empty($chartCampus['data'] ?? []) && array_sum($chartCampus['data']) > 0)
                         <div style="position: relative; height: 280px;">
                             <canvas id="campusChart"></canvas>
@@ -253,7 +246,7 @@
         <div class="col-lg-7">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Applicants by Academic Program</h2>
+                    <h3 class="h6 sf-heading mb-3">Applicants by Academic Program</h3>
                     @if (! empty($chartCourse['data'] ?? []) && array_sum($chartCourse['data']) > 0)
                         <div style="position: relative; height: 300px;">
                             <canvas id="courseChart"></canvas>
@@ -271,7 +264,7 @@
         <div class="col-lg-5">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Category Breakdown</h2>
+                    <h3 class="h6 sf-heading mb-3">Category Breakdown</h3>
                     <table class="table sf-table mb-0">
                         <thead>
                             <tr>
@@ -304,7 +297,7 @@
         <div class="col-12">
             <div class="card sf-card">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Slot Utilization by Program</h2>
+                    <h3 class="h6 sf-heading mb-3">Slot Utilization by Program</h3>
                     <div class="table-responsive">
                         <table class="table sf-table mb-0 align-middle">
                             <thead>

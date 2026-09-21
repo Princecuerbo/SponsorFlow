@@ -1,8 +1,21 @@
 @extends('layouts.app')
 
 @section('title', 'Beneficiary Batch Reference')
-@section('eyebrow', 'Accounting Office')
-@section('page-title', 'Beneficiary Batch Reference')
+@section('eyebrow', 'Accounting Office · Tuition Adjustment Reference')
+@section('page-title', $fixedList->batch_name)
+@section('subtitle', $fixedList->sponsorshipProgram?->program_name ?? 'Unspecified Program' . ' · ' . $fixedList->total_names . ' ' . Str::plural('beneficiary', $fixedList->total_names) . ' · Confirmed ' . ($approval?->created_at?->format('M d, Y, h:i A') ?? '—'))
+
+@section('header-actions')
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+        <a href="{{ route('accounting.beneficiaries.index') }}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Back to Master List
+        </a>
+        <x-status-badge :status="$fixedList->status" />
+        <span class="badge bg-primary-subtle text-primary-emphasis fw-semibold">
+            Sponsor Confirmed
+        </span>
+    </div>
+@endsection
 
 @push('styles')
     <style>
@@ -33,29 +46,7 @@
 @endpush
 
 @section('content')
-    <div class="container-fluid px-4 py-4">
-        <div class="mb-4 no-print">
-            <a href="{{ route('accounting.beneficiaries.index') }}" class="btn btn-sm btn-outline-secondary mb-3">
-                <i class="bi bi-arrow-left me-1"></i>Back to Master List
-            </a>
-            <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
-                <span class="text-uppercase fw-bold text-muted extra-small d-block">
-                    Tuition Adjustment Reference
-                </span>
-                <x-status-badge :status="$fixedList->status" />
-                <span class="badge bg-primary-subtle text-primary-emphasis fw-semibold">
-                    Sponsor Confirmed
-                </span>
-            </div>
-            <h1 class="h2 fw-bold text-dark mb-1">{{ $fixedList->batch_name }}</h1>
-            <p class="text-muted small mb-0">
-                {{ $fixedList->sponsorshipProgram?->program_name ?? 'Unspecified Program' }} ·
-                {{ $fixedList->total_names }} {!! \Illuminate\Support\Str::plural('beneficiary', $fixedList->total_names) !!} ·
-                Confirmed {{ $approval?->created_at?->format('M d, Y, h:i A') ?? '—' }}
-            </p>
-        </div>
-
-        <div class="alert border-0 border-start border-4 rounded-3 p-3 mb-4 no-print d-flex align-items-center gap-2"
+    <div class="alert border-0 border-start border-4 rounded-3 p-3 mb-4 no-print d-flex align-items-center gap-2"
             style="background-color: rgba(15, 37, 55, 0.05); color: var(--sf-navy); border-color: var(--sf-navy) !important;">
             <i class="bi bi-lock-fill fs-5"></i>
             <span class="small fw-semibold">Accounting access is strictly read-only. Approval, editing, and deletion are
@@ -66,7 +57,7 @@
             <div class="col-lg-7">
                 <div class="card sf-card border-0 shadow-sm rounded-3">
                     <div class="card-body p-4">
-                        <h2 class="h5 fw-bold text-dark mb-4">Approved Batch Details</h2>
+                        <h3 class="h6 sf-heading mb-3">Approved Batch Details</h3>
                         <dl class="row mb-0">
                             <dt class="col-sm-4 text-secondary fw-normal py-2">Batch Name</dt>
                             <dd class="col-sm-8 fw-semibold text-dark py-2 mb-0">{{ $fixedList->batch_name }}</dd>
@@ -105,7 +96,7 @@
             <div class="col-lg-5">
                 <div class="card sf-card border-0 shadow-sm rounded-3 h-100">
                     <div class="card-body p-4">
-                        <h2 class="h5 fw-bold text-dark mb-4">Signed Approval Document</h2>
+                        <h3 class="h6 sf-heading mb-3">Signed Approval Document</h3>
                         @if ($approval?->approval_document_path)
                             <a href="{{ route('accounting.fixed-lists.document', $fixedList) }}" target="_blank"
                                 rel="noopener" class="btn btn-sf-navy w-100 fw-semibold">
@@ -134,7 +125,7 @@
         <div class="card sf-card border-0 shadow-sm rounded-3 mt-4">
             <div class="card-header bg-white border-bottom p-3 d-flex align-items-center justify-content-between">
                 <div>
-                    <h2 class="h5 fw-bold text-dark mb-0">Beneficiary Roster</h2>
+                    <h3 class="h6 sf-heading mb-3">Beneficiary Roster</h3>
                     <div class="small text-secondary">{{ $fixedList->items->count() }} record(s) in this batch</div>
                 </div>
                 <button type="button" onclick="window.print()" class="btn btn-outline-secondary btn-sm fw-semibold no-print">

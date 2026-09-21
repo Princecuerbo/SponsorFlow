@@ -1,18 +1,16 @@
 @extends('layouts.app')
 
 @section('title', 'Accounting Dashboard')
-@section('eyebrow', 'Accounting Office')
-@section('page-title', 'Dashboard')
+@section('eyebrow', 'Accounting Office · Dashboard')
+@section('page-title', 'Accounting Dashboard')
+@section('subtitle', 'Read-only financial reference overview for sponsor-confirmed beneficiaries.')
+
+@section('header-actions')
+    <a href="{{ route('accounting.beneficiaries.index') }}" class="btn btn-sf-navy"><i class="bi bi-table me-1"></i>View Full
+        Master List</a>
+@endsection
 
 @section('content')
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
-        <div>
-            <span class="sf-eyebrow d-block mb-1">ACCOUNTING OFFICE · DASHBOARD</span>
-            <h2 class="h2 sf-heading mb-1 fw-bold">Accounting Dashboard</h2>
-            <p class="text-secondary mb-0">Read-only financial reference overview for sponsor-confirmed beneficiaries.</p>
-        </div><a href="{{ route('accounting.beneficiaries.index') }}" class="btn btn-sf-navy"><i
-                class="bi bi-table me-1"></i>View Full Master List</a>
-    </div>
     <div class="alert border-0 border-start border-4 border-primary rounded-3 p-3 mb-4"
         style="background-color: rgba(15, 41, 66, 0.05); color: #0F2942; border-color: #0F2942 !important;">
         <i class="bi bi-lock-fill me-2"></i> Accounting personnel can view and export references only. No approval, editing,
@@ -56,7 +54,7 @@
         <div class="col-lg-7">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
-                    <h2 class="h5 sf-heading mb-3">Sponsor Allocation Summary</h2>
+                    <h3 class="h6 sf-heading mb-3">Sponsor Allocation Summary</h3>
                     <div class="table-responsive">
                         <table class="table sf-table mb-0">
                             <thead class="table-light text-muted small text-uppercase">
@@ -88,7 +86,7 @@
         <div class="col-lg-5">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
-                    <h2 class="h5 sf-heading mb-3">Program Category Breakdown</h2>
+                    <h3 class="h6 sf-heading mb-3">Program Category Breakdown</h3>
                     @forelse ($programBreakdown as $breakdown)
                         <div class="d-flex justify-content-between py-2 border-bottom">
                             <span>{{ $breakdown['category'] }}</span><strong>{{ $breakdown['beneficiaries'] }}</strong>
@@ -100,7 +98,7 @@
     </div>
     <div class="d-flex align-items-center justify-content-between gap-3 mt-4 mb-3">
         <div>
-            <h2 class="h5 sf-heading mb-1">Beneficiary Master List</h2>
+            <h3 class="h6 sf-heading mb-3">Beneficiary Master List</h3>
             <p class="small text-secondary mb-0">Detailed per-beneficiary records live on the master list page.</p>
         </div>
         <a href="{{ route('accounting.beneficiaries.index') }}" class="btn btn-sf-navy">

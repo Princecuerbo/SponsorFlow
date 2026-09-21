@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('title', 'SLE-FHE Verification')
+@section('eyebrow', 'Student Portal · SLE-FHE Verification')
+@section('page-title', 'SLE-FHE Student Verification')
+@section('subtitle', 'Submit and manage your verification records for Davao Oriental State University sponsorship eligibility.')
 
 @section('content')
     @php
@@ -9,15 +12,6 @@
     @endphp
 
     <div class="container-fluid px-3 px-md-4 py-4 mb-5" style="background-color: #f8fafc; min-height: calc(100vh - 70px);">
-
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
-            <div>
-                <h3 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.6rem;">SLE-FHE Student Verification</h3>
-                <p class="text-secondary small mb-0" style="font-size: 0.875rem;">
-                    Submit and manage your verification records for Davao Oriental State University sponsorship eligibility.
-                </p>
-            </div>
-        </div>
 
         @if (session('status'))
             <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4" role="alert"
@@ -41,7 +35,7 @@
                 style="background-color: #ECFEFF; border-left-color: #06b6d4;">
                 <div class="d-flex align-items-center gap-2 mb-1">
                     <i class="bi bi-patch-check-fill fs-5" style="color: #0891b2;"></i>
-                    <h6 class="fw-bold mb-0" style="color: #164e63;">Verification Status: Verified</h6>
+                    <h3 class="h6 sf-heading mb-0">Verification Status: Verified</h3>
                 </div>
                 <p class="small mb-0 ms-md-4" style="color: #475569;">
                     Your SLE-FHE status has been verified. You are eligible to apply for open sponsorship programs.
@@ -52,7 +46,7 @@
                 style="background-color: #FFF8E7; border-left-color: #fbbf24;">
                 <div class="d-flex align-items-center gap-2 mb-1">
                     <span class="d-inline-flex text-slate-900"><x-sf-hourglass class="fs-5" /></span>
-                    <h6 class="fw-bold mb-0 text-slate-900">Verification Status: Pending Review</h6>
+                    <h3 class="h6 sf-heading mb-0 text-slate-900">Verification Status: Pending Review</h3>
                 </div>
                 <p class="small mb-0 ms-md-4" style="color: #475569;">
                     Your records are being evaluated by FASSG. Your Student ID is being cross-checked against the
@@ -67,9 +61,9 @@
             <div class="col-12 col-lg-5">
                 <div class="card h-100 shadow-sm border-0 rounded-3 bg-white">
                     <div class="card-header bg-white border-bottom-0 pt-3 pb-0">
-                        <h6 class="fw-bold mb-0 text-slate-800 d-flex align-items-center gap-2">
+                        <h3 class="h6 sf-heading mb-0 text-slate-800 d-flex align-items-center gap-2">
                             <i class="fa-solid fa-id-card text-primary"></i> Student Profile Details
-                        </h6>
+                        </h3>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-3 mb-3">
@@ -176,9 +170,9 @@
             <div class="col-12 col-lg-7">
                 <div class="card h-100 shadow-sm border-0 rounded-3 bg-white">
                     <div class="card-header bg-white border-bottom pt-3 px-4 pb-3">
-                        <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-size: 0.95rem;">
+                        <h3 class="h6 sf-heading mb-0 d-flex align-items-center gap-2">
                             <i class="bi bi-shield-check text-primary"></i> Institutional Eligibility Status
-                        </h6>
+                        </h3>
                     </div>
                     <div class="card-body p-4">
                         <div class="d-flex align-items-start gap-3 mb-4">
@@ -191,7 +185,7 @@
                                 @endif
                             </div>
                             <div>
-                                <h6 class="fw-bold text-dark mb-1">Masterlist Verification</h6>
+                                <h3 class="h6 sf-heading mb-3">Masterlist Verification</h3>
                                 @if ($profile?->is_sle_fhe_verified)
                                     <x-status-badge :status="'Verified'" class="mb-2" />
                                     <p class="text-secondary small mb-0">Your profile is active and verified for the current
@@ -221,7 +215,7 @@
                         @endif
 
                         <div class="mt-4 pt-3 border-top">
-                            <h6 class="fw-bold text-dark mb-3" style="font-size: 0.9rem;">Verification Guidelines</h6>
+                            <h3 class="h6 sf-heading mb-3">Verification Guidelines</h3>
                             <div class="d-flex flex-column gap-3">
                                 <div class="d-flex align-items-start gap-2">
                                     <i class="bi bi-check-circle-fill text-primary mt-1"></i>

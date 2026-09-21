@@ -1,23 +1,21 @@
 @extends('layouts.app')
 
 @section('title', 'Beneficiary Reference')
-@section('eyebrow', 'Accounting Office')
-@section('page-title', 'Beneficiary Reference')
+@section('eyebrow', 'Accounting Office · Beneficiary Reference')
+@section('page-title', $application->studentProfile->user->name)
+@section('subtitle', $application->sponsorshipProgram->program_name . ' · ' . $application->status->value)
+
+@section('header-actions')
+    <a href="{{ route('accounting.beneficiaries.index') }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Back to Master List</a>
+@endsection
 
 @section('content')
-    <div class="mb-4">
-        <a href="{{ route('accounting.beneficiaries.index') }}" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left me-1"></i>Back to Master List</a>
-        <p class="text-uppercase small fw-semibold text-warning mb-2">Read-only billing reference</p>
-        <h1 class="h2 sf-heading mb-1">{{ $application->studentProfile->user->name }}</h1>
-        <p class="text-secondary mb-0">{{ $application->sponsorshipProgram->program_name }} · {{ $application->status->value }}</p>
-    </div>
-
     <div class="sf-readonly-banner d-flex align-items-center gap-3 mb-4"><i class="bi bi-lock fs-5"></i><span class="small fw-semibold">This record is read-only. Accounting cannot modify beneficiary or sponsorship data.</span></div>
 
     <div class="row g-4">
         <div class="col-lg-7">
             <div class="card sf-card"><div class="card-body p-4">
-                <h2 class="h5 sf-heading mb-4">Beneficiary Details</h2>
+                <h3 class="h6 sf-heading mb-3">Beneficiary Details</h3>
                 <dl class="row mb-0">
                     <dt class="col-sm-4 text-secondary fw-normal py-2">Student ID</dt><dd class="col-sm-8 sf-mono py-2 mb-0">{{ $application->studentProfile->student_id_number }}</dd>
                     <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Academic Program &amp; Year</dt><dd class="col-sm-8 py-2 mb-0 border-top">{{ $application->studentProfile->display_course }} · Year {{ $application->studentProfile->year_level }}</dd>
@@ -30,7 +28,7 @@
         </div>
         <div class="col-lg-5">
             <div class="card sf-card"><div class="card-body p-4">
-                <h2 class="h5 sf-heading mb-4">Billing Reference</h2>
+                <h3 class="h6 sf-heading mb-3">Billing Reference</h3>
                 <dl class="row mb-0">
                     <dt class="col-6 text-secondary fw-normal py-2">Grant Amount</dt><dd class="col-6 text-end py-2 mb-0">Not recorded</dd>
                     <dt class="col-6 text-secondary fw-normal py-2 border-top">Coverage Term</dt><dd class="col-6 text-end py-2 mb-0 border-top">Not recorded</dd>

@@ -2,27 +2,23 @@
 @section('title', 'Database Backups')
 @section('eyebrow', 'System Administrator')
 @section('page-title', 'Database Backup Snapshots')
+@section('subtitle', 'Manage and restore system backup files.')
+
+@section('header-actions')
+    <form action="{{ route('admin.backups.store') }}" method="POST" class="m-0">
+        @csrf
+        <button type="submit" class="btn fw-semibold d-inline-flex align-items-center gap-2"
+            style="background-color: #0f294a; color: #fff; border: none; border-radius: 8px;">
+            <i class="bi bi-database-add"></i>Create New Backup
+        </button>
+    </form>
+@endsection
 
 @section('content')
     <div class="alert border-0 border-start border-4 border-primary rounded-3 p-3 mb-4"
         style="background-color: rgba(15, 41, 66, 0.05); color: #0F2942;">
         <i class="bi bi-exclamation-triangle me-2"></i>Restoring a snapshot replaces current database data. Confirm the file
         and maintenance procedure before restoring.
-    </div>
-
-    <div class="d-flex align-items-center justify-content-between mb-3">
-        <div>
-            <span class="sf-eyebrow d-block mb-1">System Administrator</span>
-            <h2 class="h2 sf-heading mb-1 fw-bold">Database Snapshots</h2>
-            <p class="text-muted small mb-0">Manage and restore system backup files.</p>
-        </div>
-        <form action="{{ route('admin.backups.store') }}" method="POST">
-            @csrf
-            <button type="submit" class="btn fw-semibold d-inline-flex align-items-center gap-2"
-                style="background-color: #0f294a; color: #fff; border: none; border-radius: 8px;">
-                <i class="bi bi-database-add"></i>Create New Backup
-            </button>
-        </form>
     </div>
 
     <div class="card border-0 shadow-sm rounded-3">
@@ -63,7 +59,7 @@
                         <tr>
                             <td colspan="5" class="text-center py-5">
                                 <i class="bi bi-database-fill-gear display-5 text-muted mb-3 d-block"></i>
-                                <h6 class="fw-bold text-dark mb-1">No Backup Snapshots Found</h6>
+                                <h3 class="h6 sf-heading mb-3">No Backup Snapshots Found</h3>
                                 <p class="text-muted small mb-0">Create a new backup to safeguard system data.</p>
                             </td>
                         </tr>

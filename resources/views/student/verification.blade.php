@@ -1,17 +1,15 @@
 @extends('layouts.app')
 
 @section('title', 'Student verification')
+@section('eyebrow', 'Student Portal · Profile')
+@section('page-title', 'Verify your identity')
+@section('subtitle', 'Keep your student details current before submitting an application.')
+
+@section('header-actions')
+    <x-status-badge :status="$profile?->is_sle_fhe_verified ? 'Verified' : 'Pending'" />
+@endsection
 
 @section('content')
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
-        <div>
-            <p class="text-uppercase small fw-semibold text-success mb-2">Student profile</p>
-            <h1 class="display-6 fw-bold mb-1">Verify your identity</h1>
-            <p class="text-secondary mb-0">Keep your student details current before submitting an application.</p>
-        </div>
-        <x-status-badge :status="$profile?->is_sle_fhe_verified ? 'Verified' : 'Pending'" />
-    </div>
-
     <div class="row g-4">
         <div class="col-xl-8">
             <div class="card border-0 shadow-sm rounded-4">
@@ -31,6 +29,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-4"><div class="bg-white border rounded-4 p-4 h-100"><i class="bi bi-info-circle text-success fs-3"></i><h2 class="h5 mt-3">Why we verify</h2><p class="text-secondary mb-0">Your student ID and SLE-FHE status help FASSG match your application against approved beneficiary records.</p></div></div>
+        <div class="col-xl-4"><div class="bg-white border rounded-4 p-4 h-100"><i class="bi bi-info-circle text-success fs-3"></i><h3 class="h6 sf-heading mb-3">Why we verify</h3><p class="text-secondary mb-0">Your student ID and SLE-FHE status help FASSG match your application against approved beneficiary records.</p></div></div>
     </div>
 @endsection

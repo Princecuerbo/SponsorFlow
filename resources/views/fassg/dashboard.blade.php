@@ -52,7 +52,7 @@
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h2 class="h6 sf-heading mb-0">Application Progress This Term</h2>
+                        <h3 class="h6 sf-heading mb-0">Application Progress This Term</h3>
                         <span class="small text-secondary">By status</span>
                     </div>
 
@@ -89,7 +89,7 @@
         <div class="col-lg-5">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
-                    <h2 class="h6 sf-heading mb-3">Pending SLE-FHE Verifications</h2>
+                    <h3 class="h6 sf-heading mb-3">Pending SLE-FHE Verifications</h3>
                     <div class="d-flex align-items-center gap-3 border-bottom pb-3 mb-3">
                         <div class="sf-stat-icon bg-warning-subtle text-warning">
                             <i class="bi bi-hourglass-split"></i>

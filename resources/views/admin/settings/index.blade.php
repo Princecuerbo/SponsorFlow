@@ -1,17 +1,10 @@
 @extends('layouts.app')
 @section('title', 'System Settings')
-@section('eyebrow', 'System Administrator')
+@section('eyebrow', 'System Administrator · Settings')
 @section('page-title', 'Security Settings')
+@section('subtitle', 'Configure maintenance mode and portal security options.')
 
 @section('content')
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
-        <div>
-            <span class="sf-eyebrow d-block mb-1">System Administrator · Settings</span>
-            <h2 class="h2 sf-heading mb-1 fw-bold">Security Settings</h2>
-            <p class="text-secondary mb-0">Configure maintenance mode and portal security options.</p>
-        </div>
-    </div>
-
     <div class="card sf-card">
         <div class="card-body p-4">
             <form method="POST" action="{{ route('admin.settings.update') }}">

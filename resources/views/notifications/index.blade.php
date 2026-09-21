@@ -1,37 +1,31 @@
 @extends('layouts.app')
 
 @section('title', 'Notifications')
+@section('eyebrow', 'Notifications')
+@section('page-title')
+    Notifications
+    @if ($user->unreadNotifications->count() > 0)
+        <span class="badge bg-danger rounded-pill px-2 py-1 small fw-semibold align-middle ms-2">
+            {{ $user->unreadNotifications->count() }} new
+        </span>
+    @endif
+@endsection
+@section('subtitle', 'Stay updated on your application status, verifications, and announcements.')
+
+@section('header-actions')
+    @if ($user->unreadNotifications->count() > 0)
+        <form method="POST" action="{{ route('notifications.readAll') }}" class="m-0">
+            @csrf
+            <button type="submit" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-2 rounded-3 px-3 py-1 fw-semibold shadow-sm">
+                <i class="bi bi-check2-all fs-6"></i>
+                <span>Mark all as read</span>
+            </button>
+        </form>
+    @endif
+@endsection
 
 @section('content')
 <div style="max-width: 900px; margin: 0 auto;">
-
-    {{-- Header Section --}}
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
-        <div>
-            <div class="d-flex align-items-center gap-2 mb-1">
-                <h1 class="h4 fw-bold mb-0 text-dark">Notifications</h1>
-                @if ($user->unreadNotifications->count() > 0)
-                    <span class="badge bg-danger rounded-pill px-2 py-1 small fw-semibold">
-                        {{ $user->unreadNotifications->count() }} new
-                    </span>
-                @endif
-            </div>
-            <p class="text-secondary small mb-0">Stay updated on your application status, verifications, and announcements.</p>
-        </div>
-
-        {{-- Mark All as Read Button --}}
-        @if ($user->unreadNotifications->count() > 0)
-            <div>
-                <form method="POST" action="{{ route('notifications.readAll') }}" class="m-0">
-                    @csrf
-                    <button type="submit" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-2 rounded-3 px-3 py-1 fw-semibold shadow-sm">
-                        <i class="bi bi-check2-all fs-6"></i>
-                        <span>Mark all as read</span>
-                    </button>
-                </form>
-            </div>
-        @endif
-    </div>
 
     @php
         $items = $notifications ?? $user->notifications;
@@ -44,7 +38,7 @@
                 style="width: 64px; height: 64px;">
                 <i class="bi bi-bell-slash fs-2 text-muted"></i>
             </div>
-            <h5 class="fw-bold text-dark mb-1">No notifications yet</h5>
+            <h3 class="h6 sf-heading mb-3">No notifications yet</h3>
             <p class="text-secondary small mb-0" style="max-width: 420px; margin: 0 auto;">
                 You don't have any notifications right now. When there are updates regarding your applications, programs, or account, they will appear here.
             </p>

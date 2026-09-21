@@ -24,7 +24,7 @@
                 @csrf
                 <div class="card-body p-4">
 
-                    <h2 class="h6 sf-heading mb-1">Program Details</h2>
+                    <h3 class="h6 sf-heading mb-3">Program Details</h3>
                     <p class="small text-secondary mb-4">These fields define the criteria used for filtering-only decision
                         support — GPA, course, and address checks. Final decisions remain manual.</p>
 
@@ -135,7 +135,7 @@
 
                     <hr class="my-4">
 
-                    <h2 class="h6 sf-heading mb-1">Eligibility Filtering Criteria</h2>
+                    <h3 class="h6 sf-heading mb-3">Eligibility Filtering Criteria</h3>
                     <p class="small text-secondary mb-3">Used only to filter and shortlist applicants — not to auto-decide.
                         FASSG and the sponsor make the final call.</p>
 

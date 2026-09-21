@@ -139,13 +139,13 @@
 @endphp
 
 {{-- Page Header --}}
-<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
     <div>
         <a href="{{ route($config['backRoute']) }}" class="btn btn-sm btn-outline-secondary mb-3">
             <i class="bi bi-arrow-left me-1"></i> {{ $config['backLabel'] }}
         </a>
         <span class="sf-eyebrow d-block mb-1">{{ $config['eyebrow'] }}</span>
-        <h2 class="h1 sf-heading mb-1 fw-bold">{{ $profile->user->name }}</h2>
+        <h2 class="h2 sf-heading mb-1 fw-bold">{{ $profile->user->name }}</h2>
         <p class="text-secondary mb-0">
             {{ $program->program_name }}
             <span class="mx-1">&bull;</span>
@@ -203,7 +203,7 @@
                             <i class="bi bi-person-badge fs-4"></i>
                         </div>
                         <div>
-                            <h2 class="h5 sf-heading mb-0">Applicant Profile Summary</h2>
+                            <h3 class="h6 sf-heading mb-0">Applicant Profile Summary</h3>
                             <p class="small text-secondary mb-0">Key verification details &amp; demographics</p>
                         </div>
                     </div>
@@ -312,9 +312,9 @@
         {{-- Target Program Details --}}
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body p-4">
-                <h2 class="h5 sf-heading mb-3">
+                <h3 class="h6 sf-heading mb-3">
                     <i class="bi bi-building-check me-2" style="color:#0F2942;"></i>Target Program &amp; Slots
-                </h2>
+                </h3>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="detail-label">Program Name</div>
@@ -371,9 +371,9 @@
         {{-- Application History / Timeline --}}
         <div class="card border-0 shadow-sm">
             <div class="card-body p-4">
-                <h2 class="h6 sf-heading mb-3 text-secondary text-uppercase">
+                <h3 class="h6 sf-heading mb-3 text-secondary text-uppercase">
                     <i class="bi bi-clock-history me-2"></i>Review Timeline &amp; Notes
-                </h2>
+                </h3>
                 <div class="row g-3 small">
                     <div class="col-md-4">
                         <div class="detail-label">Submitted</div>
@@ -408,7 +408,7 @@
             <div class="card-body p-4">
                 <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
                     <div>
-                        <h2 class="h5 sf-heading mb-1">Supporting Documents</h2>
+                        <h3 class="h6 sf-heading mb-3">Supporting Documents</h3>
                         <p class="small text-secondary mb-0">Documents required for this program &amp; uploaded by the applicant</p>
                     </div>
                     <i class="bi bi-file-earmark-check fs-3" style="color:#0F2942;"></i>
@@ -572,7 +572,7 @@
             <div class="card-body p-4">
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <div>
-                        <h2 class="h5 sf-heading mb-0">Decision Controls</h2>
+                        <h3 class="h6 sf-heading mb-0">Decision Controls</h3>
                         <p class="small text-secondary mb-0">Review decision and slot reservation</p>
                     </div>
                     <span class="badge {{ $program->available_slots > 0 ? 'bg-success-subtle text-success-emphasis' : 'bg-danger-subtle text-danger-emphasis' }} border px-2 py-1">
@@ -745,7 +745,7 @@
                         <div class="mb-3">
                             <i class="bi bi-patch-check-fill display-4" style="color:#1a7a4a;"></i>
                         </div>
-                        <h3 class="h5 sf-heading mb-2">{!! $config['settledTitle'] !!}</h3>
+                        <h3 class="h6 sf-heading mb-3">{!! $config['settledTitle'] !!}</h3>
                         <p class="small text-secondary mb-0">
                             This application was verified on
                             <strong>{{ $application->verified_at?->format('M d, Y, h:i A') ?? '—' }}</strong>

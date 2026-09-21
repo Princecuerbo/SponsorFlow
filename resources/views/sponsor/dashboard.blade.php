@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
 @section('title', 'Sponsor Dashboard')
-@section('eyebrow', 'Sponsor Portal')
-@section('page-title', 'Dashboard')
+@section('eyebrow', 'Sponsor Portal · Dashboard')
+@section('page-title', 'Welcome back, ' . (auth()->user()->sponsor?->company_organization_name ?? auth()->user()->name) . '!')
+@section('subtitle', 'Authorized Sponsor Portal · Davao Oriental State University')
 
 @push('styles')
     <style>
@@ -15,13 +16,6 @@
 @endpush
 
 @section('content')
-    <div class="mb-4">
-        <span class="sf-eyebrow d-block mb-1">Sponsor Portal</span>
-        <h2 class="h2 sf-heading mb-1 fw-bold">Welcome back,
-            {{ auth()->user()->sponsor?->company_organization_name ?? auth()->user()->name }}!</h2>
-        <p class="text-secondary mb-0">Authorized Sponsor Portal · Davao Oriental State University</p>
-    </div>
-
     <div class="row g-3 mb-4">
         <div class="col-md-4">
             <div class="sf-stat-card p-4 h-100 card border-0 shadow-sm">
@@ -59,7 +53,7 @@
         <div class="card-body p-4 p-lg-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h2 class="h5 sf-heading mb-1 fw-bold">Sponsor workflow</h2>
+                    <h3 class="h6 sf-heading mb-3 fw-bold">Sponsor workflow</h3>
                     <p class="small text-secondary mb-0">Each step keeps beneficiary decisions traceable and ready for
                         billing reference.</p>
                 </div>

@@ -1,8 +1,17 @@
 @extends('layouts.app')
 
 @section('title', 'Generated Batch')
-@section('eyebrow', 'FASSG Office')
-@section('page-title', 'Generated Batch')
+@section('eyebrow', 'FASSG Office · Generated Batches')
+@section('page-title', $list->batch_name ?: 'Generated Batch #' . $list->id . ' - ' . ($list->sponsorshipProgram->program_name ?? 'Unassigned Program'))
+@section('subtitle', $list->sponsorshipProgram->program_name . ' · Total Names: ' . $list->items->count())
+
+@section('header-actions')
+    <a href="{{ route('fassg.generated-batches.index') }}"
+        class="btn btn-outline-secondary btn-sm fw-semibold d-inline-flex align-items-center gap-2">
+        <i class="bi bi-arrow-left"></i>Back to Generated Batches
+    </a>
+    <x-status-badge :status="$list->status" />
+@endsection
 
 @push('styles')
     <style>
@@ -41,23 +50,6 @@
         <div class="col-12 col-lg-9">
             <div class="card sf-card mb-4 border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-3 gap-3">
-                        <a href="{{ route('fassg.generated-batches.index') }}"
-                            class="btn btn-outline-secondary btn-sm fw-semibold d-inline-flex align-items-center gap-2">
-                            <i class="bi bi-arrow-left"></i>Back to Generated Batches
-                        </a>
-                        <x-status-badge :status="$list->status" />
-                    </div>
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            <span class="badge bg-light text-dark mb-2 border">{{ $list->sponsorshipProgram->program_name }}</span>
-                            <h2 class="h4 fw-bold mb-1">
-                                {{ $list->batch_name ?: 'Generated Batch #' . $list->id . ' - ' . ($list->sponsorshipProgram->program_name ?? 'Unassigned Program') }}
-                            </h2>
-                            <p class="text-secondary small mb-0">Total Names: {{ $list->items->count() }}</p>
-                        </div>
-                    </div>
-
                     <div class="alert alert-info border-0 mb-0 d-flex align-items-start gap-2 py-2 small">
                         <i class="bi bi-list-check text-primary mt-1"></i>
                         <div>

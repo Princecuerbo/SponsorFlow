@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
+@php
+    $userName = auth()->user()->first_name ?? explode(' ', auth()->user()->name ?? 'Student')[0];
+@endphp
+
 @section('title', 'Student Dashboard')
+@section('eyebrow', 'Student Portal · Dashboard')
+@section('page-title', 'Welcome back, ' . $userName)
+@section('subtitle', 'Your SLE-FHE sponsorship overview at Davao Oriental State University.')
 
 @section('content')
     @php
@@ -42,20 +49,9 @@
         ];
         $isVerified = (bool) ($studentProfile?->is_sle_fhe_verified ?? false);
         $featured = $activeGrant ?? $activeApplication ?? $latestApp;
-        $userName = auth()->user()->first_name ?? explode(' ', auth()->user()->name ?? 'Student')[0];
     @endphp
 
     <div>
-
-        <!-- Welcome Title -->
-        <div class="mb-4">
-            <h3 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.65rem;">
-                Welcome back, {{ $userName }}
-            </h3>
-            <p class="text-secondary small mb-0" style="font-size: 0.875rem;">
-                Your SLE-FHE sponsorship overview at Davao Oriental State University.
-            </p>
-        </div>
 
         <!-- Top Metric Cards Grid -->
         <div class="row g-3 mb-4">
@@ -135,7 +131,7 @@
                         <x-sf-hourglass class="fs-5" />
                     </div>
                     <div>
-                        <h6 class="fw-bold mb-1 text-slate-900" style="font-size: 0.925rem;">Complete your SLE-FHE verification setup.</h6>
+                        <h3 class="h6 sf-heading mb-3 text-slate-900">Complete your SLE-FHE verification setup.</h3>
                         <p class="mb-2 small" style="color: #475569; font-size: 0.85rem;">Your request is pending review. Update your verification details before applying for sponsorship programs.</p>
                         <a href="{{ route('student.verification.show') }}"
                             class="btn btn-sm fw-semibold shadow-sm px-3 py-1"
@@ -150,7 +146,7 @@
                 style="background-color: #ECFEFF; border-left-color: #06b6d4;">
                 <div class="d-flex align-items-center gap-2 mb-1">
                     <i class="bi bi-patch-check-fill fs-5" style="color: #0891b2;"></i>
-                    <h6 class="fw-bold mb-0" style="color: #164e63;">Verification Status: Verified</h6>
+                    <h3 class="h6 sf-heading mb-0">Verification Status: Verified</h3>
                 </div>
                 <p class="small mb-0 ms-md-4" style="color: #475569;">
                     Your SLE-FHE status has been verified. You are eligible to apply for open sponsorship programs.
@@ -171,7 +167,7 @@
         <!-- My Applications Table Section -->
         <div class="card border-0 shadow-sm rounded-3 bg-white mb-4">
             <div class="card-header bg-white border-0 pt-3 px-4 pb-0">
-                <h6 class="fw-bold text-dark mb-0" style="font-size: 0.95rem;">My Applications</h6>
+                <h3 class="h6 sf-heading mb-0">My Applications</h3>
             </div>
             <div class="card-body px-4 pt-2 pb-4">
                 <div class="table-responsive">
@@ -214,7 +210,7 @@
         @if ($activeApplication)
             <div class="card border-0 shadow-sm rounded-3 bg-white mb-4">
                 <div class="card-header bg-white border-0 pt-3 px-4 pb-2">
-                    <h6 class="fw-bold text-dark mb-0" style="font-size: 0.95rem;">
+                    <h3 class="h6 sf-heading mb-0">
                         <i class="bi bi-clock-history me-2 text-primary"></i>Application Status Timeline
                     </h6>
                 </div>
@@ -251,9 +247,9 @@
         <!-- Document Verification Check Section -->
         <div class="card border-0 shadow-sm rounded-3 bg-white mb-4">
             <div class="card-header bg-white border-0 pt-3 px-4 pb-2">
-                <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-size: 0.95rem;">
+                <h3 class="h6 sf-heading mb-0 d-flex align-items-center gap-2">
                     <i class="bi bi-file-earmark-text text-secondary"></i> Document Verification Check
-                </h6>
+                </h3>
             </div>
             <div class="card-body px-4 pt-0 pb-3">
                 <div class="small mb-3" style="color: #64748b; font-size: 0.75rem;">
@@ -296,9 +292,9 @@
             <div class="col-lg-6">
                 <div class="card border-0 shadow-sm rounded-3 bg-white">
                     <div class="card-header bg-white border-bottom pt-3 px-4 pb-2">
-                        <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-size: 0.95rem;">
+                        <h3 class="h6 sf-heading mb-0 d-flex align-items-center gap-2">
                             <i class="bi bi-info-circle text-primary"></i> FASSG Announcements &amp; Policy
-                        </h6>
+                        </h3>
                     </div>
                     <div class="card-body p-4">
                         <div class="text-uppercase fw-bold text-secondary mb-1"

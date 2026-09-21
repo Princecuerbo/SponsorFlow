@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
 @section('title', 'Browse Programs')
-@section('eyebrow', 'Student Portal')
-@section('page-title', 'Open Sponsorship Programs')
+@section('eyebrow', 'Student Portal · Programs')
+@section('page-title', 'Sponsorship Opportunities')
+@section('subtitle', 'Browse and apply for available university sponsorship programs.')
 
 @push('styles')
     <style>
@@ -15,10 +16,6 @@
     @php
         $isVerified = (bool) ($profile?->is_sle_fhe_verified ?? false);
     @endphp
-
-    <span class="sf-eyebrow d-block mb-1">Student Portal</span>
-    <h2 class="h2 sf-heading mb-1 fw-bold">Sponsorship Opportunities</h2>
-    <p class="text-muted small mb-3">Browse and apply for available university sponsorship programs.</p>
 
     @if ($isVerified)
         <form method="GET" action="{{ route('student.programs.index') }}" id="filter-form" class="card sf-card mb-4">
@@ -57,7 +54,7 @@
                 <div class="mb-3">
                     <i class="bi bi-lock-fill text-secondary display-4"></i>
                 </div>
-                <h5 class="fw-bold text-dark mb-2">Sponsorship Opportunities Locked</h5>
+                <h3 class="h6 sf-heading mb-3">Sponsorship Opportunities Locked</h3>
                 <p class="text-secondary small mb-4 mx-auto" style="max-width: 480px;">
                     Programs will become available after FASSG verifies your Student ID against the institutional
                     masterlist.

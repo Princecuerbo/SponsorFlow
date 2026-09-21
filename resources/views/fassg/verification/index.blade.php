@@ -1,8 +1,33 @@
 @extends('layouts.app')
 
 @section('title', 'Application Review Queue')
-@section('eyebrow', 'FASSG Office')
+@section('eyebrow', 'FASSG Office · Verification')
 @section('page-title', 'Application Review Queue')
+@section('subtitle', 'Review unverified student profiles and submitted applications.')
+
+@section('header-actions')
+    <div class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 small fw-medium d-inline-flex align-items-center gap-2" style="display: inline-flex; align-items: center; gap: 0.375rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" style="width: 1rem; height: 1rem; flex-shrink: 0;" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
+        </svg>
+        <span>{{ $pendingSleFheCount ?? 0 }} Pending SLE-FHE</span>
+    </div>
+    <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #fffbebf5; color: #b45309; border: 1px solid #fde68a;">
+        <i class="bi bi-hourglass-split"></i> {{ $statusCounts['pending'] }} pending applications
+    </span>
+    <span class="stat-pill bg-cyan-50 text-cyan-700 border border-cyan-200 rounded-full" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #ecfeff; color: #0e7490; border: 1px solid #a5f3fc;">
+        <i class="bi bi-patch-check"></i> {{ $statusCounts['verified'] }} verified
+    </span>
+    <span class="stat-pill bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
+        <i class="bi bi-award"></i> {{ $statusCounts['approved'] }} approved
+    </span>
+    <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #fff1f2; color: #be123c; border: 1px solid #fecdd3;">
+        <i class="bi bi-x-circle"></i> {{ $statusCounts['rejected'] }} rejected
+    </span>
+    <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #fff7ed; color: #c2410c; border: 1px solid #ffedd5;">
+        <i class="bi bi-arrow-counterclockwise"></i> {{ $statusCounts['resubmission'] }} resubmission
+    </span>
+@endsection
 
 @push('styles')
     <style>
@@ -67,38 +92,6 @@
 @endpush
 
 @section('content')
-    {{-- Page Header --}}
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
-        <div>
-            <span class="sf-eyebrow d-block mb-1">FASSG Office · Verification</span>
-            <h2 class="h2 sf-heading mb-1 fw-bold">Application Review Queue</h2>
-            <p class="text-secondary mb-0">Review unverified student profiles and submitted applications.</p>
-        </div>
-        <div class="d-flex flex-wrap gap-2">
-            <div class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 small fw-medium d-inline-flex align-items-center gap-2" style="display: inline-flex; align-items: center; gap: 0.375rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe;">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" style="width: 1rem; height: 1rem; flex-shrink: 0;" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
-                </svg>
-                <span>{{ $pendingSleFheCount ?? 0 }} Pending SLE-FHE</span>
-            </div>
-            <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #fffbebf5; color: #b45309; border: 1px solid #fde68a;">
-                <i class="bi bi-hourglass-split"></i> {{ $statusCounts['pending'] }} pending applications
-            </span>
-            <span class="stat-pill bg-cyan-50 text-cyan-700 border border-cyan-200 rounded-full" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #ecfeff; color: #0e7490; border: 1px solid #a5f3fc;">
-                <i class="bi bi-patch-check"></i> {{ $statusCounts['verified'] }} verified
-            </span>
-            <span class="stat-pill bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
-                <i class="bi bi-award"></i> {{ $statusCounts['approved'] }} approved
-            </span>
-            <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #fff1f2; color: #be123c; border: 1px solid #fecdd3;">
-                <i class="bi bi-x-circle"></i> {{ $statusCounts['rejected'] }} rejected
-            </span>
-            <span class="stat-pill" style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.375rem 0.875rem; font-weight: 500; font-size: 0.875rem; background-color: #fff7ed; color: #c2410c; border: 1px solid #ffedd5;">
-                <i class="bi bi-arrow-counterclockwise"></i> {{ $statusCounts['resubmission'] }} resubmission
-            </span>
-        </div>
-    </div>
-
     {{-- Flash Messages --}}
     @if (session('status'))
         <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">

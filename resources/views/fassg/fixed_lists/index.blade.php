@@ -3,6 +3,14 @@
 @section('title', 'Fixed Lists')
 @section('eyebrow', 'FASSG Office')
 @section('page-title', 'Sponsor-Provided Fixed Lists')
+@section('subtitle', 'Manage and process batch beneficiary lists forwarded by sponsors.')
+
+@section('header-actions')
+    <button type="button" class="btn btn-sf-navy fw-semibold d-inline-flex align-items-center gap-2 px-3"
+        data-bs-toggle="modal" data-bs-target="#newFixedListModal">
+        <i class="bi bi-plus-lg"></i>Upload / Encode List
+    </button>
+@endsection
 
 @push('styles')
     <style>
@@ -16,18 +24,6 @@
 @endpush
 
 @section('content')
-    <div class="d-flex align-items-center justify-content-between mb-4 gap-3">
-        <div>
-            <span class="sf-eyebrow d-block mb-1">FASSG Office</span>
-            <h2 class="h2 sf-heading mb-1 fw-bold">Sponsor-Provided Fixed Lists</h2>
-            <p class="text-secondary small mb-0">Manage and process batch beneficiary lists forwarded by sponsors.</p>
-        </div>
-        <button type="button" class="btn btn-sf-navy fw-semibold d-inline-flex align-items-center gap-2 px-3"
-            data-bs-toggle="modal" data-bs-target="#newFixedListModal">
-            <i class="bi bi-plus-lg"></i>Upload / Encode List
-        </button>
-    </div>
-
     @if ($fixedLists->isEmpty())
         <div class="card sf-card border-0 shadow-sm">
             <div class="sf-empty-state text-center p-5">
@@ -46,12 +42,12 @@
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
-                                <h2 class="h6 sf-heading mb-1 fw-bold">
+                                <h3 class="h6 sf-heading mb-1 fw-bold">
                                     <a href="{{ route('fassg.fixed-lists.show', $list) }}"
                                         class="text-decoration-none text-dark">
                                         {{ $list->batch_name ?: 'Batch #' . $list->id . ' - ' . ($list->sponsorshipProgram->program_name ?? 'Unassigned Program') }}
                                     </a>
-                                </h2>
+                                </h3>
                                 <div class="small text-secondary">
                                     {{ $list->sponsorshipProgram->program_name }} · {{ $list->total_names }}
                                     {{ Str::plural('name', $list->total_names) }}

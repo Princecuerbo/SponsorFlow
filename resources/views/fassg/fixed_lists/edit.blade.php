@@ -15,11 +15,10 @@
         <div class="col-lg-7">
             <div class="card sf-card border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <h2 class="h5 fw-bold mb-1">Rename Fixed List</h2>
-                    <p class="text-secondary small mb-4">Update the batch name for
+                    <h3 class="h6 sf-heading mb-3">Rename Fixed List</h3>
+                    <p class="text-secondary small">Update the batch name for
                         {{ $fixedList->sponsorshipProgram->program_name }}.</p>
-
-                    <form method="POST" action="{{ route('fassg.fixed-lists.update', $fixedList) }}">
+                    <form method="POST" action="{{ route('fassg.fixed-lists.update', $fixedList) }}" class="mt-4">
                         @csrf
                         @method('PUT')
                         <input type="hidden" name="redirect_to" value="{{ $backUrl }}">

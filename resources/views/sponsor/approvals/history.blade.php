@@ -1,25 +1,21 @@
 @extends('layouts.app')
 
 @section('title', 'Approval History')
-@section('eyebrow', 'Sponsor Portal')
+@section('eyebrow', 'Sponsor Portal · Records')
 @section('page-title', 'Approval History')
+@section('subtitle', 'Previously finalized applications and beneficiary lists.')
+
+@section('header-actions')
+    <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-2">
+        {{ $approvals->count() }} {{ Str::plural('finalized record', $approvals->count()) }}
+    </span>
+@endsection
 
 @section('content')
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
-        <div>
-            <p class="text-uppercase small fw-semibold text-secondary mb-2">Sponsor records</p>
-            <h1 class="h2 sf-heading mb-1 fw-bold">Approval History</h1>
-            <p class="text-secondary mb-0">Previously finalized applications and beneficiary lists.</p>
-        </div>
-        <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-2">
-            {{ $approvals->count() }} {{ Str::plural('finalized record', $approvals->count()) }}
-        </span>
-    </div>
-
     <section>
         <div class="d-flex align-items-center justify-content-between mb-3">
             <div>
-                <h2 class="h5 sf-heading mb-1 fw-bold">Confirmed Beneficiary Batches</h2>
+                <h3 class="h6 sf-heading mb-3 fw-bold">Confirmed Beneficiary Batches</h3>
                 <p class="small text-secondary mb-0">Beneficiary lists confirmed with sponsor endorsement documents.</p>
             </div>
             <i class="bi bi-people fs-3" style="color: #0F2942;"></i>

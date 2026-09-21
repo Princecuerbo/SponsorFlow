@@ -1,18 +1,11 @@
 @extends('layouts.app')
 
 @section('title', 'My Applications')
-@section('eyebrow', 'Student Portal')
+@section('eyebrow', 'Student Portal · Applications')
 @section('page-title', 'My Applications')
+@section('subtitle', 'Track the status of your submitted sponsorship applications.')
 
 @section('content')
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
-        <div>
-            <span class="sf-eyebrow d-block mb-1">Student Portal · Applications</span>
-            <h2 class="h2 sf-heading mb-1 fw-bold">My Applications</h2>
-            <p class="text-secondary mb-0">Track the status of your submitted sponsorship applications.</p>
-        </div>
-    </div>
-
     @php $profile = auth()->user()->studentProfile; @endphp
 
     @if ($profile->hasActiveSponsorship())

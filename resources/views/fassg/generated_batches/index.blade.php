@@ -3,17 +3,12 @@
 @section('title', 'Generated Batches')
 @section('eyebrow', 'FASSG Office')
 @section('page-title', 'Generated Batches')
+@section('subtitle', 'Batch beneficiary lists generated directly from the ranked Application Queue.')
 
 @push('styles')
 @endpush
 
 @section('content')
-    <div class="mb-4">
-        <span class="sf-eyebrow d-block mb-1">FASSG Office</span>
-        <h2 class="h2 sf-heading mb-1 fw-bold">Generated Batches</h2>
-        <p class="text-secondary small mb-0">Batch beneficiary lists generated directly from the ranked Application Queue.</p>
-    </div>
-
     {{-- Filter Bar --}}
     <div class="card filter-card mb-4 rounded-3 border-0 shadow-sm">
         <div class="card-body p-3">
@@ -55,7 +50,7 @@
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
-                                <h2 class="h6 sf-heading mb-1 fw-bold">
+                                <h3 class="h6 sf-heading mb-1 fw-bold">
                                     <a href="{{ route('fassg.generated-batches.show', $list) }}"
                                         class="text-decoration-none text-dark">
                                         {{ $list->batch_name ?: 'Generated Batch #' . $list->id . ' - ' . ($list->sponsorshipProgram->program_name ?? 'Unassigned Program') }}

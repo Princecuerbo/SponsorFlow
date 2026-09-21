@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
 @section('title', 'My Profile')
-@section('eyebrow', 'Student Portal')
+@section('eyebrow', 'Student Portal · Profile')
 @section('page-title', 'My Profile')
+@section('subtitle', 'Review your student information and manage account security.')
 
 @php
     $firstName = $studentProfile?->first_name;
@@ -25,13 +26,6 @@
             }
         }
     </style>
-
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
-        <div>
-            <h2 class="h4 sf-heading mb-1">Account profile</h2>
-            <p class="text-secondary small mb-0">Review your student information and manage account security.</p>
-        </div>
-    </div>
 
     <div class="row g-4">
         <div class="col-12 col-lg-4">
@@ -87,7 +81,7 @@
                                 class="rounded-3 bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center"
                                 style="width:42px;height:42px;"><i class="bi bi-person-fill fs-5"></i></span>
                             <div>
-                                <h3 class="h5 fw-bold mb-1">Personal Information</h3>
+                                <h3 class="h6 sf-heading mb-3">Personal Information</h3>
                                 <p class="text-muted small mb-0">Your institutional student record</p>
                             </div>
                         </div>
@@ -95,7 +89,7 @@
                 </div>
 
                 <div class="card-body p-4">
-                    <h6 class="fw-bold mb-3">Student Information</h6>
+                    <h3 class="h6 sf-heading mb-3">Student Information</h3>
                     <div class="row g-3">
                         @foreach ([['First Name', $firstName], ['Middle Name', $middleName ?? 'N/A'], ['Last Name', $lastName], ['Suffix / Ext. Name', $extensionName ?? 'N/A']] as [$label, $value])
                             <div class="col-md-6">
@@ -118,7 +112,7 @@
                     </div>
 
                     <hr class="my-4">
-                    <h6 class="fw-bold mb-3">Recent School Credentials</h6>
+                    <h3 class="h6 sf-heading mb-3">Recent School Credentials</h3>
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label text-muted small fw-bold" for="student-id">ID Number</label>
@@ -142,7 +136,7 @@
                     </div>
 
                     <hr class="my-4">
-                    <h6 class="fw-bold mb-3">Current Status</h6>
+                    <h3 class="h6 sf-heading mb-3">Current Status</h3>
                     <div class="row g-3">
                         <div class="col-12">
                             <div class="small text-muted">Current Academic Year and Semester:</div>
@@ -159,7 +153,7 @@
                     </div>
 
                     <hr class="my-4">
-                    <h6 class="fw-bold mb-3"><i class="bi bi-shield-lock me-2"></i>Account Security</h6>
+                    <h3 class="h6 sf-heading mb-3"><i class="bi bi-shield-lock me-2"></i>Account Security</h3>
 
                     @if ($errors->any())
                         <div class="alert alert-danger small">{{ $errors->first() }}</div>

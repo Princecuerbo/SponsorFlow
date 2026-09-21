@@ -1,8 +1,24 @@
 @extends('layouts.app')
 
 @section('title', 'Beneficiary Reference')
-@section('eyebrow', 'Accounting Office')
+@section('eyebrow', 'Accounting Office · Tuition Adjustment Reference')
 @section('page-title', 'Approved Beneficiaries')
+@section('subtitle', 'Read-only sponsor-confirmed and approved SLE-FHE beneficiary records.')
+
+@section('header-actions')
+    <button type="button" onclick="window.print()"
+        class="btn btn-outline-secondary fw-semibold d-inline-flex align-items-center gap-2 no-print">
+        <i class="bi bi-printer"></i> Print Master List
+    </button>
+    <a href="{{ route('accounting.beneficiaries.export') }}"
+        class="btn btn-sf-navy fw-semibold px-3 d-inline-flex align-items-center gap-2 no-print">
+        <i class="bi bi-file-earmark-spreadsheet me-1"></i> Export CSV / Excel
+    </a>
+    <div class="sf-stat-card px-3 py-2 ms-2">
+        <div class="h4 mb-0 sf-heading fw-bold">{{ number_format($totalApproved) }}</div>
+        <div class="small text-secondary">Approved records</div>
+    </div>
+@endsection
 
 @push('styles')
     <style>
@@ -42,30 +58,6 @@
 @endpush
 
 @section('content')
-    <div class="d-flex align-items-center justify-content-between mb-4 accounting-reference gap-3">
-        <div>
-            <span class="sf-eyebrow d-block mb-1">
-                Tuition Adjustment Reference
-            </span>
-            <h2 class="h2 sf-heading mb-1 fw-bold">Approved Beneficiaries</h2>
-            <p class="text-muted small mb-0">Read-only sponsor-confirmed and approved SLE-FHE beneficiary records.</p>
-        </div>
-        <div class="d-flex align-items-center gap-2 no-print">
-            <button type="button" onclick="window.print()"
-                class="btn btn-outline-secondary fw-semibold d-inline-flex align-items-center gap-2">
-                <i class="bi bi-printer"></i> Print Master List
-            </button>
-            <a href="{{ route('accounting.beneficiaries.export') }}"
-                class="btn btn-sf-navy fw-semibold px-3 d-inline-flex align-items-center gap-2 no-print">
-                <i class="bi bi-file-earmark-spreadsheet me-1"></i> Export CSV / Excel
-            </a>
-            <div class="sf-stat-card px-3 py-2 ms-2">
-                <div class="h4 mb-0 sf-heading fw-bold">{{ number_format($totalApproved) }}</div>
-                <div class="small text-secondary">Approved records</div>
-            </div>
-        </div>
-    </div>
-
     <div class="sf-readonly-banner d-flex align-items-center gap-3 mb-4 no-print">
         <i class="bi bi-lock fs-5"></i>
         <div class="small fw-semibold">Accounting access is strictly read-only. Approval, editing, and deletion are handled

@@ -176,7 +176,7 @@
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center gap-2 mb-3">
                             <span class="badge rounded-circle sf-step-badge">1</span>
-                            <h2 class="h6 sf-heading mb-0">Student &amp; SLE-FHE Profile</h2>
+                            <h3 class="h6 sf-heading mb-0">Student &amp; SLE-FHE Profile</h3>
                         </div>
                         <p class="small text-secondary mb-3">Pulled from your verified profile. To change any of this,
                             update your profile before applying.</p>
@@ -213,7 +213,7 @@
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center gap-2 mb-3">
                             <span class="badge rounded-circle sf-step-badge">2</span>
-                            <h2 class="h6 sf-heading mb-0">Application Details</h2>
+                            <h3 class="h6 sf-heading mb-0">Application Details</h3>
                         </div>
 
                         <div class="row g-3">
@@ -276,7 +276,7 @@
                                 <span class="badge rounded-circle sf-step-badge">
                                     <i class="bi bi-person-badge fs-6"></i>
                                 </span>
-                                <h2 class="h6 sf-heading mb-0">Institutional Employee Verification</h2>
+                                <h3 class="h6 sf-heading mb-0">Institutional Employee Verification</h3>
                             </div>
                             <p class="small text-secondary mb-3">This program requires verification of an immediate
                                 relative who is an employee of the institution.</p>
@@ -330,7 +330,7 @@
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center gap-2 mb-3">
                             <span class="badge rounded-circle sf-step-badge">3</span>
-                            <h2 class="h6 sf-heading mb-0">Supporting Documents</h2>
+                            <h3 class="h6 sf-heading mb-0">Supporting Documents</h3>
                         </div>
                         <p class="small text-secondary mb-3">Accepted formats: PDF, JPG, PNG · Max 5MB each.</p>
 
@@ -371,7 +371,7 @@
             <div class="col-lg-4">
                 <div class="card sf-card position-sticky" style="top:5.5rem;">
                     <div class="card-body p-4">
-                        <h2 class="h6 sf-heading mb-3">{{ $program->program_name }}</h2>
+                        <h3 class="h6 sf-heading mb-3">{{ $program->program_name }}</h3>
                         <ul class="list-unstyled small mb-4">
                             <li class="d-flex justify-content-between py-1 border-bottom">
                                 <span class="text-secondary">Sponsor</span>

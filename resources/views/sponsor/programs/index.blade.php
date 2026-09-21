@@ -1,16 +1,11 @@
 @extends('layouts.app')
 
 @section('title', 'Sponsorship Programs')
-@section('eyebrow', 'Sponsor Portal')
+@section('eyebrow', 'Sponsor Portal · Programs')
 @section('page-title', 'Connected Programs')
+@section('subtitle', 'Programs created for your organization and their current review activity.')
 
 @section('content')
-    <div class="mb-4">
-        <span class="sf-eyebrow d-block mb-1">Sponsor programs</span>
-        <h2 class="h2 sf-heading mb-1 fw-bold">Connected Programs</h2>
-        <p class="text-secondary mb-0">Programs created for your organization and their current review activity.</p>
-    </div>
-
     @if ($programs->isEmpty())
         <div class="card sf-card border-0 shadow-sm">
             <div class="sf-empty-state text-center p-5">
