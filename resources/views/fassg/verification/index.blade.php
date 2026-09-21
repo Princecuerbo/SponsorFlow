@@ -32,11 +32,6 @@
 @push('styles')
     <style>
 
-        .filter-card {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-        }
-
         .stat-pill {
             display: inline-flex;
             align-items: center;
@@ -145,7 +140,7 @@
                 </div>
 
                 {{-- Search --}}
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label small text-secondary fw-semibold mb-1">Search</label>
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white border-end-0">
@@ -161,8 +156,8 @@
                 {{-- Reset --}}
                 <div class="col-md-2">
                     <a href="{{ route('fassg.verification.index') }}"
-                        class="btn btn-outline-secondary btn-sm w-100">
-                        Reset Filters
+                        class="btn btn-outline-secondary btn-sm w-100 d-flex align-items-center justify-content-center gap-1">
+                        <i class="bi bi-arrow-counterclockwise"></i> Reset Filters
                     </a>
                 </div>
             </form>
@@ -181,17 +176,17 @@
     @else
         <div class="card sf-card">
             <div class="table-responsive">
-                <table class="table sf-table mb-0">
+                <table class="table sf-table table-hover align-middle mb-0">
                     <thead>
                         <tr>
-                            <th class="ps-4">Student ID</th>
-                            <th>Student Name</th>
+                            <th class="ps-4 text-nowrap">Student ID</th>
+                            <th class="text-nowrap">Student Name</th>
                             <th>Academic Program</th>
                             <th>Year Level</th>
                             <th>Program</th>
                             <th>Category</th>
                             <th>Documents</th>
-                            <th>Status</th>
+                            <th class="text-nowrap">Status</th>
                             <th class="text-end pe-4">Actions</th>
                         </tr>
                     </thead>
@@ -203,7 +198,7 @@
                             @endphp
                             <tr>
                                 {{-- Student ID --}}
-                                <td class="ps-4">
+                                <td class="ps-4 text-nowrap">
                                     <span class="small text-secondary sf-mono fw-semibold">{{ $profile->student_id_number ?: '—' }}</span>
                                 </td>
 
@@ -265,15 +260,9 @@
                                 </td>
 
                                 {{-- Status --}}
-                                <td>
+                                <td class="text-nowrap">
                                     @if ($item['type'] === 'student')
-                                        <span class="px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 small fw-medium d-inline-flex align-items-center gap-2"
-                                            style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.25rem 0.65rem; font-weight: 500; font-size: 0.8rem; background-color: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" style="width: 0.875rem; height: 0.875rem; flex-shrink: 0;" aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
-                                            </svg>
-                                            Pending SLE-FHE
-                                        </span>
+                                        <x-status-badge :status="'Pending SLE-FHE'" />
                                     @else
                                         <x-status-badge :status="$application->status" />
                                     @endif

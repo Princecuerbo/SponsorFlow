@@ -18,34 +18,16 @@
 @section('content')
     <div class="row g-3 mb-4">
         <div class="col-md-4">
-            <div class="sf-stat-card p-4 h-100 card border-0 shadow-sm">
-                <div class="sf-stat-icon mb-3 p-2 rounded d-inline-block" style="background-color: #e9ecef; color: #0F2942;">
-                    <i class="bi bi-briefcase fs-4"></i>
-                </div>
-                <div class="sf-eyebrow text-secondary small text-uppercase fw-semibold">Connected programs</div>
-                <div class="h3 sf-heading mb-0 fw-bold">{{ $connectedPrograms }}</div>
-                <div class="small text-secondary mt-1">Active programs linked to your organization</div>
-            </div>
+            <x-metric-card title="Connected programs" value="{{ $connectedPrograms }}" icon="bi-briefcase"
+                color="slate" />
         </div>
         <div class="col-md-4">
-            <div class="sf-stat-card p-4 h-100 card border-0 shadow-sm">
-                <div class="sf-stat-icon bg-warning-subtle text-warning mb-3 p-2 rounded d-inline-block">
-                    <i class="bi bi-hourglass-split fs-4"></i>
-                </div>
-                <div class="sf-eyebrow text-secondary small text-uppercase fw-semibold">Lists pending review</div>
-                <div class="h3 sf-heading mb-0 fw-bold">{{ $listsPendingReview }}</div>
-                <div class="small text-secondary mt-1">FASSG-forwarded batches awaiting your response</div>
-            </div>
+            <x-metric-card title="Lists pending review" value="{{ $listsPendingReview }}" icon="bi-hourglass-split"
+                color="amber" />
         </div>
         <div class="col-md-4">
-            <div class="sf-stat-card p-4 h-100 card border-0 shadow-sm">
-                <div class="sf-stat-icon bg-success-subtle text-success mb-3 p-2 rounded d-inline-block">
-                    <i class="bi bi-file-earmark-check fs-4"></i>
-                </div>
-                <div class="sf-eyebrow text-secondary small text-uppercase fw-semibold">Uploaded approvals</div>
-                <div class="h3 sf-heading mb-0 fw-bold">{{ $uploadedApprovals }}</div>
-                <div class="small text-secondary mt-1">Signed approval documents on file</div>
-            </div>
+            <x-metric-card title="Uploaded approvals" value="{{ $uploadedApprovals }}" icon="bi-file-earmark-check"
+                color="emerald" />
         </div>
     </div>
 

@@ -18,36 +18,20 @@
     </div>
     <div class="row g-3 mb-4">
         <div class="col-sm-6 col-xl-3">
-            <div class="sf-stat-card p-4">
-                <div class="sf-stat-icon mb-3" style="background-color: rgba(15, 41, 66, 0.08); color: #0F2942;"><i
-                        class="bi bi-person-check"></i></div>
-                <div class="h3 sf-heading mb-1">{{ number_format($totalApproved) }}</div>
-                <div class="small text-secondary">Approved beneficiaries</div>
-            </div>
+            <x-metric-card title="Approved beneficiaries" value="{{ number_format($totalApproved) }}" icon="bi-person-check"
+                color="emerald" />
         </div>
         <div class="col-sm-6 col-xl-3">
-            <div class="sf-stat-card p-4">
-                <div class="sf-stat-icon mb-3" style="background-color: rgba(15, 41, 66, 0.08); color: #0F2942;"><i
-                        class="bi bi-buildings"></i></div>
-                <div class="h3 sf-heading mb-1">{{ number_format($activeSponsors) }}</div>
-                <div class="small text-secondary">Active sponsors represented</div>
-            </div>
+            <x-metric-card title="Active sponsors represented" value="{{ number_format($activeSponsors) }}"
+                icon="bi-buildings" color="slate" />
         </div>
         <div class="col-sm-6 col-xl-3">
-            <div class="sf-stat-card p-4">
-                <div class="sf-stat-icon mb-3" style="background-color: rgba(15, 41, 66, 0.08); color: #0F2942;"><i
-                        class="bi bi-diagram-3"></i></div>
-                <div class="h3 sf-heading mb-1">{{ number_format($programBreakdown->count()) }}</div>
-                <div class="small text-secondary">Grant program categories</div>
-            </div>
+            <x-metric-card title="Grant program categories" value="{{ number_format($programBreakdown->count()) }}"
+                icon="bi-diagram-3" color="sky" />
         </div>
         <div class="col-sm-6 col-xl-3">
-            <div class="sf-stat-card p-4">
-                <div class="sf-stat-icon mb-3" style="background-color: rgba(15, 41, 66, 0.08); color: #0F2942;"><i
-                        class="bi bi-clock-history"></i></div>
-                <div class="h3 sf-heading mb-1">{{ number_format($recentApprovalCount) }}</div>
-                <div class="small text-secondary">Approvals in the last 30 days</div>
-            </div>
+            <x-metric-card title="Approvals in the last 30 days" value="{{ number_format($recentApprovalCount) }}"
+                icon="bi-clock-history" color="amber" />
         </div>
     </div>
     <div class="row g-4">
@@ -56,18 +40,18 @@
                 <div class="card-body p-4">
                     <h3 class="h6 sf-heading mb-3">Sponsor Allocation Summary</h3>
                     <div class="table-responsive">
-                        <table class="table sf-table mb-0">
+                        <table class="table sf-table table-hover align-middle mb-0">
                             <thead class="table-light text-muted small text-uppercase">
                                 <tr>
-                                    <th>Sponsor / Organization</th>
+                                    <th class="ps-4">Sponsor / Organization</th>
                                     <th>Programs</th>
-                                    <th class="text-end">Beneficiaries</th>
+                                    <th class="text-end pe-4">Beneficiaries</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($sponsorAllocation as $allocation)
                                     <tr>
-                                        <td>{{ $allocation['sponsor'] }}</td>
+                                        <td class="ps-4">{{ $allocation['sponsor'] }}</td>
                                         <td>{{ $allocation['programs'] }}</td>
                                         <td class="text-end fw-semibold">{{ $allocation['beneficiaries'] }}</td>
                                 </tr>@empty<tr>

@@ -265,7 +265,7 @@
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
                     <h3 class="h6 sf-heading mb-3">Category Breakdown</h3>
-                    <table class="table sf-table mb-0">
+                    <table class="table sf-table table-hover align-middle mb-0">
                         <thead>
                             <tr>
                                 <th>Category</th>
@@ -299,7 +299,7 @@
                 <div class="card-body p-4">
                     <h3 class="h6 sf-heading mb-3">Slot Utilization by Program</h3>
                     <div class="table-responsive">
-                        <table class="table sf-table mb-0 align-middle">
+                        <table class="table sf-table table-hover align-middle mb-0">
                             <thead>
                                 <tr>
                                     <th>Program</th>

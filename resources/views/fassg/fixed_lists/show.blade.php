@@ -105,7 +105,7 @@
                     @endif
                 </div>
                 <div class="table-responsive">
-                    <table class="table sf-table mb-0 align-middle" id="candidateListTable">
+                    <table class="table sf-table table-hover align-middle mb-0" id="candidateListTable">
                         <thead>
                             <tr>
                                 <th class="ps-4" style="width: 36px;">

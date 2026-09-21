@@ -9,40 +9,20 @@
     {{-- Stat cards --}}
     <div class="row g-3 mb-4">
         <div class="col-sm-6 col-xl-3">
-            <div class="sf-stat-card p-3 d-flex align-items-center gap-3">
-                <div class="sf-stat-icon bg-primary-subtle text-primary"><i class="bi bi-people"></i></div>
-                <div>
-                    <div class="h4 mb-0 sf-heading">{{ number_format($stats['total_applicants'] ?? 0) }}</div>
-                    <div class="small text-secondary">Total Applicants</div>
-                </div>
-            </div>
+            <x-metric-card title="Total Applicants" value="{{ number_format($stats['total_applicants'] ?? 0) }}"
+                icon="bi-people" color="slate" />
         </div>
         <div class="col-sm-6 col-xl-3">
-            <div class="sf-stat-card p-3 d-flex align-items-center gap-3">
-                <div class="sf-stat-icon bg-info-subtle text-info"><i class="bi bi-patch-check"></i></div>
-                <div>
-                    <div class="h4 mb-0 sf-heading">{{ number_format($stats['verified_sle_fhe'] ?? 0) }}</div>
-                    <div class="small text-secondary">Verified SLE-FHE</div>
-                </div>
-            </div>
+            <x-metric-card title="Verified SLE-FHE" value="{{ number_format($stats['verified_sle_fhe'] ?? 0) }}"
+                icon="bi-patch-check" color="sky" />
         </div>
         <div class="col-sm-6 col-xl-3">
-            <div class="sf-stat-card p-3 d-flex align-items-center gap-3">
-                <div class="sf-stat-icon bg-warning-subtle text-warning"><i class="bi bi-briefcase"></i></div>
-                <div>
-                    <div class="h4 mb-0 sf-heading">{{ number_format($stats['active_programs'] ?? 0) }}</div>
-                    <div class="small text-secondary">Active Programs</div>
-                </div>
-            </div>
+            <x-metric-card title="Active Programs" value="{{ number_format($stats['active_programs'] ?? 0) }}"
+                icon="bi-briefcase" color="amber" />
         </div>
         <div class="col-sm-6 col-xl-3">
-            <div class="sf-stat-card p-3 d-flex align-items-center gap-3">
-                <div class="sf-stat-icon bg-success-subtle text-success"><i class="bi bi-award"></i></div>
-                <div>
-                    <div class="h4 mb-0 sf-heading">{{ number_format($stats['confirmed_beneficiaries'] ?? 0) }}</div>
-                    <div class="small text-secondary">Confirmed Beneficiaries</div>
-                </div>
-            </div>
+            <x-metric-card title="Confirmed Beneficiaries"
+                value="{{ number_format($stats['confirmed_beneficiaries'] ?? 0) }}" icon="bi-award" color="emerald" />
         </div>
     </div>
 

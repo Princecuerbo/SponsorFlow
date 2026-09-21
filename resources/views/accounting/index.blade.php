@@ -96,7 +96,9 @@
                     </div>
                 </div>
                 <div class="col-md-2 text-end">
-                    <a href="{{ route('accounting.beneficiaries.index') }}" class="btn btn-outline-secondary w-100">Reset Filters</a>
+                    <a href="{{ route('accounting.beneficiaries.index') }}"
+                        class="btn btn-outline-secondary btn-sm w-100 d-flex align-items-center justify-content-center gap-1"><i
+                            class="bi bi-arrow-counterclockwise"></i> Reset Filters</a>
                 </div>
             </form>
         </div>
@@ -104,11 +106,11 @@
 
     <div class="card sf-card accounting-reference">
         <div class="table-responsive">
-            <table class="table sf-table mb-0">
+            <table class="table sf-table table-hover align-middle mb-0">
                 <thead>
                     <tr>
-                        <th class="ps-4">Student ID Number</th>
-                        <th>Full Name</th>
+                        <th class="ps-4 text-nowrap">Student ID Number</th>
+                        <th class="text-nowrap">Full Name</th>
                         <th>Academic Program</th>
                         <th>Year Level</th>
                         <th>Campus</th>
@@ -116,14 +118,14 @@
                         <th>Sponsor / Organization</th>
                         <th>GWA / GPA</th>
                         <th>Address &amp; Rurality</th>
-                        <th>Date Approved</th>
+                        <th class="text-nowrap">Date Approved</th>
                         <th class="text-end pe-4 no-print">Reference</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($beneficiaries as $beneficiary)
                         <tr>
-                            <td class="ps-4 sf-mono">{{ $beneficiary['student_id_number'] }}</td>
+                            <td class="ps-4 sf-mono text-nowrap">{{ $beneficiary['student_id_number'] }}</td>
                             <td class="fw-semibold">{{ $beneficiary['student_name'] }}</td>
                             <td>{{ $beneficiary['course'] }}</td>
                             <td>
@@ -149,12 +151,10 @@
                                     </div>
                                 @endif
                             </td>
-                            <td>{{ $beneficiary['approved_at']?->format('M d, Y, h:i A') ?? '—' }}</td>
+                            <td class="text-nowrap">{{ $beneficiary['approved_at']?->format('M d, Y, h:i A') ?? '—' }}</td>
                             <td class="text-end pe-4 no-print">
-                                <span
-                                    class="badge {{ !empty($beneficiary['application_id']) ? 'bg-primary-subtle text-primary-emphasis border border-primary-subtle' : 'bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle' }} fw-semibold">
-                                    {{ $beneficiary['reference_label'] ?? (!empty($beneficiary['application_id']) ? 'Application Batch' : 'Fixed List') }}
-                                </span>
+                                <x-status-badge
+                                    :status="$beneficiary['reference_label'] ?? (!empty($beneficiary['application_id']) ? 'Application Batch' : 'Fixed List')" />
                                 @if (!empty($beneficiary['fixed_list_id']))
                                     <a href="{{ route('accounting.beneficiaries.reference', $beneficiary['fixed_list_id']) }}"
                                         class="btn btn-sm btn-outline-secondary mt-1"><i class="bi bi-eye me-1"></i>View
@@ -168,7 +168,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="10" class="text-center text-secondary py-5"><i
+                            <td colspan="11" class="text-center text-secondary py-5"><i
                                     class="bi bi-inbox fs-2 d-block mb-2"></i>No approved beneficiaries found.</td>
                         </tr>
                     @endforelse

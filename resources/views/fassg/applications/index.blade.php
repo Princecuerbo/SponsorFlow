@@ -298,7 +298,7 @@
 
         <div class="card sf-card">
             <div class="table-responsive">
-                <table class="table sf-table mb-0">
+                <table class="table sf-table table-hover align-middle mb-0">
                     <thead>
                         <tr>
                             <th class="ps-3" style="width: 40px;">

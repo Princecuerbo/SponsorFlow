@@ -99,7 +99,7 @@
 
             <div class="card sf-card border-0 shadow-sm mb-4">
                 <div class="table-responsive">
-                    <table class="table sf-table mb-0 align-middle">
+                    <table class="table sf-table table-hover align-middle mb-0">
                         <thead>
                             <tr>
                                 <th class="ps-4">Batch / Program</th>
@@ -172,7 +172,7 @@
 
             <div class="card sf-card border-0 shadow-sm mb-4">
                 <div class="table-responsive">
-                    <table class="table sf-table mb-0 align-middle">
+                    <table class="table sf-table table-hover align-middle mb-0">
                         <thead>
                             <tr>
                                 <th class="ps-4">Batch / Program</th>

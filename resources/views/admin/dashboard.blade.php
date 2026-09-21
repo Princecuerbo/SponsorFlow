@@ -8,24 +8,17 @@
     <div class="row g-3 mb-4">
         @php
             $kpiCards = [
-                ['label' => 'TOTAL ACCOUNTS', 'value' => $metrics['totalUsers'], 'icon' => 'bi-people', 'color' => '#0f294a', 'bg' => '#e0e7ff'],
-                ['label' => 'ACTIVE ACCOUNTS', 'value' => $metrics['activeUsers'], 'icon' => 'bi-person-check', 'color' => '#047857', 'bg' => '#d1fae5'],
-                ['label' => "TODAY'S AUDIT LOGS", 'value' => $metrics['todayLogs'], 'icon' => 'bi-shield-check', 'color' => '#7c3aed', 'bg' => '#ede9fe'],
-                ['label' => 'LAST BACKUP', 'value' => $metrics['lastBackup']?->status ?? 'None', 'icon' => 'bi-database-check', 'color' => '#b45309', 'bg' => '#fef3c7'],
+                ['title' => 'TOTAL ACCOUNTS', 'value' => $metrics['totalUsers'], 'icon' => 'bi-people', 'color' => 'slate'],
+                ['title' => 'ACTIVE ACCOUNTS', 'value' => $metrics['activeUsers'], 'icon' => 'bi-person-check', 'color' => 'emerald'],
+                ['title' => "TODAY'S AUDIT LOGS", 'value' => $metrics['todayLogs'], 'icon' => 'bi-shield-check', 'color' => 'sky'],
+                ['title' => 'LAST BACKUP', 'value' => $metrics['lastBackup']?->status ?? 'None', 'icon' => 'bi-database-check', 'color' => 'amber'],
             ];
         @endphp
 
         @foreach ($kpiCards as $card)
             <div class="col-sm-6 col-xl-3">
-                <div class="sf-stat-card p-4 h-100" style="border-radius: 14px;">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div class="sf-eyebrow" style="font-size: 0.7rem; color: #64748b;">{{ $card['label'] }}</div>
-                        <div style="width: 40px; height: 40px; border-radius: 10px; background: {{ $card['bg'] }}; display: flex; align-items: center; justify-content: center;">
-                            <i class="bi {{ $card['icon'] }}" style="font-size: 1.1rem; color: {{ $card['color'] }};"></i>
-                        </div>
-                    </div>
-                    <div style="font-size: 1.75rem; font-weight: 700; color: #0f172a; line-height: 1;">{{ $card['value'] }}</div>
-                </div>
+                <x-metric-card title="{{ $card['title'] }}" value="{{ $card['value'] }}" icon="{{ $card['icon'] }}"
+                    color="{{ $card['color'] }}" />
             </div>
         @endforeach
     </div>

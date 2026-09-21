@@ -102,23 +102,23 @@
     @else
         <div class="card sf-card">
             <div class="table-responsive">
-                <table class="table sf-table mb-0">
+                <table class="table sf-table table-hover align-middle mb-0">
                     <thead>
                         <tr>
-                            <th class="ps-4">Student ID</th>
-                            <th>Student Name</th>
+                            <th class="ps-4 text-nowrap">Student ID</th>
+                            <th class="text-nowrap">Student Name</th>
                             <th>Academic Program</th>
                             <th>Year Level</th>
                             <th>Campus</th>
                             <th>Residency</th>
-                            <th>Status</th>
+                            <th class="text-nowrap">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($verifiedProfiles as $profile)
                             <tr>
                                 {{-- Student ID --}}
-                                <td class="ps-4">
+                                <td class="ps-4 text-nowrap">
                                     <span class="small text-secondary sf-mono fw-semibold">{{ $profile->student_id_number ?: '—' }}</span>
                                 </td>
 
@@ -163,7 +163,7 @@
                                 </td>
 
                                 {{-- Status --}}
-                                <td>
+                                <td class="text-nowrap">
                                     <span class="px-2 py-1 rounded-full bg-success bg-opacity-10 text-success border border-success-subtle d-inline-flex align-items-center"
                                         style="display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 9999px; padding: 0.25rem 0.65rem; font-weight: 500; font-size: 0.8rem;">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 0.875rem; height: 0.875rem; flex-shrink: 0;" aria-hidden="true">

@@ -66,7 +66,7 @@
         @else
             <div class="card sf-card border-0 shadow-sm">
                 <div class="table-responsive">
-                    <table class="table sf-table mb-0 align-middle">
+                    <table class="table sf-table table-hover align-middle mb-0">
                         <thead>
                             <tr>
                                 <th class="ps-4">Student ID</th>
@@ -136,7 +136,7 @@
         @else
             <div class="card sf-card border-0 shadow-sm">
                 <div class="table-responsive">
-                    <table class="table sf-table mb-0 align-middle">
+                    <table class="table sf-table table-hover align-middle mb-0">
                         <thead>
                             <tr>
                                 <th class="ps-4">Batch</th>

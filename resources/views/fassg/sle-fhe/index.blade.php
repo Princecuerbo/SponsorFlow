@@ -17,11 +17,6 @@
 @push('styles')
     <style>
 
-        .filter-card {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-        }
-
         .stat-pill {
             display: inline-flex;
             align-items: center;
@@ -83,7 +78,7 @@
                 <div class="col-md-2">
                     <a href="{{ route('fassg.sle-fhe.index') }}"
                         class="btn btn-outline-secondary btn-sm w-100 d-flex align-items-center justify-content-center gap-1">
-                        Reset Filters
+                        <i class="bi bi-arrow-counterclockwise"></i> Reset Filters
                     </a>
                 </div>
             </form>
@@ -102,16 +97,16 @@
     @else
         <div class="card sf-card">
             <div class="table-responsive">
-                <table class="table sf-table mb-0">
+                <table class="table sf-table table-hover align-middle mb-0">
                     <thead>
                         <tr>
-                            <th class="ps-4">Student ID</th>
-                            <th>Student Name</th>
+                            <th class="ps-4 text-nowrap">Student ID</th>
+                            <th class="text-nowrap">Student Name</th>
                             <th>Academic Program</th>
                             <th>Year Level</th>
                             <th>Campus</th>
                             <th>Residency</th>
-                            <th>Status</th>
+                            <th class="text-nowrap">Status</th>
                             <th class="text-end pe-4">Actions</th>
                         </tr>
                     </thead>
@@ -119,7 +114,7 @@
                         @foreach ($pendingProfiles as $profile)
                             <tr>
                                 {{-- Student ID --}}
-                                <td class="ps-4">
+                                <td class="ps-4 text-nowrap">
                                     <span class="small text-secondary sf-mono fw-semibold">{{ $profile->student_id_number ?: '—' }}</span>
                                 </td>
 
@@ -164,12 +159,8 @@
                                 </td>
 
                                 {{-- Status --}}
-                                <td>
-                                    <span class="px-2 py-1 rounded-pill bg-warning bg-opacity-10 text-dark border border-warning border-opacity-25 fw-semibold d-inline-flex align-items-center gap-2"
-                                        style="display: inline-flex; align-items: center; gap: 0.375rem; border-radius: 9999px; padding: 0.25rem 0.65rem; font-size: 0.8rem;">
-                                        <i class="bi bi-hourglass-split" style="font-size: 0.875rem; flex-shrink: 0;"></i>
-                                        Pending SLE-FHE Verification
-                                    </span>
+                                <td class="text-nowrap">
+                                    <x-status-badge :status="'Pending SLE-FHE Verification'" />
                                 </td>
 
                                 {{-- Actions --}}

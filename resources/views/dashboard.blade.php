@@ -57,36 +57,14 @@
         <div class="row g-3 mb-4">
             <!-- Total Applications -->
             <div class="col-12 col-md-4">
-                <div class="card border-0 shadow-sm rounded-3 p-3 bg-white h-100">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="rounded-3 p-2 d-flex align-items-center justify-content-center"
-                            style="background-color: #eff6ff; color: #2563eb; width: 44px; height: 44px; flex-shrink: 0;">
-                            <i class="bi bi-journal-text fs-5"></i>
-                        </div>
-                        <div>
-                            <div class="text-secondary fw-semibold text-uppercase extra-small"
-                                style="font-size: 0.72rem; letter-spacing: 0.05em;">Total Applications</div>
-                            <div class="fw-bold text-dark fs-4 lh-1 mt-1">{{ $totalApplications ?? 0 }}</div>
-                        </div>
-                    </div>
-                </div>
+                <x-metric-card title="Total Applications" value="{{ $totalApplications ?? 0 }}" icon="bi-journal-text"
+                    color="slate" />
             </div>
 
             <!-- Active Sponsorships -->
             <div class="col-12 col-md-4">
-                <div class="card border-0 shadow-sm rounded-3 p-3 bg-white h-100">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="rounded-3 p-2 d-flex align-items-center justify-content-center"
-                            style="background-color: #ecfdf5; color: #059669; width: 44px; height: 44px; flex-shrink: 0;">
-                            <i class="bi bi-award fs-5"></i>
-                        </div>
-                        <div>
-                            <div class="text-secondary fw-semibold text-uppercase extra-small"
-                                style="font-size: 0.72rem; letter-spacing: 0.05em;">Active Sponsorships</div>
-                            <div class="fw-bold text-dark fs-4 lh-1 mt-1">{{ $activeSponsorships ?? 0 }}</div>
-                        </div>
-                    </div>
-                </div>
+                <x-metric-card title="Active Sponsorships" value="{{ $activeSponsorships ?? 0 }}" icon="bi-award"
+                    color="emerald" />
             </div>
 
             <!-- SLE-FHE Verification -->
@@ -171,25 +149,25 @@
             </div>
             <div class="card-body px-4 pt-2 pb-4">
                 <div class="table-responsive">
-                    <table class="table align-middle mb-0">
+                    <table class="table sf-table table-hover align-middle mb-0">
                         <thead class="text-secondary extra-small text-uppercase border-bottom" style="font-size: 0.72rem;">
                             <tr>
-                                <th class="py-2 fw-bold border-0 text-secondary" style="width: 40%;">PROGRAM</th>
-                                <th class="py-2 fw-bold border-0 text-secondary" style="width: 25%;">SUBMITTED</th>
-                                <th class="py-2 fw-bold border-0 text-secondary" style="width: 20%;">STATUS</th>
-                                <th class="py-2 fw-bold border-0 text-secondary text-end" style="width: 15%;">VIEW</th>
+                                <th class="ps-4 py-2 fw-bold border-0 text-secondary" style="width: 40%;">PROGRAM</th>
+                                <th class="py-2 fw-bold border-0 text-secondary text-nowrap" style="width: 25%;">SUBMITTED</th>
+                                <th class="py-2 fw-bold border-0 text-secondary text-nowrap" style="width: 20%;">STATUS</th>
+                                <th class="py-2 fw-bold border-0 text-secondary text-end pe-4" style="width: 15%;">VIEW</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($applications as $app)
                                 <tr>
-                                    <td class="fw-semibold text-dark">
+                                    <td class="ps-4 fw-semibold text-dark">
                                         {{ $app->sponsorshipProgram?->program_name ?? 'Unknown Program' }}</td>
-                                    <td class="text-secondary small">{{ $app->submitted_at?->format('M d, Y, h:i A') ?? '—' }}</td>
-                                    <td>
+                                    <td class="text-secondary small text-nowrap">{{ $app->submitted_at?->format('M d, Y, h:i A') ?? '—' }}</td>
+                                    <td class="text-nowrap">
                                         <x-status-badge :status="$app->status" />
                                     </td>
-                                    <td class="text-end">
+                                    <td class="text-end pe-4">
                                         <a href="{{ route('student.applications.show', $app) }}"
                                             class="btn btn-light btn-sm rounded-2 border px-2 py-1 small">View</a>
                                     </td>

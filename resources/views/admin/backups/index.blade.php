@@ -23,23 +23,23 @@
 
     <div class="card border-0 shadow-sm rounded-3">
         <div class="table-responsive">
-            <table class="table sf-table mb-0">
+            <table class="table sf-table table-hover align-middle mb-0">
                 <thead>
                     <tr>
                         <th class="ps-4">File name</th>
-                        <th>Size</th>
-                        <th>Created</th>
-                        <th>Status</th>
+                        <th class="text-nowrap">Size</th>
+                        <th class="text-nowrap">Created</th>
+                        <th class="text-nowrap">Status</th>
                         <th class="text-end pe-4">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($backups as $backup)
                         <tr>
-                            <td class="ps-4 fw-semibold">{{ $backup->file_name }}</td>
-                            <td style="color: #475569;">{{ number_format($backup->file_size / 1024, 1) }} KB</td>
-                            <td style="color: #475569;">{{ $backup->created_at?->format('M d, Y, h:i A') }}</td>
-                            <td><span class="badge text-bg-success">{{ ucfirst($backup->status) }}</span></td>
+                            <td class="ps-4 fw-semibold text-nowrap">{{ $backup->file_name }}</td>
+                            <td class="text-nowrap" style="color: #475569;">{{ number_format($backup->file_size / 1024, 1) }} KB</td>
+                            <td class="text-nowrap" style="color: #475569;">{{ $backup->created_at?->format('M d, Y, h:i A') }}</td>
+                            <td class="text-nowrap"><x-status-badge :status="$backup->status" /></td>
                             <td class="text-end pe-4">
                                 <a class="btn btn-sm btn-outline-secondary"
                                     href="{{ route('admin.backups.download', $backup) }}" title="Download snapshot">

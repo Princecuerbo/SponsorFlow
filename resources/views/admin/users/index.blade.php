@@ -87,14 +87,14 @@
 
     <div class="card sf-card" style="border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
         <div class="table-responsive">
-            <table class="table sf-table mb-0">
+            <table class="table sf-table table-hover align-middle mb-0">
                 <thead>
                     <tr>
                         <th class="ps-4">Name</th>
                         <th>Email</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Last login</th>
+                        <th class="text-nowrap">Role</th>
+                        <th class="text-nowrap">Status</th>
+                        <th class="text-nowrap">Last login</th>
                         <th class="text-end pe-4">Actions</th>
                     </tr>
                 </thead>
@@ -103,11 +103,11 @@
                         <tr>
                             <td class="ps-4 fw-semibold">{{ $account->name }}</td>
                             <td style="color: #475569;">{{ $account->email }}</td>
-                            <td><span class="badge bg-light text-dark">{{ $account->role->label() }}</span></td>
+                            <td><span class="badge bg-light text-dark text-nowrap">{{ $account->role->label() }}</span></td>
                             <td>
                                 <x-status-badge :status="$account->isActive() ? 'Active' : $account->status" />
                             </td>
-                            <td>
+                            <td class="text-nowrap">
                                 @if ($account->last_login_at)
                                     <span class="small"
                                         style="color: #475569;">{{ $account->last_login_at->format('M d, Y, h:i A') }}</span>

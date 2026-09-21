@@ -11,13 +11,13 @@
 @endphp
 
 <div {{ $attributes->merge(['class' => 'sf-stat-card card border-0 shadow-sm h-100']) }}>
-    <div class="card-body p-4 d-flex align-items-start justify-content-between gap-3">
-        <div>
-            <p class="sf-eyebrow mb-1 text-uppercase">{{ $title }}</p>
-            <p class="fw-bold text-slate-900 mb-0" style="font-size: 1.75rem;">{{ $value }}</p>
+    <div class="card-body p-4">
+        <div class="d-flex align-items-start justify-content-between gap-3 mb-2">
+            <span class="sf-eyebrow d-block">{{ $title }}</span>
+            <span class="sf-stat-icon {{ $colors[$color] ?? $colors['slate'] }}">
+                <i class="bi {{ $icon }}"></i>
+            </span>
         </div>
-        <span class="sf-stat-icon {{ $colors[$color] ?? $colors['slate'] }}">
-            <i class="bi {{ $icon }}"></i>
-        </span>
+        <h3 class="sf-heading mb-0" style="font-size: 1.75rem; color: #0F2537;">{{ $value }}</h3>
     </div>
 </div>

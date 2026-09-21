@@ -10,11 +10,17 @@
         'Under Review' => ['bg-cream text-slate-900 border border-cream-gold', 'bi-hourglass-split'],
         'Resubmission Requested' => ['bg-cream text-slate-900 border border-cream-gold', 'bi-hourglass-split'],
         'Saved'      => ['bg-cream text-slate-900 border border-cream-gold', 'bi-hourglass-split'],
+        'pending'    => ['bg-cream text-slate-900 border border-cream-gold', 'bi-hourglass-split'],
+        'Pending SLE-FHE' => ['bg-indigo-50 text-indigo-700 border border-indigo-200', 'bi-people'],
+        'Pending SLE-FHE Verification' => ['bg-indigo-50 text-indigo-700 border border-indigo-200', 'bi-people'],
+        'Application Batch' => ['bg-indigo-50 text-indigo-700 border border-indigo-200', 'bi-collection'],
+        'Fixed List'     => ['bg-indigo-50 text-indigo-700 border border-indigo-200', 'bi-list-ul'],
         // Cyan — FASSG-verified, awaiting next step
         'Verified'   => ['bg-cyan-50 text-cyan-700 border border-cyan-200', 'bi-patch-check-fill'],
         // Emerald — final positive resolution
         'Approved'   => ['bg-emerald-50 text-emerald-700 border border-emerald-200', 'bi-check-circle-fill'],
         'Completed'  => ['bg-emerald-50 text-emerald-700 border border-emerald-200', 'bi-check-circle-fill'],
+        'completed'  => ['bg-emerald-50 text-emerald-700 border border-emerald-200', 'bi-check-circle-fill'],
         'Active'     => ['bg-emerald-50 text-emerald-700 border border-emerald-200', 'bi-check-circle-fill'],
         'active'     => ['bg-emerald-50 text-emerald-700 border border-emerald-200', 'bi-check-circle-fill'],
         'Eligible'   => ['bg-emerald-50 text-emerald-700 border border-emerald-200', 'bi-check-circle-fill'],

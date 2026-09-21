@@ -66,7 +66,7 @@
                     <span class="small text-secondary"><i class="bi bi-sort-numeric-down me-1"></i>Ranked by GWA (best first)</span>
                 </div>
                 <div class="table-responsive">
-                    <table class="table sf-table mb-0 align-middle" id="generatedBatchTable">
+                    <table class="table sf-table table-hover align-middle mb-0" id="generatedBatchTable">
                         <thead>
                             <tr>
                                 <th class="ps-4" style="width: 48px;">Rank</th>

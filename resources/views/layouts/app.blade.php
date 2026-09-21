@@ -94,6 +94,12 @@
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
         }
 
+        .filter-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+        }
+
         .card {
             background-color: #ffffff;
             border: 1px solid var(--sf-border);
