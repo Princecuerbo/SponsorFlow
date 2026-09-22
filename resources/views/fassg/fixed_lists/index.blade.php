@@ -45,16 +45,18 @@
                                 <h3 class="h6 sf-heading mb-1 fw-bold">
                                     <a href="{{ route('fassg.fixed-lists.show', $list) }}"
                                         class="text-decoration-none text-dark">
-                                        {{ $list->batch_name ?: 'Batch #' . $list->id . ' - ' . ($list->sponsorshipProgram->program_name ?? 'Unassigned Program') }}
+                                        {{ $list->batch_name ?: 'Batch #' . $list->id . ' - ' . ($list->sponsorshipProgram?->program_name ?? 'Unassigned Program') }}
                                     </a>
                                 </h3>
                                 <div class="small text-secondary">
-                                    {{ $list->sponsorshipProgram->program_name }} · {{ $list->total_names }}
+                                    {{ $list->sponsorshipProgram?->program_name ?? 'Unassigned Program' }} · {{ $list->total_names }}
                                     {{ Str::plural('name', $list->total_names) }}
                                 </div>
                             </div>
                             <div class="d-flex align-items-center gap-2">
-                                @php($listStatus = $list->status->value ?? (string) $list->status)
+                                @php
+                                    $listStatus = $list->status->value ?? (string) $list->status;
+                                @endphp
                                 <x-status-badge :status="$listStatus" />
 
                                 <a href="{{ route('fassg.fixed-lists.show', $list) }}" class="btn btn-outline-primary btn-sm"
