@@ -8,7 +8,11 @@
 @section('content')
     @php
         $isRural = (bool) old('is_rural', $profile?->is_rural);
-        $isVerified = (bool) ($profile?->is_sle_fhe_verified ?? false);
+        $sleFheStatus = $profile?->sle_fhe_status;
+        $isVerified = (bool) ($profile?->is_sle_fhe_verified ?? false) || $sleFheStatus === 'Verified';
+        $isPending = ! $isVerified && $sleFheStatus === 'Pending Review';
+        $isEditable = ! $isVerified && ! $isPending;
+        $requestedAddress = $profile?->sleFheRequest;
     @endphp
 
     <div class="container-fluid px-3 px-md-4 py-4 mb-5" style="background-color: #f8fafc; min-height: calc(100vh - 70px);">
@@ -30,7 +34,7 @@
         @endif
 
         {{-- Main Banner Notification --}}
-        @if ($profile?->is_sle_fhe_verified)
+        @if ($isVerified)
             <div class="alert border-0 border-start border-4 rounded-3 p-3 mb-4"
                 style="background-color: #ECFEFF; border-left-color: #06b6d4;">
                 <div class="d-flex align-items-center gap-2 mb-1">
@@ -41,7 +45,7 @@
                     Your SLE-FHE status has been verified. You are eligible to apply for open sponsorship programs.
                 </p>
             </div>
-        @else
+        @elseif ($isPending)
             <div class="alert border-0 border-start border-4 rounded-3 p-4 mb-4"
                 style="background-color: #FFF8E7; border-left-color: #fbbf24;">
                 <div class="d-flex align-items-center gap-2 mb-1">
@@ -51,6 +55,17 @@
                 <p class="small mb-0 ms-md-4" style="color: #475569;">
                     Your records are being evaluated by FASSG. Your Student ID is being cross-checked against the
                     institutional masterlist.
+                </p>
+            </div>
+        @else
+            <div class="alert border-0 border-start border-4 rounded-3 p-4 mb-4"
+                style="background-color: #FFF8E7; border-left-color: #fbbf24;">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="d-inline-flex text-slate-900"><x-sf-hourglass class="fs-5" /></span>
+                    <h3 class="h6 sf-heading mb-0 text-slate-900">Verification Status: Not Yet Verified</h3>
+                </div>
+                <p class="small mb-0 ms-md-4" style="color: #475569;">
+                    Submit your residential address below to start the SLE-FHE verification process.
                 </p>
             </div>
         @endif
@@ -177,8 +192,8 @@
                     <div class="card-body p-4">
                         <div class="d-flex align-items-start gap-3 mb-4">
                             <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
-                                style="width: 48px; height: 48px; background-color: {{ $profile?->is_sle_fhe_verified ? '#ecfeff' : '#FFF8E7' }}; color: {{ $profile?->is_sle_fhe_verified ? '#0e7490' : '#0f172a' }}; {{ $profile?->is_sle_fhe_verified ? '' : 'border: 1px solid #FDE68A;' }}">
-                                @if ($profile?->is_sle_fhe_verified)
+                                style="width: 48px; height: 48px; background-color: {{ $isVerified ? '#ecfeff' : '#FFF8E7' }}; color: {{ $isVerified ? '#0e7490' : '#0f172a' }}; {{ $isVerified ? '' : 'border: 1px solid #FDE68A;' }}">
+                                @if ($isVerified)
                                     <i class="bi bi-patch-check fs-5"></i>
                                 @else
                                     <x-sf-hourglass class="fs-5" />
@@ -186,16 +201,24 @@
                             </div>
                             <div>
                                 <h3 class="h6 sf-heading mb-3">Masterlist Verification</h3>
-                                @if ($profile?->is_sle_fhe_verified)
+                                @if ($isVerified)
                                     <x-status-badge :status="'Verified'" class="mb-2" />
                                     <p class="text-secondary small mb-0">Your profile is active and verified for the current
                                         academic term.</p>
-                                @else
+                                @elseif ($isPending)
                                     <span class="badge rounded-pill d-inline-flex align-items-center gap-1 fw-semibold bg-cream border text-slate-900"
                                         style="font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.75rem; border-color: #FCD34D; margin-bottom: 0.5rem;">
                                         <x-sf-hourglass filled style="width: 0.85em; height: 0.85em;" />
                                         Pending Review
                                     </span>
+                                    <p class="text-secondary small mb-0">Your request is awaiting review by FASSG.</p>
+                                @else
+                                    <span class="badge rounded-pill d-inline-flex align-items-center gap-1 fw-semibold bg-secondary-subtle text-secondary border border-secondary-subtle"
+                                        style="font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.75rem; margin-bottom: 0.5rem;">
+                                        <i class="bi bi-lock-fill"></i> Not Verified
+                                    </span>
+                                    <p class="text-secondary small mb-0">Submit your residential address to request
+                                        verification.</p>
                                 @endif
                             </div>
                         </div>
@@ -206,7 +229,7 @@
                                 style="border-radius: 8px;">
                                 <i class="bi bi-search me-1"></i> Browse Sponsorship Opportunities
                             </a>
-                        @else
+                        @elseif ($isPending)
                             <button type="button" id="btn-pending-modal-trigger"
                                 class="btn btn-outline-secondary w-100 fw-semibold py-2" data-bs-toggle="modal"
                                 data-bs-target="#verificationPendingModal" style="border-radius: 8px;">
@@ -249,10 +272,91 @@
 
         </div>
 
+        {{-- Residential Address — Verification Request --}}
+        <div class="row g-4 mt-1">
+            <div class="col-12">
+                <div class="card shadow-sm border-0 rounded-3 bg-white">
+                    <div class="card-header bg-white border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2 pt-3 px-4 pb-3">
+                        <h3 class="h6 sf-heading mb-0 d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-location-dot text-primary"></i> Residential Address
+                        </h3>
+                        @if ($isPending)
+                            <span class="badge rounded-pill d-inline-flex align-items-center gap-1 fw-semibold bg-cream border text-slate-900"
+                                style="font-size: 0.75rem; font-weight: 600; padding: 0.3125rem 0.75rem; border-color: #FCD34D;">
+                                <x-sf-hourglass filled style="width: 0.85em; height: 0.85em;" />
+                                Verification Request Pending Review
+                            </span>
+                        @elseif ($isVerified)
+                            <span class="badge rounded-pill d-inline-flex align-items-center gap-1 fw-semibold bg-cyan-50 text-cyan-700 border border-cyan-200"
+                                style="font-size: 0.75rem; font-weight: 600; padding: 0.3125rem 0.75rem;">
+                                <i class="bi bi-lock-fill"></i> Verification Status: Verified - Profile Locked
+                            </span>
+                        @endif
+                    </div>
+                    <div class="card-body p-4">
+                        @if ($isPending || $isVerified)
+                            <div class="d-flex align-items-center gap-2 mb-3 text-secondary small">
+                                <i class="bi bi-lock-fill"></i>
+                                <span>
+                                    @if ($isPending)
+                                        Your submitted address is under review and can no longer be edited.
+                                    @else
+                                        Your residential address is locked because your SLE-FHE status is already verified.
+                                    @endif
+                                </span>
+                            </div>
+                        @endif
+
+                        <form method="POST" action="{{ route('student.sle-fhe.request') }}" class="row g-3">
+                            @csrf
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="province">Province</label>
+                                <input type="text" class="form-control" id="province" name="province"
+                                    value="{{ old('province', $requestedAddress?->province ?? $profile?->province) }}"
+                                    @disabled(! $isEditable) required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="municipality_city">Municipality / City</label>
+                                <input type="text" class="form-control" id="municipality_city" name="municipality_city"
+                                    value="{{ old('municipality_city', $requestedAddress?->municipality_city ?? $profile?->municipality) }}"
+                                    @disabled(! $isEditable) required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="barangay">Barangay</label>
+                                <input type="text" class="form-control" id="barangay" name="barangay"
+                                    value="{{ old('barangay', $requestedAddress?->barangay ?? $profile?->barangay) }}"
+                                    @disabled(! $isEditable) required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="street_purok">Street / Purok</label>
+                                <input type="text" class="form-control" id="street_purok" name="street_purok"
+                                    value="{{ old('street_purok', $requestedAddress?->street_purok ?? $profile?->home_address) }}"
+                                    @disabled(! $isEditable)>
+                            </div>
+                            <div class="col-12 pt-2 d-flex flex-wrap align-items-center gap-2">
+                                @if ($isEditable)
+                                    <button type="submit" class="btn btn-sf-navy px-4 py-2 fw-semibold"
+                                        style="border-radius: 8px;">
+                                        <i class="bi bi-shield-check me-1"></i> Request Verification
+                                    </button>
+                                @else
+                                    <button type="submit" class="btn btn-sf-navy px-4 py-2 fw-semibold" disabled
+                                        style="border-radius: 8px;">
+                                        <i class="bi bi-lock-fill me-1"></i>
+                                        {{ $isPending ? 'Awaiting FASSG Review' : 'Profile Locked' }}
+                                    </button>
+                                @endif
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     {{-- Verification Pending Modal --}}
-    @if (!$isVerified)
+    @if ($isPending)
         <div class="modal fade" id="verificationPendingModal" tabindex="-1"
             aria-labelledby="verificationPendingModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">

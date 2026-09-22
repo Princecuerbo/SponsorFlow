@@ -25,9 +25,9 @@ use App\Http\Controllers\Fassg\VerificationController as FassgVerificationContro
 use App\Http\Controllers\Sponsor\ApprovalUploadController;
 use App\Http\Controllers\Sponsor\ReviewController;
 use App\Http\Controllers\Student\ApplicationController as StudentApplicationController;
-use App\Http\Controllers\Student\ProfileController;
-use App\Http\Controllers\Student\VerificationController;
 use App\Http\Controllers\Student\NotificationController as StudentNotificationController;
+use App\Http\Controllers\Student\ProfileController;
+use App\Http\Controllers\Student\SleVerificationController;
 use App\Models\User;
 use App\Models\SponsorshipProgram;
 use Illuminate\Support\Facades\Artisan;
@@ -101,11 +101,12 @@ Route::middleware(['web', 'auth', 'EnsureUserRole:student'])
         Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
         Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 
-        Route::get('/verification', [VerificationController::class, 'show'])->name('verification.show');
-        Route::get('/sle-fhe', [VerificationController::class, 'show'])->name('sle-fhe');
-        Route::put('/verification', [VerificationController::class, 'update'])->name('verification.update');
-        Route::get('/verify', [VerificationController::class, 'show'])->name('verification');
-        Route::post('/verify', [VerificationController::class, 'update'])->name('verify.store');
+        Route::get('/verification', [SleVerificationController::class, 'show'])->name('verification.show');
+        Route::get('/sle-fhe', [SleVerificationController::class, 'show'])->name('sle-fhe');
+        Route::put('/verification', [SleVerificationController::class, 'update'])->name('verification.update');
+        Route::post('/sle-fhe/request', [SleVerificationController::class, 'submit'])->name('sle-fhe.request');
+        Route::get('/verify', [SleVerificationController::class, 'show'])->name('verification');
+        Route::post('/verify', [SleVerificationController::class, 'update'])->name('verify.store');
 
         Route::get('/programs', [StudentApplicationController::class, 'programs'])->name('programs.index');
         Route::get('/applications/create/{sponsorshipProgram}', [StudentApplicationController::class, 'create'])->name('applications.create');

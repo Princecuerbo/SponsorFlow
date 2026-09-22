@@ -4,14 +4,16 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Student\SleFheRequestSubmissionRequest;
 use App\Http\Requests\Student\UpdateVerificationRequest;
 use App\Models\AcademicProgram;
+use App\Models\SleFheRequest;
 use App\Models\StudentProfile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class VerificationController extends Controller
+class SleVerificationController extends Controller
 {
     use ResolvesModuleContext;
 
@@ -61,6 +63,31 @@ class VerificationController extends Controller
         return redirect()
             ->route('student.sle-fhe')
             ->with('status', $message);
+    }
+
+    public function submit(SleFheRequestSubmissionRequest $request): RedirectResponse
+    {
+        $profile = $this->studentProfile($request);
+
+        if ($profile->sleFheVerification()->exists() || $profile->is_sle_fhe_verified) {
+            return redirect()
+                ->route('student.sle-fhe')
+                ->with('error', 'Your SLE-FHE status is already verified and your residential address is locked.');
+        }
+
+        SleFheRequest::query()->updateOrCreate(
+            ['student_profile_id' => $profile->id],
+            array_merge($request->validated(), [
+                'status' => 'pending',
+                'submitted_at' => now(),
+            ]),
+        );
+
+        $this->audit($request, 'student.sle-fhe.request.submitted', 'sle_fhe_requests');
+
+        return redirect()
+            ->route('student.sle-fhe')
+            ->with('status', 'Your verification request has been submitted. FASSG will review your residential address.');
     }
 
     public function upload(Request $request): RedirectResponse
