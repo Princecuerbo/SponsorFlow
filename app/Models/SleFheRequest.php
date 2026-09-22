@@ -37,4 +37,16 @@ class SleFheRequest extends Model
     {
         return $this->belongsTo(StudentProfile::class);
     }
+
+    public function getFullAddressAttribute(): string
+    {
+        $parts = array_filter([
+            $this->street_purok,
+            $this->barangay,
+            $this->municipality_city,
+            $this->province,
+        ]);
+
+        return implode(', ', $parts);
+    }
 }

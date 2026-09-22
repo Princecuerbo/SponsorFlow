@@ -91,7 +91,7 @@
     </div>
 
     {{-- Masterlist Table --}}
-    @if ($verifiedProfiles->isEmpty())
+    @if ($verifiedVerifications->isEmpty())
         <div class="card sf-card">
             <div class="sf-empty-state">
                 <i class="bi bi-person-check"></i>
@@ -111,11 +111,14 @@
                             <th>Year Level</th>
                             <th>Campus</th>
                             <th>Residency</th>
+                            <th>Verified Address</th>
+                            <th class="text-nowrap">Verified At</th>
                             <th class="text-nowrap">Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($verifiedProfiles as $profile)
+                        @foreach ($verifiedVerifications as $verification)
+                            @php $profile = $verification->studentProfile; @endphp
                             <tr>
                                 {{-- Student ID --}}
                                 <td class="ps-4 text-nowrap">
@@ -159,6 +162,21 @@
                                         <span class="badge rounded-2 fw-medium bg-secondary-subtle text-secondary-emphasis">
                                             <i class="bi bi-building me-1"></i>Urban
                                         </span>
+                                    @endif
+                                </td>
+
+                                {{-- Verified Address --}}
+                                <td>
+                                    <span class="small">{{ $verification->verified_address ?: '—' }}</span>
+                                </td>
+
+                                {{-- Verified At --}}
+                                <td class="text-nowrap">
+                                    <span class="small text-secondary">
+                                        {{ optional($verification->verified_at)->format('M d, Y h:i A') ?: '—' }}
+                                    </span>
+                                    @if ($verification->verifiedBy)
+                                        <div class="small text-muted">by {{ $verification->verifiedBy->name }}</div>
                                     @endif
                                 </td>
 

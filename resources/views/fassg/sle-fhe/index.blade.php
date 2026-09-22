@@ -86,12 +86,12 @@
     </div>
 
     {{-- Queue Table --}}
-    @if ($pendingProfiles->isEmpty())
+    @if ($pendingRequests->isEmpty())
         <div class="card sf-card">
             <div class="sf-empty-state">
                 <i class="bi bi-patch-check"></i>
-                <div class="fw-semibold">No pending profiles</div>
-                <div class="small">No student profiles match the current filters.</div>
+                <div class="fw-semibold">No pending verification requests</div>
+                <div class="small">No student verification requests match the current filters.</div>
             </div>
         </div>
     @else
@@ -111,7 +111,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($pendingProfiles as $profile)
+                        @foreach ($pendingRequests as $pendingRequest)
+                            @php $profile = $pendingRequest->studentProfile; @endphp
                             <tr>
                                 {{-- Student ID --}}
                                 <td class="ps-4 text-nowrap">
@@ -121,6 +122,7 @@
                                 {{-- Student Name --}}
                                 <td>
                                     <div class="fw-semibold">{{ $profile->user->name ?? trim($profile->first_name . ' ' . ($profile->middle_name ?? '') . ' ' . $profile->last_name . ($profile->extension_name ? ' ' . $profile->extension_name : '')) }}</div>
+                                    <div class="small text-secondary">Requested {{ optional($pendingRequest->submitted_at)->format('M d, Y h:i A') }}</div>
                                 </td>
 
                                 {{-- Academic Program --}}
@@ -166,20 +168,22 @@
                                 {{-- Actions --}}
                                 <td class="text-end pe-4">
                                     <div class="d-flex justify-content-end gap-2">
-                                        <form method="POST"
-                                             action="{{ route('fassg.sle-fhe.verify', $profile) }}">
-                                             @csrf
-                                             <button type="submit" class="btn btn-sm btn-sf-navy">
-                                                 <i class="bi bi-check2-circle me-1"></i>Verify SLE-FHE Student
-                                             </button>
+                                        <button type="button" class="btn btn-sm btn-outline-sf-navy"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#viewStudentModal-{{ $pendingRequest->id }}">
+                                            <i class="bi bi-person-vcard me-1"></i>View Student Profile Details
+                                        </button>
+                                        <form method="POST" action="{{ route('fassg.sle-fhe.verify', $profile) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-sf-navy">
+                                                <i class="bi bi-check2-circle me-1"></i>Verify SLE-FHE Student
+                                            </button>
                                         </form>
-                                        <form method="POST"
-                                             action="{{ route('fassg.sle-fhe.reject', $profile) }}">
-                                             @csrf
-                                             <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                 <i class="bi bi-x-circle me-1"></i>Reject
-                                             </button>
-                                        </form>
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#rejectStudentModal-{{ $pendingRequest->id }}">
+                                            <i class="bi bi-x-circle me-1"></i>Reject
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -188,5 +192,117 @@
                 </table>
             </div>
         </div>
+
+        @foreach ($pendingRequests as $pendingRequest)
+            @php $profile = $pendingRequest->studentProfile; @endphp
+
+            {{-- View Student Profile Details Modal --}}
+                            <div class="modal fade" id="viewStudentModal-{{ $pendingRequest->id }}" tabindex="-1"
+                                aria-labelledby="viewStudentModalLabel-{{ $pendingRequest->id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                                    <div class="modal-content border-0 shadow rounded-4">
+                                        <div class="modal-header border-bottom-0 pb-0 px-4 pt-4">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="rounded-3 d-flex align-items-center justify-content-center"
+                                                    style="width: 42px; height: 42px; background-color:#ECFEFF; color:#0e7490;">
+                                                    <i class="bi bi-person-vcard fs-5"></i>
+                                                </div>
+                                                <div>
+                                                    <h5 class="fw-bold text-dark mb-0" id="viewStudentModalLabel-{{ $pendingRequest->id }}">Student Profile Details</h5>
+                                                    <span class="small text-secondary">{{ $profile->student_id_number ?: 'No student ID' }}</span>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body px-4 py-3">
+                                            {{-- Personal Information --}}
+                                            <h6 class="small text-uppercase text-secondary fw-bold mb-2" style="letter-spacing:0.05em;">Personal Information</h6>
+                                            <div class="row g-3 bg-light rounded-3 p-3 mb-4">
+                                                <div class="col-md-6">
+                                                    <div class="small text-secondary">Full Name</div>
+                                                    <div class="fw-semibold">@if ($profile->user) {{ $profile->user->name }} @else {{ trim($profile->first_name . ' ' . ($profile->middle_name ?? '') . ' ' . $profile->last_name . ($profile->extension_name ? ' ' . $profile->extension_name : '')) }} @endif</div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="small text-secondary">Student ID</div>
+                                                    <div class="fw-semibold sf-mono">{{ $profile->student_id_number ?: '—' }}</div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="small text-secondary">Academic Program</div>
+                                                    <div class="fw-semibold">{{ $profile->display_course }}</div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="small text-secondary">Year Level</div>
+                                                    <div class="fw-semibold">{{ $profile->year_level ? 'Year ' . $profile->year_level : 'N/A' }}</div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="small text-secondary">Campus</div>
+                                                    <div class="fw-semibold">{{ $profile->campus ?: 'Not Assigned' }}</div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="small text-secondary">Residency</div>
+                                                    <div class="fw-semibold">{{ $profile->is_rural ? 'Rural' : 'Urban' }}</div>
+                                                </div>
+                                            </div>
+
+                                            {{-- Submitted Address --}}
+                                            <h6 class="small text-uppercase text-secondary fw-bold mb-2" style="letter-spacing:0.05em;">Submitted Address (Verification Request)</h6>
+                                            <div class="row g-3 bg-light rounded-3 p-3">
+                                                <div class="col-md-6">
+                                                    <div class="small text-secondary">Province</div>
+                                                    <div class="fw-semibold">{{ $pendingRequest->province ?: '—' }}</div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="small text-secondary">Municipality / City</div>
+                                                    <div class="fw-semibold">{{ $pendingRequest->municipality_city ?: '—' }}</div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="small text-secondary">Barangay</div>
+                                                    <div class="fw-semibold">{{ $pendingRequest->barangay ?: '—' }}</div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="small text-secondary">Street / Purok</div>
+                                                    <div class="fw-semibold">{{ $pendingRequest->street_purok ?: '—' }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer border-top-0 px-4 pb-4 pt-0">
+                                            <button type="button" class="btn btn-sm fw-semibold text-white px-3" style="background-color:#0f294a;"
+                                                data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Reject Verification Request Modal --}}
+                            <div class="modal fade" id="rejectStudentModal-{{ $pendingRequest->id }}" tabindex="-1"
+                                aria-labelledby="rejectStudentModalLabel-{{ $pendingRequest->id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content border-0 shadow rounded-4">
+                                        <form method="POST" action="{{ route('fassg.sle-fhe.reject', $profile) }}">
+                                            @csrf
+                                            <div class="modal-header border-bottom-0 pb-0 px-4 pt-4">
+                                                <div>
+                                                    <h5 class="fw-bold text-dark mb-0" id="rejectStudentModalLabel-{{ $pendingRequest->id }}">Reject Verification Request</h5>
+                                                    <span class="small text-secondary">{{ $profile->user->name ?? $profile->student_id_number }}</span>
+                                                </div>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body px-4 py-3">
+                                                <label for="reason-{{ $pendingRequest->id }}" class="form-label fw-semibold">Rejection Reason</label>
+                                                <textarea name="reason" id="reason-{{ $pendingRequest->id }}" class="form-control" rows="3"
+                                                    required placeholder="e.g. Student ID does not match the SLE-FHE masterlist"></textarea>
+                                            </div>
+                                            <div class="modal-footer border-top-0 px-4 pb-4 pt-0">
+                                                <button type="button" class="btn btn-sm fw-semibold" style="background-color:#eef2f6; color:#0F2942;"
+                                                    data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="bi bi-x-circle me-1"></i>Confirm Rejection
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
     @endif
 @endsection

@@ -279,13 +279,11 @@
                                                     <i class="bi bi-check2-circle me-1"></i>Verify &amp; Approve SLE-FHE
                                                 </button>
                                             </form>
-                                            <form method="POST"
-                                                action="{{ route('fassg.verification.students.reject', $profile) }}">
-                                                @csrf
-                                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                    <i class="bi bi-arrow-return-left me-1"></i>Request Fix
-                                                </button>
-                                            </form>
+                                            <button type="button" class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#requestFixModal-{{ $profile->id }}">
+                                                <i class="bi bi-arrow-return-left me-1"></i>Request Fix
+                                            </button>
                                         </div>
                                     @else
                                         <a href="{{ route('fassg.verification.show', $application) }}"
@@ -306,5 +304,40 @@
                 {{ $applications->withQueryString()->links() }}
             </div>
         @endif
+
+        @foreach ($verificationItems as $item)
+            @if ($item['type'] === 'student')
+                @php $profile = $item['profile']; @endphp
+                <div class="modal fade" id="requestFixModal-{{ $profile->id }}" tabindex="-1"
+                    aria-labelledby="requestFixModalLabel-{{ $profile->id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 shadow rounded-4">
+                            <form method="POST" action="{{ route('fassg.verification.students.reject', $profile) }}">
+                                @csrf
+                                <div class="modal-header border-bottom-0 pb-0 px-4 pt-4">
+                                    <div>
+                                        <h5 class="fw-bold text-dark mb-0" id="requestFixModalLabel-{{ $profile->id }}">Request Fix</h5>
+                                        <span class="small text-secondary">{{ $profile->user->name }}</span>
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body px-4 py-3">
+                                    <label for="reason-{{ $profile->id }}" class="form-label fw-semibold">Rejection Reason</label>
+                                    <textarea name="reason" id="reason-{{ $profile->id }}" class="form-control" rows="3"
+                                        required placeholder="e.g. Student masterlist does not match the SLE-FHE beneficiary list"></textarea>
+                                </div>
+                                <div class="modal-footer border-top-0 px-4 pb-4 pt-0">
+                                    <button type="button" class="btn btn-sm fw-semibold" style="background-color:#eef2f6; color:#0F2942;"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-arrow-return-left me-1"></i>Confirm Request Fix
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endforeach
     @endif
 @endsection
