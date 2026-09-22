@@ -101,10 +101,13 @@
                                             <td class="text-secondary">{{ $item->course ?: '—' }}</td>
                                             <td class="text-secondary">{{ $item->year_level ?: '—' }}</td>
                                             <td>
-                                                @if ($item->is_sle_fhe_verified)
-                                                    <x-status-badge :status="'Verified'" />
+                                                @php
+                                                    $isVerified = $item->is_sle_fhe_verified || ($item->studentProfile && $item->studentProfile->isSleFheVerified());
+                                                @endphp
+                                                @if ($isVerified)
+                                                    <span class="px-2 py-0.5 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md">✓ Verified</span>
                                                 @else
-                                                    <x-status-badge :status="'Pending'" />
+                                                    <span class="px-2 py-0.5 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-md">⏳ Pending</span>
                                                 @endif
                                             </td>
                                             <td><x-status-badge :status="$item->status" /></td>

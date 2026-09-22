@@ -340,6 +340,23 @@
         .border-cream-gold { border-color: #FCD34D !important; }
         .text-slate-900    { color: #0f172a !important; }
 
+        .bg-amber-50     { background-color: #fffbeb !important; }
+        .text-amber-700  { color: #b45309 !important; }
+        .text-amber-800  { color: #92400e !important; }
+        .border-amber-200 { border-color: #fde68a !important; }
+        .border-amber-300 { border-color: #fcd34d !important; }
+
+        .bg-blue-50     { background-color: #eff6ff !important; }
+        .text-blue-700  { color: #1d4ed8 !important; }
+        .border-blue-200 { border-color: #bfdbfe !important; }
+
+        .text-xs { font-size: 0.75rem !important; }
+        .px-2.5 { padding-left: 0.625rem !important; padding-right: 0.625rem !important; }
+        .py-0.5 { padding-top: 0.125rem !important; padding-bottom: 0.125rem !important; }
+        .rounded-md { border-radius: 0.375rem !important; }
+        .inline-flex { display: inline-flex !important; }
+        .items-center { align-items: center !important; }
+
         /* Password toggle eye feedback colors */
         .text-indigo-600 { color: #4f46e5 !important; }
         .text-gray-400   { color: #94a3b8 !important; }

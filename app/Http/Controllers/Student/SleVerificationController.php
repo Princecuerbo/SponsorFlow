@@ -36,7 +36,18 @@ class SleVerificationController extends Controller
             ->orderBy('province')
             ->pluck('province');
 
-        $selectedProvince = old('province', $profile?->sleFheRequest?->province ?? '');
+        $requestedAddress = $profile?->sleFheRequest;
+        $verification = $profile?->sleFheVerification;
+
+        $verifiedComponents = $profile !== null
+            && $profile->isSleFheVerified()
+            && $requestedAddress === null
+            && filled($verification?->verified_address)
+            ? $this->splitVerifiedAddress((string) $verification->verified_address)
+            : [];
+
+        $effectiveProvince = $requestedAddress?->province ?: ($verifiedComponents['province'] ?? '');
+        $selectedProvince = old('province', $effectiveProvince);
         $municipalities = $selectedProvince !== ''
             ? DB::table('localaddress')
                 ->where('province', $selectedProvince)
@@ -53,7 +64,23 @@ class SleVerificationController extends Controller
             'programs' => $programs,
             'provinces' => $provinces,
             'municipalities' => $municipalities,
+            'verifiedComponents' => $verifiedComponents,
         ]);
+    }
+
+    private function splitVerifiedAddress(string $address): array
+    {
+        $parts = array_values(array_filter(
+            array_map('trim', explode(',', $address)),
+            static fn (string $part): bool => $part !== '',
+        ));
+
+        return [
+            'street_purok' => $parts[0] ?? '',
+            'barangay' => $parts[1] ?? '',
+            'municipality_city' => $parts[2] ?? '',
+            'province' => $parts[3] ?? '',
+        ];
     }
 
     public function municipalities(string $province): JsonResponse

@@ -12,8 +12,12 @@
         $isPending = ! $isVerified && $sleFheStatus === 'Pending Review';
         $isEditable = ! $isVerified && ! $isPending;
         $requestedAddress = $profile?->sleFheRequest;
-        $selectedProvince = old('province', $requestedAddress?->province ?? '');
-        $selectedCity = old('municipality_city', $requestedAddress?->municipality_city ?? '');
+        $lockedProvince = $verifiedComponents['province'] ?? '';
+        $lockedCity = $verifiedComponents['municipality_city'] ?? '';
+        $lockedBarangay = $verifiedComponents['barangay'] ?? '';
+        $lockedStreet = $verifiedComponents['street_purok'] ?? '';
+        $selectedProvince = old('province', $requestedAddress?->province ?: $lockedProvince);
+        $selectedCity = old('municipality_city', $requestedAddress?->municipality_city ?: $lockedCity);
     @endphp
 
     <div class="container-fluid px-3 px-md-4 py-4 mb-5" style="background-color: #f8fafc; min-height: calc(100vh - 70px);">
@@ -197,13 +201,13 @@
                             <div class="col-12 col-md-6">
                                 <label class="form-label" for="barangay">Barangay</label>
                                 <input type="text" class="form-control" id="barangay" name="barangay"
-                                    value="{{ old('barangay', $requestedAddress?->barangay) }}"
+                                    value="{{ old('barangay', $requestedAddress?->barangay ?: $lockedBarangay) }}"
                                     @disabled(! $isEditable) required>
                             </div>
                             <div class="col-12 col-md-6">
                                 <label class="form-label" for="street_purok">Street / Purok</label>
                                 <input type="text" class="form-control" id="street_purok" name="street_purok"
-                                    value="{{ old('street_purok', $requestedAddress?->street_purok) }}"
+                                    value="{{ old('street_purok', $requestedAddress?->street_purok ?: $lockedStreet) }}"
                                     @disabled(! $isEditable)>
                             </div>
                             <div class="col-12 pt-2 d-flex flex-wrap align-items-center gap-2">

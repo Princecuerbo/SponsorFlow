@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\SleFheStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -206,8 +207,17 @@ class StudentProfile extends Model
         return $verified;
     }
 
+    public function scopeSleFheVerified(Builder $query): Builder
+    {
+        return $query->where(function (Builder $query): void {
+            $query->whereHas('sleFheVerification')
+                ->orWhereHas('sleFheRequest', fn ($query) => $query->where('status', 'verified'));
+        });
+    }
+
     public function isSleFheVerified(): bool
     {
-        return $this->sleFheVerification()->exists();
+        return $this->sleFheVerification()->exists()
+            || $this->sleFheRequest()->where('status', 'verified')->exists();
     }
 }

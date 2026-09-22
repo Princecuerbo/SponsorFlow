@@ -78,13 +78,20 @@ class ApplicantVerificationController extends Controller
 
         $programs = SponsorshipProgram::query()
             ->with(['sponsor', 'academicPrograms', 'fixedLists' => function ($q): void {
-                $q->whereIn('status', [FixedListStatus::Saved, FixedListStatus::Draft])
-                    ->orderBy('batch_name');
+                $q->orderBy('batch_name');
             }])
             ->orderBy('program_name')
             ->get();
 
-        $savedFixedLists = $programs->pluck('fixedLists')->flatten()->values();
+        $allFixedLists = $programs->pluck('fixedLists')->flatten()->values();
+
+        $savedFixedLists = $allFixedLists
+            ->whereIn('status', [FixedListStatus::Saved, FixedListStatus::Draft])
+            ->values();
+
+        $finalizedFixedLists = $allFixedLists
+            ->where('status', FixedListStatus::Finalized)
+            ->values();
 
         $selectedProgram = $programId > 0 ? $programs->firstWhere('id', $programId) : null;
 
@@ -117,6 +124,7 @@ class ApplicantVerificationController extends Controller
             'rejectedCount' => $rejectedCount,
             'programs' => $programs,
             'savedFixedLists' => $savedFixedLists,
+            'finalizedFixedLists' => $finalizedFixedLists,
             'selectedProgram' => $selectedProgram,
             'availableSlots' => $availableSlots,
             'selectedProgramId' => $programId,
@@ -137,6 +145,7 @@ class ApplicantVerificationController extends Controller
             'selected_applications' => ['sometimes', 'array', 'min:1'],
             'selected_applications.*' => ['integer'],
             'existing_fixed_list_id' => ['nullable', 'integer', 'exists:fixed_lists,id'],
+            'locked_fixed_list_id' => ['nullable', 'integer', 'exists:fixed_lists,id'],
         ]);
 
         $programId = (int) $validated['sponsorship_program_id'];
@@ -157,6 +166,28 @@ class ApplicantVerificationController extends Controller
             if ($targetList === null) {
                 return back()->withErrors([
                     'existing_fixed_list_id' => 'The selected batch is no longer available for appending. Only Saved or Draft batches from the target program can be modified.',
+                ]);
+            }
+        }
+
+        // Optional finalized Fixed List whose verified candidates are locked
+        // into the top slots (Stage 1). Only Finalized lists belonging to the
+        // target program qualify; anything else is rejected.
+        $lockedFixedListId = filled($validated['locked_fixed_list_id'] ?? null)
+            ? (int) $validated['locked_fixed_list_id']
+            : null;
+
+        $lockedList = null;
+        if ($lockedFixedListId !== null) {
+            $lockedList = FixedList::query()
+                ->where('id', $lockedFixedListId)
+                ->where('sponsorship_program_id', $programId)
+                ->where('status', FixedListStatus::Finalized)
+                ->first();
+
+            if ($lockedList === null) {
+                return back()->withErrors([
+                    'locked_fixed_list_id' => 'The selected fixed list is no longer available. Only Finalized lists from the target program can be locked into the top slots.',
                 ]);
             }
         }
@@ -210,17 +241,21 @@ class ApplicantVerificationController extends Controller
             ]);
         }
 
-        // Reserved fixed-list seats: verified sponsor-provided list entries for
-        // this program that are not yet linked to an application.
-        $reservedStudentIds = FixedListItem::query()
-            ->where('is_sle_fhe_verified', true)
-            ->whereNull('application_id')
-            ->whereHas('fixedList', fn ($query) => $query->where('sponsorship_program_id', $programId))
-            ->pluck('student_id_number')
-            ->map(static fn (string $id): string => trim($id))
-            ->filter()
-            ->values()
-            ->toArray();
+        // Reserved fixed-list seats: verified items of the selected Finalized
+        // Fixed List that are not yet linked to an application. When no list is
+        // selected (or none is finalized), no candidates are locked and all
+        // slots are filled by the general auto-ranking queue.
+        $reservedStudentIds = $lockedList === null
+            ? []
+            : FixedListItem::query()
+                ->where('fixed_list_id', $lockedList->id)
+                ->where('is_sle_fhe_verified', true)
+                ->whereNull('application_id')
+                ->pluck('student_id_number')
+                ->map(static fn (string $id): string => trim($id))
+                ->filter()
+                ->values()
+                ->toArray();
 
         $reservedIds = array_flip($reservedStudentIds);
 

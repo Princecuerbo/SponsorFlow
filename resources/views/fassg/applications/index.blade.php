@@ -510,6 +510,22 @@
                     <div class="form-text small text-secondary">
                         Only applicants applied to the target program will be included in the batch.
                     </div>
+                    <div id="finalizedListGroup" class="mb-3">
+                        <label class="form-label small fw-semibold text-dark" for="locked_fixed_list_id">Lock from Finalized Fixed List</label>
+                        <select id="locked_fixed_list_id" name="locked_fixed_list_id" class="form-select">
+                            <option value="">None / General Applicants Only</option>
+                            @foreach ($finalizedFixedLists as $finalizedList)
+                                <option value="{{ $finalizedList->id }}"
+                                    data-program-id="{{ $finalizedList->sponsorship_program_id }}"
+                                    @selected((int) old('locked_fixed_list_id') === $finalizedList->id)>
+                                    {{ $finalizedList->batch_name }} ({{ $finalizedList->total_names }} {{ Str::plural('name', $finalizedList->total_names) }})
+                                </option>
+                            @endforeach
+                        </select>
+                        <div class="form-text small text-secondary">
+                            Candidates from the selected finalized list are locked into the top slots; remaining slots are auto-ranked by GWA, then submission date.
+                        </div>
+                    </div>
                     <div id="selectedApplicantsContainer"></div>
                 </div>
                 <div class="modal-footer">
@@ -639,6 +655,7 @@
                 const batchNameInput = document.getElementById('batch_name');
                 const existingListSelect = document.getElementById('existing_fixed_list_id');
                 const batchProgramSelect = document.getElementById('batch_program');
+const finalizedListSelect = document.getElementById('locked_fixed_list_id');
 
                 function syncBatchMode() {
                     if (!batchModeNew) return;
@@ -663,9 +680,16 @@
                     Array.from(existingListSelect.options).forEach(opt => {
                         opt.hidden = opt.value !== '' && opt.dataset.programId !== pid;
                     });
-                    if (existingListSelect.value && existingListSelect.selectedOptions.length > 0 && existingListSelect.selectedOptions[0].hidden) {
-                        existingListSelect.value = '';
+                    if (finalizedListSelect) {
+                        Array.from(finalizedListSelect.options).forEach(opt => {
+                            opt.hidden = opt.value !== '' && opt.dataset.programId !== pid;
+                        });
                     }
+                    [existingListSelect, finalizedListSelect].forEach(sel => {
+                        if (sel && sel.value && sel.selectedOptions.length > 0 && sel.selectedOptions[0].hidden) {
+                            sel.value = '';
+                        }
+                    });
                 }
 
                 if (batchModeNew) batchModeNew.addEventListener('change', syncBatchMode);
