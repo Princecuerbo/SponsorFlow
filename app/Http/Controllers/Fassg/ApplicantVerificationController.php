@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Fassg;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\DocumentType;
-use App\Enums\FixedListItemStatus;
 use App\Enums\FixedListStatus;
+use App\Enums\GeneratedBatchStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Fassg\RejectApplicationRequest;
@@ -14,6 +14,7 @@ use App\Models\Application;
 use App\Models\ApplicationDocument;
 use App\Models\FixedList;
 use App\Models\FixedListItem;
+use App\Models\GeneratedBatch;
 use App\Models\SleFheVerification;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
@@ -85,19 +86,24 @@ class ApplicantVerificationController extends Controller
         $endorsedKeys = $this->finalizedEndorsedKeys($applications->getCollection()->all());
 
         $programs = SponsorshipProgram::query()
-            ->with(['sponsor', 'academicPrograms', 'fixedLists' => function ($q): void {
-                $q->orderBy('batch_name');
-            }])
+            ->with([
+                'sponsor',
+                'academicPrograms',
+                'fixedLists' => fn ($q) => $q->orderBy('batch_name'),
+                'generatedBatches' => fn ($q) => $q->orderBy('batch_name'),
+            ])
             ->orderBy('program_name')
             ->get();
 
-        $allFixedLists = $programs->pluck('fixedLists')->flatten()->values();
-
-        $savedFixedLists = $allFixedLists
-            ->whereIn('status', [FixedListStatus::Saved, FixedListStatus::Draft])
+        $savedFixedLists = $programs
+            ->pluck('generatedBatches')
+            ->flatten()
+            ->filter(fn (GeneratedBatch $batch): bool => $batch->status === GeneratedBatchStatus::Saved)
             ->values();
 
-        $finalizedFixedLists = $allFixedLists
+        $finalizedFixedLists = $programs
+            ->pluck('fixedLists')
+            ->flatten()
             ->where('status', FixedListStatus::Finalized)
             ->values();
 
@@ -154,7 +160,7 @@ class ApplicantVerificationController extends Controller
             'sponsorship_program_id' => ['required', 'integer', 'exists:sponsorship_programs,id'],
             'selected_applications' => ['sometimes', 'array', 'min:1'],
             'selected_applications.*' => ['integer'],
-            'existing_fixed_list_id' => ['nullable', 'integer', 'exists:fixed_lists,id'],
+            'existing_fixed_list_id' => ['nullable', 'integer', 'exists:generated_batches,id'],
             'locked_fixed_list_id' => ['nullable', 'integer', 'exists:fixed_lists,id'],
         ]);
 
@@ -167,15 +173,15 @@ class ApplicantVerificationController extends Controller
 
         $targetList = null;
         if ($appendToId !== null) {
-            $targetList = FixedList::query()
+            $targetList = GeneratedBatch::query()
                 ->where('id', $appendToId)
                 ->where('sponsorship_program_id', $programId)
-                ->whereIn('status', [FixedListStatus::Saved, FixedListStatus::Draft])
+                ->where('status', GeneratedBatchStatus::Saved)
                 ->first();
 
             if ($targetList === null) {
                 return back()->withErrors([
-                    'existing_fixed_list_id' => 'The selected batch is no longer available for appending. Only Saved or Draft batches from the target program can be modified.',
+                    'existing_fixed_list_id' => 'The selected batch is no longer available for appending. Only Saved batches from the target program can be modified.',
                 ]);
             }
         }
@@ -209,7 +215,7 @@ class ApplicantVerificationController extends Controller
             ->where('sponsorship_program_id', $programId)
             ->with('studentProfile.user')
             ->whereIn('status', [ApplicationStatus::Pending, ApplicationStatus::Verified])
-            ->whereDoesntHave('fixedListItems')
+            ->whereDoesntHave('batchCandidates')
             ->orderBy('gpa_submitted', 'asc')
             ->orderBy('submitted_at', 'asc');
 
@@ -231,7 +237,7 @@ class ApplicantVerificationController extends Controller
                     $application->status,
                     [ApplicationStatus::Pending, ApplicationStatus::Verified],
                     true,
-                ) && $application->fixedListItems()->doesntExist(),
+                ) && $application->batchCandidates()->doesntExist(),
             );
 
             if ($eligible->count() !== $applications->count()) {
@@ -251,7 +257,7 @@ class ApplicantVerificationController extends Controller
         // by best GWA, then submission date.
         $lockedEntries = $lockedList === null
             ? collect()
-            : $this->lockedCandidateEntries($lockedList, $programId);
+            : $this->lockedCandidateEntries($lockedList, $programId, $targetList?->id);
 
         if ($eligible->isEmpty() && $lockedEntries->isEmpty()) {
             return back()->withErrors([
@@ -296,12 +302,12 @@ class ApplicantVerificationController extends Controller
             $list = $targetList;
 
             if ($list === null) {
-                $list = FixedList::query()->create([
+                $list = GeneratedBatch::query()->create([
                     'sponsorship_program_id' => $programId,
                     'batch_name' => $validated['batch_name'],
-                    'uploaded_by_fassg_id' => $this->actor($request)->id,
-                    'total_names' => 0,
-                    'status' => FixedListStatus::Saved,
+                    'created_by_fassg_id' => $this->actor($request)->id,
+                    'total_slots' => 0,
+                    'status' => GeneratedBatchStatus::Saved,
                 ]);
             }
 
@@ -309,32 +315,14 @@ class ApplicantVerificationController extends Controller
             $added = 0;
 
             foreach ($candidates as [$application, $isFixedList]) {
-                $profile = $application->studentProfile;
-
-                if ($profile === null) {
+                if ($application->batchCandidates()->where('generated_batch_id', $list->id)->exists()) {
                     continue;
                 }
-
-                if ($list->items()->where('student_id_number', $profile->student_id_number)->exists()) {
-                    continue;
-                }
-
-                $name = $profile->user?->name ?? trim(
-                    ($profile->first_name ?? '').' '.($profile->middle_name ?? '').' '.($profile->last_name ?? '')
-                );
 
                 $list->items()->create([
                     'application_id' => $application->id,
-                    'student_name' => $name !== '' ? $name : 'Unknown',
-                    'student_id_number' => $profile->student_id_number ?: 'Unknown',
-                    'course' => $profile->academicProgram?->name ?? $profile->course ?: 'Unspecified',
-                    'year_level' => $profile->year_level ?? 1,
-                    'campus' => $profile->campus ?: null,
-                    'is_sle_fhe_verified' => $profile->isSleFheVerified(),
-                    'is_fixed_list' => $isFixedList,
-                    'origin_type' => $isFixedList ? 'fixed_list' : 'ranked_queue',
                     'rank_position' => $nextRank,
-                    'status' => FixedListItemStatus::Pending,
+                    'origin_type' => $isFixedList ? 'fixed_list' : 'ranked_queue',
                 ]);
 
                 $application->update([
@@ -346,24 +334,24 @@ class ApplicantVerificationController extends Controller
                 $added++;
             }
 
-            $list->update(['total_names' => $list->items()->count()]);
+            $list->update(['total_slots' => $list->items()->count()]);
 
             return [$list, $added];
         });
 
         if ($appendToId !== null) {
-            $this->audit($request, 'fassg.fixed_list.appended_from_applications', 'fixed_lists');
+            $this->audit($request, 'fassg.generated_batch.appended_from_applications', 'generated_batches');
 
             return redirect()
                 ->route('fassg.generated-batches.show', $list)
                 ->with('status', "Successfully added {$added} student(s) to {$list->batch_name}.");
         }
 
-        $this->audit($request, 'fassg.fixed_list.generated_from_applications', 'fixed_lists');
+        $this->audit($request, 'fassg.generated_batch.generated_from_applications', 'generated_batches');
 
         return redirect()
             ->route('fassg.generated-batches.show', $list)
-            ->with('status', "Batch list '{$list->batch_name}' created from {$list->total_names} applicant(s). Review and submit when ready.");
+            ->with('status', "Batch list '{$list->batch_name}' created from {$list->total_slots} applicant(s). Review and submit when ready.");
     }
 
     /**
@@ -374,7 +362,7 @@ class ApplicantVerificationController extends Controller
      *
      * @return Collection<string, array{profile: StudentProfile, application: ?Application}>
      */
-    private function lockedCandidateEntries(FixedList $lockedList, int $programId): Collection
+    private function lockedCandidateEntries(FixedList $lockedList, int $programId, ?int $targetBatchId): Collection
     {
         $resolved = [];
 
@@ -397,21 +385,23 @@ class ApplicantVerificationController extends Controller
                 continue;
             }
 
-            $application = $item->application_id !== null
-                ? Application::query()
-                    ->whereKey((int) $item->application_id)
-                    ->where('sponsorship_program_id', $programId)
-                    ->first()
-                : null;
-
-            $application ??= Application::query()
+            $application = Application::query()
                 ->where('sponsorship_program_id', $programId)
                 ->where('student_profile_id', $profile->id)
                 ->first();
 
-            // Candidates already claimed by another batch are left untouched.
+            // Candidates already claimed by another active batch are left
+            // untouched (append-only batches may reference their own items).
             if ($application !== null
-                && $application->fixedListItems()->where('fixed_list_id', '!=', $lockedList->id)->exists()) {
+                && $targetBatchId !== null
+                && $application->batchCandidates()
+                    ->where('generated_batch_id', '!=', $targetBatchId)
+                    ->whereHas('generatedBatch', fn ($query) => $query->whereIn('status', [
+                        GeneratedBatchStatus::Saved,
+                        GeneratedBatchStatus::Submitted,
+                        GeneratedBatchStatus::Approved,
+                    ]))
+                    ->exists()) {
                 continue;
             }
 

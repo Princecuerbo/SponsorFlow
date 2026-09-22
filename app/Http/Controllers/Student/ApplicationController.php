@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Student;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\DocumentType;
-use App\Enums\FixedListStatus;
+use App\Enums\GeneratedBatchStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Student\StoreApplicationRequest;
 use App\Models\Application;
-use App\Models\FixedListItem;
+use App\Models\BatchCandidate;
 use App\Models\SponsorshipProgram;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -181,12 +181,11 @@ class ApplicationController extends Controller
         $profile = $this->studentProfile($request);
         $this->assertOwnsApplication($profile->id, $application);
 
-        $isApprovedOnFixedList = FixedListItem::query()
-            ->where('student_id_number', $profile->student_id_number)
-            ->where('is_sle_fhe_verified', true)
-            ->whereHas('fixedList', function ($query) use ($application): void {
+        $isApprovedOnFixedList = BatchCandidate::query()
+            ->whereHas('application', fn ($query) => $query->where('student_profile_id', $profile->id))
+            ->whereHas('generatedBatch', function ($query) use ($application): void {
                 $query->where('sponsorship_program_id', $application->sponsorship_program_id)
-                    ->where('status', FixedListStatus::Approved);
+                    ->where('status', GeneratedBatchStatus::Approved);
             })
             ->exists();
 

@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Accounting;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
-use App\Enums\FixedListStatus;
+use App\Enums\GeneratedBatchStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
-use App\Models\FixedListItem;
+use App\Models\BatchCandidate;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -24,14 +24,14 @@ class DashboardController extends Controller
             ->latest('approved_at')
             ->get();
 
-        $confirmedListItems = FixedListItem::query()
-            ->where('is_sle_fhe_verified', true)
+        $confirmedCandidates = BatchCandidate::query()
             ->whereDoesntHave('application', fn ($q) => $q->where('status', ApplicationStatus::Rejected))
-            ->whereHas('fixedList', function ($query): void {
-                $query->where('status', FixedListStatus::Approved)
-                    ->whereHas('latestApproval', fn ($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed));
+            ->whereHas('generatedBatch', function ($query): void {
+                $query->where('status', GeneratedBatchStatus::Approved)
+                    ->whereHas('latestApproval', fn ($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed))
+                    ->whereNotNull('fassg_assigned_at');
             })
-            ->with('fixedList.sponsorshipProgram.sponsor')
+            ->with('generatedBatch.sponsorshipProgram.sponsor')
             ->get();
 
         $applicationBeneficiaries = $approvedApplications->map(function (Application $application): array {
@@ -49,9 +49,9 @@ class DashboardController extends Controller
             ];
         });
 
-        $fixedListBeneficiaries = $confirmedListItems->map(function (FixedListItem $item): array {
-            $list = $item->fixedList;
-            $program = $list->sponsorshipProgram;
+        $fixedListBeneficiaries = $confirmedCandidates->map(function (BatchCandidate $item): array {
+            $batch = $item->generatedBatch;
+            $program = $batch->sponsorshipProgram;
 
             return [
                 'type' => 'fixed_list',
@@ -61,7 +61,7 @@ class DashboardController extends Controller
                 'program_category' => $program->category?->value ?? 'General',
                 'sponsor_name' => $program->sponsor->company_organization_name,
                 'sponsor_id' => $program->sponsor_id,
-                'date_approved' => $list->updated_at,
+                'date_approved' => $batch->fassg_assigned_at ?? $batch->updated_at,
             ];
         });
 

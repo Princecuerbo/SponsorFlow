@@ -109,7 +109,7 @@
                                         <div class="small text-secondary">{{ $list->sponsorshipProgram->program_name }}
                                         </div>
                                     </td>
-                                    <td>{{ $list->total_names }} {{ Str::plural('student', $list->total_names) }}</td>
+                                    <td>{{ $list->total_slots }} {{ Str::plural('student', $list->total_slots) }}</td>
                                     <td><x-status-badge :status="'Submitted'" /></td>
                                     <td>
                                         @if (!empty($list->approval_document_path))

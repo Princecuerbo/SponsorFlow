@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\FixedListStatus;
+use App\Enums\GeneratedBatchStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -38,6 +39,12 @@ class Sponsor extends Model
     {
         return $this->hasManyThrough(FixedList::class, SponsorshipProgram::class)
             ->where('fixed_lists.status', FixedListStatus::Submitted);
+    }
+
+    public function forwardedGeneratedBatches(): HasManyThrough
+    {
+        return $this->hasManyThrough(GeneratedBatch::class, SponsorshipProgram::class)
+            ->where('generated_batches.status', GeneratedBatchStatus::Submitted);
     }
 
     public function verifiedApplicants(): HasManyThrough

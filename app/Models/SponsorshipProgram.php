@@ -202,6 +202,11 @@ class SponsorshipProgram extends Model
         return $this->hasMany(FixedList::class);
     }
 
+    public function generatedBatches(): HasMany
+    {
+        return $this->hasMany(GeneratedBatch::class);
+    }
+
     public function sponsorApprovals(): HasMany
     {
         return $this->hasMany(SponsorApproval::class);

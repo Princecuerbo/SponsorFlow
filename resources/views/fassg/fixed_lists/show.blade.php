@@ -41,22 +41,6 @@
         <div class="col-md-8">
             <div class="card sf-card mb-4 border-0 shadow-sm">
                 <div class="card-body p-4">
-                    @php
-                        $generatedFromQueueCount = $list->items->whereNotNull('application_id')->count();
-                        $generatedFromQueue = $generatedFromQueueCount > 0;
-                    @endphp
-
-                    @if ($generatedFromQueue)
-                        <div class="alert alert-info border-0 mb-3 d-flex align-items-start gap-2 py-2 small">
-                            <i class="bi bi-list-check text-primary mt-1"></i>
-                            <div>
-                                <strong>Generated from Application Queue</strong> — linked to
-                                {{ $generatedFromQueueCount }} application(s). These candidates originate from the FASSG
-                                applicant queue, not manual encoding. You can still encode or import additional names below.
-                            </div>
-                        </div>
-                    @endif
-
                     @if (in_array($list->status, [\App\Enums\FixedListStatus::Draft, \App\Enums\FixedListStatus::Rejected, \App\Enums\FixedListStatus::Saved], true))
                         <div class="border-top pt-3 mt-3">
                             <h3 class="h6 fw-bold mb-3"><i class="bi bi-person-plus me-1"></i>Encode Student Manually</h3>
@@ -120,7 +104,6 @@
                                 <th>Academic Program</th>
                                 <th>Year Level</th>
                                 <th>Campus</th>
-                                <th>Rank</th>
                                 <th>Candidate Source</th>
                                 <th>SLE-FHE Status</th>
                                 <th>Endorsed</th>
@@ -132,30 +115,16 @@
                                 <tr class="{{ $item->is_manually_endorsed ? 'table-success' : '' }}">
                                     <td class="ps-4">
                                         <input type="checkbox" class="form-check-input item-checkbox"
-                                            value="{{ $item->id }}" aria-label="Select {{ $item->student_name }}">
+                                            value="{{ $item->id }}" aria-label="Select {{ $item->student_name }}"
+                                            @disabled($item->is_manually_endorsed)>
                                     </td>
                                     <td class="sf-mono text-secondary fw-semibold">{{ $item->student_id_number ?: 'N/A' }}</td>
                                     <td class="fw-semibold">
                                         {{ $item->student_name }}
-                                        @if ($item->application_id)
-                                            <a href="{{ route('fassg.applications.show', $item->application_id) }}"
-                                                class="d-block small text-primary text-decoration-none fw-normal">
-                                                <i class="bi bi-arrow-right-circle me-1"></i>View source application
-                                            </a>
-                                        @endif
                                     </td>
                                     <td>{{ $item->course ?: '—' }}</td>
                                     <td>{{ $item->year_level ? "Year {$item->year_level}" : '—' }}</td>
                                     <td>{{ $item->campus ?: 'N/A' }}</td>
-                                    <td>
-                                        @if ($item->rank_position !== null)
-                                            <span
-                                                class="d-inline-flex align-items-center justify-content-center rounded-circle bg-cyan-50 text-cyan-700 border border-cyan-200 fw-bold"
-                                                style="width: 30px; height: 30px;">{{ $item->rank_position }}</span>
-                                        @else
-                                            <span class="text-secondary small">—</span>
-                                        @endif
-                                    </td>
                                     <td>
                                         @if ($item->is_fixed_list)
                                             <span class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-semibold rounded-md bg-amber-50 text-amber-800 border border-amber-300">★ Endorsed by Sponsor</span>
@@ -241,16 +210,34 @@
 
                 <div class="card sf-card border-0 shadow-sm">
                     <div class="card-body p-4 text-center">
+                        @php
+                            $hasUnverifiedOrUnendorsed = $list->items->contains(
+                                fn ($item) => ! ($item->is_sle_fhe_verified || $item->studentProfile?->isSleFheVerified())
+                                    || ! $item->is_manually_endorsed
+                            );
+                        @endphp
                         <h3 class="h6 fw-bold mb-2">Finalize Fixed List</h3>
                         <p class="text-secondary small mb-3">Once finalized, candidates in this fixed list will be locked into top slots when generating program batches.</p>
-                        <form method="POST" action="{{ route('fassg.fixed-lists.finalize', $list) }}">
-                            @csrf
-                            @method('PATCH')
-                            <button type="submit" class="btn btn-sf-navy w-100 py-2" @disabled($list->items->isEmpty())
-                                onClick="if ({{ $list->items->where('is_sle_fhe_verified', true)->count() }} !== {{ $list->items->count() }}) { alert('Verify all students before finalizing this list.'); return false; } return confirm('All students are verified. Finalize this list for batch generation?');">
-                                <i class="bi bi-send me-1"></i>Finalize List
+                        @if ($list->items->isNotEmpty() && ! $hasUnverifiedOrUnendorsed)
+                            <form method="POST" action="{{ route('fassg.fixed-lists.finalize', $list) }}">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="btn btn-sf-navy w-100 py-2"
+                                    onClick="return confirm('All students are verified and endorsed. Finalize this list for batch generation?');">
+                                    <i class="bi bi-send me-1"></i>Finalize List
+                                </button>
+                            </form>
+                        @else
+                            @if ($hasUnverifiedOrUnendorsed)
+                                <div class="alert alert-warning border-0 py-2 small text-start mb-3">
+                                    <i class="bi bi-exclamation-triangle me-1"></i>All candidates in this list must be SLE-FHE verified and endorsed before finalization.
+                                </div>
+                            @endif
+                            <button type="button" disabled class="btn btn-sf-navy w-100 py-2"
+                                style="cursor: not-allowed; opacity: 0.5;">
+                                <i class="bi bi-send me-1"></i>{{ $hasUnverifiedOrUnendorsed ? 'Complete Verifications & Endorsements to Finalize' : 'Finalize List' }}
                             </button>
-                        </form>
+                        @endif
                     </div>
                 </div>
             @elseif ($list->status === \App\Enums\FixedListStatus::Finalized)
@@ -298,22 +285,23 @@
                 }
 
                 const checkboxes = Array.from(document.querySelectorAll('.item-checkbox'));
+                const selectable = () => checkboxes.filter(chk => !chk.disabled);
 
                 function updateState() {
-                    const checked = checkboxes.filter(chk => chk.checked);
+                    const checked = selectable().filter(chk => chk.checked);
                     bulkEndorseBtn.disabled = checked.length === 0;
-                    selectAll.checked = checked.length > 0 && checked.length === checkboxes.length;
+                    selectAll.checked = checked.length > 0 && checked.length === selectable().length;
                 }
 
                 selectAll.addEventListener('change', function () {
-                    checkboxes.forEach(chk => { chk.checked = selectAll.checked; });
+                    selectable().forEach(chk => { chk.checked = selectAll.checked; });
                     updateState();
                 });
 
                 checkboxes.forEach(chk => chk.addEventListener('change', updateState));
 
                 bulkEndorseBtn.addEventListener('click', function () {
-                    const checked = checkboxes.filter(chk => chk.checked);
+                    const checked = selectable().filter(chk => chk.checked);
                     if (checked.length === 0) {
                         return;
                     }

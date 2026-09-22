@@ -59,11 +59,6 @@ class FixedList extends Model
         return $this->hasMany(FixedListItem::class);
     }
 
-    public function applications(): HasMany
-    {
-        return $this->hasMany(Application::class, 'batch_id');
-    }
-
     public function approvals(): HasMany
     {
         return $this->sponsorApprovals();

@@ -37,8 +37,9 @@
                         @forelse ($approvals as $approval)
                             <tr>
                                 <td class="ps-4">
-                                    <div class="fw-semibold">{{ $approval->fixedList->batch_name }}</div>
-                                    <div class="small text-secondary">{{ $approval->fixedList->items->reject(fn($item) => $item->application?->status->value === 'Rejected')->count() }} beneficiary(ies)</div>
+                                    @php($approvalBatch = $approval->generatedBatch ?? $approval->fixedList)
+                                    <div class="fw-semibold">{{ $approvalBatch?->batch_name }}</div>
+                                    <div class="small text-secondary">{{ $approvalBatch?->items?->reject(fn($item) => $item->application?->status?->value === 'Rejected')->count() ?? 0 }} beneficiary(ies)</div>
                                 </td>
                                 <td>{{ $approval->sponsorshipProgram->program_name }}</td>
                                 <td><x-status-badge :status="'Confirmed'" /></td>

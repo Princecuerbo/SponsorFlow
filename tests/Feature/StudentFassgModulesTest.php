@@ -6,14 +6,17 @@ use App\Enums\ApplicationStatus;
 use App\Enums\DocumentType;
 use App\Enums\FixedListItemStatus;
 use App\Enums\FixedListStatus;
+use App\Enums\GeneratedBatchStatus;
 use App\Enums\ProgramCategory;
 use App\Enums\ProgramStatus;
 use App\Enums\UserRole;
 use App\Models\AcademicProgram;
 use App\Models\Application;
 use App\Models\ApplicationDocument;
+use App\Models\BatchCandidate;
 use App\Models\FixedList;
 use App\Models\FixedListItem;
+use App\Models\GeneratedBatch;
 use App\Models\Sponsor;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
@@ -132,15 +135,13 @@ class StudentFassgModulesTest extends TestCase
             'sponsorship_program_id' => $program->id,
             'status' => ApplicationStatus::Pending,
         ]);
-        $list = FixedList::factory()->create([
+        $list = GeneratedBatch::factory()->create([
             'sponsorship_program_id' => $program->id,
-            'status' => FixedListStatus::Approved,
+            'status' => GeneratedBatchStatus::Approved,
         ]);
-        FixedListItem::factory()->create([
-            'fixed_list_id' => $list->id,
-            'student_id_number' => $profile->student_id_number,
-            'is_sle_fhe_verified' => true,
-            'status' => FixedListItemStatus::Verified,
+        BatchCandidate::factory()->create([
+            'generated_batch_id' => $list->id,
+            'application_id' => $application->id,
         ]);
 
         $this->actingAsStudent($profile->user)

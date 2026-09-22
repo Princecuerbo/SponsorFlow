@@ -18,6 +18,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\Fassg\ApplicantVerificationController;
 use App\Http\Controllers\Fassg\BatchController;
 use App\Http\Controllers\Fassg\FixedListController;
+use App\Http\Controllers\Fassg\GeneratedBatchController;
 use App\Http\Controllers\Fassg\ProgramManagementController;
 use App\Http\Controllers\Fassg\ReportsController;
 use App\Http\Controllers\Fassg\VerificationController as FassgVerificationController;
@@ -186,18 +187,16 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
         Route::get('/fixed-lists/{fixedList}', [FixedListController::class, 'show'])->name('fixed-lists.show');
         Route::post('/fixed-lists/{fixedList}/items', [FixedListController::class, 'storeItem'])->name('fixed-lists.items.store');
         Route::post('/fixed-lists/{fixedList}/import', [FixedListController::class, 'import'])->name('fixed-lists.import');
-        Route::patch('/fixed-lists/{fixedList}/submit', [FixedListController::class, 'submit'])->name('fixed-lists.submit');
-        Route::patch('/fixed-lists/{fixedList}/publish', [FixedListController::class, 'publish'])->name('fixed-lists.publish');
-        Route::post('/fixed-lists/{fixedList}/forward', [FixedListController::class, 'submit'])->name('fixed-lists.forward');
         Route::patch('/fixed-lists/{fixedList}/finalize', [FixedListController::class, 'finalize'])->name('fixed-lists.finalize');
         Route::patch('/fixed-lists/{fixedList}/items/{fixedListItem}/verify', [FixedListController::class, 'verifyItem'])
             ->name('fixed-lists.items.verify');
         Route::patch('/fixed-lists/{fixedList}/items/{fixedListItem}/endorse', [FixedListController::class, 'endorseItem'])
             ->name('fixed-lists.items.endorse');
 
-        Route::get('/generated-batches', [FixedListController::class, 'generatedIndex'])->name('generated-batches.index');
-        Route::get('/generated-batches/{fixedList}', [FixedListController::class, 'showGenerated'])->name('generated-batches.show');
-        Route::delete('/generated-batches/{fixedList}', [FixedListController::class, 'destroyGenerated'])->name('generated-batches.destroy');
+        Route::get('/generated-batches', [GeneratedBatchController::class, 'index'])->name('generated-batches.index');
+        Route::get('/generated-batches/{generatedBatch}', [GeneratedBatchController::class, 'show'])->name('generated-batches.show');
+        Route::patch('/generated-batches/{generatedBatch}/submit', [GeneratedBatchController::class, 'submit'])->name('generated-batches.submit');
+        Route::delete('/generated-batches/{generatedBatch}', [GeneratedBatchController::class, 'destroy'])->name('generated-batches.destroy');
         Route::get('/batches', [BatchController::class, 'index'])->name('batches.index');
 
         Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
@@ -216,17 +215,17 @@ Route::middleware(['auth', 'EnsureUserRole:sponsor'])
         Route::get('/approvals/history', [ReviewController::class, 'history'])->name('approvals.history');
         Route::get('/review', [ReviewController::class, 'index'])->name('review.index');
         Route::get('/lists', [ReviewController::class, 'index'])->name('lists.index');
-        Route::get('/lists/{fixedList}', [ReviewController::class, 'show'])->name('lists.show');
+        Route::get('/lists/{generatedBatch}', [ReviewController::class, 'show'])->name('lists.show');
         Route::get('/applicants', [ReviewController::class, 'applicants'])->name('applicants.index');
         Route::get('/applicants/{application}', [ReviewController::class, 'showApplicant'])->name('applicants.show');
         Route::get('/applicants/{application}/approval-document', [ReviewController::class, 'downloadApprovalDocument'])->name('applicants.approval-document');
         Route::post('/applicants/{application}/confirm', [ReviewController::class, 'confirmApplication'])->name('applicants.confirm');
         Route::post('/applicants/{application}/reject', [ReviewController::class, 'reject'])->name('applicants.reject');
-        Route::post('/lists/{fixedList}/approvals', [ApprovalUploadController::class, 'store'])->name('approvals.store');
-        Route::post('/lists/{fixedList}/upload-approval', [ApprovalUploadController::class, 'store'])->name('lists.upload-approval');
-        Route::patch('/lists/{fixedList}/confirm', [ApprovalUploadController::class, 'confirm'])->name('approvals.confirm');
-        Route::patch('/lists/{fixedList}/confirm-beneficiaries', [ApprovalUploadController::class, 'confirm'])->name('lists.confirm');
-        Route::patch('/lists/{fixedList}/reject', [ApprovalUploadController::class, 'reject'])->name('approvals.reject');
+        Route::post('/lists/{generatedBatch}/approvals', [ApprovalUploadController::class, 'store'])->name('approvals.store');
+        Route::post('/lists/{generatedBatch}/upload-approval', [ApprovalUploadController::class, 'store'])->name('lists.upload-approval');
+        Route::patch('/lists/{generatedBatch}/confirm', [ApprovalUploadController::class, 'confirm'])->name('approvals.confirm');
+        Route::patch('/lists/{generatedBatch}/confirm-beneficiaries', [ApprovalUploadController::class, 'confirm'])->name('lists.confirm');
+        Route::patch('/lists/{generatedBatch}/reject', [ApprovalUploadController::class, 'reject'])->name('approvals.reject');
         Route::get('/approvals/{sponsorApproval}/document', [ApprovalUploadController::class, 'download'])->name('approvals.download');
     });
 
@@ -238,10 +237,10 @@ Route::middleware(['auth', 'EnsureUserRole:accounting'])
         Route::get('/beneficiaries', [ReferenceController::class, 'index'])->name('beneficiaries.index');
         Route::get('/beneficiaries/export', [ReferenceController::class, 'export'])->name('beneficiaries.export');
         Route::get('/beneficiaries/{application}', [ReferenceController::class, 'show'])->name('beneficiaries.show');
-        Route::get('/beneficiaries/{fixedList}/reference', [ReferenceController::class, 'showFixedListReference'])->name('beneficiaries.reference');
+        Route::get('/beneficiaries/{generatedBatch}/reference', [ReferenceController::class, 'showFixedListReference'])->name('beneficiaries.reference');
         Route::get('/applications/{application}/document', [ReferenceController::class, 'viewApplicationDocument'])->name('applications.document');
         Route::get('/applications/{application}/document-reference', [ReferenceController::class, 'viewApplicationDocument'])->name('documents.view');
-        Route::get('/fixed-lists/{fixedList}/document', [ReferenceController::class, 'viewFixedListDocument'])->name('fixed-lists.document');
+        Route::get('/fixed-lists/{generatedBatch}/document', [ReferenceController::class, 'viewFixedListDocument'])->name('fixed-lists.document');
         Route::get('/export', [ReferenceController::class, 'export'])->name('export');
         Route::get('/programs', [ReferenceController::class, 'index'])->name('programs.index');
         Route::get('/applications', [ReferenceController::class, 'index'])->name('applications.index');

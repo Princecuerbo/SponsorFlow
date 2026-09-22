@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Sponsor;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
-use App\Enums\FixedListStatus;
+use App\Enums\GeneratedBatchStatus;
 use App\Enums\ProgramStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicProgram;
 use App\Models\Application;
-use App\Models\FixedList;
+use App\Models\GeneratedBatch;
 use App\Models\Sponsor;
 use App\Models\SponsorApproval;
 use App\Models\SponsorshipProgram;
@@ -33,11 +33,10 @@ class ReviewController extends Controller
         $sponsor = $user->sponsor;
         $sponsorProgramIds = $sponsor?->sponsorshipPrograms()->pluck('id') ?? collect();
 
-        $pendingReviewCount = FixedList::query()
+        $pendingReviewCount = GeneratedBatch::query()
             ->whereIn('sponsorship_program_id', $sponsorProgramIds)
-            ->where('status', FixedListStatus::Submitted)
-            ->whereHas('items', fn ($query) => $query
-                ->whereHas('application', fn ($applicationQuery) => $applicationQuery->where('status', '!=', ApplicationStatus::Rejected)))
+            ->where('status', GeneratedBatchStatus::Submitted)
+            ->whereHas('items.application', fn ($applicationQuery) => $applicationQuery->where('status', '!=', ApplicationStatus::Rejected))
             ->count();
 
         return view('sponsor.dashboard', [
@@ -45,9 +44,9 @@ class ReviewController extends Controller
             'sponsor' => $sponsor,
             'connectedPrograms' => $sponsor?->sponsorshipPrograms()->count() ?? 0,
             'listsPendingReview' => $pendingReviewCount,
-            'uploadedApprovals' => FixedList::query()
+            'uploadedApprovals' => GeneratedBatch::query()
                 ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor?->id))
-                ->where('status', FixedListStatus::Approved)
+                ->where('status', GeneratedBatchStatus::Approved)
                 ->whereNotNull('fassg_assigned_at')
                 ->whereHas('latestApproval', fn ($approval) => $approval
                     ->whereNotNull('approval_document_path')
@@ -64,14 +63,9 @@ class ReviewController extends Controller
             ->orderBy('program_name')
             ->get(['id', 'program_name']);
 
-        // Lists generated from the FASSG Application Queue carry linked
-        // applications on their items, whereas manually encoded / CSV-imported
-        // lists have items with no application linkage. Keep them isolated so
-        // individual applications cannot bypass the batch workflow.
-        $generatedBatches = FixedList::query()
+        $generatedBatches = GeneratedBatch::query()
             ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor->id))
-            ->where('status', FixedListStatus::Submitted)
-            ->whereHas('items', fn ($query) => $query->whereNotNull('application_id'))
+            ->where('status', GeneratedBatchStatus::Submitted)
             ->with(['sponsorshipProgram', 'latestApproval'])
             ->when($request->filled('sponsorship_program_id'), fn ($query) => $query->where('sponsorship_program_id', $request->integer('sponsorship_program_id')))
             ->latest()
@@ -99,24 +93,25 @@ class ReviewController extends Controller
         ]);
     }
 
-    public function show(Request $request, FixedList $fixedList): View
+    public function show(Request $request, GeneratedBatch $generatedBatch): View
     {
         $sponsor = $this->sponsorOrganization($request);
-        $this->assertOwnsList($sponsor, $fixedList);
+        $this->assertOwnsBatch($sponsor, $generatedBatch);
 
-        $fixedList->load([
+        $generatedBatch->load([
             'sponsorshipProgram',
             'items' => fn ($query) => $query
                 ->whereDoesntHave('application', fn ($applicationQuery) => $applicationQuery->where('status', ApplicationStatus::Rejected)),
-            'items.application',
+            'items.application.studentProfile.user',
             'latestApproval',
-            'uploadedByFassg',
+            'createdByFassg',
         ]);
 
         return view('sponsor.lists.show', [
             'user' => $this->actor($request),
             'sponsor' => $sponsor,
-            'list' => $fixedList,
+            'list' => $generatedBatch,
+            'generatedBatch' => $generatedBatch,
         ]);
     }
 
@@ -139,9 +134,9 @@ class ReviewController extends Controller
             ->latest('created_at')
             ->get();
 
-        $fixedLists = FixedList::query()
+        $generatedBatches = GeneratedBatch::query()
             ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor->id))
-            ->where('status', FixedListStatus::Submitted)
+            ->where('status', GeneratedBatchStatus::Submitted)
             ->with(['sponsorshipProgram', 'latestApproval'])
             ->latest()
             ->get();
@@ -167,7 +162,8 @@ class ReviewController extends Controller
             'user' => $this->actor($request),
             'sponsor' => $sponsor,
             'applicants' => $applicants,
-            'fixedLists' => $fixedLists,
+            'generatedBatches' => $generatedBatches,
+            'fixedLists' => $generatedBatches,
             'academicPrograms' => $academicPrograms,
             'courses' => $courses,
         ]);
@@ -318,7 +314,7 @@ class ReviewController extends Controller
         $approvals = SponsorApproval::query()
             ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsorId))
             ->where('confirmation_status', ConfirmationStatus::Confirmed)
-            ->with(['fixedList.items.application', 'sponsorshipProgram'])
+            ->with(['generatedBatch.items.application', 'sponsorshipProgram'])
             ->latest()
             ->get();
 
@@ -344,10 +340,10 @@ class ReviewController extends Controller
         ]);
     }
 
-    private function assertOwnsList(Sponsor $sponsor, FixedList $fixedList): void
+    private function assertOwnsBatch(Sponsor $sponsor, GeneratedBatch $generatedBatch): void
     {
-        $fixedList->loadMissing('sponsorshipProgram');
+        $generatedBatch->loadMissing('sponsorshipProgram');
 
-        abort_unless($sponsor->ownsProgram($fixedList->sponsorshipProgram), 403);
+        abort_unless($sponsor->ownsProgram($generatedBatch->sponsorshipProgram), 403);
     }
 }

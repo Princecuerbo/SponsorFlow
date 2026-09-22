@@ -3,7 +3,7 @@
 @section('title', 'Beneficiary Batch Reference')
 @section('eyebrow', 'Accounting Office · Tuition Adjustment Reference')
 @section('page-title', $fixedList->batch_name)
-@section('subtitle', $fixedList->sponsorshipProgram?->program_name ?? 'Unspecified Program' . ' · ' . $fixedList->total_names . ' ' . Str::plural('beneficiary', $fixedList->total_names) . ' · Confirmed ' . ($approval?->created_at?->format('M d, Y, h:i A') ?? '—'))
+@section('subtitle', $fixedList->sponsorshipProgram?->program_name ?? 'Unspecified Program' . ' · ' . $fixedList->total_slots . ' ' . Str::plural('beneficiary', $fixedList->total_slots) . ' · Confirmed ' . ($approval?->created_at?->format('M d, Y, h:i A') ?? '—'))
 
 @section('header-actions')
     <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -77,7 +77,7 @@
                                 {{ $fixedList->sponsorshipProgram?->sponsor?->contact_person ?: 'Not provided' }}
                             </dd>
                             <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Total Names</dt>
-                            <dd class="col-sm-8 py-2 mb-0 border-top">{{ $fixedList->total_names }}</dd>
+                            <dd class="col-sm-8 py-2 mb-0 border-top">{{ $fixedList->total_slots }}</dd>
                             @if ($fixedList->fassg_assigned_at)
                                 <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">FASSG Assigned</dt>
                                 <dd class="col-sm-8 py-2 mb-0 border-top">
@@ -159,7 +159,7 @@
                                 </td>
                                 <td>
                                     @php
-                                        $gwa = $item->application?->gpa_submitted ?? $item->gwa;
+                                        $gwa = $item->application?->gpa_submitted;
                                     @endphp
                                     @if ($gwa !== null)
                                         {{ number_format((float) $gwa, 2) }}
@@ -169,10 +169,10 @@
                                 </td>
                                 <td>{{ $item->campus ?: 'N/A' }}</td>
                                 <td>
-                                    @if ($item->application_id)
-                                        <span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle fw-semibold">Application Batch</span>
-                                    @else
+                                    @if ($item->is_fixed_list)
                                         <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle fw-semibold">Fixed List</span>
+                                    @else
+                                        <span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle fw-semibold">Ranked Queue</span>
                                     @endif
                                 </td>
                                 <td>

@@ -92,7 +92,7 @@
                                     </td>
                                     <td>
                                         @if ($item->is_fixed_list)
-                                            <span class="badge bg-purple-subtle text-purple fw-bold">★ Endorsed by Sponsor</span>
+                                            <span class="badge bg-warning-subtle text-warning-emphasis fw-bold">★ Endorsed by Sponsor</span>
                                         @else
                                             <span class="badge bg-info-subtle text-info fw-bold">Ranked Queue</span>
                                         @endif
@@ -126,14 +126,8 @@
                                                 <i class="bi bi-file-earmark-text text-white"></i>View Application
                                             </a>
                                         @endif
-                                        @if (!$item->is_sle_fhe_verified && $item->status !== \App\Enums\FixedListItemStatus::Endorsed)
-                                            <form method="POST"
-                                                action="{{ route('fassg.fixed-lists.items.verify', [$list, $item]) }}"
-                                                class="d-inline">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="btn btn-outline-navy btn-sm">Verify</button>
-                                            </form>
+                                        @if (!$item->is_sle_fhe_verified)
+                                            <span class="badge bg-light text-secondary border">Awaiting SLE-FHE verification</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -150,7 +144,7 @@
         </div>
 
         <div class="col-12 col-lg-3">
-            @if (in_array($list->status, [\App\Enums\FixedListStatus::Draft, \App\Enums\FixedListStatus::Rejected, \App\Enums\FixedListStatus::Saved], true))
+            @if (in_array($list->status, [\App\Enums\GeneratedBatchStatus::Saved, \App\Enums\GeneratedBatchStatus::Rejected], true))
                 <div class="card sf-card border-0 shadow-sm">
                     <div class="card-body p-4 text-center">
                         <h3 class="h6 fw-bold mb-2"><i class="bi bi-send me-1"></i>Submit to Sponsor</h3>
@@ -168,7 +162,7 @@
                             </div>
                         @endif
 
-                        <form method="POST" action="{{ route('fassg.fixed-lists.submit', $list) }}">
+                        <form method="POST" action="{{ route('fassg.generated-batches.submit', $list) }}">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn btn-sf-navy w-100 py-2"
@@ -190,7 +184,7 @@
                         </div>
                     </div>
                 </div>
-            @elseif ($list->status === \App\Enums\FixedListStatus::Submitted)
+            @elseif ($list->status === \App\Enums\GeneratedBatchStatus::Submitted)
                 <div class="card sf-card border-0 shadow-sm">
                     <div class="card-body p-4 text-center">
                         <h3 class="h6 fw-bold mb-2"><i class="bi bi-hourglass-split me-1 text-info"></i>Submitted to Sponsor</h3>
@@ -200,7 +194,7 @@
                         </span>
                     </div>
                 </div>
-            @elseif ($list->status === \App\Enums\FixedListStatus::Approved)
+            @elseif ($list->status === \App\Enums\GeneratedBatchStatus::Approved)
                 <div class="card sf-card border-0 shadow-sm">
                     <div class="card-body p-4 text-center">
                         <h3 class="h6 fw-bold mb-2 text-success"><i class="bi bi-check-circle-fill me-1"></i>Approved by Sponsor</h3>

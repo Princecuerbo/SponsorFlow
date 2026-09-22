@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ApplicationStatus;
+use App\Enums\GeneratedBatchStatus;
 use App\Enums\ProgramStatus;
 use App\Models\Application;
-use App\Models\FixedListItem;
+use App\Models\BatchCandidate;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
 use Illuminate\Http\Request;
@@ -131,8 +132,10 @@ class DashboardController extends Controller
                 ->whereIn('status', [ProgramStatus::Open->value, ProgramStatus::Closed->value])
                 ->count();
 
-            $confirmedBeneficiaries = FixedListItem::query()
-                ->whereHas('fixedList', fn ($q) => $q->whereNotNull('fassg_assigned_at'))
+            $confirmedBeneficiaries = BatchCandidate::query()
+                ->whereHas('generatedBatch', fn ($q) => $q
+                    ->where('status', GeneratedBatchStatus::Approved)
+                    ->whereNotNull('fassg_assigned_at'))
                 ->whereDoesntHave('application', fn ($q) => $q->where('status', ApplicationStatus::Rejected))
                 ->count();
 
@@ -165,13 +168,13 @@ class DashboardController extends Controller
                                         })
                                         ->orWhere(function ($query): void {
                                             $query->where('status', ApplicationStatus::Verified)
-                                                ->whereHas('fixedListItems.fixedList', fn ($q) => $q->whereNotNull('fassg_assigned_at'));
+                                                ->whereHas('batchCandidates.generatedBatch', fn ($q) => $q->whereNotNull('fassg_assigned_at'));
                                         });
                                 })
                                 ->count(),
                             ApplicationStatus::Verified => Application::query()
                                 ->where('status', ApplicationStatus::Verified)
-                                ->whereDoesntHave('fixedListItems.fixedList', fn ($q) => $q->whereNotNull('fassg_assigned_at'))
+                                ->whereDoesntHave('batchCandidates.generatedBatch', fn ($q) => $q->whereNotNull('fassg_assigned_at'))
                                 ->count(),
                             ApplicationStatus::Expired => Application::query()
                                 ->where('status', ApplicationStatus::Expired)

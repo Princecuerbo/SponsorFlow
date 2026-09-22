@@ -4,15 +4,14 @@ namespace Tests\Feature;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
-use App\Enums\FixedListItemStatus;
-use App\Enums\FixedListStatus;
+use App\Enums\GeneratedBatchStatus;
 use App\Enums\ProgramCategory;
 use App\Enums\ProgramStatus;
 use App\Enums\UserRole;
 use App\Models\AcademicProgram;
 use App\Models\Application;
-use App\Models\FixedList;
-use App\Models\FixedListItem;
+use App\Models\BatchCandidate;
+use App\Models\GeneratedBatch;
 use App\Models\Sponsor;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
@@ -47,21 +46,18 @@ class SponsorAccountingReportsTest extends TestCase
         $sponsor = Sponsor::factory()->create();
         $program = SponsorshipProgram::factory()->create(['sponsor_id' => $sponsor->id]);
         $profile = StudentProfile::factory()->create();
-        $list = FixedList::factory()->create([
-            'sponsorship_program_id' => $program->id,
-            'status' => FixedListStatus::Submitted,
-        ]);
-        FixedListItem::factory()->create([
-            'fixed_list_id' => $list->id,
-            'student_name' => $profile->user->name,
-            'student_id_number' => $profile->student_id_number,
-            'course' => $profile->course,
-            'is_sle_fhe_verified' => true,
-        ]);
-        Application::factory()->create([
+        $application = Application::factory()->create([
             'student_profile_id' => $profile->id,
             'sponsorship_program_id' => $program->id,
             'status' => ApplicationStatus::Pending,
+        ]);
+        $list = GeneratedBatch::factory()->create([
+            'sponsorship_program_id' => $program->id,
+            'status' => GeneratedBatchStatus::Submitted,
+        ]);
+        BatchCandidate::factory()->create([
+            'generated_batch_id' => $list->id,
+            'application_id' => $application->id,
         ]);
 
         $this->actingAs($sponsor->user)
@@ -79,16 +75,16 @@ class SponsorAccountingReportsTest extends TestCase
             ->patch(route('sponsor.approvals.confirm', $list))
             ->assertRedirect();
 
-        $this->assertSame(FixedListStatus::Approved, $list->fresh()->status);
+        $this->assertSame(GeneratedBatchStatus::Approved, $list->fresh()->status);
         $this->assertTrue($list->fresh()->latestApproval->isConfirmed());
-        $this->assertSame(ApplicationStatus::Approved, Application::query()->first()->status);
-        $this->assertSame(Application::query()->first()->id, $profile->fresh()->active_sponsorship_id);
+        $this->assertSame(ApplicationStatus::Approved, $application->fresh()->status);
+        $this->assertSame($application->id, $profile->fresh()->active_sponsorship_id);
     }
 
     public function test_sponsor_cannot_review_another_sponsors_list(): void
     {
         $sponsor = Sponsor::factory()->create();
-        $otherList = FixedList::factory()->create(['status' => FixedListStatus::Submitted]);
+        $otherList = GeneratedBatch::factory()->create(['status' => GeneratedBatchStatus::Submitted]);
 
         $this->actingAs($sponsor->user)
             ->get(route('sponsor.lists.show', $otherList))
@@ -196,9 +192,9 @@ class SponsorAccountingReportsTest extends TestCase
     public function test_sponsor_cannot_confirm_without_signed_document(): void
     {
         $sponsor = Sponsor::factory()->create();
-        $list = FixedList::factory()->create([
+        $list = GeneratedBatch::factory()->create([
             'sponsorship_program_id' => SponsorshipProgram::factory()->create(['sponsor_id' => $sponsor->id])->id,
-            'status' => FixedListStatus::Submitted,
+            'status' => GeneratedBatchStatus::Submitted,
         ]);
 
         $this->actingAs($sponsor->user)
@@ -249,17 +245,25 @@ class SponsorAccountingReportsTest extends TestCase
             'sponsor_id' => $sponsor->id,
             'category' => ProgramCategory::Group,
         ]);
-        $list = FixedList::factory()->create([
+        $profile = StudentProfile::factory()->create();
+        $profile->user->update(['name' => 'Billing Scholar']);
+        $application = Application::factory()->create([
+            'student_profile_id' => $profile->id,
             'sponsorship_program_id' => $program->id,
-            'status' => FixedListStatus::Approved,
+            'status' => ApplicationStatus::Pending,
         ]);
-        FixedListItem::factory()->create([
-            'fixed_list_id' => $list->id,
-            'student_id_number' => '2024-00888',
-            'student_name' => 'Billing Scholar',
+        $list = GeneratedBatch::factory()->create([
+            'sponsorship_program_id' => $program->id,
+            'status' => GeneratedBatchStatus::Approved,
+            'fassg_assigned_at' => now(),
+        ]);
+        BatchCandidate::factory()->create([
+            'generated_batch_id' => $list->id,
+            'application_id' => $application->id,
         ]);
         $list->sponsorApprovals()->create([
             'sponsorship_program_id' => $program->id,
+            'generated_batch_id' => $list->id,
             'approval_document_path' => 'sponsor-approvals/1/signed.pdf',
             'confirmation_status' => ConfirmationStatus::Confirmed,
             'uploaded_by_sponsor_id' => $sponsor->user_id,
@@ -280,38 +284,57 @@ class SponsorAccountingReportsTest extends TestCase
             ->assertStatus(405);
     }
 
-    public function test_accounting_lists_only_verified_fixed_list_items(): void
+    public function test_accounting_lists_only_items_from_confirmed_batches(): void
     {
         $accounting = User::factory()->create(['role' => UserRole::Accounting]);
         $sponsor = Sponsor::factory()->create();
         $program = SponsorshipProgram::factory()->create(['sponsor_id' => $sponsor->id]);
-        $list = FixedList::factory()->create([
+
+        $verifiedProfile = StudentProfile::factory()->create();
+        $verifiedProfile->user->update(['name' => 'Verified Beneficiary']);
+        $verifiedApp = Application::factory()->create([
+            'student_profile_id' => $verifiedProfile->id,
             'sponsorship_program_id' => $program->id,
-            'status' => FixedListStatus::Approved,
+            'status' => ApplicationStatus::Verified,
+        ]);
+        $list = GeneratedBatch::factory()->create([
+            'sponsorship_program_id' => $program->id,
+            'status' => GeneratedBatchStatus::Approved,
+            'fassg_assigned_at' => now(),
+        ]);
+        BatchCandidate::factory()->create([
+            'generated_batch_id' => $list->id,
+            'application_id' => $verifiedApp->id,
         ]);
         $list->sponsorApprovals()->create([
             'sponsorship_program_id' => $program->id,
+            'generated_batch_id' => $list->id,
             'approval_document_path' => 'sponsor-approvals/verified.pdf',
             'confirmation_status' => ConfirmationStatus::Confirmed,
             'uploaded_by_sponsor_id' => $sponsor->user_id,
         ]);
-        FixedListItem::factory()->create([
-            'fixed_list_id' => $list->id,
-            'student_name' => 'Verified Beneficiary',
-            'is_sle_fhe_verified' => true,
+
+        $unapprovedProfile = StudentProfile::factory()->create();
+        $unapprovedProfile->user->update(['name' => 'Unconfirmed Beneficiary']);
+        $pendingApp = Application::factory()->create([
+            'student_profile_id' => $unapprovedProfile->id,
+            'sponsorship_program_id' => $program->id,
+            'status' => ApplicationStatus::Pending,
         ]);
-        FixedListItem::factory()->create([
-            'fixed_list_id' => $list->id,
-            'student_name' => 'Unverified Beneficiary',
-            'is_sle_fhe_verified' => false,
-            'status' => FixedListItemStatus::Pending,
+        $otherList = GeneratedBatch::factory()->create([
+            'sponsorship_program_id' => $program->id,
+            'status' => GeneratedBatchStatus::Submitted,
+        ]);
+        BatchCandidate::factory()->create([
+            'generated_batch_id' => $otherList->id,
+            'application_id' => $pendingApp->id,
         ]);
 
         $this->actingAs($accounting)
             ->get(route('accounting.beneficiaries.index'))
             ->assertOk()
             ->assertSee('Verified Beneficiary')
-            ->assertDontSee('Unverified Beneficiary');
+            ->assertDontSee('Unconfirmed Beneficiary');
     }
 
     public function test_accounting_can_view_confirmed_fixed_list_document(): void
@@ -321,12 +344,14 @@ class SponsorAccountingReportsTest extends TestCase
         $accounting = User::factory()->create(['role' => UserRole::Accounting]);
         $sponsor = Sponsor::factory()->create();
         $program = SponsorshipProgram::factory()->create(['sponsor_id' => $sponsor->id]);
-        $list = FixedList::factory()->create([
+        $list = GeneratedBatch::factory()->create([
             'sponsorship_program_id' => $program->id,
-            'status' => FixedListStatus::Approved,
+            'status' => GeneratedBatchStatus::Approved,
+            'fassg_assigned_at' => now(),
         ]);
         $list->sponsorApprovals()->create([
             'sponsorship_program_id' => $program->id,
+            'generated_batch_id' => $list->id,
             'approval_document_path' => 'sponsor-approvals/final.pdf',
             'confirmation_status' => ConfirmationStatus::Confirmed,
             'uploaded_by_sponsor_id' => $sponsor->user_id,
@@ -351,17 +376,26 @@ class SponsorAccountingReportsTest extends TestCase
             'status' => ApplicationStatus::Approved,
             'approved_at' => now(),
         ]);
-        $list = FixedList::factory()->create([
+
+        $fixedListScholar = StudentProfile::factory()->create();
+        $fixedListScholar->user->update(['name' => 'Fixed List Scholar']);
+        $fixedListApp = Application::factory()->create([
+            'student_profile_id' => $fixedListScholar->id,
             'sponsorship_program_id' => $program->id,
-            'status' => FixedListStatus::Approved,
+            'status' => ApplicationStatus::Verified,
         ]);
-        FixedListItem::factory()->create([
-            'fixed_list_id' => $list->id,
-            'student_name' => 'Fixed List Scholar',
-            'is_sle_fhe_verified' => true,
+        $list = GeneratedBatch::factory()->create([
+            'sponsorship_program_id' => $program->id,
+            'status' => GeneratedBatchStatus::Approved,
+            'fassg_assigned_at' => now(),
+        ]);
+        BatchCandidate::factory()->create([
+            'generated_batch_id' => $list->id,
+            'application_id' => $fixedListApp->id,
         ]);
         $list->sponsorApprovals()->create([
             'sponsorship_program_id' => $program->id,
+            'generated_batch_id' => $list->id,
             'approval_document_path' => 'sponsor-approvals/dashboard.pdf',
             'confirmation_status' => ConfirmationStatus::Confirmed,
             'uploaded_by_sponsor_id' => $sponsor->user_id,

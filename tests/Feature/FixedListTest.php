@@ -5,10 +5,12 @@ namespace Tests\Feature;
 use App\Enums\ApplicationStatus;
 use App\Enums\FixedListItemStatus;
 use App\Enums\FixedListStatus;
+use App\Enums\GeneratedBatchStatus;
 use App\Enums\UserRole;
 use App\Models\Application;
 use App\Models\FixedList;
 use App\Models\FixedListItem;
+use App\Models\GeneratedBatch;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
 use App\Models\User;
@@ -186,7 +188,7 @@ class FixedListTest extends TestCase
         ])->assertRedirect()
             ->assertSessionHas('status');
 
-        $batch = FixedList::query()->where('status', FixedListStatus::Saved)->first();
+        $batch = GeneratedBatch::query()->where('status', GeneratedBatchStatus::Saved)->first();
         $this->assertNotNull($batch);
 
         $items = $batch->items()->orderBy('rank_position')->get();
@@ -236,7 +238,7 @@ class FixedListTest extends TestCase
         $this->assertNotNull($autoApp->verified_at);
         $this->assertTrue((bool) $autoApp->is_manually_endorsed);
 
-        $batch = FixedList::query()->where('status', FixedListStatus::Saved)->first();
+        $batch = GeneratedBatch::query()->where('status', GeneratedBatchStatus::Saved)->first();
         $this->assertNotNull($batch);
 
         $items = $batch->items()->orderBy('rank_position')->get();
@@ -276,7 +278,7 @@ class FixedListTest extends TestCase
         ])->assertRedirect()
             ->assertSessionHas('status');
 
-        $batch = FixedList::query()->where('status', FixedListStatus::Saved)->first();
+        $batch = GeneratedBatch::query()->where('status', GeneratedBatchStatus::Saved)->first();
         $this->assertNotNull($batch);
 
         $items = $batch->items()->orderBy('rank_position')->get();
@@ -309,7 +311,7 @@ class FixedListTest extends TestCase
         ])->assertRedirect()
             ->assertSessionHasErrors('locked_fixed_list_id');
 
-        $this->assertDatabaseMissing('fixed_lists', ['batch_name' => 'Rejected Lock']);
+        $this->assertDatabaseMissing('generated_batches', ['batch_name' => 'Rejected Lock']);
     }
 
     public function test_application_queue_excludes_auto_provisioned_and_shows_endorsed_badge(): void

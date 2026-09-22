@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Fassg;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
+use App\Enums\GeneratedBatchStatus;
 use App\Enums\ProgramCategory;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
-use App\Models\FixedList;
-use App\Models\FixedListItem;
+use App\Models\BatchCandidate;
+use App\Models\GeneratedBatch;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -156,16 +157,17 @@ class ReportsController extends Controller
             ->distinct('student_profile_id')
             ->count('student_profile_id');
 
-        $confirmedLists = FixedList::query()
+        $confirmedLists = GeneratedBatch::query()
             ->whereNotNull('fassg_assigned_at')
             ->whereHas('latestApproval', fn ($query) => $query->where('confirmation_status', ConfirmationStatus::Confirmed))
             ->when($sponsorshipProgramId > 0, fn ($q) => $q->where('sponsorship_program_id', $sponsorshipProgramId))
             ->when($term !== null, fn ($q) => $q->whereBetween('fassg_assigned_at', $term))
             ->count();
 
-        $confirmedListItems = FixedListItem::query()
-            ->whereHas('fixedList', function ($q) use ($sponsorshipProgramId, $term): void {
-                $q->whereNotNull('fassg_assigned_at');
+        $confirmedListItems = BatchCandidate::query()
+            ->whereHas('generatedBatch', function ($q) use ($sponsorshipProgramId, $term): void {
+                $q->where('status', GeneratedBatchStatus::Approved)
+                    ->whereNotNull('fassg_assigned_at');
                 if ($sponsorshipProgramId > 0) {
                     $q->where('sponsorship_program_id', $sponsorshipProgramId);
                 }
@@ -175,15 +177,13 @@ class ReportsController extends Controller
             })
             ->whereDoesntHave('application', fn ($q) => $q->where('status', ApplicationStatus::Rejected))
             ->when($campus !== '', function ($q) use ($campus): void {
-                $q->where(function ($sub) use ($campus): void {
-                    $sub->where('fixed_list_items.campus', $campus)
-                        ->orWhereHas('application.studentProfile', fn ($sq) => $sq->where('campus', $campus))
-                        ->orWhereHas('studentProfile', fn ($sq) => $sq->where('campus', $campus));
-                });
+                $q->whereHas('application.studentProfile', fn ($sq) => $sq->where('campus', $campus));
             })
-            ->get(['id', 'application_id']);
+            ->pluck('application_id')
+            ->filter()
+            ->values();
 
-        $linkedConfirmedAppIds = $confirmedListItems->pluck('application_id')->filter()->all();
+        $linkedConfirmedAppIds = $confirmedListItems->all();
 
         $standaloneApprovedCount = Application::query()
             ->previouslyApprovedBeneficiaries()
@@ -231,9 +231,10 @@ class ReportsController extends Controller
             ->when($sponsorshipProgramId > 0, $programScope)
             ->pluck('student_profile_id');
 
-        $confirmedFixedListStudentIds = FixedListItem::query()
-            ->whereHas('fixedList', function ($q) use ($sponsorshipProgramId, $term): void {
-                $q->whereNotNull('fassg_assigned_at');
+        $confirmedCandidateApplicationIds = BatchCandidate::query()
+            ->whereHas('generatedBatch', function ($q) use ($sponsorshipProgramId, $term): void {
+                $q->where('status', GeneratedBatchStatus::Approved)
+                    ->whereNotNull('fassg_assigned_at');
                 if ($sponsorshipProgramId > 0) {
                     $q->where('sponsorship_program_id', $sponsorshipProgramId);
                 }
@@ -242,19 +243,22 @@ class ReportsController extends Controller
                 }
             })
             ->whereDoesntHave('application', fn ($q) => $q->where('status', ApplicationStatus::Rejected))
-            ->when($campus !== '', function ($q) use ($campus): void {
-                $q->where(function ($sub) use ($campus): void {
-                    $sub->where('fixed_list_items.campus', $campus)
-                        ->orWhereHas('application.studentProfile', fn ($sq) => $sq->where('campus', $campus))
-                        ->orWhereHas('studentProfile', fn ($sq) => $sq->where('campus', $campus));
-                });
-            })
-            ->pluck('student_id_number');
+            ->when($campus !== '', fn ($q) => $q->whereHas('application.studentProfile', fn ($sq) => $sq->where('campus', $campus)))
+            ->pluck('application_id')
+            ->filter()
+            ->unique()
+            ->values();
 
-        $fixedListProfileIds = StudentProfile::query()
-            ->whereIn('student_id_number', $confirmedFixedListStudentIds)
-            ->when($campus !== '', fn ($q) => $q->where('campus', $campus))
-            ->pluck('id');
+        $confirmedFixedListProfileIds = Application::query()
+            ->whereIn('id', $confirmedCandidateApplicationIds)
+            ->distinct()
+            ->pluck('student_profile_id')
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        $fixedListProfileIds = $confirmedFixedListProfileIds;
 
         $allProfileIds = $applicantProfileIds->merge($fixedListProfileIds)->unique();
 
@@ -373,9 +377,10 @@ class ReportsController extends Controller
             ->orderBy('program_name')
             ->get()
             ->map(function (SponsorshipProgram $program) use ($campus, $term, $termScope, $campusScope): SponsorshipProgram {
-                $flItems = FixedListItem::query()
-                    ->whereHas('fixedList', function ($q) use ($program, $term): void {
+                $flItems = BatchCandidate::query()
+                    ->whereHas('generatedBatch', function ($q) use ($program, $term): void {
                         $q->where('sponsorship_program_id', $program->id)
+                            ->where('status', GeneratedBatchStatus::Approved)
                             ->whereNotNull('fassg_assigned_at');
                         if ($term !== null) {
                             $q->whereBetween('fassg_assigned_at', $term);
@@ -385,15 +390,13 @@ class ReportsController extends Controller
                         ->where('status', ApplicationStatus::Rejected)
                     )
                     ->when($campus !== '', function ($q) use ($campus): void {
-                        $q->where(function ($sub) use ($campus): void {
-                            $sub->where('fixed_list_items.campus', $campus)
-                                ->orWhereHas('application.studentProfile', fn ($sq) => $sq->where('campus', $campus))
-                                ->orWhereHas('studentProfile', fn ($sq) => $sq->where('campus', $campus));
-                        });
+                        $q->whereHas('application.studentProfile', fn ($sq) => $sq->where('campus', $campus));
                     })
-                    ->get(['id', 'application_id']);
+                    ->pluck('application_id')
+                    ->filter()
+                    ->values();
 
-                $linkedAppIds = $flItems->pluck('application_id')->filter()->all();
+                $linkedAppIds = $flItems->all();
 
                 $standaloneApprovedApps = $program->applications()
                     ->previouslyApprovedBeneficiaries()

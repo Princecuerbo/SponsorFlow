@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Sponsor;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
-use App\Enums\FixedListStatus;
+use App\Enums\GeneratedBatchStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Sponsor\StoreApprovalDocumentRequest;
 use App\Models\Application;
-use App\Models\FixedList;
+use App\Models\GeneratedBatch;
 use App\Models\Sponsor;
 use App\Models\SponsorApproval;
 use App\Models\SponsorshipProgram;
@@ -25,20 +25,20 @@ class ApprovalUploadController extends Controller
 {
     use ResolvesModuleContext;
 
-    public function store(StoreApprovalDocumentRequest $request, FixedList $fixedList): RedirectResponse
+    public function store(StoreApprovalDocumentRequest $request, GeneratedBatch $generatedBatch): RedirectResponse
     {
         $sponsor = $this->sponsorOrganization($request);
-        $this->assertCanActOnList($sponsor, $fixedList);
+        $this->assertCanActOnBatch($sponsor, $generatedBatch);
 
         $path = $request->file('approval_document')->store(
-            "sponsor-approvals/{$fixedList->id}",
+            "sponsor-approvals/{$generatedBatch->id}",
             'local',
         );
 
         $approval = SponsorApproval::query()->updateOrCreate(
             [
-                'sponsorship_program_id' => $fixedList->sponsorship_program_id,
-                'fixed_list_id' => $fixedList->id,
+                'sponsorship_program_id' => $generatedBatch->sponsorship_program_id,
+                'generated_batch_id' => $generatedBatch->id,
             ],
             [
                 'approval_document_path' => $path,
@@ -50,79 +50,71 @@ class ApprovalUploadController extends Controller
         $this->audit($request, 'sponsor.approval.uploaded', 'sponsor_approvals');
 
         return redirect()
-            ->route('sponsor.lists.show', $fixedList)
+            ->route('sponsor.lists.show', $generatedBatch)
             ->with('status', 'Signed approval document uploaded. Confirm the beneficiary list to finalize.');
     }
 
-    public function confirm(Request $request, FixedList $fixedList): RedirectResponse
+    public function confirm(Request $request, GeneratedBatch $generatedBatch): RedirectResponse
     {
         $sponsor = $this->sponsorOrganization($request);
-        $this->assertCanActOnList($sponsor, $fixedList);
+        $this->assertCanActOnBatch($sponsor, $generatedBatch);
 
-        $fixedList->load('latestApproval');
-        $approval = $fixedList->latestApproval;
+        $generatedBatch->load('latestApproval');
+        $approval = $generatedBatch->latestApproval;
 
         if ($approval === null || blank($approval->approval_document_path)) {
             return back()->withErrors([
-                'approval' => 'Upload a signed PDF or JPG approval document before confirming this list.',
+                'approval' => 'Upload a signed PDF or JPG approval document before confirming this batch.',
             ]);
         }
 
-        DB::transaction(function () use ($fixedList, $approval, $request): void {
+        DB::transaction(function () use ($generatedBatch, $approval, $request): void {
             $approval->update(['confirmation_status' => ConfirmationStatus::Confirmed]);
 
             // Automatic Accounting hand-off: stamp FASSG assignment on the batch
-            // and all eligible items so verified beneficiaries appear in Accounting
-            // immediately without requiring a manual post-sponsor assignment step.
-            $fixedList->items()
-                ->where('is_sle_fhe_verified', true)
-                ->whereDoesntHave('application', fn ($query) => $query->where('status', ApplicationStatus::Rejected))
-                ->update([
-                    'fassg_assigned_at' => now(),
-                    'fassg_assigned_by_id' => $this->actor($request)->id,
-                ]);
-
-            $fixedList->update([
-                'status' => FixedListStatus::Approved,
+            // so confirmed beneficiaries appear in Accounting immediately without
+            // requiring a manual post-sponsor assignment step.
+            $generatedBatch->update([
+                'status' => GeneratedBatchStatus::Approved,
                 'fassg_assigned_at' => now(),
                 'fassg_assigned_by_id' => $this->actor($request)->id,
             ]);
 
             $program = SponsorshipProgram::query()
                 ->lockForUpdate()
-                ->findOrFail($fixedList->sponsorship_program_id);
-            $this->promoteMatchingApplications($fixedList, $program);
+                ->findOrFail($generatedBatch->sponsorship_program_id);
+            $this->promoteMatchingApplications($generatedBatch, $program);
         });
 
         $this->audit($request, 'sponsor.approval.confirmed', 'sponsor_approvals');
 
-        return back()->with('status', "Beneficiary list {$fixedList->batch_name} confirmed.");
+        return back()->with('status', "Beneficiary batch {$generatedBatch->batch_name} confirmed.");
     }
 
-    public function reject(Request $request, FixedList $fixedList): RedirectResponse
+    public function reject(Request $request, GeneratedBatch $generatedBatch): RedirectResponse
     {
         $sponsor = $this->sponsorOrganization($request);
-        $this->assertCanActOnList($sponsor, $fixedList);
+        $this->assertCanActOnBatch($sponsor, $generatedBatch);
 
-        DB::transaction(function () use ($request, $fixedList): void {
+        DB::transaction(function () use ($request, $generatedBatch): void {
             SponsorApproval::query()->updateOrCreate(
                 [
-                    'sponsorship_program_id' => $fixedList->sponsorship_program_id,
-                    'fixed_list_id' => $fixedList->id,
+                    'sponsorship_program_id' => $generatedBatch->sponsorship_program_id,
+                    'generated_batch_id' => $generatedBatch->id,
                 ],
                 [
-                    'approval_document_path' => $fixedList->latestApproval?->approval_document_path ?? '',
+                    'approval_document_path' => $generatedBatch->latestApproval?->approval_document_path ?? '',
                     'confirmation_status' => ConfirmationStatus::Rejected,
                     'uploaded_by_sponsor_id' => $this->actor($request)->id,
                 ],
             );
 
-            $fixedList->update(['status' => FixedListStatus::Rejected]);
+            $generatedBatch->update(['status' => GeneratedBatchStatus::Rejected]);
         });
 
         $this->audit($request, 'sponsor.approval.rejected', 'sponsor_approvals');
 
-        return back()->with('status', "Beneficiary list {$fixedList->batch_name} returned to FASSG.");
+        return back()->with('status', "Beneficiary batch {$generatedBatch->batch_name} returned to FASSG.");
     }
 
     public function download(Request $request, SponsorApproval $sponsorApproval): BinaryFileResponse
@@ -141,42 +133,29 @@ class ApprovalUploadController extends Controller
         ]);
     }
 
-    private function assertCanActOnList(Sponsor $sponsor, FixedList $fixedList): void
+    private function assertCanActOnBatch(Sponsor $sponsor, GeneratedBatch $generatedBatch): void
     {
-        $fixedList->loadMissing('sponsorshipProgram');
+        $generatedBatch->loadMissing('sponsorshipProgram');
 
-        abort_unless($sponsor->ownsProgram($fixedList->sponsorshipProgram), 403);
+        abort_unless($sponsor->ownsProgram($generatedBatch->sponsorshipProgram), 403);
         abort_unless(
-            $fixedList->isForwardedToSponsor(),
+            $generatedBatch->isForwardedToSponsor(),
             403,
-            'This list is not currently forwarded for sponsor confirmation.',
+            'This batch is not currently forwarded for sponsor confirmation.',
         );
     }
 
-    private function promoteMatchingApplications(FixedList $fixedList, SponsorshipProgram $program): void
+    private function promoteMatchingApplications(GeneratedBatch $generatedBatch, SponsorshipProgram $program): void
     {
-        $eligibleItems = $fixedList->items()
-            ->where('is_sle_fhe_verified', true)
-            ->whereNotNull('fassg_assigned_at')
-            ->get();
+        $applicationIds = $generatedBatch->items()->pluck('application_id')->filter()->unique()->values();
 
-        $applicationIds = $eligibleItems->pluck('application_id')->filter()->unique();
-        $studentIds = $eligibleItems->pluck('student_id_number')->filter()->unique();
-
-        if ($applicationIds->isEmpty() && $studentIds->isEmpty()) {
+        if ($applicationIds->isEmpty()) {
             return;
         }
 
         $applications = Application::query()
-            ->where('sponsorship_program_id', $fixedList->sponsorship_program_id)
-            ->where(function ($query) use ($applicationIds, $studentIds): void {
-                if ($applicationIds->isNotEmpty()) {
-                    $query->whereIn('id', $applicationIds);
-                }
-                if ($studentIds->isNotEmpty()) {
-                    $query->orWhereHas('studentProfile', fn ($subQuery) => $subQuery->whereIn('student_id_number', $studentIds));
-                }
-            })
+            ->where('sponsorship_program_id', $generatedBatch->sponsorship_program_id)
+            ->whereIn('id', $applicationIds)
             ->whereIn('status', [ApplicationStatus::Pending, ApplicationStatus::Verified])
             ->with('studentProfile')
             ->get();

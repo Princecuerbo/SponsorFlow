@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Accounting;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
-use App\Enums\FixedListStatus;
+use App\Enums\GeneratedBatchStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicProgram;
 use App\Models\Application;
-use App\Models\FixedList;
-use App\Models\FixedListItem;
+use App\Models\BatchCandidate;
+use App\Models\GeneratedBatch;
 use App\Models\SponsorshipProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -27,12 +27,10 @@ class ReferenceController extends Controller
         return view('accounting.dashboard', [
             'user' => $this->actor($request),
             'approvedApplications' => Application::query()->approvedBeneficiaries()->count(),
-            'confirmedLists' => FixedListItem::query()
-                ->whereHas('fixedList', fn ($query) => $query
-                    ->where('status', FixedListStatus::Approved)
-                    ->whereHas('latestApproval', fn ($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed)))
-                ->distinct('fixed_list_id')
-                ->count('fixed_list_id'),
+            'confirmedLists' => GeneratedBatch::query()
+                ->where('status', GeneratedBatchStatus::Approved)
+                ->whereHas('latestApproval', fn ($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed))
+                ->count(),
             'latestApprovedAt' => Application::query()->approvedBeneficiaries()->max('approved_at'),
         ]);
     }
@@ -68,27 +66,26 @@ class ReferenceController extends Controller
         ]);
     }
 
-    public function showFixedListReference(Request $request, FixedList $fixedList): View
+    public function showFixedListReference(Request $request, GeneratedBatch $generatedBatch): View
     {
-        abort_unless($fixedList->status === FixedListStatus::Approved, 404);
+        abort_unless($generatedBatch->status === GeneratedBatchStatus::Approved, 404);
 
-        $approval = $fixedList->latestApproval;
+        $approval = $generatedBatch->latestApproval;
         abort_unless($approval?->confirmation_status === ConfirmationStatus::Confirmed, 404);
 
-        $fixedList->load([
+        $generatedBatch->load([
             'sponsorshipProgram.sponsor',
             'latestApproval',
             'items' => function ($query): void {
-                $query->where('is_sle_fhe_verified', true)
-                    ->whereDoesntHave('application', fn ($applicationQuery) => $applicationQuery->where('status', ApplicationStatus::Rejected));
+                $query->whereDoesntHave('application', fn ($applicationQuery) => $applicationQuery->where('status', ApplicationStatus::Rejected));
             },
             'items.application.studentProfile.user',
-            'items.fassgAssignedBy',
         ]);
 
         return view('accounting.beneficiaries.show', [
             'user' => $this->actor($request),
-            'fixedList' => $fixedList,
+            'fixedList' => $generatedBatch,
+            'generatedBatch' => $generatedBatch,
             'approval' => $approval,
         ]);
     }
@@ -115,11 +112,11 @@ class ReferenceController extends Controller
         ]);
     }
 
-    public function viewFixedListDocument(Request $request, FixedList $fixedList): BinaryFileResponse
+    public function viewFixedListDocument(Request $request, GeneratedBatch $generatedBatch): BinaryFileResponse
     {
-        abort_unless($fixedList->status === FixedListStatus::Approved, 404);
+        abort_unless($generatedBatch->status === GeneratedBatchStatus::Approved, 404);
 
-        $approval = $fixedList->latestApproval;
+        $approval = $generatedBatch->latestApproval;
         abort_unless($approval?->confirmation_status === ConfirmationStatus::Confirmed, 404);
         abort_if(blank($approval->approval_document_path), 404, 'Confirmation document not found.');
 
@@ -267,12 +264,12 @@ class ReferenceController extends Controller
                 ];
             });
 
-        $confirmedItems = FixedListItem::query()
-            ->where('is_sle_fhe_verified', true)
+        $confirmedItems = BatchCandidate::query()
             ->whereDoesntHave('application', fn ($q) => $q->where('status', ApplicationStatus::Rejected))
-            ->whereHas('fixedList', function ($query) use ($academicProgramId, $sponsorshipProgramId): void {
-                $query->where('status', FixedListStatus::Approved)
-                    ->whereHas('latestApproval', fn ($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed));
+            ->whereHas('generatedBatch', function ($query) use ($academicProgramId, $sponsorshipProgramId): void {
+                $query->where('status', GeneratedBatchStatus::Approved)
+                    ->whereHas('latestApproval', fn ($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed))
+                    ->whereNotNull('fassg_assigned_at');
                 if ($sponsorshipProgramId > 0) {
                     $query->where('sponsorship_program_id', $sponsorshipProgramId);
                 }
@@ -280,59 +277,52 @@ class ReferenceController extends Controller
                     $query->whereHas('sponsorshipProgram', fn ($programQuery) => $programQuery->whereHas('academicPrograms', fn ($programFilter) => $programFilter->where('academic_programs.program_id', $academicProgramId)));
                 }
             })
-            ->with(['fixedList.sponsorshipProgram.sponsor', 'fixedList.latestApproval', 'fixedList.items', 'application.studentProfile'])
+            ->with(['generatedBatch.sponsorshipProgram.sponsor', 'generatedBatch.latestApproval', 'application.studentProfile'])
             ->when($search !== '', fn ($query) => $query->where(function ($query) use ($search): void {
-                $query->where('student_id_number', 'like', "%{$search}%")
-                    ->orWhere('student_name', 'like', "%{$search}%")
-                    ->orWhere('course', 'like', "%{$search}%")
-                    ->orWhereHas('application.studentProfile.academicProgram', fn ($ap) => $ap->where('name', 'like', "%{$search}%"));
+                $query->whereHas('application.studentProfile', function ($profileQuery) use ($search): void {
+                    $profileQuery->where('student_id_number', 'like', "%{$search}%")
+                        ->orWhere('course', 'like', "%{$search}%")
+                        ->orWhereHas('academicProgram', fn ($ap) => $ap->where('name', 'like', "%{$search}%"))
+                        ->orWhereHas('user', fn ($userQuery) => $userQuery->where('name', 'like', "%{$search}%"));
+                });
             }))
             ->latest()
             ->get()
-            ->map(function (FixedListItem $item): array {
-                $program = $item->fixedList->sponsorshipProgram;
-                $approval = $item->fixedList->latestApproval;
-
-                // Queue-generated batches carry items linked to an Application;
-                // manual CSV / encoded lists have items with no application_id.
-                $isGenerated = $item->fixedList->items->contains(
-                    fn (FixedListItem $i) => $i->application_id !== null,
-                );
+            ->map(function (BatchCandidate $item): array {
+                $batch = $item->generatedBatch;
+                $program = $batch->sponsorshipProgram;
+                $approval = $batch->latestApproval;
 
                 $application = $item->application;
                 $profile = $application?->studentProfile;
 
                 return [
                     'source' => 'confirmed_fixed_list',
-                    'fixed_list_id' => $item->fixed_list_id,
+                    'fixed_list_id' => $batch->id,
                     'item_id' => $item->id,
-                    'application_id' => $item->application_id,
-                    'student_id_number' => $item->student_id_number,
-                    'student_name' => $item->student_name,
-                    'course' => $profile?->academicProgram?->name ?? $item->course ?? 'Unspecified',
-                    'year_level' => $item->year_level,
-                    'campus' => $item->campus,
+                    'application_id' => $application?->id,
+                    'student_id_number' => $profile?->student_id_number ?? 'N/A',
+                    'student_name' => $profile?->user?->name ?? 'Unknown',
+                    'course' => $profile?->academicProgram?->name ?? $profile?->course ?? 'Unspecified',
+                    'year_level' => $profile?->year_level,
+                    'campus' => $profile?->campus,
                     'program' => $program->program_name,
                     'category' => $program->category->value,
                     'sponsor' => $program->sponsor->company_organization_name,
                     'billing_contact' => $program->sponsor->contact_person,
                     'gwa' => $application?->gpa_submitted,
-                    'address' => $isGenerated
-                        ? ($application?->address_submitted ?? $profile?->full_address)
-                        : null,
-                    'rurality' => $isGenerated
-                        ? (($application !== null)
-                            ? ($application->is_rural_submitted ? 'Rural' : 'Urban')
-                            : null)
+                    'address' => $application?->address_submitted ?? $profile?->full_address,
+                    'rurality' => $application !== null
+                        ? ($application->is_rural_submitted ? 'Rural' : 'Urban')
                         : null,
                     'confirmation_document' => $approval?->approval_document_path,
                     'document_url' => $approval?->approval_document_path
-                        ? route('accounting.fixed-lists.document', $item->fixedList)
+                        ? route('accounting.fixed-lists.document', $batch)
                         : null,
                     'approved_at' => $approval?->created_at,
                     'billing_status' => 'Confirmed for reference',
                     'application_status' => 'List beneficiary',
-                    'reference_label' => $isGenerated ? 'Application Batch' : 'Fixed List',
+                    'reference_label' => 'Application Batch',
                 ];
             });
 

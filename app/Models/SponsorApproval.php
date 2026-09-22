@@ -17,6 +17,7 @@ class SponsorApproval extends Model
     protected $fillable = [
         'sponsorship_program_id',
         'fixed_list_id',
+        'generated_batch_id',
         'approval_document_path',
         'confirmation_status',
         'uploaded_by_sponsor_id',
@@ -40,6 +41,11 @@ class SponsorApproval extends Model
     public function fixedList(): BelongsTo
     {
         return $this->belongsTo(FixedList::class);
+    }
+
+    public function generatedBatch(): BelongsTo
+    {
+        return $this->belongsTo(GeneratedBatch::class);
     }
 
     public function uploadedBySponsor(): BelongsTo

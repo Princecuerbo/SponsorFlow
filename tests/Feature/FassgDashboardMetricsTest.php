@@ -3,12 +3,12 @@
 namespace Tests\Feature;
 
 use App\Enums\ApplicationStatus;
-use App\Enums\FixedListStatus;
+use App\Enums\GeneratedBatchStatus;
 use App\Enums\ProgramStatus;
 use App\Enums\UserRole;
 use App\Models\Application;
-use App\Models\FixedList;
-use App\Models\FixedListItem;
+use App\Models\BatchCandidate;
+use App\Models\GeneratedBatch;
 use App\Models\Sponsor;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
@@ -84,19 +84,19 @@ class FassgDashboardMetricsTest extends TestCase
         ]);
 
         // Verified application linked to confirmed batch
-        $batch = FixedList::factory()->create([
+        $batch = GeneratedBatch::factory()->create([
             'sponsorship_program_id' => $program->id,
-            'status' => FixedListStatus::Approved,
+            'created_by_fassg_id' => $fassg->id,
+            'status' => GeneratedBatchStatus::Approved,
             'fassg_assigned_at' => now(),
         ]);
         $confirmedBatchApp = Application::factory()->create([
             'sponsorship_program_id' => $program->id,
             'status' => ApplicationStatus::Verified,
         ]);
-        FixedListItem::factory()->create([
-            'fixed_list_id' => $batch->id,
+        BatchCandidate::factory()->create([
+            'generated_batch_id' => $batch->id,
             'application_id' => $confirmedBatchApp->id,
-            'fassg_assigned_at' => now(),
         ]);
 
         Application::factory()->create([

@@ -57,8 +57,8 @@
                                     </a>
                                 </h2>
                                 <div class="small text-secondary">
-                                    {{ $list->sponsorshipProgram->program_name }} · {{ $list->total_names }}
-                                    {{ Str::plural('name', $list->total_names) }}
+                                    {{ $list->sponsorshipProgram->program_name }} · {{ $list->total_slots }}
+                                    {{ Str::plural('slot', $list->total_slots) }}
                                 </div>
                             </div>
                             <div class="d-flex align-items-center gap-2">

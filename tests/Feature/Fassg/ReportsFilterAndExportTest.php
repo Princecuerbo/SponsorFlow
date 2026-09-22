@@ -4,14 +4,14 @@ namespace Tests\Feature\Fassg;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
-use App\Enums\FixedListStatus;
+use App\Enums\GeneratedBatchStatus;
 use App\Enums\ProgramCategory;
 use App\Enums\ProgramStatus;
 use App\Enums\UserRole;
 use App\Models\AcademicProgram;
 use App\Models\Application;
-use App\Models\FixedList;
-use App\Models\FixedListItem;
+use App\Models\BatchCandidate;
+use App\Models\GeneratedBatch;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
 use App\Models\User;
@@ -120,36 +120,32 @@ class ReportsFilterAndExportTest extends TestCase
             'submitted_at' => '2026-09-16 14:00:00',
         ]);
 
-        // Fixed List for FilterTest Grant, confirmed
-        $fixedList = FixedList::factory()->create([
+        // Generated Batch for FilterTest Grant, confirmed by sponsor
+        $generatedBatch = GeneratedBatch::factory()->create([
             'sponsorship_program_id' => $this->filterTestProgram->id,
-            'status' => FixedListStatus::Approved,
+            'created_by_fassg_id' => $this->fassg->id,
+            'status' => GeneratedBatchStatus::Approved,
             'fassg_assigned_at' => '2026-09-16 15:00:00',
         ]);
 
-        $fixedList->sponsorApprovals()->create([
+        $generatedBatch->sponsorApprovals()->create([
             'sponsorship_program_id' => $this->filterTestProgram->id,
+            'generated_batch_id' => $generatedBatch->id,
             'approval_document_path' => 'sponsor-approvals/test.pdf',
             'confirmation_status' => ConfirmationStatus::Confirmed,
             'uploaded_by_sponsor_id' => $this->filterTestProgram->sponsor->user_id,
         ]);
 
         // Item 1: Confirmed beneficiary (Maria Santos, linked to app1)
-        FixedListItem::factory()->create([
-            'fixed_list_id' => $fixedList->id,
+        BatchCandidate::factory()->create([
+            'generated_batch_id' => $generatedBatch->id,
             'application_id' => $app1->id,
-            'student_id_number' => $profile1->student_id_number,
-            'student_name' => $profile1->user->name,
-            'campus' => $profile1->campus,
         ]);
 
         // Item 2: Rejected item (linked to app3) - should be excluded
-        FixedListItem::factory()->create([
-            'fixed_list_id' => $fixedList->id,
+        BatchCandidate::factory()->create([
+            'generated_batch_id' => $generatedBatch->id,
             'application_id' => $app3->id,
-            'student_id_number' => $profile3->student_id_number,
-            'student_name' => $profile3->user->name,
-            'campus' => $profile3->campus,
         ]);
     }
 

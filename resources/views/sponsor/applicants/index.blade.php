@@ -151,7 +151,7 @@
                                 <tr>
                                     <td class="ps-4 fw-semibold">{{ $list->batch_name }}</td>
                                     <td>{{ $list->sponsorshipProgram->program_name }}</td>
-                                    <td>{{ $list->total_names }}</td>
+                                    <td>{{ $list->total_slots }}</td>
                                     <td><x-status-badge :status="$list->status" /></td>
                                     <td class="text-end pe-4">
                                         <a href="{{ route('sponsor.lists.show', $list) }}"

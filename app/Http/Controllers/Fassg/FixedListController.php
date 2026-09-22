@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Fassg;
 
-use App\Enums\ApplicationStatus;
 use App\Enums\FixedListItemStatus;
 use App\Enums\FixedListStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
@@ -10,13 +9,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Fassg\ImportFixedListRequest;
 use App\Http\Requests\Fassg\StoreFixedListItemRequest;
 use App\Http\Requests\Fassg\StoreFixedListRequest;
-use App\Models\Application;
 use App\Models\FixedList;
 use App\Models\FixedListItem;
 use App\Models\SleFheVerification;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
-use App\Notifications\ApplicationStatusUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -33,7 +30,6 @@ class FixedListController extends Controller
         $lists = FixedList::query()
             ->with('sponsorshipProgram')
             ->withCount('items')
-            ->whereDoesntHave('items', fn ($query) => $query->whereNotNull('application_id'))
             ->latest()
             ->get();
 
@@ -45,80 +41,9 @@ class FixedListController extends Controller
         ]);
     }
 
-    public function generatedIndex(Request $request): View
-    {
-        $programId = $request->integer('sponsorship_program_id', 0);
-
-        $lists = FixedList::query()
-            ->with('sponsorshipProgram')
-            ->withCount('items')
-            ->whereHas('items', fn ($query) => $query->whereNotNull('application_id'))
-            ->when($programId > 0, fn ($query) => $query->where('sponsorship_program_id', $programId))
-            ->latest()
-            ->get();
-
-        return view('fassg.generated_batches.index', [
-            'user' => $this->actor($request),
-            'lists' => $lists,
-            'fixedLists' => $lists,
-            'batches' => $lists,
-            'programs' => SponsorshipProgram::query()->orderBy('program_name')->get(),
-            'selectedProgramId' => $programId,
-        ]);
-    }
-
-    public function showGenerated(Request $request, FixedList $fixedList): View
-    {
-        $fixedList->load(['sponsorshipProgram', 'items.application']);
-
-        $fixedList->setRelation(
-            'items',
-            $fixedList->items->sortBy(
-                static fn (FixedListItem $item) => $item->rank_position ?? PHP_FLOAT_MAX,
-            ),
-        );
-
-        return view('fassg.generated_batches.show', [
-            'user' => $this->actor($request),
-            'list' => $fixedList,
-            'fixedList' => $fixedList,
-        ]);
-    }
-
-    public function destroyGenerated(Request $request, FixedList $fixedList): RedirectResponse
-    {
-        $this->assertListEditable($fixedList);
-
-        DB::transaction(function () use ($fixedList): void {
-            // Hard-delete the linked items so the source applications are
-            // released back into the eligible Application Queue.
-            $applicationIds = $fixedList->items()
-                ->whereNotNull('application_id')
-                ->pluck('application_id');
-
-            $fixedList->items()->delete();
-            $fixedList->delete();
-
-            if ($applicationIds->isNotEmpty()) {
-                Application::query()
-                    ->whereKey($applicationIds)
-                    ->update([
-                        'is_batched' => false,
-                        'batch_id' => null,
-                    ]);
-            }
-        });
-
-        $this->audit($request, 'fassg.generated_batch.deleted', 'fixed_lists');
-
-        return redirect()
-            ->route('fassg.generated-batches.index')
-            ->with('status', 'Generated batch deleted successfully. All linked applications have been unbatched and returned to the queue.');
-    }
-
     public function show(Request $request, FixedList $fixedList): View
     {
-        $fixedList->load(['sponsorshipProgram', 'items.application']);
+        $fixedList->load(['sponsorshipProgram', 'items.application', 'items.studentProfile']);
 
         return view('fassg.fixed_lists.show', [
             'user' => $this->actor($request),
@@ -244,7 +169,7 @@ class FixedListController extends Controller
 
         $fixedList->items()->updateOrCreate(
             ['student_id_number' => $validated['student_id_number']],
-            [...$validated, 'is_sle_fhe_verified' => $isSleFheVerified, 'is_fixed_list' => true, 'origin_type' => 'fixed_list', 'status' => FixedListItemStatus::Pending],
+            [...$validated, 'is_sle_fhe_verified' => $isSleFheVerified, 'is_fixed_list' => true, 'status' => FixedListItemStatus::Pending],
         );
         $this->refreshTotalNames($fixedList);
         $this->audit($request, 'fassg.fixed_list.item_encoded', 'fixed_list_items');
@@ -269,7 +194,6 @@ class FixedListController extends Controller
                 ...$request->validated(),
                 'is_sle_fhe_verified' => $isSleFheVerified,
                 'is_fixed_list' => true,
-                'origin_type' => 'fixed_list',
                 'status' => FixedListItemStatus::Pending,
             ],
         );
@@ -290,61 +214,25 @@ class FixedListController extends Controller
         return back()->with('status', 'Student list imported successfully.');
     }
 
-    public function submit(Request $request, FixedList $fixedList): RedirectResponse
-    {
-        $this->assertListEditable($fixedList);
-
-        if ($fixedList->items()->count() === 0) {
-            return back()->withErrors(['list' => 'Encode or upload at least one student before submitting.']);
-        }
-
-        $items = $fixedList->items()
-            ->with('application')
-            ->whereNotNull('application_id')
-            ->get();
-
-        $applications = $items
-            ->map(static fn (FixedListItem $item) => $item->application)
-            ->filter();
-
-        $blockedStatuses = [
-            ApplicationStatus::Pending,
-            ApplicationStatus::ResubmissionRequested,
-        ];
-
-        if ($applications->contains(static fn ($application) => in_array($application->status, $blockedStatuses, true))) {
-            return back()->withErrors([
-                'list' => 'Cannot submit batch to sponsor. All applications in the batch must be in verified status.',
-            ]);
-        }
-
-        // Rejected applicants are automatically excluded from the batch forwarded to
-        // the sponsor (see the batch detail filter in the sponsor lists show query),
-        // so flagged as Ineligible here to keep the forwarded items consistent.
-        $items
-            ->filter(static fn (FixedListItem $item) => $item->application?->status === ApplicationStatus::Rejected)
-            ->each(static fn (FixedListItem $item) => $item->update(['status' => FixedListItemStatus::Ineligible]));
-
-        $fixedList->update(['status' => FixedListStatus::Submitted]);
-        $this->refreshTotalNames($fixedList);
-        $this->audit($request, 'fassg.fixed_list.submitted', 'fixed_lists');
-
-        $this->notifyShortlistedStudents($fixedList);
-
-        return back()->with('status', 'Fixed list submitted for sponsor confirmation.');
-    }
-
-    public function publish(Request $request, FixedList $fixedList): RedirectResponse
-    {
-        return $this->submit($request, $fixedList);
-    }
-
     public function finalize(Request $request, FixedList $fixedList): RedirectResponse
     {
         $this->assertListEditable($fixedList);
 
         if ($fixedList->items()->count() === 0) {
             return back()->withErrors(['list' => 'Encode or upload at least one student before finalizing.']);
+        }
+
+        $fixedList->loadMissing('items.studentProfile');
+
+        $hasUnverifiedOrUnendorsed = $fixedList->items->contains(
+            static fn (FixedListItem $item): bool => ! ($item->is_sle_fhe_verified || $item->studentProfile?->isSleFheVerified())
+                || ! $item->is_manually_endorsed,
+        );
+
+        if ($hasUnverifiedOrUnendorsed) {
+            return back()->withErrors([
+                'list' => 'Cannot finalize list until all candidates are SLE-FHE verified and endorsed.',
+            ]);
         }
 
         $fixedList->update([
@@ -516,43 +404,11 @@ class FixedListController extends Controller
                     'campus' => $rowCampus !== '' ? $rowCampus : null,
                     'is_sle_fhe_verified' => $isSleFheVerified($studentId),
                     'is_fixed_list' => true,
-                    'origin_type' => 'fixed_list',
                     'status' => FixedListItemStatus::Pending,
                 ],
             );
         }
 
         $this->refreshTotalNames($fixedList);
-    }
-
-    /**
-     * Notify the students on a shortlist that their application has been
-     * forwarded to the sponsor for review.
-     */
-    private function notifyShortlistedStudents(FixedList $fixedList): void
-    {
-        $studentIds = $fixedList->items()
-            ->where('is_sle_fhe_verified', true)
-            ->pluck('student_id_number')
-            ->filter();
-
-        if ($studentIds->isEmpty()) {
-            return;
-        }
-
-        $applications = Application::query()
-            ->where('sponsorship_program_id', $fixedList->sponsorship_program_id)
-            ->whereHas('studentProfile', fn ($query) => $query->whereIn('student_id_number', $studentIds))
-            ->where('status', ApplicationStatus::Pending)
-            ->with('studentProfile.user')
-            ->get();
-
-        foreach ($applications as $application) {
-            $studentUser = $application->studentProfile->user ?? null;
-
-            if ($studentUser !== null) {
-                $studentUser->notify(new ApplicationStatusUpdated($application, 'Sponsor Reviewed'));
-            }
-        }
     }
 }

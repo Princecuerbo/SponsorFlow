@@ -80,14 +80,14 @@ class Application extends Model
         return $this->belongsTo(User::class, 'endorsed_by_id');
     }
 
-    public function fixedListItems(): HasMany
+    public function batchCandidates(): HasMany
     {
-        return $this->hasMany(FixedListItem::class);
+        return $this->hasMany(BatchCandidate::class);
     }
 
     public function batch(): BelongsTo
     {
-        return $this->belongsTo(FixedList::class, 'batch_id');
+        return $this->belongsTo(GeneratedBatch::class, 'batch_id');
     }
 
     public function getStatusAttribute($value): ?ApplicationStatus

@@ -338,7 +338,7 @@
                                     $application->status,
                                     [\App\Enums\ApplicationStatus::Pending, \App\Enums\ApplicationStatus::Verified],
                                     true,
-                                ) && $application->fixedListItems()->doesntExist();
+                                ) && $application->batchCandidates()->doesntExist();
                                 $isEndorsed = in_array(
                                     $application->sponsorship_program_id . '|' . trim((string) ($profile->student_id_number ?? '')),
                                     $endorsedKeys ?? [],
@@ -496,7 +496,7 @@
                             @foreach ($savedFixedLists as $savedList)
                                 <option value="{{ $savedList->id }}" data-program-id="{{ $savedList->sponsorship_program_id }}"
                                     @selected((int) old('existing_fixed_list_id') === $savedList->id)>
-                                    {{ $savedList->batch_name }} ({{ $savedList->total_names }} {{ Str::plural('name', $savedList->total_names) }})
+                                    {{ $savedList->batch_name }} ({{ $savedList->total_slots }} {{ Str::plural('slot', $savedList->total_slots) }})
                                 </option>
                             @endforeach
                         </select>

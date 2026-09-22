@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Fassg;
 
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
-use App\Models\FixedList;
+use App\Models\GeneratedBatch;
 use App\Models\SponsorshipProgram;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -17,10 +17,9 @@ class BatchController extends Controller
     {
         $programId = $request->integer('sponsorship_program_id', 0);
 
-        $lists = FixedList::query()
+        $lists = GeneratedBatch::query()
             ->with('sponsorshipProgram')
             ->withCount('items')
-            ->whereHas('items', fn ($query) => $query->whereNotNull('application_id'))
             ->when($programId > 0, fn ($query) => $query->where('sponsorship_program_id', $programId))
             ->latest()
             ->get();
