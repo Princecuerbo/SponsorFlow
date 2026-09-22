@@ -2,6 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Enums\SleFheStatus;
+use App\Models\AcademicProgram;
+use App\Models\SleFheRejection;
+use App\Models\SleFheRequest;
+use App\Models\SleFheVerification;
 use App\Models\StudentProfile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -11,9 +16,9 @@ class StudentRegistrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_student_can_register_auto_classifying_rural_for_provincial_address(): void
+    public function test_student_can_register_without_address_and_defaults_to_unverified_sle_fhe_status(): void
     {
-        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Computer Science']);
+        $program = AcademicProgram::factory()->create(['name' => 'Computer Science']);
 
         $response = $this->post(route('register.store'), [
             'first_name' => 'Juan',
@@ -28,12 +33,7 @@ class StudentRegistrationTest extends TestCase
             'contact_number' => '09123456789',
             'year_level' => 2,
             'birthdate' => '2000-01-15',
-            'province' => 'Davao Oriental',
-            'municipality' => 'Baganga',
-            'barangay' => 'Lambajon',
-            'home_address' => '123 Main Street',
             'privacy_consent' => 1,
-            // Intentionally omit 'is_rural' — it is now auto-computed
         ]);
 
         $response->assertRedirect(route('login'));
@@ -42,21 +42,58 @@ class StudentRegistrationTest extends TestCase
         $user = User::query()->where('email', 'juan.delacruz@dorsu.edu.ph')->firstOrFail();
         $profile = StudentProfile::query()->where('user_id', $user->id)->firstOrFail();
 
-        $this->assertTrue($profile->is_rural, 'Baganga is a provincial municipality so it should default to rural');
+        $this->assertSame(SleFheStatus::Unverified->value, $profile->sle_fhe_status, 'New registrations must default to Unverified SLE-FHE status');
+        $this->assertFalse($profile->is_sle_fhe_verified);
+        $this->assertNull($profile->sleFheRequest, 'No SLE-FHE request is created during registration');
+        $this->assertNull($profile->sleFheVerification, 'No SLE-FHE verification is created during registration');
+        $this->assertCount(0, $profile->sleFheRejections, 'No SLE-FHE rejection is created during registration');
         $this->assertSame('Juan', $profile->first_name);
         $this->assertSame('Dela Cruz', $profile->last_name);
         $this->assertSame('Male', $profile->gender);
-        $this->assertSame('Davao Oriental', $profile->province);
-        $this->assertSame('Baganga', $profile->municipality);
-        $this->assertSame('Lambajon', $profile->barangay);
-        $this->assertSame('123 Main Street', $profile->home_address);
-        $this->assertSame('123 Main Street, Brgy. Lambajon, Baganga, Davao Oriental', $profile->full_address);
+        $this->assertNull($profile->province, 'Address should not be captured during registration');
+        $this->assertNull($profile->municipality);
+        $this->assertNull($profile->barangay);
+        $this->assertNull($profile->home_address);
         $this->assertTrue($user->isStudent());
     }
 
-    public function test_student_registration_auto_classifies_urban_for_huc_city(): void
+    public function test_student_profile_sle_fhe_status_is_derived_from_dedicated_tables(): void
     {
-        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Computer Science']);
+        $profile = StudentProfile::factory()->create();
+
+        $this->assertSame(SleFheStatus::Unverified->value, $profile->sle_fhe_status, 'No SLE-FHE records means Unverified');
+
+        SleFheRequest::create([
+            'student_profile_id' => $profile->id,
+            'status' => 'pending',
+        ]);
+        SleFheRejection::create([
+            'student_profile_id' => $profile->id,
+        ]);
+
+        $this->assertSame(SleFheStatus::PendingReview->value, $profile->fresh()->sle_fhe_status, 'An open request takes priority over a past rejection');
+
+        SleFheVerification::create([
+            'student_profile_id' => $profile->id,
+        ]);
+
+        $this->assertSame(SleFheStatus::Verified->value, $profile->fresh()->sle_fhe_status, 'A verification overrides earlier request/rejection records');
+    }
+
+    public function test_student_profile_sle_fhe_status_returns_rejected_when_only_rejections_exist(): void
+    {
+        $profile = StudentProfile::factory()->create();
+
+        SleFheRejection::create([
+            'student_profile_id' => $profile->id,
+        ]);
+
+        $this->assertSame(SleFheStatus::Rejected->value, $profile->fresh()->sle_fhe_status);
+    }
+
+    public function test_student_registration_ignores_address_and_rurality_inputs_on_store(): void
+    {
+        $program = AcademicProgram::factory()->create(['name' => 'Computer Science']);
 
         $response = $this->post(route('register.store'), [
             'first_name' => 'Maria',
@@ -83,14 +120,17 @@ class StudentRegistrationTest extends TestCase
         $user = User::query()->where('email', 'maria.santos@dorsu.edu.ph')->firstOrFail();
         $profile = StudentProfile::query()->where('user_id', $user->id)->firstOrFail();
 
-        $this->assertFalse($profile->is_rural, 'Davao City is a highly urbanized city');
-        $this->assertSame('Female', $profile->gender);
-        $this->assertSame('Davao City', $profile->municipality);
+        $this->assertSame(SleFheStatus::Unverified->value, $profile->sle_fhe_status);
+        $this->assertNull($profile->province, 'Address and rurality are no longer captured on registration');
+        $this->assertNull($profile->municipality);
+        $this->assertNull($profile->barangay);
+        $this->assertNull($profile->home_address);
+        $this->assertFalse($profile->is_rural);
     }
 
     public function test_student_registration_fails_with_non_dorsu_email(): void
     {
-        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Information Technology']);
+        $program = AcademicProgram::factory()->create(['name' => 'Information Technology']);
 
         $response = $this->post(route('register.store'), [
             'name' => 'Invalid User',
@@ -102,9 +142,6 @@ class StudentRegistrationTest extends TestCase
             'course' => 'Information Technology',
             'year_level' => 1,
             'birthdate' => '2001-03-10',
-            'municipality' => 'Mati City',
-            'address' => '789 Test Street',
-            'is_rural' => '0',
         ]);
 
         $response->assertSessionHasErrors('email');
@@ -115,7 +152,7 @@ class StudentRegistrationTest extends TestCase
 
     public function test_student_registration_fails_with_yahoo_email(): void
     {
-        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Engineering']);
+        $program = AcademicProgram::factory()->create(['name' => 'Engineering']);
 
         $response = $this->post(route('register.store'), [
             'name' => 'Yahoo User',
@@ -127,8 +164,6 @@ class StudentRegistrationTest extends TestCase
             'course' => 'Engineering',
             'year_level' => 2,
             'birthdate' => '2000-11-25',
-            'municipality' => 'Mati City',
-            'address' => '321 Another Street',
         ]);
 
         $response->assertSessionHasErrors('email');
@@ -136,7 +171,7 @@ class StudentRegistrationTest extends TestCase
 
     public function test_student_registration_succeeds_with_mixed_case_dorsu_email(): void
     {
-        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Bachelor of Arts']);
+        $program = AcademicProgram::factory()->create(['name' => 'Bachelor of Arts']);
 
         $response = $this->post(route('register.store'), [
             'first_name' => 'Case',
@@ -151,10 +186,6 @@ class StudentRegistrationTest extends TestCase
             'contact_number' => '09123456789',
             'year_level' => 4,
             'birthdate' => '1998-08-12',
-            'province' => 'Davao Oriental',
-            'municipality' => 'Mati City',
-            'barangay' => 'Dahican',
-            'home_address' => '654 Central Avenue',
             'privacy_consent' => 1,
         ]);
 
@@ -162,11 +193,14 @@ class StudentRegistrationTest extends TestCase
 
         $user = User::query()->where('email', 'CaseUser@DORSU.EDU.PH')->firstOrFail();
         $this->assertNotNull($user, 'User with mixed-case DORSU email should be created');
+
+        $profile = StudentProfile::query()->where('user_id', $user->id)->firstOrFail();
+        $this->assertSame(SleFheStatus::Unverified->value, $profile->sle_fhe_status);
     }
 
     public function test_student_registration_requires_valid_student_id_format(): void
     {
-        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Medicine']);
+        $program = AcademicProgram::factory()->create(['name' => 'Medicine']);
 
         $response = $this->post(route('register.store'), [
             'name' => 'Invalid ID User',
@@ -178,8 +212,6 @@ class StudentRegistrationTest extends TestCase
             'course' => 'Medicine',
             'year_level' => 1,
             'birthdate' => '2001-12-01',
-            'municipality' => 'Mati City',
-            'address' => '999 Hospital Street',
         ]);
 
         $response->assertSessionHasErrors('student_id_number');
@@ -196,8 +228,6 @@ class StudentRegistrationTest extends TestCase
             'student_id_number' => '2024-0010',
             'year_level' => 1,
             'birthdate' => '2001-12-01',
-            'municipality' => 'Mati City',
-            'address' => '123 Test Street',
         ]);
 
         $response->assertSessionHasErrors('gender');
@@ -215,42 +245,50 @@ class StudentRegistrationTest extends TestCase
             'student_id_number' => '2024-0011',
             'year_level' => 1,
             'birthdate' => '2001-12-01',
-            'municipality' => 'Mati City',
-            'address' => '123 Test Street',
         ]);
 
         $response->assertSessionHasErrors('gender');
     }
 
-    public function test_student_registration_requires_municipality(): void
+    public function test_student_registration_no_longer_requires_address_fields(): void
     {
+        $program = AcademicProgram::factory()->create(['name' => 'Computer Science']);
+
         $response = $this->post(route('register.store'), [
             'first_name' => 'Test',
             'last_name' => 'User',
             'gender' => 'Male',
-            'email' => 'muni.test@dorsu.edu.ph',
+            'email' => 'no.address@dorsu.edu.ph',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
             'student_id_number' => '2024-0012',
+            'academic_program_id' => $program->program_id,
+            'campus' => 'Main Campus (City of Mati)',
+            'contact_number' => '09123456789',
             'year_level' => 1,
             'birthdate' => '2001-12-01',
-            'province' => 'Davao Oriental',
-            'barangay' => 'Lambajon',
-            'home_address' => '123 Test Street',
+            'privacy_consent' => 1,
         ]);
 
-        $response->assertSessionHasErrors('municipality');
+        $response->assertRedirect(route('login'));
+
+        $profile = StudentProfile::query()->where('student_id_number', '2024-0012')->firstOrFail();
+        $this->assertNull($profile->province);
+        $this->assertNull($profile->municipality);
+        $this->assertNull($profile->barangay);
+        $this->assertNull($profile->home_address);
+        $this->assertSame(SleFheStatus::Unverified->value, $profile->sle_fhe_status);
     }
 
-    public function test_student_registration_accepts_any_philippine_municipality(): void
+    public function test_student_registration_does_not_classify_rurality_at_signup(): void
     {
-        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'Computer Science']);
+        $program = AcademicProgram::factory()->create(['name' => 'Computer Science']);
 
         $response = $this->post(route('register.store'), [
             'first_name' => 'Test',
             'last_name' => 'User',
             'gender' => 'Male',
-            'email' => 'muni.accept@dorsu.edu.ph',
+            'email' => 'no.rurality@dorsu.edu.ph',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
             'student_id_number' => '2024-0013',
@@ -259,18 +297,13 @@ class StudentRegistrationTest extends TestCase
             'contact_number' => '09123456789',
             'year_level' => 1,
             'birthdate' => '2001-12-01',
-            'province' => 'Metro Manila',
-            'municipality' => 'Quezon City',
-            'barangay' => 'Diliman',
-            'home_address' => '123 Test Street',
             'privacy_consent' => 1,
         ]);
 
         $response->assertRedirect(route('login'));
 
         $profile = StudentProfile::query()->where('student_id_number', '2024-0013')->firstOrFail();
-        $this->assertSame('Quezon City', $profile->municipality);
-        $this->assertFalse($profile->is_rural, 'Metro Manila should be classified as urban');
+        $this->assertFalse($profile->is_rural, 'Rurality is no longer computed at registration');
+        $this->assertSame(SleFheStatus::Unverified->value, $profile->sle_fhe_status);
     }
 }
-

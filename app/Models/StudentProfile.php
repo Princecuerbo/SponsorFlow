@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Enums\ApplicationStatus;
+use App\Enums\SleFheStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StudentProfile extends Model
@@ -100,6 +102,38 @@ class StudentProfile extends Model
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class);
+    }
+
+    public function sleFheRequest(): HasOne
+    {
+        return $this->hasOne(SleFheRequest::class);
+    }
+
+    public function sleFheVerification(): HasOne
+    {
+        return $this->hasOne(SleFheVerification::class);
+    }
+
+    public function sleFheRejections(): HasMany
+    {
+        return $this->hasMany(SleFheRejection::class);
+    }
+
+    public function getSleFheStatusAttribute(): string
+    {
+        if ($this->sleFheVerification()->exists()) {
+            return SleFheStatus::Verified->value;
+        }
+
+        if ($this->sleFheRequest()->exists()) {
+            return SleFheStatus::PendingReview->value;
+        }
+
+        if ($this->sleFheRejections()->exists()) {
+            return SleFheStatus::Rejected->value;
+        }
+
+        return SleFheStatus::Unverified->value;
     }
 
     public function hasActiveSponsorship(): bool

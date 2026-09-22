@@ -10,7 +10,6 @@ use App\Models\StudentProfile;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -56,10 +55,6 @@ class RegisteredUserController extends Controller
             'course' => ['nullable', 'string', 'max:150'],
             'year_level' => ['required', 'integer', 'min:1', 'max:5'],
             'birthdate' => ['required', 'date', 'before:today'],
-            'province' => ['required', 'string', 'max:255'],
-            'municipality' => ['required', 'string', 'max:255'],
-            'barangay' => ['required', 'string', 'max:255'],
-            'home_address' => ['required', 'string', 'max:255'],
             'privacy_consent' => ['accepted'],
         ], [
             'email.regex' => 'Registration requires an official DORSU institutional email (@dorsu.edu.ph).',
@@ -68,16 +63,10 @@ class RegisteredUserController extends Controller
             'privacy_consent.accepted' => 'You must certify the accuracy of your information and consent to FASSG verifying your SLE-FHE records under the Data Privacy Act.',
         ]);
 
-        $isRural = $this->determineRurality(
-            $validated['province'],
-            $validated['municipality'],
-            $validated['barangay'],
-        );
-
         $program = AcademicProgram::query()->findOrFail($validated['academic_program_id']);
         $course = $program->name;
 
-        $user = DB::transaction(function () use ($validated, $isRural, $course): User {
+        $user = DB::transaction(function () use ($validated, $course): User {
             $nameParts = array_filter([
                 $validated['first_name'],
                 $validated['middle_name'] ?? null,
@@ -109,11 +98,6 @@ class RegisteredUserController extends Controller
                 'year_level' => $validated['year_level'],
                 'gender' => $validated['gender'],
                 'birthdate' => $validated['birthdate'],
-                'province' => $validated['province'],
-                'municipality' => $validated['municipality'],
-                'barangay' => $validated['barangay'],
-                'home_address' => $validated['home_address'],
-                'is_rural' => $isRural,
                 'is_sle_fhe_verified' => false,
             ]);
 
@@ -121,48 +105,5 @@ class RegisteredUserController extends Controller
         });
 
         return redirect()->route('login')->with('status', 'Registration successful! Please sign in with your credentials.');
-    }
-
-    /**
-     * Auto-classify a residence as rural (true) or urban (false).
-     *
-     * - Major Highly Urbanized Cities (HUCs) and Metro Manila classify as urban.
-     * - "City of Mati" classifies per barangay (urban for the listed urban barangays).
-     * - All other provincial municipalities default to rural.
-     */
-    private function determineRurality(string $province, string $municipality, string $barangay): bool
-    {
-        $urbanCities = [
-            'manila', 'quezon city', 'caloocan', 'las piñas', 'las pinas', 'makati',
-            'malabon', 'mandaluyong', 'marikina', 'muntinlupa', 'navotas',
-            'parañaque', 'paranaque', 'pasay', 'pasig', 'san juan', 'taguig', 'valenzuela',
-            'baguio', 'angeles city', 'olongapo city',
-            'cebu city', 'mandaue city', 'lapu-lapu city',
-            'iloilo city', 'bacolod', 'tacloban city',
-            'davao city', 'zamboanga city', 'cagayan de oro', 'iligan',
-            'butuan', 'general santos', 'cotabato city', 'puerto princesa',
-        ];
-
-        $prov = strtolower(trim($province));
-        $city = str_replace(' ', '', strtolower(trim($municipality)));
-        $key = strtolower(trim($barangay));
-
-        if (str_contains($prov, 'metro manila') || str_contains($prov, 'national capital')) {
-            return false;
-        }
-
-        $compactCities = array_map(fn (string $c) => str_replace(' ', '', $c), $urbanCities);
-
-        if (in_array($city, $compactCities, true)) {
-            return false;
-        }
-
-        if (str_contains($city, 'mati')) {
-            $urbanMatiBarangays = ['central', 'dahican', 'sainz', 'matiao'];
-
-            return ! in_array($key, $urbanMatiBarangays, true);
-        }
-
-        return true;
     }
 }

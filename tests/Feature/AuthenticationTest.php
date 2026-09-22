@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Enums\SleFheStatus;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
+use App\Models\AcademicProgram;
 use App\Models\StudentProfile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,7 +17,7 @@ class AuthenticationTest extends TestCase
 
     public function test_student_can_register_with_a_dorsu_email(): void
     {
-        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'BS Information Technology']);
+        $program = AcademicProgram::factory()->create(['name' => 'BS Information Technology']);
 
         $response = $this->post(route('register.store'), [
             'first_name' => 'DORSU',
@@ -30,10 +32,6 @@ class AuthenticationTest extends TestCase
             'contact_number' => '09123456789',
             'year_level' => 2,
             'birthdate' => '2005-01-15',
-            'province' => 'Davao Oriental',
-            'municipality' => 'Mati City',
-            'barangay' => 'Central',
-            'home_address' => '123 Rizal St',
             'privacy_consent' => 1,
         ]);
 
@@ -43,17 +41,17 @@ class AuthenticationTest extends TestCase
         $this->assertDatabaseHas('student_profiles', ['student_id_number' => '2026-0001', 'is_sle_fhe_verified' => false, 'academic_program_id' => $program->program_id]);
 
         $profile = StudentProfile::query()->where('student_id_number', '2026-0001')->firstOrFail();
-        $this->assertSame('Davao Oriental', $profile->province);
-        $this->assertSame('Mati City', $profile->municipality);
-        $this->assertSame('Central', $profile->barangay);
-        $this->assertSame('123 Rizal St', $profile->home_address);
-        $this->assertFalse($profile->is_rural, 'Mati City + Central barangay should be classified as urban');
-        $this->assertSame('123 Rizal St, Brgy. Central, Mati City, Davao Oriental', $profile->full_address);
+        $this->assertSame(SleFheStatus::Unverified->value, $profile->sle_fhe_status);
+        $this->assertNull($profile->province, 'Address is no longer captured during registration');
+        $this->assertNull($profile->municipality);
+        $this->assertNull($profile->barangay);
+        $this->assertNull($profile->home_address);
+        $this->assertFalse($profile->is_rural);
     }
 
     public function test_registration_rejects_non_dorsu_email(): void
     {
-        $program = \App\Models\AcademicProgram::factory()->create(['name' => 'BS Information Technology']);
+        $program = AcademicProgram::factory()->create(['name' => 'BS Information Technology']);
 
         $this->post(route('register.store'), [
             'name' => 'External User',
