@@ -142,10 +142,10 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label small text-secondary">Batch Name <span
+                                <label class="form-label small text-secondary">Fixed List Title <span
                                         class="text-danger">*</span></label>
-                                <input type="text" name="batch_name" class="form-control" placeholder="e.g. 2026 Batch A"
-                                    required>
+                                <input type="text" name="batch_name" class="form-control"
+                                    placeholder="e.g. Governor Endorsed Candidates 2026" required>
                             </div>
                             <div class="col-12">
                                 <label class="form-label small text-secondary">Upload CSV/Excel of Names</label>
@@ -186,8 +186,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal"><i class="bi bi-x-lg me-1"></i> Cancel</button>
-                        <button type="submit" class="btn btn-sf-navy"><i class="bi bi-upload me-1"></i>Create
-                            Batch</button>
+                        <button type="submit" class="btn btn-sf-navy"><i class="bi bi-upload me-1"></i>Save
+                            Fixed List</button>
                     </div>
                 </form>
             </div>
