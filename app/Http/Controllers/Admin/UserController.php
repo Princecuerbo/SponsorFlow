@@ -20,12 +20,12 @@ class UserController extends Controller
     public function index(Request $request): View
     {
         $users = User::query()
-            ->when($request->filled('q'), fn($query) => $query->where(function ($query) use ($request): void {
-                $query->where('name', 'like', '%' . $request->string('q') . '%')
-                    ->orWhere('email', 'like', '%' . $request->string('q') . '%');
+            ->when($request->filled('q'), fn ($query) => $query->where(function ($query) use ($request): void {
+                $query->where('name', 'like', '%'.$request->string('q').'%')
+                    ->orWhere('email', 'like', '%'.$request->string('q').'%');
             }))
-            ->when($request->filled('role'), fn($query) => $query->where('role', $request->string('role')))
-            ->when($request->filled('status'), fn($query) => $query->where('status', $request->string('status')))
+            ->when($request->filled('role'), fn ($query) => $query->where('role', $request->string('role')))
+            ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
             ->latest()
             ->paginate(20)
             ->withQueryString();
@@ -119,7 +119,7 @@ class UserController extends Controller
     {
         abort_if($request->user()->is($user), 422, 'You cannot change your own account status.');
         $user->update(['status' => $status, 'is_active' => $status === UserStatus::Active]);
-        AuditLog::record('admin.user.' . ($status === UserStatus::Active ? 'restored' : 'deactivated'), 'users', $request->user(), $request->ip(), null, $request->userAgent(), $request->user()?->role?->value);
+        AuditLog::record('admin.user.'.($status === UserStatus::Active ? 'restored' : 'deactivated'), 'users', $request->user(), $request->ip(), null, $request->userAgent(), $request->user()?->role?->value);
 
         return back()->with('status', "{$user->name}'s account is now {$status->value}.");
     }

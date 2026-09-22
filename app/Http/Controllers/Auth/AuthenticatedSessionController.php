@@ -38,6 +38,7 @@ class AuthenticatedSessionController extends Controller
         $user = $request->user();
         if (! $user->isActive()) {
             Auth::logout();
+
             return back()->withErrors(['email' => 'Your account is not active.'])->onlyInput('email');
         }
 

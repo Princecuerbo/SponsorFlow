@@ -54,7 +54,7 @@ class ProgramManagementController extends Controller
             ->withCount('applications')
             ->when(
                 $request->filled('status'),
-                fn($query) => $query->where(
+                fn ($query) => $query->where(
                     'status',
                     ProgramStatus::tryFrom(ucfirst(strtolower($request->string('status')->toString()))),
                 ),
@@ -200,7 +200,7 @@ class ProgramManagementController extends Controller
      * none or multiple selections -> null, so eligibility resolves through the
      * program_academic_program pivot instead of the free-text fallback.
      *
-     * @param list<int> $academicProgramIds
+     * @param  list<int>  $academicProgramIds
      */
     private function resolveTargetCourse(array $academicProgramIds): ?string
     {
@@ -231,7 +231,7 @@ class ProgramManagementController extends Controller
         return Sponsor::query()
             ->whereNotIn('company_organization_name', ['A', 'B'])
             ->whereNotNull('company_organization_name')
-            ->whereHas('user', fn($query) => $query
+            ->whereHas('user', fn ($query) => $query
                 ->where('role', UserRole::Sponsor)
                 ->where('status', UserStatus::Active))
             ->orderBy('company_organization_name')

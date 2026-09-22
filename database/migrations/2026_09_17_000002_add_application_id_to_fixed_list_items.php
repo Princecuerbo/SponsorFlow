@@ -18,7 +18,7 @@ return new class extends Migration
             DB::statement("ALTER TABLE fixed_list_items MODIFY COLUMN status ENUM('Pending','Verified','Eligible','Ineligible','Endorsed') NOT NULL DEFAULT 'Pending'");
         } elseif ($driver === 'pgsql') {
             // Drop the existing CHECK constraint (Laravel names it "{table}_{column}_check")
-            DB::statement("ALTER TABLE fixed_list_items DROP CONSTRAINT IF EXISTS fixed_list_items_status_check");
+            DB::statement('ALTER TABLE fixed_list_items DROP CONSTRAINT IF EXISTS fixed_list_items_status_check');
             // Re-create with expanded values
             DB::statement("ALTER TABLE fixed_list_items ADD CONSTRAINT fixed_list_items_status_check CHECK (status::text = ANY (ARRAY['Pending'::character varying, 'Verified'::character varying, 'Eligible'::character varying, 'Ineligible'::character varying, 'Endorsed'::character varying]::text[]))");
         }
@@ -43,7 +43,7 @@ return new class extends Migration
         if ($driver === 'mysql') {
             DB::statement("ALTER TABLE fixed_list_items MODIFY COLUMN status ENUM('Pending','Verified','Eligible','Ineligible') NOT NULL DEFAULT 'Pending'");
         } elseif ($driver === 'pgsql') {
-            DB::statement("ALTER TABLE fixed_list_items DROP CONSTRAINT IF EXISTS fixed_list_items_status_check");
+            DB::statement('ALTER TABLE fixed_list_items DROP CONSTRAINT IF EXISTS fixed_list_items_status_check');
             DB::statement("ALTER TABLE fixed_list_items ADD CONSTRAINT fixed_list_items_status_check CHECK (status::text = ANY (ARRAY['Pending'::character varying, 'Verified'::character varying, 'Eligible'::character varying, 'Ineligible'::character varying]::text[]))");
         }
     }

@@ -10,7 +10,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 
@@ -46,13 +45,13 @@ abstract class PortalLoginController extends Controller
         } catch (\Throwable) {
             $maxAttempts = 5;
         }
-        $key = strtolower($request->input('email')) . '|' . $request->ip();
+        $key = strtolower($request->input('email')).'|'.$request->ip();
 
         if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
             $seconds = RateLimiter::availableIn($key);
 
             return back()->withErrors([
-                'email' => 'Too many login attempts. Please try again in ' . ceil($seconds / 60) . ' minutes.',
+                'email' => 'Too many login attempts. Please try again in '.ceil($seconds / 60).' minutes.',
             ])->onlyInput('email');
         }
 
@@ -119,7 +118,7 @@ abstract class PortalLoginController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $key = strtolower($request->input('email')) . '|' . $request->ip();
+        $key = strtolower($request->input('email')).'|'.$request->ip();
         try {
             $maxAttempts = (int) SystemSetting::get('max_login_attempts', 5);
         } catch (\Throwable) {
@@ -130,7 +129,7 @@ abstract class PortalLoginController extends Controller
             $seconds = RateLimiter::availableIn($key);
 
             throw ValidationException::withMessages([
-                'email' => 'Too many login attempts. Please try again in ' . ceil($seconds / 60) . ' minutes.',
+                'email' => 'Too many login attempts. Please try again in '.ceil($seconds / 60).' minutes.',
             ]);
         }
 

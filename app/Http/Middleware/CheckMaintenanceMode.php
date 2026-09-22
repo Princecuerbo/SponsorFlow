@@ -37,7 +37,7 @@ class CheckMaintenanceMode
         $adminPath = (string) config('app.admin_login_path', 'dorsu-sysadmin-gate');
         if (
             $request->is('admin*') ||
-            $request->is($adminPath . '*') ||
+            $request->is($adminPath.'*') ||
             $request->is('admin/login*') ||
             $request->routeIs('admin.*') ||
             $request->routeIs('admin.login*')

@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Models\AuditLog;
 use App\Models\Sponsor;
+use App\Models\SystemSetting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -170,12 +171,12 @@ class AdminControlTest extends TestCase
         $this->assertTrue($user->is_active);
         $this->assertTrue($user->isActive());
 
-        \App\Models\SystemSetting::query()->updateOrCreate(
+        SystemSetting::query()->updateOrCreate(
             ['setting_key' => 'maintenance_mode'],
             ['setting_value' => 'true', 'description' => 'Maintenance mode'],
         );
 
-        $this->assertSame('true', \App\Models\SystemSetting::get('maintenance_mode'));
-        $this->assertSame('maintenance_mode', \App\Models\SystemSetting::query()->where('setting_key', 'maintenance_mode')->value('setting_key'));
+        $this->assertSame('true', SystemSetting::get('maintenance_mode'));
+        $this->assertSame('maintenance_mode', SystemSetting::query()->where('setting_key', 'maintenance_mode')->value('setting_key'));
     }
 }

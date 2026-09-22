@@ -86,7 +86,7 @@ class User extends Authenticatable
     public function hasAnyRole(UserRole|string ...$roles): bool
     {
         $allowed = array_map(
-            static fn(UserRole|string $role): UserRole => $role instanceof UserRole
+            static fn (UserRole|string $role): UserRole => $role instanceof UserRole
                 ? $role
                 : UserRole::from($role),
             $roles,

@@ -12,6 +12,7 @@ class AcademicProgram extends Model
     use HasFactory;
 
     protected $table = 'academic_programs';
+
     protected $primaryKey = 'program_id';
 
     protected $fillable = [

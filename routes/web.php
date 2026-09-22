@@ -1,13 +1,13 @@
 <?php
 
+use App\Http\Controllers\Accounting\DashboardController as AccountingDashboardController;
 use App\Http\Controllers\Accounting\ReferenceController;
+use App\Http\Controllers\Admin\AuditLogController as AdminAuditLogController;
 use App\Http\Controllers\Admin\BackupController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\AuditLogController as AdminAuditLogController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Api\AddressLookupController;
-use App\Http\Controllers\Accounting\DashboardController as AccountingDashboardController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -15,21 +15,21 @@ use App\Http\Controllers\Auth\StaffLoginController;
 use App\Http\Controllers\Auth\StudentLoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
-use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Fassg\ApplicantVerificationController;
 use App\Http\Controllers\Fassg\BatchController;
 use App\Http\Controllers\Fassg\FixedListController;
 use App\Http\Controllers\Fassg\ProgramManagementController;
 use App\Http\Controllers\Fassg\ReportsController;
 use App\Http\Controllers\Fassg\VerificationController as FassgVerificationController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Sponsor\ApprovalUploadController;
 use App\Http\Controllers\Sponsor\ReviewController;
 use App\Http\Controllers\Student\ApplicationController as StudentApplicationController;
 use App\Http\Controllers\Student\NotificationController as StudentNotificationController;
 use App\Http\Controllers\Student\ProfileController;
 use App\Http\Controllers\Student\SleVerificationController;
-use App\Models\User;
 use App\Models\SponsorshipProgram;
+use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +41,7 @@ Route::get('/', function () {
         $programs = Schema::hasTable('sponsorship_programs')
             ? SponsorshipProgram::query()->open()->with('sponsor')->latest()->take(6)->get()
             : collect();
-    } catch (\Throwable) {
+    } catch (Throwable) {
         $programs = collect();
     }
 
@@ -303,7 +303,7 @@ Route::middleware(['auth', 'EnsureUserRole:admin'])->group(function () {
 
     Route::get('/force-sync-database-99', function () {
         if (! Schema::hasTable('localaddress')) {
-            DB::statement("
+            DB::statement('
                 CREATE TABLE IF NOT EXISTS localaddress (
                     localaddressid BIGSERIAL PRIMARY KEY,
                     province VARCHAR(255) NULL,
@@ -314,7 +314,7 @@ Route::middleware(['auth', 'EnsureUserRole:admin'])->group(function () {
                     created_at TIMESTAMP NULL,
                     updated_at TIMESTAMP NULL
                 );
-            ");
+            ');
         }
 
         Artisan::call('migrate', ['--force' => true]);

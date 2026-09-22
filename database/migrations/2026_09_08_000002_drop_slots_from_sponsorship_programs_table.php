@@ -27,7 +27,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('sponsorship_programs', function (Blueprint $table) {
-            if (!Schema::hasColumn('sponsorship_programs', 'slots')) {
+            if (! Schema::hasColumn('sponsorship_programs', 'slots')) {
                 $table->integer('slots')->default(0);
             }
         });

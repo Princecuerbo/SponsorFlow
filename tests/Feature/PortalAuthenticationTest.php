@@ -74,10 +74,10 @@ class PortalAuthenticationTest extends TestCase
             $this->assertDatabaseHas('audit_logs', [
                 'user_id' => $user->id,
                 'role' => $role->value,
-                'action' => $role->value . '.user.login',
+                'action' => $role->value.'.user.login',
                 'target_module' => 'authentication',
                 'user_agent' => 'SponsorFlow-Audit-Test',
-                'details' => 'User logged into system: ' . $user->email,
+                'details' => 'User logged into system: '.$user->email,
             ]);
 
             $this->post(route('logout'));

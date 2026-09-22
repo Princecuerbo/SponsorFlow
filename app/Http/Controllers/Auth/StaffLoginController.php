@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
+
 class StaffLoginController extends PortalLoginController
 {
     /** @var list<string> */
@@ -13,7 +15,7 @@ class StaffLoginController extends PortalLoginController
 
     protected string $accessDeniedMessage = 'Access denied. Students and System Administrators must use their designated portal logins.';
 
-    protected function destinationRoute(\App\Models\User $user): string
+    protected function destinationRoute(User $user): string
     {
         return match ($user->role->value) {
             'fassg' => 'fassg.dashboard',

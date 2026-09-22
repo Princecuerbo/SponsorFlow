@@ -106,21 +106,21 @@ class SessionTimeoutRedirectTest extends TestCase
         $admin = User::factory()->create(['role' => UserRole::Admin]);
         $response = $this->actingAs($admin)->get(route('admin.dashboard'));
         $response->assertOk();
-        $response->assertSee('data-login-gate="' . route('admin.login') . '"', false);
+        $response->assertSee('data-login-gate="'.route('admin.login').'"', false);
         $response->assertSee('id="idle-logout-btn"', false);
 
         // Staff (FASSG)
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
         $response = $this->actingAs($fassg)->get(route('fassg.dashboard'));
         $response->assertOk();
-        $response->assertSee('data-login-gate="' . route('staff.login') . '"', false);
+        $response->assertSee('data-login-gate="'.route('staff.login').'"', false);
         $response->assertSee('id="idle-logout-btn"', false);
 
         // Student
         $student = User::factory()->create(['role' => UserRole::Student]);
         $response = $this->actingAs($student)->get(route('student.dashboard'));
         $response->assertOk();
-        $response->assertSee('data-login-gate="' . route('login') . '"', false);
+        $response->assertSee('data-login-gate="'.route('login').'"', false);
         $response->assertSee('id="idle-logout-btn"', false);
     }
 

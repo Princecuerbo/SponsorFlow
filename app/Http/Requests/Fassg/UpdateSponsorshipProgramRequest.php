@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Fassg;
 
 use App\Enums\ProgramCategory;
+use App\Enums\ProgramStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -37,7 +38,7 @@ class UpdateSponsorshipProgramRequest extends FormRequest
             'category' => ['required', Rule::enum(ProgramCategory::class)],
             'available_slots' => ['required', 'integer', 'min:0', 'lte:total_slots', 'max:1000'],
             'total_slots' => ['required', 'integer', 'min:0', 'max:1000'],
-            'status' => ['required', Rule::enum(\App\Enums\ProgramStatus::class)],
+            'status' => ['required', Rule::enum(ProgramStatus::class)],
             'end_date' => ['nullable', 'date'],
             'application_deadline' => [
                 'nullable',

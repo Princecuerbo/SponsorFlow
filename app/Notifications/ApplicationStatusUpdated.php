@@ -16,8 +16,7 @@ class ApplicationStatusUpdated extends Notification
         public readonly ApplicationStatus|string $status,
         public readonly ?string $customTitle = null,
         public readonly ?string $customMessage = null,
-    ) {
-    }
+    ) {}
 
     /**
      * @return list<string>
@@ -65,12 +64,12 @@ class ApplicationStatusUpdated extends Notification
         }
 
         return [
-            'icon'           => $icon,
-            'title'          => $title,
-            'message'        => $message,
-            'url'            => route('student.applications.show', $this->application),
+            'icon' => $icon,
+            'title' => $title,
+            'message' => $message,
+            'url' => route('student.applications.show', $this->application),
             'application_id' => $this->application->id,
-            'status'         => $statusValue,
+            'status' => $statusValue,
         ];
     }
 }

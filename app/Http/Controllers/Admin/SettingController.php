@@ -38,6 +38,7 @@ class SettingController extends Controller
         }
 
         AuditLog::record('admin.settings.updated', 'system_settings', $request->user(), $request->ip());
+
         return back()->with('status', 'System settings updated.');
     }
 }

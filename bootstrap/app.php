@@ -13,8 +13,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__ . '/../routes/web.php',
-        commands: __DIR__ . '/../routes/console.php',
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
@@ -74,7 +74,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     if (
                         str_starts_with($path, 'admin') ||
                         str_starts_with($path, $adminPath) ||
-                        preg_match('/(^|\/)(' . preg_quote($adminPath, '/') . '|admin)(\/|$)/i', $path)
+                        preg_match('/(^|\/)('.preg_quote($adminPath, '/').'|admin)(\/|$)/i', $path)
                     ) {
                         $targetRoute = 'admin.login';
                         break;
@@ -86,7 +86,7 @@ return Application::configure(basePath: dirname(__DIR__))
                         str_starts_with($path, 'accounting') ||
                         str_starts_with($path, 'staff') ||
                         str_starts_with($path, $staffPath) ||
-                        preg_match('/(^|\/)(' . preg_quote($staffPath, '/') . '|fassg|sponsor|accounting|staff)(\/|$)/i', $path)
+                        preg_match('/(^|\/)('.preg_quote($staffPath, '/').'|fassg|sponsor|accounting|staff)(\/|$)/i', $path)
                     ) {
                         $targetRoute = 'staff.login';
                         break;
@@ -141,9 +141,9 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], $status);
             }
 
-            if (view()->exists('errors.' . $status)) {
+            if (view()->exists('errors.'.$status)) {
                 try {
-                    return response()->view('errors.' . $status, ['exception' => $e], $status);
+                    return response()->view('errors.'.$status, ['exception' => $e], $status);
                 } catch (Throwable) {
                 }
             }
@@ -156,9 +156,9 @@ return Application::configure(basePath: dirname(__DIR__))
             };
 
             return response(
-                '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>' . $status . ' - ' . $title . '</title>'
-                . '<style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f8fafc;color:#1e293b;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}.wrap{text-align:center}.code{font-size:5rem;font-weight:700;color:#0f172a}.msg{color:#64748b;margin-top:.5rem}</style></head>'
-                . '<body><div class="wrap"><div class="code">' . $status . '</div><div class="msg">' . $title . '. Please try again.</div></div></body></html>',
+                '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>'.$status.' - '.$title.'</title>'
+                .'<style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f8fafc;color:#1e293b;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}.wrap{text-align:center}.code{font-size:5rem;font-weight:700;color:#0f172a}.msg{color:#64748b;margin-top:.5rem}</style></head>'
+                .'<body><div class="wrap"><div class="code">'.$status.'</div><div class="msg">'.$title.'. Please try again.</div></div></body></html>',
                 $status,
                 ['Content-Type' => 'text/html'],
             );

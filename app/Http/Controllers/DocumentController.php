@@ -29,11 +29,11 @@ class DocumentController extends Controller
 
         $path = Storage::disk('local')->path($document->file_path);
         $mimeType = mime_content_type($path) ?: 'application/octet-stream';
-        $fileName = addcslashes(basename($document->file_name), "\\\"");
+        $fileName = addcslashes(basename($document->file_name), '\\"');
 
         return response()->file($path, [
             'Content-Type' => $mimeType,
-            'Content-Disposition' => 'inline; filename="' . $fileName . '"',
+            'Content-Disposition' => 'inline; filename="'.$fileName.'"',
         ]);
     }
 }

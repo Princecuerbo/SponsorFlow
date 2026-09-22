@@ -159,7 +159,7 @@ class BackupController extends Controller
         $tableKey = 'Tables_in_'.$dbName;
 
         $dumpContent = "-- SponsorFlow System Backup\n";
-        $dumpContent .= "-- Date: ".now()->toDateTimeString()."\n\n";
+        $dumpContent .= '-- Date: '.now()->toDateTimeString()."\n\n";
         $dumpContent .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
 
         foreach ($tables as $table) {
@@ -191,7 +191,7 @@ class BackupController extends Controller
     private function buildSqliteDump(): string
     {
         $dumpContent = "-- SponsorFlow System Backup\n";
-        $dumpContent .= "-- Date: ".now()->toDateTimeString()."\n\n";
+        $dumpContent .= '-- Date: '.now()->toDateTimeString()."\n\n";
 
         $tables = DB::select("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%' ORDER BY name");
 

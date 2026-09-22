@@ -13,8 +13,7 @@ class SleFheVerificationUpdated extends Notification
     public function __construct(
         public readonly StudentProfile $profile,
         public readonly string $outcome,
-    ) {
-    }
+    ) {}
 
     /**
      * @return list<string>
@@ -32,12 +31,12 @@ class SleFheVerificationUpdated extends Notification
         $verified = $this->outcome === 'verified';
 
         return [
-            'icon'   => 'shield-check',
-            'title'  => $verified ? 'SLE-FHE verification approved' : 'SLE-FHE verification needs fixes',
-            'message'=> $verified
+            'icon' => 'shield-check',
+            'title' => $verified ? 'SLE-FHE verification approved' : 'SLE-FHE verification needs fixes',
+            'message' => $verified
                 ? 'Your SLE-FHE verification has been approved. You can now apply to sponsorship programs.'
                 : 'Your SLE-FHE verification was returned for correction. Please review and update your details.',
-            'url'    => route('student.sle-fhe'),
+            'url' => route('student.sle-fhe'),
         ];
     }
 }

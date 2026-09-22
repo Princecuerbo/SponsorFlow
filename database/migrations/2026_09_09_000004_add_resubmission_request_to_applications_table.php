@@ -19,7 +19,7 @@ return new class extends Migration
 
         if ($driver === 'pgsql') {
             // Safe constraint handling for PostgreSQL
-            DB::statement("ALTER TABLE applications DROP CONSTRAINT IF EXISTS applications_status_check;");
+            DB::statement('ALTER TABLE applications DROP CONSTRAINT IF EXISTS applications_status_check;');
             DB::statement("ALTER TABLE applications ADD CONSTRAINT applications_status_check CHECK (status::text IN ('Pending', 'Verified', 'Approved', 'Rejected', 'Ongoing', 'Expired', 'Resubmission Requested'));");
         } else {
             Schema::table('applications', function (Blueprint $table) {
@@ -38,7 +38,7 @@ return new class extends Migration
 
         $driver = DB::getDriverName();
         if ($driver === 'pgsql') {
-            DB::statement("ALTER TABLE applications DROP CONSTRAINT IF EXISTS applications_status_check;");
+            DB::statement('ALTER TABLE applications DROP CONSTRAINT IF EXISTS applications_status_check;');
         }
     }
 };
