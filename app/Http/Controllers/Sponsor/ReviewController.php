@@ -77,20 +77,10 @@ class ReviewController extends Controller
             ->latest()
             ->get();
 
-        $externalLists = FixedList::query()
-            ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor->id))
-            ->where('status', FixedListStatus::Submitted)
-            ->whereDoesntHave('items', fn ($query) => $query->whereNotNull('application_id'))
-            ->with(['sponsorshipProgram', 'latestApproval'])
-            ->when($request->filled('sponsorship_program_id'), fn ($query) => $query->where('sponsorship_program_id', $request->integer('sponsorship_program_id')))
-            ->latest()
-            ->get();
-
         return view('sponsor.approvals.index', [
             'user' => $this->actor($request),
             'sponsor' => $sponsor,
             'generatedBatches' => $generatedBatches,
-            'externalLists' => $externalLists,
             'programs' => $programs,
         ]);
     }

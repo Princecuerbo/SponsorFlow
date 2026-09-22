@@ -13,6 +13,7 @@ use App\Http\Requests\Fassg\VerifyApplicationRequest;
 use App\Models\Application;
 use App\Models\ApplicationDocument;
 use App\Models\FixedList;
+use App\Models\FixedListItem;
 use App\Models\SleFheVerification;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
@@ -133,13 +134,13 @@ class ApplicantVerificationController extends Controller
                 Rule::requiredIf($request->filled('existing_fixed_list_id') === false),
             ],
             'sponsorship_program_id' => ['required', 'integer', 'exists:sponsorship_programs,id'],
-            'selected_applications' => ['required', 'array', 'min:1'],
+            'selected_applications' => ['sometimes', 'array', 'min:1'],
             'selected_applications.*' => ['integer'],
             'existing_fixed_list_id' => ['nullable', 'integer', 'exists:fixed_lists,id'],
         ]);
 
         $programId = (int) $validated['sponsorship_program_id'];
-        $applicationIds = array_values(array_unique(array_map('intval', $validated['selected_applications'])));
+        $applicationIds = array_values(array_unique(array_map('intval', $validated['selected_applications'] ?? [])));
 
         $appendToId = isset($validated['existing_fixed_list_id']) && $validated['existing_fixed_list_id'] !== null
             ? (int) $validated['existing_fixed_list_id']
@@ -160,42 +161,89 @@ class ApplicantVerificationController extends Controller
             }
         }
 
-        // Only Pending and Verified applications with no active batch link can be
-        // bundled. Approved, Rejected, or already-batched applications are guarded
-        // out here and surfaced to the user as a friendly validation error.
-        $applications = Application::query()
+        // Candidates must belong to the target program and be Pending or Verified
+        // with no active batch link. Approved, Rejected, or already-batched
+        // applications are guarded out here.
+        $baseQuery = Application::query()
             ->where('sponsorship_program_id', $programId)
-            ->whereIn('id', $applicationIds)
             ->with('studentProfile.user')
-            ->get();
+            ->whereIn('status', [ApplicationStatus::Pending, ApplicationStatus::Verified])
+            ->whereDoesntHave('fixedListItems')
+            ->orderBy('gpa_submitted', 'asc')
+            ->orderBy('submitted_at', 'asc');
 
-        if ($applications->count() !== count($applicationIds)) {
-            return back()->withErrors([
-                'selected_applications' => 'One or more of the selected applications no longer belongs to the target program. Please refresh the queue and reselect.',
-            ])->withInput();
-        }
+        if ($applicationIds !== []) {
+            $applications = Application::query()
+                ->where('sponsorship_program_id', $programId)
+                ->whereIn('id', $applicationIds)
+                ->with('studentProfile.user')
+                ->get();
 
-        $eligible = $applications->filter(
-            static fn (Application $application): bool => in_array(
-                $application->status,
-                [ApplicationStatus::Pending, ApplicationStatus::Verified],
-                true,
-            ) && $application->fixedListItems()->doesntExist(),
-        );
+            if ($applications->count() !== count($applicationIds)) {
+                return back()->withErrors([
+                    'selected_applications' => 'One or more of the selected applications no longer belongs to the target program. Please refresh the queue and reselect.',
+                ])->withInput();
+            }
 
-        if ($eligible->count() !== $applications->count()) {
-            return back()->withErrors([
-                'selected_applications' => 'Some selected applications are already approved, rejected, or assigned to a batch and cannot be included. Please deselect them and try again.',
-            ])->withInput();
+            $eligible = $applications->filter(
+                static fn (Application $application): bool => in_array(
+                    $application->status,
+                    [ApplicationStatus::Pending, ApplicationStatus::Verified],
+                    true,
+                ) && $application->fixedListItems()->doesntExist(),
+            );
+
+            if ($eligible->count() !== $applications->count()) {
+                return back()->withErrors([
+                    'selected_applications' => 'Some selected applications are already approved, rejected, or assigned to a batch and cannot be included. Please deselect them and try again.',
+                ])->withInput();
+            }
+        } else {
+            $eligible = $baseQuery->get();
         }
 
         if ($eligible->isEmpty()) {
             return back()->withErrors([
-                'selected_applications' => 'Select at least one eligible application belonging to the target program. Only pending or verified, unbatched applications can be bundled into a batch list.',
+                'selected_applications' => $applicationIds !== []
+                    ? 'Select at least one eligible application belonging to the target program. Only pending or verified, unbatched applications can be bundled into a batch list.'
+                    : 'There are no pending or verified, unbatched applications left for this program to auto-generate a batch.',
             ]);
         }
 
-        [$list, $added] = DB::transaction(function () use ($eligible, $programId, $request, $validated, $targetList): array {
+        // Reserved fixed-list seats: verified sponsor-provided list entries for
+        // this program that are not yet linked to an application.
+        $reservedStudentIds = FixedListItem::query()
+            ->where('is_sle_fhe_verified', true)
+            ->whereNull('application_id')
+            ->whereHas('fixedList', fn ($query) => $query->where('sponsorship_program_id', $programId))
+            ->pluck('student_id_number')
+            ->map(static fn (string $id): string => trim($id))
+            ->filter()
+            ->values()
+            ->toArray();
+
+        $reservedIds = array_flip($reservedStudentIds);
+
+        // Stage 1 (Fixed List Lock): matching students automatically reserve the
+        // top slots. Stage 2 (Auto-Ranking Queue): everyone else fills the
+        // remaining slots sorted by best GWA, then submission date.
+        $sortCandidates = static fn ($collection) => $collection->sortBy([
+            static fn (Application $application): float => (float) $application->gpa_submitted,
+            static fn (Application $application): int => $application->submitted_at?->getTimestamp() ?? PHP_INT_MAX,
+        ])->values();
+
+        [$fixedLockCandidates, $queueCandidates] = $eligible->partition(
+            static fn (Application $application): bool => isset(
+                $reservedIds[trim((string) ($application->studentProfile?->student_id_number ?? ''))],
+            ),
+        );
+
+        $candidates = $sortCandidates($fixedLockCandidates)
+            ->map(static fn (Application $application) => [$application, true])
+            ->concat($sortCandidates($queueCandidates)->map(static fn (Application $application) => [$application, false]))
+            ->values();
+
+        [$list, $added] = DB::transaction(function () use ($candidates, $programId, $request, $validated, $targetList): array {
             $list = $targetList;
 
             if ($list === null) {
@@ -208,9 +256,10 @@ class ApplicantVerificationController extends Controller
                 ]);
             }
 
+            $nextRank = ((int) $list->items()->max('rank_position')) + 1;
             $added = 0;
 
-            foreach ($eligible as $application) {
+            foreach ($candidates as [$application, $isFixedList]) {
                 $profile = $application->studentProfile;
 
                 if ($profile === null) {
@@ -233,9 +282,18 @@ class ApplicantVerificationController extends Controller
                     'year_level' => $profile->year_level ?? 1,
                     'campus' => $profile->campus ?: null,
                     'is_sle_fhe_verified' => $profile->isSleFheVerified(),
+                    'is_fixed_list' => $isFixedList,
+                    'origin_type' => $isFixedList ? 'fixed_list' : 'ranked_queue',
+                    'rank_position' => $nextRank,
                     'status' => FixedListItemStatus::Pending,
                 ]);
 
+                $application->update([
+                    'is_batched' => true,
+                    'batch_id' => $list->id,
+                ]);
+
+                $nextRank++;
                 $added++;
             }
 

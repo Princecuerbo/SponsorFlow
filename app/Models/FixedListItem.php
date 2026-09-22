@@ -23,6 +23,9 @@ class FixedListItem extends Model
         'year_level',
         'campus',
         'is_sle_fhe_verified',
+        'is_fixed_list',
+        'origin_type',
+        'rank_position',
         'status',
         'is_manually_endorsed',
         'endorsed_by_id',
@@ -39,6 +42,8 @@ class FixedListItem extends Model
         return [
             'year_level' => 'integer',
             'is_sle_fhe_verified' => 'boolean',
+            'is_fixed_list' => 'boolean',
+            'rank_position' => 'integer',
             'is_manually_endorsed' => 'boolean',
             'status' => FixedListItemStatus::class,
             'endorsed_at' => 'datetime',

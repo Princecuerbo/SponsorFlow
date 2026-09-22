@@ -70,6 +70,7 @@
                         <thead>
                             <tr>
                                 <th class="ps-4" style="width: 48px;">Rank</th>
+                                <th>Candidate Source</th>
                                 <th style="white-space: nowrap;">Student ID</th>
                                 <th>Student Name</th>
                                 <th>Academic Program</th>
@@ -87,7 +88,14 @@
                                     <td class="ps-4">
                                         <span
                                             class="d-inline-flex align-items-center justify-content-center rounded-circle bg-cyan-50 text-cyan-700 border border-cyan-200 fw-bold"
-                                            style="width: 30px; height: 30px;">{{ $loop->iteration }}</span>
+                                            style="width: 30px; height: 30px;">{{ $item->rank_position ?? $loop->iteration }}</span>
+                                    </td>
+                                    <td>
+                                        @if ($item->is_fixed_list)
+                                            <span class="badge bg-purple-subtle text-purple fw-bold">★ Endorsed by Sponsor</span>
+                                        @else
+                                            <span class="badge bg-info-subtle text-info fw-bold">Ranked Queue</span>
+                                        @endif
                                     </td>
                                     <td class="sf-mono text-secondary fw-semibold" style="white-space: nowrap;">{{ $item->student_id_number ?: 'N/A' }}</td>
                                     <td class="fw-semibold">
@@ -131,7 +139,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="10" class="text-center text-secondary py-4">No applicants in this generated batch yet.</td>
+                                    <td colspan="11" class="text-center text-secondary py-4">No applicants in this generated batch yet.</td>
                                 </tr>
                             @endforelse
                         </tbody>

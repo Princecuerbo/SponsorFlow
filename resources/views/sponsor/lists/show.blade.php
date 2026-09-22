@@ -36,6 +36,7 @@
                                     <th>Student Name</th>
                                     <th>Academic Program</th>
                                     <th>Year Level</th>
+                                    <th>Candidate Source</th>
                                     <th>Verification Status</th>
                                 </tr>
                             </thead>
@@ -46,6 +47,13 @@
                                         <td class="fw-semibold">{{ $item->student_name }}</td>
                                         <td class="text-secondary">{{ $item->course }}</td>
                                         <td class="text-secondary">{{ $item->year_level ? "Year {$item->year_level}" : '—' }}</td>
+                                        <td>
+                                            @if ($item->is_fixed_list)
+                                                <span class="badge bg-purple-subtle text-purple fw-bold">★ Endorsed by Sponsor</span>
+                                            @else
+                                                <span class="badge bg-info-subtle text-info fw-bold">Ranked Queue</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             @if ($item->application)
                                                 <x-status-badge :status="$item->application->status" />

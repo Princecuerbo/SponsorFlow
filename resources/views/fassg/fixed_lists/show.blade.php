@@ -117,6 +117,8 @@
                                 <th>Academic Program</th>
                                 <th>Year Level</th>
                                 <th>Campus</th>
+                                <th>Rank</th>
+                                <th>Candidate Source</th>
                                 <th>SLE-FHE Status</th>
                                 <th>Endorsed</th>
                                 <th class="text-end pe-4">Action</th>
@@ -143,6 +145,22 @@
                                     <td>{{ $item->year_level ? "Year {$item->year_level}" : '—' }}</td>
                                     <td>{{ $item->campus ?: 'N/A' }}</td>
                                     <td>
+                                        @if ($item->rank_position !== null)
+                                            <span
+                                                class="d-inline-flex align-items-center justify-content-center rounded-circle bg-cyan-50 text-cyan-700 border border-cyan-200 fw-bold"
+                                                style="width: 30px; height: 30px;">{{ $item->rank_position }}</span>
+                                        @else
+                                            <span class="text-secondary small">—</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($item->is_fixed_list)
+                                            <span class="badge bg-purple-subtle text-purple fw-bold">★ Endorsed by Sponsor</span>
+                                        @else
+                                            <span class="badge bg-info-subtle text-info fw-bold">Ranked Queue</span>
+                                        @endif
+                                    </td>
+                                    <td>
                                         <x-status-badge :status="$item->is_sle_fhe_verified ? 'Verified' : 'Pending'" />
                                     </td>
                                     <td>
@@ -168,7 +186,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="8" class="text-center text-secondary py-4">No students encoded in this
+                                    <td colspan="10" class="text-center text-secondary py-4">No students encoded in this
                                         batch yet.</td>
                                 </tr>
                             @endforelse

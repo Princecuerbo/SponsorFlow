@@ -73,7 +73,7 @@ class FixedListController extends Controller
         $fixedList->setRelation(
             'items',
             $fixedList->items->sortBy(
-                static fn (FixedListItem $item) => $item->application?->gpa_submitted ?? PHP_FLOAT_MAX,
+                static fn (FixedListItem $item) => $item->rank_position ?? PHP_FLOAT_MAX,
             ),
         );
 
@@ -91,8 +91,21 @@ class FixedListController extends Controller
         DB::transaction(function () use ($fixedList): void {
             // Hard-delete the linked items so the source applications are
             // released back into the eligible Application Queue.
+            $applicationIds = $fixedList->items()
+                ->whereNotNull('application_id')
+                ->pluck('application_id');
+
             $fixedList->items()->delete();
             $fixedList->delete();
+
+            if ($applicationIds->isNotEmpty()) {
+                Application::query()
+                    ->whereKey($applicationIds)
+                    ->update([
+                        'is_batched' => false,
+                        'batch_id' => null,
+                    ]);
+            }
         });
 
         $this->audit($request, 'fassg.generated_batch.deleted', 'fixed_lists');
@@ -225,7 +238,7 @@ class FixedListController extends Controller
         $this->assertListEditable($fixedList);
         $fixedList->items()->updateOrCreate(
             ['student_id_number' => $validated['student_id_number']],
-            [...$validated, 'is_sle_fhe_verified' => false, 'status' => FixedListItemStatus::Pending],
+            [...$validated, 'is_sle_fhe_verified' => false, 'is_fixed_list' => true, 'origin_type' => 'fixed_list', 'status' => FixedListItemStatus::Pending],
         );
         $this->refreshTotalNames($fixedList);
         $this->audit($request, 'fassg.fixed_list.item_encoded', 'fixed_list_items');
@@ -242,6 +255,8 @@ class FixedListController extends Controller
             [
                 ...$request->validated(),
                 'is_sle_fhe_verified' => false,
+                'is_fixed_list' => true,
+                'origin_type' => 'fixed_list',
                 'status' => FixedListItemStatus::Pending,
             ],
         );
@@ -453,6 +468,8 @@ class FixedListController extends Controller
                     'year_level' => (int) ($record['year_level'] ?? $record['year'] ?? 1),
                     'campus' => $rowCampus !== '' ? $rowCampus : null,
                     'is_sle_fhe_verified' => false,
+                    'is_fixed_list' => true,
+                    'origin_type' => 'fixed_list',
                     'status' => FixedListItemStatus::Pending,
                 ],
             );

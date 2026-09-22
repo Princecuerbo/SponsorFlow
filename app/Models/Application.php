@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Enums\ApplicationStatus;
-use App\Enums\ProgramStatus;
 use App\Enums\DocumentType;
+use App\Enums\ProgramStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -40,6 +40,8 @@ class Application extends Model
         'is_manually_endorsed',
         'endorsed_by_id',
         'endorsed_at',
+        'is_batched',
+        'batch_id',
     ];
 
     /**
@@ -51,6 +53,7 @@ class Application extends Model
             'gpa_submitted' => 'decimal:2',
             'is_rural_submitted' => 'boolean',
             'is_manually_endorsed' => 'boolean',
+            'is_batched' => 'boolean',
             'status' => ApplicationStatus::class,
             'requested_documents' => 'array',
             'submitted_at' => 'datetime',
@@ -78,6 +81,11 @@ class Application extends Model
     public function fixedListItems(): HasMany
     {
         return $this->hasMany(FixedListItem::class);
+    }
+
+    public function batch(): BelongsTo
+    {
+        return $this->belongsTo(FixedList::class, 'batch_id');
     }
 
     public function getStatusAttribute($value): ?ApplicationStatus
