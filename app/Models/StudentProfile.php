@@ -100,6 +100,11 @@ class StudentProfile extends Model
         return $this->hasOne(SleFheRequest::class);
     }
 
+    public function sleFheRequests(): HasMany
+    {
+        return $this->hasMany(SleFheRequest::class, 'student_profile_id');
+    }
+
     public function sleFheVerification(): HasOne
     {
         return $this->hasOne(SleFheVerification::class);
