@@ -31,11 +31,10 @@ class SleVerificationController extends Controller
             ->get();
 
         $provinces = DB::table('localaddress')
+            ->whereNotNull('province')
             ->distinct()
             ->orderBy('province')
-            ->pluck('province')
-            ->filter()
-            ->values();
+            ->pluck('province');
 
         $selectedProvince = old('province', $profile?->sleFheRequest?->province ?? '');
         $municipalities = $selectedProvince !== ''
@@ -60,12 +59,11 @@ class SleVerificationController extends Controller
     public function municipalities(string $province): JsonResponse
     {
         $cities = DB::table('localaddress')
-            ->where('province', trim($province))
+            ->where('province', $province)
+            ->whereNotNull('city')
             ->distinct()
             ->orderBy('city')
-            ->pluck('city')
-            ->filter()
-            ->values();
+            ->pluck('city');
 
         return response()->json($cities);
     }
