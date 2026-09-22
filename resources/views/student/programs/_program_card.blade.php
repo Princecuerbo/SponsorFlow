@@ -93,11 +93,16 @@
                         @endif
                     </span>
                 </li>
-                @if ($program->address_requirement)
+                @if ($program->address_requirement || filled($program->target_province) || filled($program->target_municipality))
                     <li class="d-flex justify-content-between gap-3 py-1">
                         <span class="text-secondary">Address requirement</span>
-                        <span
-                            class="fw-semibold text-end text-break">{{ $program->address_requirement }}</span>
+                        <span class="fw-semibold text-end text-break">
+                            {{ trim(implode(', ', array_filter([
+                                $program->address_requirement,
+                                filled($program->target_municipality) ? (string) $program->target_municipality : null,
+                                filled($program->target_province) ? (string) $program->target_province : null,
+                            ]))) }}
+                        </span>
                     </li>
                 @endif
                 @if ($deadline)

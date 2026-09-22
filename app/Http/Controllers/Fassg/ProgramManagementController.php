@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Fassg\StoreSponsorshipProgramRequest;
 use App\Http\Requests\Fassg\UpdateSponsorshipProgramRequest;
 use App\Models\AcademicProgram;
+use App\Models\LocalAddress;
 use App\Models\Sponsor;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
@@ -19,6 +20,7 @@ use App\Notifications\NewSponsorshipProgramOpened;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
@@ -75,6 +77,7 @@ class ProgramManagementController extends Controller
             'program' => new SponsorshipProgram,
             'sponsors' => $this->availableSponsors(),
             'academicPrograms' => $this->availableAcademicPrograms(),
+            ...$this->localAddressOptions(),
         ]);
     }
 
@@ -122,6 +125,7 @@ class ProgramManagementController extends Controller
                 ->count(),
             'sponsors' => $this->availableSponsors(),
             'academicPrograms' => $this->availableAcademicPrograms(),
+            ...$this->localAddressOptions(),
         ]);
     }
 
@@ -244,6 +248,35 @@ class ProgramManagementController extends Controller
             ->where('is_active', true)
             ->orderBy('code')
             ->get();
+    }
+
+    /**
+     * Province and municipality options sourced from the canonical
+     * localaddress reference table for the dependent address selects.
+     *
+     * @return array{provinces: Collection<int, string>, municipalitiesGrouped: Collection<string, Collection<int, string>>}
+     */
+    private function localAddressOptions(): array
+    {
+        $provinces = LocalAddress::query()
+            ->whereNotNull('province')
+            ->distinct()
+            ->pluck('province')
+            ->sort()
+            ->values();
+
+        $municipalitiesGrouped = LocalAddress::query()
+            ->whereNotNull('city')
+            ->select('province', 'city')
+            ->distinct()
+            ->get()
+            ->groupBy('province')
+            ->map(fn ($cities) => $cities->pluck('city')->sort()->values());
+
+        return [
+            'provinces' => $provinces,
+            'municipalitiesGrouped' => $municipalitiesGrouped,
+        ];
     }
 
     public function open(Request $request, SponsorshipProgram $sponsorshipProgram): RedirectResponse

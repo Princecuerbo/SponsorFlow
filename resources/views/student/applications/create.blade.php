@@ -57,7 +57,8 @@
         $addressReqLower = strtolower((string) ($program->address_requirement ?? ''));
         $programRequiresRural = str_contains($addressReqLower, 'rural');
         $programRequiresUrban = str_contains($addressReqLower, 'urban');
-        $hasAddressRequirement = $programRequiresRural || $programRequiresUrban;
+        $hasAddressRequirement = $programRequiresRural || $programRequiresUrban
+            || filled($program->target_province) || filled($program->target_municipality);
 
         $allowedCampuses = (array) ($program->eligible_campuses ?? []);
         $allowedCampusesNote = $allowedCampuses ? ' (' . implode(', ', $allowedCampuses) . ')' : '';
@@ -116,6 +117,8 @@
               @if ($submissionLocked) onsubmit="return false;" @endif>
             @csrf
             <input type="hidden" name="sponsorship_program_id" value="{{ $program->id }}">
+            <input type="hidden" name="address_submitted" value="{{ $profile->full_address }}">
+            <input type="hidden" name="is_rural_submitted" value="{{ $programRequiresRural || ! $hasAddressRequirement ? 1 : 0 }}">
 
             <div class="col-lg-8">
 
@@ -182,7 +185,7 @@
                         </div>
 
                         <div class="row g-3">
-                            <div class="col-sm-4">
+                            <div class="col-md-6">
                                 <label for="current_gpa" class="form-label small text-secondary">Current GPA <span
                                         class="text-danger">*</span></label>
                                 <input type="number" step="0.01" min="1" max="5" name="current_gpa"
@@ -196,35 +199,10 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="col-sm-8">
-                                <label for="current_address" class="form-label small text-secondary">Current Address <span
-                                        class="text-danger">*</span></label>
-                                <input type="text" name="current_address" id="current_address"
-                                    value="{{ old('current_address', old('address_submitted', $profile->full_address)) }}"
-                                    class="form-control @error('current_address') is-invalid @enderror" required>
-                                @error('current_address')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-12">
-                                @if ($hasAddressRequirement)
-                                    <div class="form-check mt-2">
-                                        <input class="form-check-input"
-                                               type="checkbox"
-                                               name="is_rural_submitted"
-                                               id="is_rural_submitted"
-                                               value="1"
-                                               @checked(old('is_rural_submitted'))>
-                                        <label class="form-check-label" for="is_rural_submitted">
-                                            I confirm this application is for a <strong>rural residency</strong> ({{ $program->address_requirement }}).
-                                        </label>
-                                    </div>
-                                @else
-                                    <input type="hidden" name="is_rural_submitted" value="1">
-                                @endif
-                                @error('is_rural_submitted')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
+                            <div class="col-md-6">
+                                <div class="form-label small text-secondary mb-1">Current Address</div>
+                                <div class="form-control bg-light text-secondary">{{ $profile->full_address ?: '—' }}</div>
+                                <div class="form-text">Verified residential address from your SLE-FHE profile.</div>
                             </div>
                         </div>
                     </div>

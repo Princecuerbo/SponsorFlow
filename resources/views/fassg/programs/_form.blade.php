@@ -106,20 +106,53 @@
     <div class="col-md-6"><label class="form-label fw-semibold" for="min_gpa">Minimum GPA</label><input
             class="form-control" id="min_gpa" type="number" step="0.01" min="1" max="5"
             name="min_gpa" value="{{ old('min_gpa', $program->min_gpa ?? '') }}"></div>
-    <div class="col-md-6"><label class="form-label fw-semibold" for="address_requirement">Address
-            Requirement</label>
+    <div class="col-md-6"><label class="form-label fw-semibold" for="target_province">Target
+            Province</label>
         @php
-            $selectedAddress = (string) old('address_requirement', $program->address_requirement ?? '');
-            $standardAddressOptions = ['', 'Rural', 'Urban'];
+            $selectedProvince = (string) old('target_province', $program->target_province ?? '');
         @endphp
-        <select class="form-select" id="address_requirement" name="address_requirement">
-            <option value="" @selected($selectedAddress === '')>No preference</option>
-            <option value="Rural" @selected($selectedAddress === 'Rural')>Rural only</option>
-            <option value="Urban" @selected($selectedAddress === 'Urban')>Urban only</option>
-            @if ($selectedAddress !== '' && !in_array($selectedAddress, $standardAddressOptions, true))
-                <option value="{{ $selectedAddress }}" selected>{{ $selectedAddress }}</option>
+        <select class="form-select @error('target_province') is-invalid @enderror" id="target_province"
+            name="target_province">
+            <option value="" @selected($selectedProvince === '')>All / No Preference</option>
+            @foreach ($provinces as $province)
+                <option value="{{ $province }}" @selected($selectedProvince === $province)>{{ $province }}</option>
+            @endforeach
+            @if ($selectedProvince !== '' && ! $provinces->contains($selectedProvince))
+                <option value="{{ $selectedProvince }}" selected>{{ $selectedProvince }}</option>
             @endif
         </select>
+        <small class="text-muted">Restrict applicants to a province. Leave as "All / No Preference" to accept every
+            location.</small>
+        @error('target_province')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="col-md-6"><label class="form-label fw-semibold" for="target_municipality">Target Municipality /
+            City</label>
+        @php
+            $selectedMunicipality = (string) old('target_municipality', $program->target_municipality ?? '');
+            $knownMunicipality = $selectedMunicipality !== ''
+                && ($municipalitiesGrouped[$selectedProvince] ?? collect())->contains($selectedMunicipality);
+        @endphp
+        <select class="form-select @error('target_municipality') is-invalid @enderror" id="target_municipality"
+            name="target_municipality">
+            <option value="" @selected($selectedMunicipality === '')>All / No Preference</option>
+            @foreach ($municipalitiesGrouped as $groupProvince => $municipalities)
+                @foreach ($municipalities as $municipality)
+                    <option value="{{ $municipality }}" data-province="{{ $groupProvince }}"
+                        @selected($selectedMunicipality === $municipality && $groupProvince === $selectedProvince)>
+                        {{ $municipality }}
+                    </option>
+                @endforeach
+            @endforeach
+            @if ($selectedMunicipality !== '' && ! $knownMunicipality)
+                <option value="{{ $selectedMunicipality }}" selected>{{ $selectedMunicipality }}</option>
+            @endif
+        </select>
+        <small class="text-muted">Options are filtered to the selected province.</small>
+        @error('target_municipality')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
     <div class="col-12">
         <div class="mb-4 mt-2">
@@ -333,6 +366,24 @@
             document.querySelectorAll('[data-clear-all-courses]').forEach((btn) => {
                 btn.addEventListener('click', () => courseCheckboxes().forEach((cb) => { cb.checked = false; }));
             });
+
+            const targetProvince = document.getElementById('target_province');
+            const targetMunicipality = document.getElementById('target_municipality');
+
+            if (targetProvince && targetMunicipality) {
+                const filterMunicipalities = () => {
+                    const province = targetProvince.value;
+                    targetMunicipality.querySelectorAll('option[data-province]').forEach((opt) => {
+                        opt.hidden = province !== '' && opt.dataset.province !== province;
+                    });
+                    const current = targetMunicipality.selectedOptions[0];
+                    if (current && current.dataset.province && current.hidden) {
+                        targetMunicipality.value = '';
+                    }
+                };
+                targetProvince.addEventListener('change', filterMunicipalities);
+                filterMunicipalities();
+            }
         })();
     </script>
 @endpush

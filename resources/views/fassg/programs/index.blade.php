@@ -62,6 +62,7 @@
                             <th>Category</th>
                             <th>Slots</th>
                             <th>Min. GPA</th>
+                            <th>Target Location</th>
                             <th>Status</th>
                             <th class="text-end pe-4">Actions</th>
                         </tr>
@@ -91,6 +92,18 @@
                                     <span class="text-secondary">{{ $program->total_slots }}</span>
                                 </td>
                                 <td>{{ $program->min_gpa ? number_format($program->min_gpa, 2) : '—' }}</td>
+                                <td>
+                                    @if ($program->target_municipality && $program->target_province)
+                                        <span class="fw-semibold">{{ $program->target_municipality }}</span>,
+                                        <span class="fw-semibold">{{ $program->target_province }}</span>
+                                    @elseif ($program->target_province)
+                                        <span class="fw-semibold">{{ $program->target_province }}</span>
+                                    @elseif ($program->target_municipality)
+                                        <span class="fw-semibold">{{ $program->target_municipality }}</span>
+                                    @else
+                                        <span class="text-secondary fw-normal">All / No Preference</span>
+                                    @endif
+                                </td>
                                 <td>
                                     @php
                                         $status = $program->status?->value ?? $program->status;

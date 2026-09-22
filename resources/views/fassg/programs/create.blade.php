@@ -149,14 +149,50 @@
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small text-secondary">Address Requirement</label>
-                            <select name="address_requirement"
-                                class="form-select @error('address_requirement') is-invalid @enderror">
-                                <option value="">No preference</option>
-                                <option value="Rural" @selected(old('address_requirement') === 'Rural')>Rural only</option>
-                                <option value="Urban" @selected(old('address_requirement') === 'Urban')>Urban only</option>
+                            <label class="form-label small text-secondary">Target Province</label>
+                            <select name="target_province" id="target_province"
+                                class="form-select @error('target_province') is-invalid @enderror">
+                                <option value="">All / No Preference</option>
+                                @foreach ($provinces as $province)
+                                    <option value="{{ $province }}" @selected(old('target_province') === $province)>
+                                        {{ $province }}
+                                    </option>
+                                @endforeach
+                                @if (filled(old('target_province')) && ! $provinces->contains(old('target_province')))
+                                    <option value="{{ old('target_province') }}" selected>{{ old('target_province') }}</option>
+                                @endif
                             </select>
-                            @error('address_requirement')
+                            <small class="text-muted">Restrict applicants to a province. Leave as "All / No Preference"
+                                to accept every location.</small>
+                            @error('target_province')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            @php
+                                $selectedProvince = (string) old('target_province');
+                                $selectedMunicipality = (string) old('target_municipality');
+                                $knownMunicipality = filled($selectedMunicipality)
+                                    && ($municipalitiesGrouped[$selectedProvince] ?? collect())->contains($selectedMunicipality);
+                            @endphp
+                            <label class="form-label small text-secondary">Target Municipality / City</label>
+                            <select name="target_municipality" id="target_municipality"
+                                class="form-select @error('target_municipality') is-invalid @enderror">
+                                <option value="">All / No Preference</option>
+                                @foreach ($municipalitiesGrouped as $groupProvince => $municipalities)
+                                    @foreach ($municipalities as $municipality)
+                                        <option value="{{ $municipality }}" data-province="{{ $groupProvince }}"
+                                            @selected($selectedMunicipality === $municipality && $groupProvince === $selectedProvince)>
+                                            {{ $municipality }}
+                                        </option>
+                                    @endforeach
+                                @endforeach
+                                @if ($selectedMunicipality !== '' && ! $knownMunicipality)
+                                    <option value="{{ $selectedMunicipality }}" selected>{{ $selectedMunicipality }}</option>
+                                @endif
+                            </select>
+                            <small class="text-muted">Options are filtered to the selected province.</small>
+                            @error('target_municipality')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -335,6 +371,24 @@
                     document.querySelectorAll('[data-clear-all-courses]').forEach((btn) => {
                         btn.addEventListener('click', () => courseCheckboxes().forEach((cb) => { cb.checked = false; }));
                     });
+
+                    const targetProvince = document.getElementById('target_province');
+                    const targetMunicipality = document.getElementById('target_municipality');
+
+                    if (targetProvince && targetMunicipality) {
+                        const filterMunicipalities = () => {
+                            const province = targetProvince.value;
+                            targetMunicipality.querySelectorAll('option[data-province]').forEach((opt) => {
+                                opt.hidden = province !== '' && opt.dataset.province !== province;
+                            });
+                            const current = targetMunicipality.selectedOptions[0];
+                            if (current && current.dataset.province && current.hidden) {
+                                targetMunicipality.value = '';
+                            }
+                        };
+                        targetProvince.addEventListener('change', filterMunicipalities);
+                        filterMunicipalities();
+                    }
                 </script>
             @endpush
         </div>

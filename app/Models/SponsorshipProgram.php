@@ -33,6 +33,8 @@ class SponsorshipProgram extends Model
         'min_gpa',
         'target_course',
         'address_requirement',
+        'target_province',
+        'target_municipality',
         'requires_relative_verification',
         'eligible_year_levels',
         'eligible_campuses',
@@ -337,10 +339,48 @@ class SponsorshipProgram extends Model
             }
         }
 
+        [$studentProvince, $studentMunicipality] = $this->studentLocationComponents($profile);
+
+        if (filled($this->target_province)
+            && strcasecmp(trim($studentProvince), trim((string) $this->target_province)) !== 0) {
+            $reasons[] = "This program is limited to applicants residing in {$this->target_province}.";
+        }
+
+        if (filled($this->target_municipality)
+            && strcasecmp(trim($studentMunicipality), trim((string) $this->target_municipality)) !== 0) {
+            $reasons[] = "This program is limited to applicants residing in {$this->target_municipality}.";
+        }
+
         return [
             'is_eligible' => $reasons === [],
             'reasons' => $reasons,
         ];
+    }
+
+    /**
+     * Resolve the student's structured province and municipality from their
+     * SLE-FHE residential address, falling back to parsing the free-text
+     * verified address when no structured request exists.
+     *
+     * @return array{0: string, 1: string}
+     */
+    private function studentLocationComponents(StudentProfile $profile): array
+    {
+        $requestedAddress = $profile->sleFheRequest;
+
+        if ($requestedAddress !== null) {
+            return [
+                (string) $requestedAddress->province,
+                (string) $requestedAddress->municipality_city,
+            ];
+        }
+
+        $parts = array_values(array_filter(
+            array_map('trim', explode(',', (string) ($profile->sleFheVerification?->verified_address ?? ''))),
+            static fn (string $part): bool => $part !== '',
+        ));
+
+        return [$parts[3] ?? '', $parts[2] ?? ''];
     }
 
     /**
@@ -421,6 +461,18 @@ class SponsorshipProgram extends Model
             if (str_contains($requirement, 'davao oriental') && ! str_contains($location, 'davao oriental')) {
                 $errors[] = 'Your address does not meet the program location requirement.';
             }
+        }
+
+        [$studentProvince, $studentMunicipality] = $this->studentLocationComponents($profile);
+
+        if (filled($this->target_province)
+            && strcasecmp(trim($studentProvince), trim((string) $this->target_province)) !== 0) {
+            $errors[] = "This program is limited to applicants residing in {$this->target_province}.";
+        }
+
+        if (filled($this->target_municipality)
+            && strcasecmp(trim($studentMunicipality), trim((string) $this->target_municipality)) !== 0) {
+            $errors[] = "This program is limited to applicants residing in {$this->target_municipality}.";
         }
 
         if (! empty($this->eligible_year_levels) && $profile->year_level !== null) {
