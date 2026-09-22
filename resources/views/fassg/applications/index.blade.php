@@ -339,6 +339,11 @@
                                     [\App\Enums\ApplicationStatus::Pending, \App\Enums\ApplicationStatus::Verified],
                                     true,
                                 ) && $application->fixedListItems()->doesntExist();
+                                $isEndorsed = in_array(
+                                    $application->sponsorship_program_id . '|' . trim((string) ($profile->student_id_number ?? '')),
+                                    $endorsedKeys ?? [],
+                                    true,
+                                );
                             @endphp
                             <tr class="{{ $isTopCandidate ? 'table-success bg-opacity-10' : '' }}"
                                 style="{{ $isTopCandidate ? 'border-left: 4px solid #16a34a !important; background-color: rgba(22, 163, 74, 0.04);' : '' }}">
@@ -359,9 +364,12 @@
 
                                 {{-- Student Name --}}
                                 <td>
-                                    <div class="d-flex align-items-center gap-2 flex-wrap">
-                                        <div class="fw-semibold">{{ $profile->user->name ?? trim($profile->first_name . ' ' . ($profile->middle_name ?? '') . ' ' . $profile->last_name . ($profile->extension_name ? ' ' . $profile->extension_name : '')) }}</div>
-                                        @if ($isTopCandidate)
+<div class="d-flex align-items-center gap-2 flex-wrap">
+                                            <div class="fw-semibold">{{ $profile->user->name ?? trim($profile->first_name . ' ' . ($profile->middle_name ?? '') . ' ' . $profile->last_name . ($profile->extension_name ? ' ' . $profile->extension_name : '')) }}</div>
+                                            @if ($isEndorsed)
+                                                <span class="badge bg-warning-subtle text-warning-emphasis fw-bold" title="Endorsed by Sponsor on the finalized fixed list for this program">★ Endorsed by Sponsor</span>
+                                            @endif
+                                            @if ($isTopCandidate)
                                             <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle d-inline-flex align-items-center gap-1" style="font-size: 0.72rem;">
                                                 <i class="bi bi-star-fill text-warning"></i> Top {{ $slots }} Candidate
                                             </span>

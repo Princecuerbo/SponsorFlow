@@ -20,6 +20,7 @@ use App\Models\StudentProfile;
 use App\Services\NotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -44,7 +45,12 @@ class ApplicantVerificationController extends Controller
             : null;
 
         $applications = Application::query()
-            ->with(['studentProfile.user', 'sponsorshipProgram.sponsor', 'documents'])
+            ->with([
+                'studentProfile.user',
+                'sponsorshipProgram.sponsor',
+                'documents',
+            ])
+            ->where('is_auto_provisioned', false)
             ->whereHas('studentProfile', function ($q) use ($campus): void {
                 $q->whereHas('sleFheVerification');
                 if ($campus !== '') {
@@ -76,6 +82,8 @@ class ApplicantVerificationController extends Controller
             ->paginate(15)
             ->withQueryString();
 
+        $endorsedKeys = $this->finalizedEndorsedKeys($applications->getCollection()->all());
+
         $programs = SponsorshipProgram::query()
             ->with(['sponsor', 'academicPrograms', 'fixedLists' => function ($q): void {
                 $q->orderBy('batch_name');
@@ -106,6 +114,7 @@ class ApplicantVerificationController extends Controller
             : null;
 
         $scoped = Application::query()
+            ->where('is_auto_provisioned', false)
             ->whereHas('studentProfile', fn ($q) => $q->whereHas('sleFheVerification'));
 
         $pendingCount = (clone $scoped)->where('status', ApplicationStatus::Pending)->count();
@@ -127,6 +136,7 @@ class ApplicantVerificationController extends Controller
             'finalizedFixedLists' => $finalizedFixedLists,
             'selectedProgram' => $selectedProgram,
             'availableSlots' => $availableSlots,
+            'endorsedKeys' => $endorsedKeys,
             'selectedProgramId' => $programId,
             'selectedStatus' => $statusEnum?->value,
         ]);
@@ -233,7 +243,17 @@ class ApplicantVerificationController extends Controller
             $eligible = $baseQuery->get();
         }
 
-        if ($eligible->isEmpty()) {
+        // Stage 1 (Fixed List Lock): the SLE-FHE-verified, sponsor-endorsed
+        // entries of the selected Finalized Fixed List resolve to an existing
+        // Application for the target program, or are auto-provisioned a Verified
+        // Application so they can be locked into the top slots. Stage 2
+        // (Auto-Ranking Queue): everyone else fills the remaining slots sorted
+        // by best GWA, then submission date.
+        $lockedEntries = $lockedList === null
+            ? collect()
+            : $this->lockedCandidateEntries($lockedList, $programId);
+
+        if ($eligible->isEmpty() && $lockedEntries->isEmpty()) {
             return back()->withErrors([
                 'selected_applications' => $applicationIds !== []
                     ? 'Select at least one eligible application belonging to the target program. Only pending or verified, unbatched applications can be bundled into a batch list.'
@@ -241,39 +261,33 @@ class ApplicantVerificationController extends Controller
             ]);
         }
 
-        // Reserved fixed-list seats: verified items of the selected Finalized
-        // Fixed List that are not yet linked to an application. When no list is
-        // selected (or none is finalized), no candidates are locked and all
-        // slots are filled by the general auto-ranking queue.
-        $reservedStudentIds = $lockedList === null
-            ? []
-            : FixedListItem::query()
-                ->where('fixed_list_id', $lockedList->id)
-                ->where('is_sle_fhe_verified', true)
-                ->whereNull('application_id')
-                ->pluck('student_id_number')
-                ->map(static fn (string $id): string => trim($id))
-                ->filter()
-                ->values()
-                ->toArray();
+        $reservedApplications = collect();
 
-        $reservedIds = array_flip($reservedStudentIds);
+        foreach ($lockedEntries as $lockKey => $entry) {
+            $application = $entry['application'] ?? null;
 
-        // Stage 1 (Fixed List Lock): matching students automatically reserve the
-        // top slots. Stage 2 (Auto-Ranking Queue): everyone else fills the
-        // remaining slots sorted by best GWA, then submission date.
+            if ($application === null) {
+                $application = $this->createAutoVerifiedApplication($entry['profile'], $programId);
+            }
+
+            $reservedApplications->put($lockKey, $application);
+        }
+
+        $reservedApplicationIds = $reservedApplications
+            ->map(static fn (Application $application): int => $application->id)
+            ->values()
+            ->all();
+
+        $queueCandidates = $eligible->reject(
+            static fn (Application $application): bool => in_array($application->id, $reservedApplicationIds, true),
+        )->values();
+
         $sortCandidates = static fn ($collection) => $collection->sortBy([
             static fn (Application $application): float => (float) $application->gpa_submitted,
             static fn (Application $application): int => $application->submitted_at?->getTimestamp() ?? PHP_INT_MAX,
         ])->values();
 
-        [$fixedLockCandidates, $queueCandidates] = $eligible->partition(
-            static fn (Application $application): bool => isset(
-                $reservedIds[trim((string) ($application->studentProfile?->student_id_number ?? ''))],
-            ),
-        );
-
-        $candidates = $sortCandidates($fixedLockCandidates)
+        $candidates = $sortCandidates($reservedApplications->values())
             ->map(static fn (Application $application) => [$application, true])
             ->concat($sortCandidates($queueCandidates)->map(static fn (Application $application) => [$application, false]))
             ->values();
@@ -350,6 +364,120 @@ class ApplicantVerificationController extends Controller
         return redirect()
             ->route('fassg.generated-batches.show', $list)
             ->with('status', "Batch list '{$list->batch_name}' created from {$list->total_names} applicant(s). Review and submit when ready.");
+    }
+
+    /**
+     * Resolve the SLE-FHE-verified, sponsor-endorsed entries of the selected
+     * Finalized Fixed List to reusable Applications for the target program.
+     * This performs no writes; missing applications are provisioned later in
+     * {@see createBatch} via {@see createAutoVerifiedApplication}.
+     *
+     * @return Collection<string, array{profile: StudentProfile, application: ?Application}>
+     */
+    private function lockedCandidateEntries(FixedList $lockedList, int $programId): Collection
+    {
+        $resolved = [];
+
+        foreach ($lockedList->items()->with('studentProfile')->get() as $item) {
+            if (! $item->is_sle_fhe_verified || ! $item->is_manually_endorsed) {
+                continue;
+            }
+
+            $profile = $item->studentProfile ?? StudentProfile::query()
+                ->where('student_id_number', $item->student_id_number)
+                ->first();
+
+            if ($profile === null) {
+                continue;
+            }
+
+            $lockKey = trim((string) $profile->student_id_number);
+
+            if ($lockKey === '') {
+                continue;
+            }
+
+            $application = $item->application_id !== null
+                ? Application::query()
+                    ->whereKey((int) $item->application_id)
+                    ->where('sponsorship_program_id', $programId)
+                    ->first()
+                : null;
+
+            $application ??= Application::query()
+                ->where('sponsorship_program_id', $programId)
+                ->where('student_profile_id', $profile->id)
+                ->first();
+
+            // Candidates already claimed by another batch are left untouched.
+            if ($application !== null
+                && $application->fixedListItems()->where('fixed_list_id', '!=', $lockedList->id)->exists()) {
+                continue;
+            }
+
+            $resolved[$lockKey] = [
+                'profile' => $profile,
+                'application' => $application,
+            ];
+        }
+
+        return collect($resolved);
+    }
+
+    private function createAutoVerifiedApplication(StudentProfile $profile, int $programId): Application
+    {
+        return Application::query()->create([
+            'student_profile_id' => $profile->id,
+            'sponsorship_program_id' => $programId,
+            'gpa_submitted' => 0.00,
+            'address_submitted' => $profile->full_address,
+            'is_rural_submitted' => false,
+            'status' => ApplicationStatus::Verified,
+            'verified_at' => now(),
+            'submitted_at' => now(),
+            'is_manually_endorsed' => true,
+            'is_auto_provisioned' => true,
+        ]);
+    }
+
+    /**
+     * Build the set of "programId|studentIdNumber" keys for the applications
+     * on the current queue page whose students are SLE-FHE-verified and
+     * sponsor-endorsed on a Finalized Fixed List, so the queue can render the
+     * "★ Endorsed by Sponsor" badge.
+     *
+     * @param  Application[]  $applications
+     * @return array<int, string>
+     */
+    private function finalizedEndorsedKeys(array $applications): array
+    {
+        $pairs = collect($applications)
+            ->map(static fn (Application $application): array => [
+                (int) $application->sponsorship_program_id,
+                trim((string) ($application->studentProfile?->student_id_number ?? '')),
+            ])
+            ->filter(static fn (array $pair): bool => $pair[1] !== '');
+
+        if ($pairs->isEmpty()) {
+            return [];
+        }
+
+        $studentIds = $pairs->pluck(1)->unique()->values()->all();
+        $programIds = $pairs->pluck(0)->unique()->values()->all();
+
+        return FixedListItem::query()
+            ->join('fixed_lists', 'fixed_lists.id', '=', 'fixed_list_items.fixed_list_id')
+            ->select('fixed_list_items.student_id_number', 'fixed_lists.sponsorship_program_id')
+            ->where('fixed_list_items.is_sle_fhe_verified', true)
+            ->where('fixed_list_items.is_manually_endorsed', true)
+            ->whereIn('fixed_list_items.student_id_number', $studentIds)
+            ->where('fixed_lists.status', FixedListStatus::Finalized)
+            ->whereIn('fixed_lists.sponsorship_program_id', $programIds)
+            ->get()
+            ->map(static fn (FixedListItem $item): string => (int) $item->sponsorship_program_id.'|'.trim((string) $item->student_id_number))
+            ->unique()
+            ->values()
+            ->all();
     }
 
     public function show(Request $request, Application $application): View

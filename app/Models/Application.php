@@ -40,6 +40,7 @@ class Application extends Model
         'is_manually_endorsed',
         'endorsed_by_id',
         'endorsed_at',
+        'is_auto_provisioned',
         'is_batched',
         'batch_id',
     ];
@@ -53,6 +54,7 @@ class Application extends Model
             'gpa_submitted' => 'decimal:2',
             'is_rural_submitted' => 'boolean',
             'is_manually_endorsed' => 'boolean',
+            'is_auto_provisioned' => 'boolean',
             'is_batched' => 'boolean',
             'status' => ApplicationStatus::class,
             'requested_documents' => 'array',

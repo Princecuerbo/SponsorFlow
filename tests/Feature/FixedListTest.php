@@ -101,6 +101,8 @@ class FixedListTest extends TestCase
         FixedListItem::factory()->create([
             'fixed_list_id' => $list->id,
             'is_sle_fhe_verified' => true,
+            'is_manually_endorsed' => true,
+            'status' => FixedListItemStatus::Endorsed,
         ]);
 
         $this->patch(route('fassg.fixed-lists.finalize', $list))
@@ -111,6 +113,39 @@ class FixedListTest extends TestCase
         $this->assertTrue($list->status === FixedListStatus::Finalized);
         $this->assertNotNull($list->fassg_assigned_at);
         $this->assertSame($fassg->id, $list->fassg_assigned_by_id);
+
+        Notification::assertNothingSent();
+    }
+
+    public function test_finalize_is_blocked_until_all_items_verified_and_endorsed(): void
+    {
+        Notification::fake();
+
+        $this->actingAsFassg();
+        $program = SponsorshipProgram::factory()->create();
+
+        $scenarios = [
+            'unverified only' => ['is_sle_fhe_verified' => false, 'is_manually_endorsed' => true, 'status' => FixedListItemStatus::Endorsed],
+            'unendorsed only' => ['is_sle_fhe_verified' => true, 'is_manually_endorsed' => false, 'status' => FixedListItemStatus::Verified],
+            'neither' => ['is_sle_fhe_verified' => false, 'is_manually_endorsed' => false, 'status' => FixedListItemStatus::Pending],
+        ];
+
+        foreach ($scenarios as $label => $attributes) {
+            $list = FixedList::factory()->create([
+                'sponsorship_program_id' => $program->id,
+                'status' => FixedListStatus::Draft,
+            ]);
+            FixedListItem::factory()->create(['fixed_list_id' => $list->id] + $attributes);
+
+            $this->patch(route('fassg.fixed-lists.finalize', $list))
+                ->assertRedirect()
+                ->assertSessionHasErrors('list');
+
+            $list->refresh();
+            $this->assertTrue($list->status === FixedListStatus::Draft, "{$label}: list should stay Draft");
+            $this->assertNull($list->fassg_assigned_at, "{$label}: list should not record assignment");
+            $this->assertNull($list->fassg_assigned_by_id, "{$label}: list should not record assignee");
+        }
 
         Notification::assertNothingSent();
     }
@@ -135,10 +170,12 @@ class FixedListTest extends TestCase
         FixedListItem::factory()->create([
             'fixed_list_id' => $finalized->id,
             'student_id_number' => '2024-00001',
+            'is_manually_endorsed' => true,
         ]);
         FixedListItem::factory()->create([
             'fixed_list_id' => $finalized->id,
             'student_id_number' => '2024-00002',
+            'is_manually_endorsed' => true,
         ]);
 
         $this->post(route('fassg.applications.create-batch'), [
@@ -156,7 +193,59 @@ class FixedListTest extends TestCase
         $this->assertSame([1, 2, 3], $items->pluck('rank_position')->all());
         $this->assertSame(['2024-00002', '2024-00001', '2024-00003'], $items->pluck('student_id_number')->all());
         $this->assertSame([true, true, false], $items->pluck('is_fixed_list')->all());
+        $this->assertSame(['fixed_list', 'fixed_list', 'ranked_queue'], $items->pluck('origin_type')->all());
         $this->assertSame([$lockedApp2->id, $lockedApp->id, $generalApp->id], $items->pluck('application_id')->all());
+    }
+
+    public function test_batch_creation_auto_creates_verified_application_for_locked_candidate(): void
+    {
+        $this->actingAsFassg();
+        $program = SponsorshipProgram::factory()->create();
+
+        $lockedStudent = StudentProfile::factory()->verified()->create(['student_id_number' => '2024-00011']);
+        $generalStudent = StudentProfile::factory()->verified()->create(['student_id_number' => '2024-00012']);
+        $generalApp = $this->makePendingApplication($program, $generalStudent, 1.75);
+
+        $finalized = FixedList::factory()->create([
+            'sponsorship_program_id' => $program->id,
+            'status' => FixedListStatus::Finalized,
+        ]);
+        FixedListItem::factory()->create([
+            'fixed_list_id' => $finalized->id,
+            'student_id_number' => $lockedStudent->student_id_number,
+            'is_sle_fhe_verified' => true,
+            'is_manually_endorsed' => true,
+        ]);
+
+        $this->post(route('fassg.applications.create-batch'), [
+            'batch_name' => 'Auto Provisioned Batch',
+            'sponsorship_program_id' => $program->id,
+            'selected_applications' => [$generalApp->id],
+            'locked_fixed_list_id' => $finalized->id,
+        ])->assertRedirect()
+            ->assertSessionHas('status')
+            ->assertSessionDoesntHaveErrors();
+
+        $autoApp = Application::query()
+            ->where('sponsorship_program_id', $program->id)
+            ->where('student_profile_id', $lockedStudent->id)
+            ->first();
+
+        $this->assertNotNull($autoApp);
+        $this->assertTrue($autoApp->status === ApplicationStatus::Verified);
+        $this->assertNotNull($autoApp->verified_at);
+        $this->assertTrue((bool) $autoApp->is_manually_endorsed);
+
+        $batch = FixedList::query()->where('status', FixedListStatus::Saved)->first();
+        $this->assertNotNull($batch);
+
+        $items = $batch->items()->orderBy('rank_position')->get();
+        $this->assertSame([1, 2], $items->pluck('rank_position')->all());
+        $this->assertSame([$lockedStudent->student_id_number, $generalStudent->student_id_number], $items->pluck('student_id_number')->all());
+        $this->assertSame([true, false], $items->pluck('is_fixed_list')->all());
+        $this->assertSame(['fixed_list', 'ranked_queue'], $items->pluck('origin_type')->all());
+        $this->assertSame([$autoApp->id, $generalApp->id], $items->pluck('application_id')->all());
+        $this->assertTrue((bool) $autoApp->fresh()->is_batched);
     }
 
     public function test_batch_creation_without_finalized_list_auto_ranks_all_applicants(): void
@@ -221,6 +310,45 @@ class FixedListTest extends TestCase
             ->assertSessionHasErrors('locked_fixed_list_id');
 
         $this->assertDatabaseMissing('fixed_lists', ['batch_name' => 'Rejected Lock']);
+    }
+
+    public function test_application_queue_excludes_auto_provisioned_and_shows_endorsed_badge(): void
+    {
+        $this->actingAsFassg();
+        $program = SponsorshipProgram::factory()->create();
+
+        $mariaProfile = StudentProfile::factory()->verified()->create(['student_id_number' => '2024-00021']);
+        $mariaProfile->user->update(['name' => 'Maria Santos']);
+
+        $princeProfile = StudentProfile::factory()->verified()->create(['student_id_number' => '2024-00022']);
+        $princeProfile->user->update(['name' => 'Prince Garcia']);
+
+        Application::factory()->create([
+            'sponsorship_program_id' => $program->id,
+            'student_profile_id' => $mariaProfile->id,
+            'gpa_submitted' => 0.00,
+            'status' => ApplicationStatus::Verified,
+            'is_auto_provisioned' => true,
+        ]);
+
+        $princeApp = $this->makePendingApplication($program, $princeProfile, 1.80);
+
+        $finalized = FixedList::factory()->create([
+            'sponsorship_program_id' => $program->id,
+            'status' => FixedListStatus::Finalized,
+        ]);
+        FixedListItem::factory()->create([
+            'fixed_list_id' => $finalized->id,
+            'student_id_number' => $princeProfile->student_id_number,
+            'is_sle_fhe_verified' => true,
+            'is_manually_endorsed' => true,
+        ]);
+
+        $this->get(route('fassg.applications.index', ['program_id' => $program->id]))
+            ->assertOk()
+            ->assertSee('Prince Garcia')
+            ->assertSee('★ Endorsed by Sponsor')
+            ->assertDontSee('Maria Santos');
     }
 
     private function makePendingApplication(SponsorshipProgram $program, StudentProfile $profile, float $gpa): Application
