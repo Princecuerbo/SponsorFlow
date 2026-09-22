@@ -33,20 +33,17 @@ class FassgSleFheWorkflowTest extends TestCase
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
 
         $queuedProfile = StudentProfile::factory()->create([
-            'is_sle_fhe_verified' => false,
             'student_id_number' => '2026-90001',
         ]);
         $this->createPendingRequest($queuedProfile);
 
         $excludedProfile = StudentProfile::factory()->create([
-            'is_sle_fhe_verified' => false,
             'student_id_number' => '2026-90002',
         ]);
         $this->createPendingRequest($excludedProfile);
         SleFheVerification::create(['student_profile_id' => $excludedProfile->id, 'verified_at' => now()]);
 
         $noRequestProfile = StudentProfile::factory()->create([
-            'is_sle_fhe_verified' => false,
             'student_id_number' => '2026-90003',
         ]);
 
@@ -63,13 +60,11 @@ class FassgSleFheWorkflowTest extends TestCase
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
 
         $pending = StudentProfile::factory()->create([
-            'is_sle_fhe_verified' => false,
             'student_id_number' => '2026-90011',
         ]);
         $this->createPendingRequest($pending);
 
         $superseded = StudentProfile::factory()->create([
-            'is_sle_fhe_verified' => false,
             'student_id_number' => '2026-90012',
         ]);
         $this->createPendingRequest($superseded, ['status' => 'rejected']);
@@ -85,7 +80,6 @@ class FassgSleFheWorkflowTest extends TestCase
     {
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
         $profile = StudentProfile::factory()->create([
-            'is_sle_fhe_verified' => false,
             'student_id_number' => '2026-90021',
         ]);
         $request = $this->createPendingRequest($profile, [
@@ -110,14 +104,14 @@ class FassgSleFheWorkflowTest extends TestCase
     public function test_fassg_can_approve_pending_request(): void
     {
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => false]);
+        $profile = StudentProfile::factory()->create();
         $this->createPendingRequest($profile);
 
         $this->actingAs($fassg)
             ->post(route('fassg.sle-fhe.verify', $profile))
             ->assertSessionHas('success', 'Student SLE-FHE status verified successfully.');
 
-        $this->assertTrue($profile->fresh()->is_sle_fhe_verified);
+        $this->assertTrue($profile->fresh()->sleFheVerification()->exists());
         $this->assertDatabaseMissing('sle_fhe_requests', ['student_profile_id' => $profile->id]);
         $this->assertDatabaseHas('sle_fhe_verifications', [
             'student_profile_id' => $profile->id,
@@ -142,7 +136,7 @@ class FassgSleFheWorkflowTest extends TestCase
     public function test_fassg_reject_requires_a_reason(): void
     {
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => false]);
+        $profile = StudentProfile::factory()->create();
         $this->createPendingRequest($profile);
 
         $this->actingAs($fassg)
@@ -156,7 +150,7 @@ class FassgSleFheWorkflowTest extends TestCase
     public function test_fassg_can_reject_pending_request_with_reason(): void
     {
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => false]);
+        $profile = StudentProfile::factory()->create();
         $this->createPendingRequest($profile);
 
         $this->actingAs($fassg)
@@ -180,7 +174,6 @@ class FassgSleFheWorkflowTest extends TestCase
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
 
         $verifiedProfile = StudentProfile::factory()->create([
-            'is_sle_fhe_verified' => true,
             'student_id_number' => '2026-91001',
         ]);
         SleFheVerification::create([
@@ -191,7 +184,6 @@ class FassgSleFheWorkflowTest extends TestCase
         ]);
 
         $legacyProfile = StudentProfile::factory()->create([
-            'is_sle_fhe_verified' => true,
             'student_id_number' => '2026-91002',
         ]);
 

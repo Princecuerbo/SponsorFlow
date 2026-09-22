@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
+use App\Enums\FixedListItemStatus;
 use App\Enums\FixedListStatus;
 use App\Enums\ProgramCategory;
 use App\Enums\ProgramStatus;
@@ -45,7 +46,7 @@ class SponsorAccountingReportsTest extends TestCase
 
         $sponsor = Sponsor::factory()->create();
         $program = SponsorshipProgram::factory()->create(['sponsor_id' => $sponsor->id]);
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
+        $profile = StudentProfile::factory()->create();
         $list = FixedList::factory()->create([
             'sponsorship_program_id' => $program->id,
             'status' => FixedListStatus::Submitted,
@@ -102,11 +103,9 @@ class SponsorAccountingReportsTest extends TestCase
         $cs = AcademicProgram::factory()->create(['name' => 'BS Computer Science']);
 
         $itProfile = StudentProfile::factory()->create([
-            'is_sle_fhe_verified' => true,
             'academic_program_id' => $it->program_id,
         ]);
         $csProfile = StudentProfile::factory()->create([
-            'is_sle_fhe_verified' => true,
             'academic_program_id' => $cs->program_id,
         ]);
 
@@ -137,11 +136,9 @@ class SponsorAccountingReportsTest extends TestCase
         $cs = AcademicProgram::factory()->create(['name' => 'BS Computer Science']);
 
         $itProfile = StudentProfile::factory()->create([
-            'is_sle_fhe_verified' => true,
             'academic_program_id' => $it->program_id,
         ]);
         $csProfile = StudentProfile::factory()->create([
-            'is_sle_fhe_verified' => true,
             'academic_program_id' => $cs->program_id,
         ]);
 
@@ -171,7 +168,7 @@ class SponsorAccountingReportsTest extends TestCase
 
         $sponsor = Sponsor::factory()->create();
         $program = SponsorshipProgram::factory()->create(['sponsor_id' => $sponsor->id]);
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
+        $profile = StudentProfile::factory()->create();
         $application = Application::factory()->create([
             'student_profile_id' => $profile->id,
             'sponsorship_program_id' => $program->id,
@@ -220,8 +217,8 @@ class SponsorAccountingReportsTest extends TestCase
             'sponsor_id' => $sponsor->id,
             'available_slots' => 1,
         ]);
-        $approvedProfile = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
-        $pendingProfile = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
+        $approvedProfile = StudentProfile::factory()->create();
+        $pendingProfile = StudentProfile::factory()->create();
         $application = Application::factory()->create([
             'student_profile_id' => $approvedProfile->id,
             'sponsorship_program_id' => $program->id,
@@ -307,7 +304,7 @@ class SponsorAccountingReportsTest extends TestCase
             'fixed_list_id' => $list->id,
             'student_name' => 'Unverified Beneficiary',
             'is_sle_fhe_verified' => false,
-            'status' => \App\Enums\FixedListItemStatus::Pending,
+            'status' => FixedListItemStatus::Pending,
         ]);
 
         $this->actingAs($accounting)

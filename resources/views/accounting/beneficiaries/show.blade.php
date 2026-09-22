@@ -178,9 +178,9 @@
                                 <td>
                                     @php
                                         $app = $item->application;
-                                        $rurality = $app?->is_rural_submitted
+                                        $rurality = ($app !== null && $app->is_rural_submitted)
                                             ? 'Rural'
-                                            : ($app?->studentProfile?->is_rural ? 'Rural' : null);
+                                            : null;
                                     @endphp
                                     @if ($rurality)
                                         <span class="badge {{ $rurality === 'Rural' ? 'bg-info-subtle text-info-emphasis' : 'bg-secondary-subtle text-secondary-emphasis' }}">

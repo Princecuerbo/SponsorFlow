@@ -13,6 +13,7 @@ use App\Http\Requests\Fassg\StoreFixedListRequest;
 use App\Models\Application;
 use App\Models\FixedList;
 use App\Models\FixedListItem;
+use App\Models\SleFheVerification;
 use App\Models\SponsorshipProgram;
 use App\Notifications\ApplicationStatusUpdated;
 use Illuminate\Http\RedirectResponse;
@@ -333,7 +334,7 @@ class FixedListController extends Controller
             ]);
         }
 
-        if (! $profile->is_sle_fhe_verified) {
+        if (! $profile->isSleFheVerified()) {
             return back()->withErrors([
                 'verify' => "Student account {$fixedListItem->student_id_number} exists, but their SLE-FHE profile has not been verified yet.",
             ]);
@@ -345,7 +346,10 @@ class FixedListController extends Controller
                 'status' => FixedListItemStatus::Verified,
             ]);
 
-            $profile->update(['is_sle_fhe_verified' => true]);
+            SleFheVerification::firstOrCreate(
+                ['student_profile_id' => $profile->id],
+                ['verified_address' => '', 'verified_at' => now()],
+            );
         });
 
         $this->audit($request, 'fassg.fixed_list.sle_fhe_verified', 'fixed_list_items');

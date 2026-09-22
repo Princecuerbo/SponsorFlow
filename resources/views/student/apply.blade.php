@@ -30,7 +30,7 @@
                                 required></div>
                         <div class="col-12">
                             <div class="form-check"><input class="form-check-input" id="is_rural_submitted" type="checkbox"
-                                    name="is_rural_submitted" value="1" @checked(old('is_rural_submitted', $profile?->is_rural))><label
+                                    name="is_rural_submitted" value="1" @checked(old('is_rural_submitted'))><label
                                     class="form-check-label" for="is_rural_submitted">I confirm this is a rural residency
                                     application</label></div>
                         </div>

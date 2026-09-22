@@ -32,15 +32,6 @@ class StudentProfile extends Model
         'year_level',
         'gender',
         'birthdate',
-        'municipality',
-        'province',
-        'home_address',
-        'barangay',
-        'is_rural',
-        'is_sle_fhe_verified',
-        'sle_fhe_cg_path',
-        'sle_fhe_residence_path',
-        'sle_fhe_barangay_path',
         'active_sponsorship_id',
     ];
 
@@ -52,8 +43,6 @@ class StudentProfile extends Model
         return [
             'birthdate' => 'date',
             'year_level' => 'integer',
-            'is_rural' => 'boolean',
-            'is_sle_fhe_verified' => 'boolean',
         ];
     }
 
@@ -76,7 +65,9 @@ class StudentProfile extends Model
 
     public function getFullAddressAttribute(): string
     {
-        return "{$this->home_address}, Brgy. {$this->barangay}, {$this->municipality}, {$this->province}";
+        return $this->sleFheVerification?->verified_address
+            ?? $this->sleFheRequest?->full_address
+            ?? '';
     }
 
     public function getDisplayCourseAttribute(): string
@@ -200,10 +191,18 @@ class StudentProfile extends Model
             ->where('is_sle_fhe_verified', true)
             ->exists();
 
-        if ($this->is_sle_fhe_verified !== $verified) {
-            $this->update(['is_sle_fhe_verified' => $verified]);
+        if ($verified === true) {
+            SleFheVerification::firstOrCreate(
+                ['student_profile_id' => $this->id],
+                ['verified_address' => '', 'verified_at' => now()]
+            );
         }
 
         return $verified;
+    }
+
+    public function isSleFheVerified(): bool
+    {
+        return $this->sleFheVerification()->exists();
     }
 }

@@ -118,7 +118,7 @@ class DashboardController extends Controller
                 ->all();
 
             $pendingVerificationCount = StudentProfile::query()
-                ->where('is_sle_fhe_verified', false)
+                ->whereDoesntHave('sleFheVerification')
                 ->count();
 
             $recentPrograms = SponsorshipProgram::query()
@@ -142,7 +142,7 @@ class DashboardController extends Controller
                     'total_applicants' => Application::count(),
                     'verified_sle_fhe' => StudentProfile::query()
                         ->where(function ($query): void {
-                            $query->where('is_sle_fhe_verified', true)
+                            $query->whereHas('sleFheVerification')
                                 ->orWhereHas('applications', fn ($applicationQuery) => $applicationQuery->whereIn('status', [
                                     ApplicationStatus::Verified,
                                     ApplicationStatus::Approved,

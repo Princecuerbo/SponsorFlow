@@ -47,7 +47,7 @@
             ['label' => 'Proof of Residence', 'type' => 'proof_of_residence'],
             ['label' => 'Barangay Certification', 'type' => 'barangay_cert'],
         ];
-        $isVerified = (bool) ($studentProfile?->is_sle_fhe_verified ?? false);
+        $isVerified = ($studentProfile?->sle_fhe_status ?? null) === 'Verified';
         $featured = $activeGrant ?? $activeApplication ?? $latestApp;
     @endphp
 

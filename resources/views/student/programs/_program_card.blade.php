@@ -127,7 +127,7 @@
                         title="You already have an active approved sponsorship.">
                         <i class="bi bi-lock me-1"></i>Active Sponsorship Lock
                     </button>
-                @elseif (!$profile?->is_sle_fhe_verified)
+                @elseif (($profile?->sle_fhe_status ?? null) !== 'Verified')
                     <button type="button" class="btn btn-outline-secondary btn-sm w-100" disabled
                         title="Applications are unavailable for this program.">
                         <i class="bi bi-lock me-1"></i>Applications Unavailable

@@ -43,7 +43,7 @@ class StudentRegistrationTest extends TestCase
         $profile = StudentProfile::query()->where('user_id', $user->id)->firstOrFail();
 
         $this->assertSame(SleFheStatus::Unverified->value, $profile->sle_fhe_status, 'New registrations must default to Unverified SLE-FHE status');
-        $this->assertFalse($profile->is_sle_fhe_verified);
+        $this->assertFalse($profile->isSleFheVerified());
         $this->assertNull($profile->sleFheRequest, 'No SLE-FHE request is created during registration');
         $this->assertNull($profile->sleFheVerification, 'No SLE-FHE verification is created during registration');
         $this->assertCount(0, $profile->sleFheRejections, 'No SLE-FHE rejection is created during registration');
@@ -125,7 +125,7 @@ class StudentRegistrationTest extends TestCase
         $this->assertNull($profile->municipality);
         $this->assertNull($profile->barangay);
         $this->assertNull($profile->home_address);
-        $this->assertFalse($profile->is_rural);
+        $this->assertNull($profile->is_rural, 'Rurality is no longer stored on student_profiles');
     }
 
     public function test_student_registration_fails_with_non_dorsu_email(): void
@@ -303,7 +303,7 @@ class StudentRegistrationTest extends TestCase
         $response->assertRedirect(route('login'));
 
         $profile = StudentProfile::query()->where('student_id_number', '2024-0013')->firstOrFail();
-        $this->assertFalse($profile->is_rural, 'Rurality is no longer computed at registration');
+        $this->assertNull($profile->is_rural, 'Rurality is no longer computed at registration');
         $this->assertSame(SleFheStatus::Unverified->value, $profile->sle_fhe_status);
     }
 }

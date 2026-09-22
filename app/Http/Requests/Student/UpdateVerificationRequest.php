@@ -32,10 +32,6 @@ class UpdateVerificationRequest extends FormRequest
             'year_level' => ['required', 'integer', 'min:1', 'max:5'],
             'gender' => ['nullable', 'string', 'in:Male,Female'],
             'birthdate' => ['nullable', 'date', 'before:today'],
-            'address' => ['required', 'string', 'max:500'],
-            'municipality' => ['nullable', 'string', 'in:Mati City,Baganga,Banaybanay,Boston,Caraga,Cateel,Governor Generoso,Lupon,Manay,San Isidro,Tarragona'],
-            'barangay' => ['nullable', 'string', 'max:150'],
-            'is_rural' => ['required', 'boolean'],
         ];
     }
 
@@ -47,20 +43,5 @@ class UpdateVerificationRequest extends FormRequest
         return [
             'student_id_number.regex' => 'The student ID must look like 2024-00001.',
         ];
-    }
-
-    protected function prepareForValidation(): void
-    {
-        $merges = [
-            'is_rural' => $this->boolean('is_rural'),
-        ];
-
-        if ($this->filled('municipality') && ! $this->filled('barangay')) {
-            $merges['barangay'] = $this->input('municipality');
-        } elseif ($this->filled('barangay') && ! $this->filled('municipality')) {
-            $merges['municipality'] = $this->input('barangay');
-        }
-
-        $this->merge($merges);
     }
 }

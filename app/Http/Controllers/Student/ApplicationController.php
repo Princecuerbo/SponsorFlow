@@ -11,7 +11,6 @@ use App\Http\Requests\Student\StoreApplicationRequest;
 use App\Models\Application;
 use App\Models\FixedListItem;
 use App\Models\SponsorshipProgram;
-use App\Models\StudentProfile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,7 +28,7 @@ class ApplicationController extends Controller
     {
         $profile = $this->studentProfile($request, required: false);
 
-        if ($profile?->is_sle_fhe_verified) {
+        if ($profile?->isSleFheVerified()) {
             $query = SponsorshipProgram::query()->open()->with(['sponsor', 'academicPrograms']);
 
             if ($request->filled('q')) {
@@ -67,7 +66,7 @@ class ApplicationController extends Controller
     {
         $profile = $this->studentProfile($request, required: false);
 
-        if ($profile === null || ! $profile->is_sle_fhe_verified) {
+        if ($profile === null || ! $profile->isSleFheVerified()) {
             return response()->json([
                 'is_eligible' => false,
                 'reasons' => ['Complete SLE-FHE verification before applying.'],
@@ -95,7 +94,7 @@ class ApplicationController extends Controller
         $profile = $this->studentProfile($request);
         $student = $profile;
 
-        if (! $profile->is_sle_fhe_verified) {
+        if (! $profile->isSleFheVerified()) {
             abort(403, 'Complete SLE-FHE verification before applying.');
         }
 
@@ -149,8 +148,6 @@ class ApplicationController extends Controller
 
         $program->load('sponsor');
 
-        $profileIsUrban = ! (bool) $profile->is_rural;
-
         $programRequiresRural = filled($program->address_requirement)
             && str_contains(strtolower($program->address_requirement), 'rural');
 
@@ -158,7 +155,6 @@ class ApplicationController extends Controller
             'user' => $this->actor($request),
             'profile' => $profile,
             'program' => $program,
-            'profileIsUrban' => $profileIsUrban,
             'programRequiresRural' => $programRequiresRural,
         ]);
     }
@@ -221,7 +217,7 @@ class ApplicationController extends Controller
         $profile = $this->studentProfile($request);
         $student = $profile;
 
-        if (! $profile->is_sle_fhe_verified) {
+        if (! $profile->isSleFheVerified()) {
             return redirect()
                 ->route('student.verification.show')
                 ->withErrors(['application' => 'Complete SLE-FHE verification before applying.']);
@@ -452,10 +448,10 @@ class ApplicationController extends Controller
                 }
 
                 $application->update([
-                    'status'             => ApplicationStatus::Pending,
+                    'status' => ApplicationStatus::Pending,
                     'resubmission_notes' => null,
                     'requested_documents' => null,
-                    'verified_at'        => null,
+                    'verified_at' => null,
                 ]);
             });
         } catch (Throwable $exception) {

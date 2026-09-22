@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
+use App\Models\AcademicProgram;
 use App\Models\StudentProfile;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -65,19 +66,13 @@ class RoleAndUserSeeder extends Seeder
             ['user_id' => $student->id],
             [
                 'student_id_number' => '2024-00001',
-                'academic_program_id' => \App\Models\AcademicProgram::query()
+                'academic_program_id' => AcademicProgram::query()
                     ->where('name', 'Bachelor of Science in Information Technology')
                     ->value('program_id'),
                 'course' => 'Bachelor of Science in Information Technology',
                 'year_level' => 3,
                 'gender' => 'Male',
                 'birthdate' => '2004-06-15',
-                'province' => 'Davao Oriental',
-                'municipality' => 'Mati City',
-                'barangay' => 'San Isidro',
-                'home_address' => 'Purok 2',
-                'is_rural' => true,
-                'is_sle_fhe_verified' => false,
                 'active_sponsorship_id' => null,
             ],
         );

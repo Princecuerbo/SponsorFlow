@@ -20,9 +20,8 @@ class StudentDashboardTest extends TestCase
     {
         $student = User::factory()->create(['role' => UserRole::Student]);
         $student->update(['privacy_consent_at' => now()]);
-        $profile = StudentProfile::factory()->create([
+        $profile = StudentProfile::factory()->verified()->create([
             'user_id' => $student->id,
-            'is_sle_fhe_verified' => true,
         ]);
         $program = SponsorshipProgram::factory()->create(['program_name' => 'DORSU Completion Grant']);
         Application::factory()->create([
@@ -49,7 +48,6 @@ class StudentDashboardTest extends TestCase
         $student->update(['privacy_consent_at' => now()]);
         StudentProfile::factory()->create([
             'user_id' => $student->id,
-            'is_sle_fhe_verified' => false,
         ]);
 
         $this->actingAs($student)
@@ -64,9 +62,8 @@ class StudentDashboardTest extends TestCase
     {
         $student = User::factory()->create(['role' => UserRole::Student]);
         $student->update(['privacy_consent_at' => now()]);
-        $profile = StudentProfile::factory()->create([
+        $profile = StudentProfile::factory()->verified()->create([
             'user_id' => $student->id,
-            'is_sle_fhe_verified' => true,
         ]);
         $program = SponsorshipProgram::factory()->create(['status' => ProgramStatus::Expired]);
         Application::factory()->create([

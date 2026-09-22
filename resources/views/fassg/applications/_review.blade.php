@@ -269,7 +269,7 @@
                         <div class="stat-highlight">
                             <div class="detail-label"><i class="bi bi-geo-alt me-1"></i> Residence &amp; Barangay</div>
                             <div class="detail-value fs-6 text-truncate d-flex align-items-center gap-2">
-                                <span class="text-truncate">{{ $application->address_submitted ?: ($profile->barangay ?: 'Address not provided') }}</span>
+                                <span class="text-truncate">{{ $application->address_submitted ?: ($profile->full_address ?: 'Address not provided') }}</span>
                                 @if ($application->is_rural_submitted)
                                     <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle flex-shrink-0" style="font-size: 0.7rem;">
                                         <i class="bi bi-tree me-1"></i>Rural
@@ -298,7 +298,7 @@
                     <div class="col-md-6">
                         <div class="detail-label">SLE-FHE Status</div>
                         <div>
-                            <x-status-badge :status="$profile->is_sle_fhe_verified ? 'Verified' : 'Pending'" />
+                            <x-status-badge :status="($profile->sle_fhe_status ?? null) === 'Verified' ? 'Verified' : 'Pending'" />
                         </div>
                     </div>
                     <div class="col-md-6">

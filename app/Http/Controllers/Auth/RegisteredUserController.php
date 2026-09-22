@@ -98,7 +98,6 @@ class RegisteredUserController extends Controller
                 'year_level' => $validated['year_level'],
                 'gender' => $validated['gender'],
                 'birthdate' => $validated['birthdate'],
-                'is_sle_fhe_verified' => false,
             ]);
 
             return $user;

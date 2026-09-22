@@ -3,16 +3,16 @@
 namespace Tests\Feature;
 
 use App\Enums\ApplicationStatus;
+use App\Enums\FixedListStatus;
 use App\Enums\ProgramStatus;
 use App\Enums\UserRole;
 use App\Models\Application;
-use App\Models\SponsorshipProgram;
-use App\Models\StudentProfile;
-use App\Models\User;
-use App\Enums\FixedListStatus;
 use App\Models\FixedList;
 use App\Models\FixedListItem;
 use App\Models\Sponsor;
+use App\Models\SponsorshipProgram;
+use App\Models\StudentProfile;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -23,8 +23,8 @@ class FassgDashboardMetricsTest extends TestCase
     public function test_fassg_dashboard_displays_live_metrics_and_status_breakdown(): void
     {
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
-        $verifiedProfile = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
-        $applicantProfile = StudentProfile::factory()->create(['is_sle_fhe_verified' => false]);
+        $verifiedProfile = StudentProfile::factory()->verified()->create();
+        $applicantProfile = StudentProfile::factory()->create();
         $program = SponsorshipProgram::factory()->create(['status' => ProgramStatus::Open]);
 
         Application::factory()->create([

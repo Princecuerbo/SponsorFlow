@@ -59,18 +59,11 @@
         $programRequiresUrban = str_contains($addressReqLower, 'urban');
         $hasAddressRequirement = $programRequiresRural || $programRequiresUrban;
 
-        $profileIsRural = (bool) $profile->is_rural;
-        $profileMunicipality = trim((string) ($profile->municipality ?? ''));
-
-        $residencyMismatch = $hasAddressRequirement
-            && (($programRequiresRural && ! $profileIsRural)
-                || ($programRequiresUrban && $profileIsRural));
-
         $allowedCampuses = (array) ($program->eligible_campuses ?? []);
         $allowedCampusesNote = $allowedCampuses ? ' (' . implode(', ', $allowedCampuses) . ')' : '';
         $campusRestricted = $allowedCampuses !== []
             && ! in_array($profile->campus, $allowedCampuses, true);
-        $submissionLocked = $residencyMismatch || $campusRestricted;
+        $submissionLocked = $campusRestricted;
 
         $requiredDocuments = (array) ($program->required_documents ?? []);
         $documentFieldMap = [
@@ -95,32 +88,6 @@
             <a href="{{ route('student.applications.index') }}" class="alert-link">View my applications</a>
         </div>
     @else
-        {{-- ─── Residency Mismatch Warning ─────────────────────────────────────── --}}
-        @if ($residencyMismatch)
-            <div class="alert border-0 rounded-3 shadow-sm d-flex gap-3 align-items-start mb-4"
-                 id="residency-mismatch-alert"
-                 role="alert"
-                 style="background: linear-gradient(135deg,#fff7ed 0%,#fef3c7 100%); border-left: 4px solid #f59e0b !important;">
-                <i class="bi bi-exclamation-triangle-fill fs-4 flex-shrink-0" style="color:#d97706;margin-top:2px;"></i>
-                <div>
-                    <p class="fw-semibold mb-1" style="color:#92400e;">Residency Classification Notice</p>
-                    <p class="small mb-0" style="color:#78350f;">
-                        @if ($programRequiresUrban && $profileIsRural)
-                            This program is intended for <strong>Urban</strong> residents, but your profile address is classified as <strong>Rural</strong>.
-                            Applying for Urban-specific grants requires a valid urban address or certification.
-                        @elseif ($programRequiresRural && ! $profileIsRural)
-                            This program is intended for <strong>Rural</strong> residents, but your profile address is currently classified as <strong>Urban</strong>@if ($profileMunicipality) ({{ $profileMunicipality }})@endif.
-                            Applying for Rural-specific grants requires a valid rural address or Barangay certification.
-                        @endif
-                        Form submission has been locked accordingly.
-                        If your address has changed, please
-                        <a href="{{ route('student.verification.show') }}" class="alert-link fw-semibold">update your profile</a>
-                        before applying.
-                    </p>
-                </div>
-            </div>
-        @endif
-
         {{-- ─── Campus Restriction Warning ─────────────────────────────────────── --}}
         @if ($campusRestricted)
             <div class="alert border-0 rounded-3 shadow-sm d-flex gap-3 align-items-start mb-4"
@@ -145,8 +112,6 @@
 
         <form method="POST" action="{{ route('student.applications.store') }}" enctype="multipart/form-data" class="row g-4"
               data-address-requirement="{{ $program->address_requirement }}"
-              data-profile-is-rural="{{ $profile->is_rural ? '1' : '0' }}"
-              data-residency-mismatch="{{ $residencyMismatch ? '1' : '0' }}"
               data-campus-restricted="{{ $campusRestricted ? '1' : '0' }}"
               @if ($submissionLocked) onsubmit="return false;" @endif>
             @csrf
@@ -243,23 +208,20 @@
                             </div>
                             <div class="col-12">
                                 @if ($hasAddressRequirement)
-                                    <div id="residency-verified-block" class="d-flex flex-wrap align-items-center gap-2">
-                                        <span class="badge border rounded-3 d-inline-flex align-items-center gap-2"
-                                              style="background:#f0fdf4;color:#166534;font-size:0.75rem;font-weight:600;border-color:#86efac !important;">
-                                            <i class="bi bi-patch-check-fill text-success" style="font-size:0.8rem;"></i>
-                                            Verified Residence: <strong>{{ $profileIsRural ? 'Rural' : 'Urban' }}</strong>
-                                        </span>
-                                        @if ($residencyMismatch)
-                                            <span class="badge rounded-3 d-inline-flex align-items-center gap-2"
-                                                  style="background:#fef2f2;color:#b91c1c;font-size:0.75rem;font-weight:600;border:1px solid #fca5a5;">
-                                                <i class="bi bi-exclamation-triangle-fill" style="font-size:0.75rem;"></i>
-                                                Residence requirement mismatch (Requires: {{ $program->address_requirement }})
-                                            </span>
-                                        @endif
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               name="is_rural_submitted"
+                                               id="is_rural_submitted"
+                                               value="1"
+                                               @checked(old('is_rural_submitted'))>
+                                        <label class="form-check-label" for="is_rural_submitted">
+                                            I confirm this application is for a <strong>rural residency</strong> ({{ $program->address_requirement }}).
+                                        </label>
                                     </div>
+                                @else
+                                    <input type="hidden" name="is_rural_submitted" value="1">
                                 @endif
-                                <input type="hidden" name="is_rural_submitted"
-                                       value="{{ $profileIsRural ? '1' : '0' }}">
                                 @error('is_rural_submitted')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
@@ -395,11 +357,6 @@
                             <div class="small text-danger mb-2 fw-semibold">
                                 <i class="bi bi-lock-fill me-1"></i>
                                 Form submission is locked because this program is restricted to specific campuses.
-                            </div>
-                        @elseif ($residencyMismatch)
-                            <div class="small text-danger mb-2 fw-semibold">
-                                <i class="bi bi-lock-fill me-1"></i>
-                                Form submission is locked due to residency requirements.
                             </div>
                         @endif
                         <a href="{{ route('student.programs.index') }}"

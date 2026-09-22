@@ -271,18 +271,9 @@ class ReportsController extends Controller
             ->all();
 
         $byMunicipality = $baseProfileQuery()
-            ->get(['id', 'province', 'municipality', 'barangay', 'home_address'])
+            ->with(['sleFheVerification', 'sleFheRequest'])
+            ->get()
             ->map(function (StudentProfile $profile): string {
-                $municipality = trim((string) ($profile->municipality ?? ''));
-                if ($municipality !== '') {
-                    return $municipality;
-                }
-
-                $barangay = trim((string) ($profile->barangay ?? ''));
-                if ($barangay !== '') {
-                    return $barangay;
-                }
-
                 $address = trim((string) $profile->full_address);
                 if ($address !== '') {
                     $knownMunicipalities = [
@@ -322,9 +313,9 @@ class ReportsController extends Controller
             ->all();
 
         $demographics = [
-            'rural' => $baseProfileQuery()->where('is_rural', true)->count(),
-            'urban' => $baseProfileQuery()->where('is_rural', false)->count(),
-            'sle_fhe_verified' => $baseProfileQuery()->where('is_sle_fhe_verified', true)->count(),
+            'rural' => $baseProfileQuery()->whereHas('applications', fn ($q) => $q->where('is_rural_submitted', true))->count(),
+            'urban' => $baseProfileQuery()->whereHas('applications', fn ($q) => $q->where('is_rural_submitted', false))->count(),
+            'sle_fhe_verified' => $baseProfileQuery()->whereHas('sleFheVerification')->count(),
             'by_gender' => $genderDistribution,
             'by_campus' => $baseProfileQuery()
                 ->selectRaw("COALESCE(campus, 'Unassigned') as label")
@@ -350,13 +341,28 @@ class ReportsController extends Controller
                 ->pluck('total', 'label')
                 ->all(),
             'by_barangay' => $baseProfileQuery()
-                ->whereNotNull('barangay')
-                ->where('barangay', '!=', '')
-                ->selectRaw('barangay as label, count(*) as total')
-                ->groupBy('barangay')
-                ->orderByDesc('total')
-                ->limit(10)
-                ->pluck('total', 'label')
+                ->with(['sleFheRequest'])
+                ->get()
+                ->map(function (StudentProfile $profile): string {
+                    $address = trim((string) $profile->full_address);
+                    if (preg_match('/(?:Barangay|Brgy\.?)\s+([^,]+)/i', $address, $matches)) {
+                        $parsed = trim($matches[1]);
+                        if ($parsed !== '') {
+                            return $parsed;
+                        }
+                    }
+
+                    $barangay = trim((string) ($profile->sleFheRequest?->barangay ?? ''));
+                    if ($barangay !== '') {
+                        return $barangay;
+                    }
+
+                    return 'Unspecified';
+                })
+                ->filter()
+                ->countBy()
+                ->sortDesc()
+                ->take(10)
                 ->all(),
             'by_municipality' => $byMunicipality,
         ];

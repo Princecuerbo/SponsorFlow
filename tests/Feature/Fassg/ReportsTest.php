@@ -6,6 +6,7 @@ use App\Enums\ApplicationStatus;
 use App\Enums\ProgramCategory;
 use App\Enums\UserRole;
 use App\Models\Application;
+use App\Models\SleFheVerification;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
 use App\Models\User;
@@ -29,7 +30,11 @@ class ReportsTest extends TestCase
             'gender' => 'Female',
             'course' => 'Information Technology',
             'year_level' => 3,
-            'barangay' => 'San Isidro',
+        ]);
+        SleFheVerification::create([
+            'student_profile_id' => $profile->id,
+            'verified_address' => 'Purok 2, Brgy. San Isidro, Mati City, Davao Oriental',
+            'verified_at' => now(),
         ]);
         $application = Application::factory()->create([
             'student_profile_id' => $profile->id,
@@ -42,7 +47,6 @@ class ReportsTest extends TestCase
             'gender' => 'Male',
             'course' => 'Business Administration',
             'year_level' => 2,
-            'barangay' => 'Central',
         ]);
         Application::factory()->create([
             'student_profile_id' => $pendingProfile->id,
@@ -54,10 +58,10 @@ class ReportsTest extends TestCase
         $this->actingAs($fassg)
             ->get(route('fassg.reports.index'))
             ->assertOk()
-            ->assertViewHas('applicantTrends', fn(array $trends): bool => $trends === [
+            ->assertViewHas('applicantTrends', fn (array $trends): bool => $trends === [
                 '2026-08' => 2,
             ])
-            ->assertViewHas('genderDistribution', fn(array $genders): bool => $genders === [
+            ->assertViewHas('genderDistribution', fn (array $genders): bool => $genders === [
                 'Female' => 1,
                 'Male' => 1,
             ])

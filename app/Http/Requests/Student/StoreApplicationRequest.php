@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Student;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
 use App\Models\SponsorshipProgram;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StoreApplicationRequest extends FormRequest
@@ -126,46 +126,6 @@ class StoreApplicationRequest extends FormRequest
                 && ! $this->hasFile('barangay_certification')
                 && ! $this->hasFile('barangay_cert')) {
                 $validator->errors()->add('proof_of_residence', 'The Proof of Residence / Barangay Certificate field is required.');
-            }
-
-            $profile = $this->user()?->studentProfile;
-
-            if ($profile === null) {
-                return;
-            }
-
-            $profileIsUrban = ! (bool) $profile->is_rural;
-
-            $programAddressReq = strtolower((string) ($program->address_requirement ?? ''));
-            $programRequiresRural = filled($program->address_requirement)
-                && str_contains($programAddressReq, 'rural');
-            $programRequiresUrban = filled($program->address_requirement)
-                && str_contains($programAddressReq, 'urban');
-
-            // 1. Program requires Rural, but student profile is Urban (or is_rural is false)
-            if ($programRequiresRural && (! $profile->is_rural || $profileIsUrban)) {
-                $validator->errors()->add(
-                    'application',
-                    'This program is intended for Rural residents, but your profile address is classified as Urban. '
-                    . 'Applying for Rural-specific grants requires a valid rural address or Barangay certification.',
-                );
-                $validator->errors()->add(
-                    'is_rural_submitted',
-                    'Your profile is classified as Urban. You cannot declare rural residency for a Rural-specific program.',
-                );
-            }
-
-            // 2. Program requires Urban, but student profile is Rural (is_rural is true)
-            if ($programRequiresUrban && ($profile->is_rural || ! $profileIsUrban)) {
-                $validator->errors()->add(
-                    'application',
-                    'This program is intended for Urban residents, but your profile address is classified as Rural. '
-                    . 'Applying for Urban-specific grants requires a valid urban address or certification.',
-                );
-                $validator->errors()->add(
-                    'is_rural_submitted',
-                    'Your profile is classified as Rural. You cannot apply for an Urban-specific program.',
-                );
             }
         });
     }

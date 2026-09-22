@@ -105,7 +105,6 @@
                             <th>Academic Program</th>
                             <th>Year Level</th>
                             <th>Campus</th>
-                            <th>Residency</th>
                             <th class="text-nowrap">Status</th>
                             <th class="text-end pe-4">Actions</th>
                         </tr>
@@ -145,19 +144,6 @@
                                         style="background-color: rgba(15,41,66,0.08); color:#0F2942;">
                                         {{ $profile->campus ?: 'Not Assigned' }}
                                     </span>
-                                </td>
-
-                                {{-- Residency --}}
-                                <td>
-                                    @if ($profile->is_rural)
-                                        <span class="badge rounded-2 fw-medium bg-success-subtle text-success-emphasis">
-                                            <i class="bi bi-tree me-1"></i>Rural
-                                        </span>
-                                    @else
-                                        <span class="badge rounded-2 fw-medium bg-secondary-subtle text-secondary-emphasis">
-                                            <i class="bi bi-building me-1"></i>Urban
-                                        </span>
-                                    @endif
                                 </td>
 
                                 {{-- Status --}}
@@ -237,10 +223,6 @@
                                                 <div class="col-md-6">
                                                     <div class="small text-secondary">Campus</div>
                                                     <div class="fw-semibold">{{ $profile->campus ?: 'Not Assigned' }}</div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="small text-secondary">Residency</div>
-                                                    <div class="fw-semibold">{{ $profile->is_rural ? 'Rural' : 'Urban' }}</div>
                                                 </div>
                                             </div>
 

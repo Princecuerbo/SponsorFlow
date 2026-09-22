@@ -53,7 +53,7 @@
                         <span class="badge rounded-pill text-bg-primary">Batch
                             {{ $studentProfile?->created_at?->format('Y') ?? '2024' }}</span>
                         <span
-                            class="badge rounded-pill {{ $studentProfile?->is_sle_fhe_verified ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' : 'bg-secondary' }}">{{ $studentProfile?->is_sle_fhe_verified ? 'SLE-FHE Verified' : 'Main Campus' }}</span>
+                            class="badge rounded-pill {{ ($studentProfile?->sle_fhe_status ?? null) === 'Verified' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' : 'bg-secondary' }}">{{ ($studentProfile?->sle_fhe_status ?? null) === 'Verified' ? 'SLE-FHE Verified' : 'Main Campus' }}</span>
                     </div>
                     <hr class="my-4">
                     <div class="d-flex justify-content-between small text-muted">
@@ -105,9 +105,9 @@
                                 value="{{ $studentProfile?->gender ?? 'N/A' }}" readonly>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label text-muted small fw-bold" for="municipality">Municipality / City</label>
+                            <label class="form-label text-muted small fw-bold" for="municipality">Residential Address</label>
                             <input id="municipality" class="form-control bg-light rounded-3"
-                                value="{{ $studentProfile?->municipality ?? ($studentProfile?->barangay ?? 'N/A') }}" readonly>
+                                value="{{ $studentProfile?->full_address ?: 'N/A' }}" readonly>
                         </div>
                     </div>
 

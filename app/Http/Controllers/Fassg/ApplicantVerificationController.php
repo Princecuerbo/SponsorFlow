@@ -13,9 +13,9 @@ use App\Http\Requests\Fassg\VerifyApplicationRequest;
 use App\Models\Application;
 use App\Models\ApplicationDocument;
 use App\Models\FixedList;
+use App\Models\SleFheVerification;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
-use App\Notifications\ApplicationStatusUpdated;
 use App\Services\NotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -45,7 +45,7 @@ class ApplicantVerificationController extends Controller
         $applications = Application::query()
             ->with(['studentProfile.user', 'sponsorshipProgram.sponsor', 'documents'])
             ->whereHas('studentProfile', function ($q) use ($campus): void {
-                $q->where('is_sle_fhe_verified', true);
+                $q->whereHas('sleFheVerification');
                 if ($campus !== '') {
                     $q->where('campus', $campus);
                 }
@@ -98,7 +98,7 @@ class ApplicantVerificationController extends Controller
             : null;
 
         $scoped = Application::query()
-            ->whereHas('studentProfile', fn ($q) => $q->where('is_sle_fhe_verified', true));
+            ->whereHas('studentProfile', fn ($q) => $q->whereHas('sleFheVerification'));
 
         $pendingCount = (clone $scoped)->where('status', ApplicationStatus::Pending)->count();
         $verifiedCount = (clone $scoped)->where('status', ApplicationStatus::Verified)->count();
@@ -232,7 +232,7 @@ class ApplicantVerificationController extends Controller
                     'course' => $profile->academicProgram?->name ?? $profile->course ?: 'Unspecified',
                     'year_level' => $profile->year_level ?? 1,
                     'campus' => $profile->campus ?: null,
-                    'is_sle_fhe_verified' => (bool) $profile->is_sle_fhe_verified,
+                    'is_sle_fhe_verified' => $profile->isSleFheVerified(),
                     'status' => FixedListItemStatus::Pending,
                 ]);
 
@@ -446,7 +446,10 @@ class ApplicantVerificationController extends Controller
 
     public function verifySleFhe(Request $request, StudentProfile $studentProfile): RedirectResponse
     {
-        $studentProfile->update(['is_sle_fhe_verified' => true]);
+        SleFheVerification::firstOrCreate(
+            ['student_profile_id' => $studentProfile->id],
+            ['verified_address' => '', 'verified_at' => now()],
+        );
 
         $this->audit($request, 'fassg.student.sle_fhe_verified', 'student_profiles');
 

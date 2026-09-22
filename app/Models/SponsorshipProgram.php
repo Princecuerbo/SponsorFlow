@@ -325,20 +325,15 @@ class SponsorshipProgram extends Model
 
         if (filled($this->address_requirement)) {
             $requirement = strtolower((string) $this->address_requirement);
-            $isRural = (bool) $profile->is_rural;
 
-            if (str_contains($requirement, 'rural') && ! $isRural) {
-                $reasons[] = 'This program requires rural residency.';
-            }
-
-            if (str_contains($requirement, 'urban') && $isRural) {
-                $reasons[] = 'This program requires urban residency.';
-            }
-
-            $location = strtolower(trim((string) $profile->full_address.' '.$profile->barangay));
+            $location = strtolower(trim((string) $profile->full_address));
 
             if (str_contains($requirement, 'davao oriental') && ! str_contains($location, 'davao oriental')) {
                 $reasons[] = 'Your address does not meet the program location requirement.';
+            }
+
+            if ((str_contains($requirement, 'rural') || str_contains($requirement, 'urban')) && $location === '') {
+                $reasons[] = 'Provide your residential address to verify the program location requirement.';
             }
         }
 
@@ -421,7 +416,7 @@ class SponsorshipProgram extends Model
                 $errors[] = 'This program requires urban residency.';
             }
 
-            $location = strtolower(trim($address.' '.$profile->barangay));
+            $location = strtolower(trim($address));
 
             if (str_contains($requirement, 'davao oriental') && ! str_contains($location, 'davao oriental')) {
                 $errors[] = 'Your address does not meet the program location requirement.';

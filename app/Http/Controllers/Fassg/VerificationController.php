@@ -40,10 +40,10 @@ class VerificationController extends Controller
         $category = $request->string('category')->trim()->toString();
         $statusFilter = $request->string('status')->trim()->toString();
 
-        $pendingSleFheCount = StudentProfile::where('is_sle_fhe_verified', false)->count();
+        $pendingSleFheCount = StudentProfile::whereDoesntHave('sleFheVerification')->count();
 
         $pendingAppCount = Application::where('status', 'Pending')
-            ->whereHas('studentProfile', fn ($q) => $q->where('is_sle_fhe_verified', true))
+            ->whereHas('studentProfile', fn ($q) => $q->whereHas('sleFheVerification'))
             ->count();
 
         $isPendingSleFhe = in_array(strtolower($statusFilter), ['pending_sle_fhe', 'pending sle-fhe'], true);
@@ -56,7 +56,7 @@ class VerificationController extends Controller
         $profiles = $includeProfiles
             ? StudentProfile::query()
                 ->with(['user', 'applications.documents'])
-                ->where('is_sle_fhe_verified', false)
+                ->whereDoesntHave('sleFheVerification')
                 ->when($search !== '', function ($query) use ($search): void {
                     $query->where(function ($query) use ($search): void {
                         $query->where('student_id_number', 'like', "%{$search}%")
@@ -87,7 +87,7 @@ class VerificationController extends Controller
                 'sponsorshipProgram',
                 fn ($pq) => $pq->where('category', $category)
             ))
-            ->whereHas('studentProfile', fn ($pq) => $pq->where('is_sle_fhe_verified', true));
+            ->whereHas('studentProfile', fn ($pq) => $pq->whereHas('sleFheVerification'));
 
         $actionableStatuses = [
             ApplicationStatus::Pending,
@@ -259,18 +259,16 @@ class VerificationController extends Controller
             ->where('status', 'pending')
             ->first();
 
-        $studentProfile->update(['is_sle_fhe_verified' => true]);
+        SleFheVerification::query()->updateOrCreate(
+            ['student_profile_id' => $studentProfile->id],
+            [
+                'verified_address' => $pendingRequest?->full_address ?? '',
+                'verified_by' => $this->actor($request)?->id,
+                'verified_at' => now(),
+            ],
+        );
 
         if ($pendingRequest !== null) {
-            SleFheVerification::query()->updateOrCreate(
-                ['student_profile_id' => $studentProfile->id],
-                [
-                    'verified_address' => $pendingRequest->full_address,
-                    'verified_by' => $this->actor($request)?->id,
-                    'verified_at' => now(),
-                ],
-            );
-
             $pendingRequest->delete();
         }
 

@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Enums\UserRole;
 use App\Models\AcademicProgram;
-use App\Models\AuditLog;
 use App\Models\StudentProfile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -21,12 +20,10 @@ class FassgVerificationQueueTest extends TestCase
         $cs = AcademicProgram::factory()->create(['name' => 'BS Computer Science']);
 
         $itProfile = StudentProfile::factory()->create([
-            'is_sle_fhe_verified' => false,
             'academic_program_id' => $it->program_id,
             'student_id_number' => '2026-00011',
         ]);
         $csProfile = StudentProfile::factory()->create([
-            'is_sle_fhe_verified' => false,
             'academic_program_id' => $cs->program_id,
             'student_id_number' => '2026-00022',
         ]);
@@ -41,7 +38,7 @@ class FassgVerificationQueueTest extends TestCase
     public function test_unverified_student_profiles_are_visible_in_the_queue(): void
     {
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => false]);
+        $profile = StudentProfile::factory()->create();
 
         $this->actingAs($fassg)
             ->get(route('fassg.verification.index'))
@@ -53,13 +50,13 @@ class FassgVerificationQueueTest extends TestCase
     public function test_fassg_can_verify_a_student_and_audit_the_action(): void
     {
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => false]);
+        $profile = StudentProfile::factory()->create();
 
         $this->actingAs($fassg)
             ->post(route('fassg.verification.students.verify', $profile))
             ->assertSessionHas('success', 'Student SLE-FHE status verified successfully.');
 
-        $this->assertTrue($profile->fresh()->is_sle_fhe_verified);
+        $this->assertTrue($profile->fresh()->sleFheVerification()->exists());
         $this->assertDatabaseHas('audit_logs', [
             'user_id' => $fassg->id,
             'action' => 'fassg.student.sle_fhe_verified',

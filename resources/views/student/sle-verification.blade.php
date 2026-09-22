@@ -7,9 +7,8 @@
 
 @section('content')
     @php
-        $isRural = (bool) old('is_rural', $profile?->is_rural);
         $sleFheStatus = $profile?->sle_fhe_status;
-        $isVerified = (bool) ($profile?->is_sle_fhe_verified ?? false) || $sleFheStatus === 'Verified';
+        $isVerified = $sleFheStatus === 'Verified';
         $isPending = ! $isVerified && $sleFheStatus === 'Pending Review';
         $isEditable = ! $isVerified && ! $isPending;
         $requestedAddress = $profile?->sleFheRequest;
@@ -133,14 +132,6 @@
 
                             <div class="col-6 pb-2 border-bottom">
                                 <span class="text-secondary extra-small text-uppercase d-block mb-1"
-                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">Residency</span>
-                                <span id="sle-residency-badge" class="badge {{ $isRural ? 'bg-success' : 'bg-secondary' }}">
-                                    {{ $isRural ? 'Rural' : 'Urban' }}
-                                </span>
-                            </div>
-
-                            <div class="col-6 pb-2 border-bottom">
-                                <span class="text-secondary extra-small text-uppercase d-block mb-1"
                                     style="font-size: 0.7rem; letter-spacing: 0.05em;">Campus</span>
                                 <span class="fw-semibold text-dark"
                                     style="font-size: 0.875rem;">{{ $profile?->campus ?? 'Not Assigned' }}</span>
@@ -167,13 +158,6 @@
                                     style="font-size: 0.7rem; letter-spacing: 0.05em;">Address</span>
                                 <span class="fw-semibold text-dark" style="font-size: 0.875rem;">
                                     {{ $profile?->full_address ?? '—' }}
-                                </span>
-                            </div>
-                            <div class="col-6">
-                                <span class="text-secondary extra-small text-uppercase d-block mb-1"
-                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">Municipality / City</span>
-                                <span class="fw-semibold text-dark" style="font-size: 0.875rem;">
-                                    {{ $profile?->municipality ?? ($profile?->barangay ?? '—') }}
                                 </span>
                             </div>
                         </div>
@@ -312,25 +296,25 @@
                             <div class="col-12 col-md-6">
                                 <label class="form-label" for="province">Province</label>
                                 <input type="text" class="form-control" id="province" name="province"
-                                    value="{{ old('province', $requestedAddress?->province ?? $profile?->province) }}"
+                                    value="{{ old('province', $requestedAddress?->province) }}"
                                     @disabled(! $isEditable) required>
                             </div>
                             <div class="col-12 col-md-6">
                                 <label class="form-label" for="municipality_city">Municipality / City</label>
                                 <input type="text" class="form-control" id="municipality_city" name="municipality_city"
-                                    value="{{ old('municipality_city', $requestedAddress?->municipality_city ?? $profile?->municipality) }}"
+                                    value="{{ old('municipality_city', $requestedAddress?->municipality_city) }}"
                                     @disabled(! $isEditable) required>
                             </div>
                             <div class="col-12 col-md-6">
                                 <label class="form-label" for="barangay">Barangay</label>
                                 <input type="text" class="form-control" id="barangay" name="barangay"
-                                    value="{{ old('barangay', $requestedAddress?->barangay ?? $profile?->barangay) }}"
+                                    value="{{ old('barangay', $requestedAddress?->barangay) }}"
                                     @disabled(! $isEditable) required>
                             </div>
                             <div class="col-12 col-md-6">
                                 <label class="form-label" for="street_purok">Street / Purok</label>
                                 <input type="text" class="form-control" id="street_purok" name="street_purok"
-                                    value="{{ old('street_purok', $requestedAddress?->street_purok ?? $profile?->home_address) }}"
+                                    value="{{ old('street_purok', $requestedAddress?->street_purok) }}"
                                     @disabled(! $isEditable)>
                             </div>
                             <div class="col-12 pt-2 d-flex flex-wrap align-items-center gap-2">

@@ -110,7 +110,6 @@
                             <th>Academic Program</th>
                             <th>Year Level</th>
                             <th>Campus</th>
-                            <th>Residency</th>
                             <th>Verified Address</th>
                             <th class="text-nowrap">Verified At</th>
                             <th class="text-nowrap">Status</th>
@@ -150,19 +149,6 @@
                                         style="background-color: rgba(15,41,66,0.08); color:#0F2942;">
                                         {{ $profile->campus ?: 'Not Assigned' }}
                                     </span>
-                                </td>
-
-                                {{-- Residency --}}
-                                <td>
-                                    @if ($profile->is_rural)
-                                        <span class="badge rounded-2 fw-medium bg-success-subtle text-success-emphasis">
-                                            <i class="bi bi-tree me-1"></i>Rural
-                                        </span>
-                                    @else
-                                        <span class="badge rounded-2 fw-medium bg-secondary-subtle text-secondary-emphasis">
-                                            <i class="bi bi-building me-1"></i>Urban
-                                        </span>
-                                    @endif
                                 </td>
 
                                 {{-- Verified Address --}}

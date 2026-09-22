@@ -321,9 +321,9 @@ class ReferenceController extends Controller
                         ? ($application?->address_submitted ?? $profile?->full_address)
                         : null,
                     'rurality' => $isGenerated
-                        ? ($application?->is_rural_submitted
-                            ? 'Rural'
-                            : ($profile?->is_rural ? 'Rural' : 'Urban'))
+                        ? (($application !== null)
+                            ? ($application->is_rural_submitted ? 'Rural' : 'Urban')
+                            : null)
                         : null,
                     'confirmation_document' => $approval?->approval_document_path,
                     'document_url' => $approval?->approval_document_path

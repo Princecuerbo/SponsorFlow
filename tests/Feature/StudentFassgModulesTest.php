@@ -5,9 +5,11 @@ namespace Tests\Feature;
 use App\Enums\ApplicationStatus;
 use App\Enums\DocumentType;
 use App\Enums\FixedListItemStatus;
+use App\Enums\FixedListStatus;
 use App\Enums\ProgramCategory;
 use App\Enums\ProgramStatus;
 use App\Enums\UserRole;
+use App\Models\AcademicProgram;
 use App\Models\Application;
 use App\Models\ApplicationDocument;
 use App\Models\FixedList;
@@ -52,7 +54,7 @@ class StudentFassgModulesTest extends TestCase
     public function test_student_can_save_id_and_sync_sle_fhe_from_fixed_list(): void
     {
         $student = User::factory()->create(['role' => UserRole::Student]);
-        $program = \App\Models\AcademicProgram::factory()->create();
+        $program = AcademicProgram::factory()->create();
 
         $this->actingAsStudent($student)->put(route('student.verification.update'), [
             'student_id_number' => '2024-00099',
@@ -68,13 +70,12 @@ class StudentFassgModulesTest extends TestCase
         $this->assertDatabaseHas('student_profiles', [
             'user_id' => $student->id,
             'student_id_number' => '2024-00099',
-            'is_sle_fhe_verified' => false,
         ]);
     }
 
     public function test_unverified_student_cannot_view_or_submit_sponsorship_applications(): void
     {
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => false]);
+        $profile = StudentProfile::factory()->create();
         $program = SponsorshipProgram::factory()->create();
 
         $this->actingAsStudent($profile->user)
@@ -96,12 +97,11 @@ class StudentFassgModulesTest extends TestCase
     {
         Storage::fake('public');
 
-        $academicProgram = \App\Models\AcademicProgram::factory()->create(['name' => 'BSHM']);
+        $academicProgram = AcademicProgram::factory()->create(['name' => 'BSHM']);
 
-        $profile = StudentProfile::factory()->create([
+        $profile = StudentProfile::factory()->verified()->create([
             'academic_program_id' => $academicProgram->program_id,
             'course' => 'BSHM',
-            'is_sle_fhe_verified' => true,
         ]);
         $program = SponsorshipProgram::factory()->create([
             'target_course' => 'BSIT, BSHM',
@@ -123,8 +123,7 @@ class StudentFassgModulesTest extends TestCase
 
     public function test_application_detail_syncs_approval_from_approved_fixed_list(): void
     {
-        $profile = StudentProfile::factory()->create([
-            'is_sle_fhe_verified' => true,
+        $profile = StudentProfile::factory()->verified()->create([
             'active_sponsorship_id' => null,
         ]);
         $program = SponsorshipProgram::factory()->create();
@@ -135,7 +134,7 @@ class StudentFassgModulesTest extends TestCase
         ]);
         $list = FixedList::factory()->create([
             'sponsorship_program_id' => $program->id,
-            'status' => \App\Enums\FixedListStatus::Approved,
+            'status' => FixedListStatus::Approved,
         ]);
         FixedListItem::factory()->create([
             'fixed_list_id' => $list->id,
@@ -158,7 +157,7 @@ class StudentFassgModulesTest extends TestCase
     {
         Storage::fake('public');
 
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
+        $profile = StudentProfile::factory()->verified()->create();
         $existingProgram = SponsorshipProgram::factory()->create();
         $newProgram = SponsorshipProgram::factory()->create([
             'target_course' => $profile->course,
@@ -186,7 +185,7 @@ class StudentFassgModulesTest extends TestCase
     {
         Storage::fake('public');
 
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
+        $profile = StudentProfile::factory()->verified()->create();
         $program = SponsorshipProgram::factory()->create();
         Application::factory()->create([
             'student_profile_id' => $profile->id,
@@ -205,7 +204,7 @@ class StudentFassgModulesTest extends TestCase
     {
         Storage::fake('local');
 
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
+        $profile = StudentProfile::factory()->verified()->create();
         $program = SponsorshipProgram::factory()->create([
             'target_course' => $profile->course,
             'address_requirement' => 'Rural barangay in Davao Oriental',
@@ -229,7 +228,7 @@ class StudentFassgModulesTest extends TestCase
     {
         Storage::fake('local');
 
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
+        $profile = StudentProfile::factory()->verified()->create();
         $program = SponsorshipProgram::factory()->create(['min_gpa' => 2.50]);
 
         $active = Application::factory()->create([
@@ -249,7 +248,7 @@ class StudentFassgModulesTest extends TestCase
     {
         Storage::fake('local');
 
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
+        $profile = StudentProfile::factory()->verified()->create();
         $program = SponsorshipProgram::factory()->create([
             'min_gpa' => 2.50,
             'target_course' => $profile->course,
@@ -274,7 +273,7 @@ class StudentFassgModulesTest extends TestCase
     {
         Storage::fake('public');
 
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
+        $profile = StudentProfile::factory()->verified()->create();
         $program = SponsorshipProgram::factory()->create([
             'min_gpa' => 2.50,
             'target_course' => $profile->course,
@@ -521,7 +520,7 @@ class StudentFassgModulesTest extends TestCase
                 'application_id' => $application->id,
                 'document_type' => $type,
                 'file_path' => "application-documents/{$application->id}/{$type->value}.pdf",
-                'file_name' => $type->value . '.pdf',
+                'file_name' => $type->value.'.pdf',
             ]);
         }
 
@@ -543,9 +542,8 @@ class StudentFassgModulesTest extends TestCase
     public function test_fassg_can_encode_fixed_list_and_verify_sle_fhe(): void
     {
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
-        $profile = StudentProfile::factory()->create([
+        $profile = StudentProfile::factory()->verified()->create([
             'student_id_number' => '2024-00111',
-            'is_sle_fhe_verified' => true,
         ]);
         $program = SponsorshipProgram::factory()->create();
 
@@ -572,7 +570,7 @@ class StudentFassgModulesTest extends TestCase
 
         $this->assertTrue($item->fresh()->is_sle_fhe_verified);
         $this->assertSame(FixedListItemStatus::Verified, $item->fresh()->status);
-        $this->assertTrue($profile->fresh()->is_sle_fhe_verified);
+        $this->assertTrue($profile->fresh()->sleFheVerification()->exists());
     }
 
     public function test_fassg_cannot_verify_fixed_list_item_for_unverified_student(): void
@@ -580,7 +578,6 @@ class StudentFassgModulesTest extends TestCase
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
         $profile = StudentProfile::factory()->create([
             'student_id_number' => '2024-00222',
-            'is_sle_fhe_verified' => false,
         ]);
         $list = FixedList::factory()->create();
         $item = FixedListItem::factory()->create([
@@ -632,7 +629,7 @@ class StudentFassgModulesTest extends TestCase
         $list = FixedList::factory()->create([
             'sponsorship_program_id' => $program->id,
             'uploaded_by_fassg_id' => $fassg->id,
-            'status' => \App\Enums\FixedListStatus::Draft,
+            'status' => FixedListStatus::Draft,
         ]);
 
         $this->actingAs($fassg)
@@ -658,7 +655,7 @@ class StudentFassgModulesTest extends TestCase
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
         $list = FixedList::factory()->create([
             'uploaded_by_fassg_id' => $fassg->id,
-            'status' => \App\Enums\FixedListStatus::Submitted,
+            'status' => FixedListStatus::Submitted,
         ]);
 
         $this->actingAs($fassg)
@@ -677,8 +674,8 @@ class StudentFassgModulesTest extends TestCase
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
         $sponsor = Sponsor::factory()->create();
 
-        $it = \App\Models\AcademicProgram::factory()->create(['code' => 'BSIT', 'name' => 'BS Information Technology']);
-        $cs = \App\Models\AcademicProgram::factory()->create(['code' => 'BSCS', 'name' => 'BS Computer Science']);
+        $it = AcademicProgram::factory()->create(['code' => 'BSIT', 'name' => 'BS Information Technology']);
+        $cs = AcademicProgram::factory()->create(['code' => 'BSCS', 'name' => 'BS Computer Science']);
 
         $this->actingAs($fassg)->post(route('fassg.programs.store'), [
             'sponsor_id' => $sponsor->id,
@@ -721,9 +718,9 @@ class StudentFassgModulesTest extends TestCase
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
         $program = SponsorshipProgram::factory()->create(['available_slots' => 5]);
 
-        $studentA = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
-        $studentB = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
-        $studentC = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
+        $studentA = StudentProfile::factory()->verified()->create();
+        $studentB = StudentProfile::factory()->verified()->create();
+        $studentC = StudentProfile::factory()->verified()->create();
 
         // Student A: Earlier submission, higher GWA (2.25)
         $appA = Application::factory()->create([

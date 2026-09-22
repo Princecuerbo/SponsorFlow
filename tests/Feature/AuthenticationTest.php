@@ -38,7 +38,7 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect(route('login'));
         $this->assertGuest();
         $this->assertDatabaseHas('users', ['email' => 'student@dorsu.edu.ph', 'role' => UserRole::Student->value]);
-        $this->assertDatabaseHas('student_profiles', ['student_id_number' => '2026-0001', 'is_sle_fhe_verified' => false, 'academic_program_id' => $program->program_id]);
+        $this->assertDatabaseHas('student_profiles', ['student_id_number' => '2026-0001', 'academic_program_id' => $program->program_id]);
 
         $profile = StudentProfile::query()->where('student_id_number', '2026-0001')->firstOrFail();
         $this->assertSame(SleFheStatus::Unverified->value, $profile->sle_fhe_status);
@@ -46,7 +46,7 @@ class AuthenticationTest extends TestCase
         $this->assertNull($profile->municipality);
         $this->assertNull($profile->barangay);
         $this->assertNull($profile->home_address);
-        $this->assertFalse($profile->is_rural);
+        $this->assertNull($profile->is_rural, 'Rurality is no longer stored on student_profiles');
     }
 
     public function test_registration_rejects_non_dorsu_email(): void

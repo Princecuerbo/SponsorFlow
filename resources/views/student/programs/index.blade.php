@@ -14,7 +14,7 @@
 
 @section('content')
     @php
-        $isVerified = (bool) ($profile?->is_sle_fhe_verified ?? false);
+        $isVerified = ($profile?->sle_fhe_status ?? null) === 'Verified';
     @endphp
 
     @if ($isVerified)

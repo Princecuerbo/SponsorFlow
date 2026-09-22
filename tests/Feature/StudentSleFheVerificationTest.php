@@ -25,7 +25,7 @@ class StudentSleFheVerificationTest extends TestCase
 
     public function test_student_can_submit_sle_fhe_address_request(): void
     {
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => false]);
+        $profile = StudentProfile::factory()->create();
 
         $response = $this->actingAsStudent($profile->user)->post(route('student.sle-fhe.request'), [
             'province' => 'Davao Oriental',
@@ -53,7 +53,7 @@ class StudentSleFheVerificationTest extends TestCase
 
     public function test_student_can_resubmit_and_update_sle_fhe_address_request(): void
     {
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => false]);
+        $profile = StudentProfile::factory()->create();
         $existing = SleFheRequest::create([
             'student_profile_id' => $profile->id,
             'province' => 'Davao del Sur',
@@ -89,7 +89,7 @@ class StudentSleFheVerificationTest extends TestCase
 
     public function test_student_cannot_submit_address_request_when_verification_exists(): void
     {
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
+        $profile = StudentProfile::factory()->create();
         SleFheVerification::create([
             'student_profile_id' => $profile->id,
             'verified_at' => now(),
@@ -110,7 +110,7 @@ class StudentSleFheVerificationTest extends TestCase
 
     public function test_sle_fhe_address_request_requires_address_fields(): void
     {
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => false]);
+        $profile = StudentProfile::factory()->create();
 
         $this->actingAsStudent($profile->user)
             ->post(route('student.sle-fhe.request'), [
@@ -126,7 +126,7 @@ class StudentSleFheVerificationTest extends TestCase
 
     public function test_sle_fhe_page_shows_editable_address_form_to_unverified_student(): void
     {
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => false]);
+        $profile = StudentProfile::factory()->create();
 
         $response = $this->actingAsStudent($profile->user)->get(route('student.sle-fhe'));
 
@@ -142,7 +142,7 @@ class StudentSleFheVerificationTest extends TestCase
 
     public function test_sle_fhe_page_shows_editable_address_form_to_rejected_student(): void
     {
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => false]);
+        $profile = StudentProfile::factory()->create();
         SleFheRejection::create(['student_profile_id' => $profile->id]);
 
         $response = $this->actingAsStudent($profile->user)->get(route('student.sle-fhe'));
@@ -156,7 +156,7 @@ class StudentSleFheVerificationTest extends TestCase
 
     public function test_sle_fhe_page_locks_address_form_when_verification_request_is_pending(): void
     {
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => false]);
+        $profile = StudentProfile::factory()->create();
         SleFheRequest::create([
             'student_profile_id' => $profile->id,
             'province' => 'Davao de Oro',
@@ -181,7 +181,7 @@ class StudentSleFheVerificationTest extends TestCase
 
     public function test_sle_fhe_page_locks_address_form_when_profile_is_verified(): void
     {
-        $profile = StudentProfile::factory()->create(['is_sle_fhe_verified' => true]);
+        $profile = StudentProfile::factory()->create();
         SleFheVerification::create([
             'student_profile_id' => $profile->id,
             'verified_address' => 'Purok 2, San Isidro, Mati City, Davao Oriental',

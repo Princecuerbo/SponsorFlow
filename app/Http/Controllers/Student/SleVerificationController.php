@@ -69,7 +69,7 @@ class SleVerificationController extends Controller
     {
         $profile = $this->studentProfile($request);
 
-        if ($profile->sleFheVerification()->exists() || $profile->is_sle_fhe_verified) {
+        if ($profile->sleFheVerification()->exists()) {
             return redirect()
                 ->route('student.sle-fhe')
                 ->with('error', 'Your SLE-FHE status is already verified and your residential address is locked.');
@@ -88,40 +88,5 @@ class SleVerificationController extends Controller
         return redirect()
             ->route('student.sle-fhe')
             ->with('status', 'Your verification request has been submitted. FASSG will review your residential address.');
-    }
-
-    public function upload(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'document_type' => ['required', 'string', 'in:certificate_of_grades,proof_of_residence,barangay_cert'],
-            'document_file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
-        ]);
-
-        $user = $this->actor($request);
-        $profile = $this->studentProfile($request, required: false);
-
-        if (! $profile) {
-            return redirect()
-                ->route('student.sle-fhe')
-                ->with('error', 'Please complete your student profile first.');
-        }
-
-        $path = $request->file('document_file')->store('sle-fhe-documents/' . $user->id, 'public');
-
-        $columnMap = [
-            'certificate_of_grades' => 'sle_fhe_cg_path',
-            'proof_of_residence' => 'sle_fhe_residence_path',
-            'barangay_cert' => 'sle_fhe_barangay_path',
-        ];
-
-        $profile->update([
-            $columnMap[$validated['document_type']] => $path,
-        ]);
-
-        $this->audit($request, 'student.sle-fhe.document.uploaded', 'student_profiles');
-
-        return redirect()
-            ->route('student.sle-fhe')
-            ->with('status', ucfirst(str_replace('_', ' ', $validated['document_type'])) . ' uploaded successfully.');
     }
 }

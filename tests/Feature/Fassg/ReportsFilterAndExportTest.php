@@ -8,6 +8,7 @@ use App\Enums\FixedListStatus;
 use App\Enums\ProgramCategory;
 use App\Enums\ProgramStatus;
 use App\Enums\UserRole;
+use App\Models\AcademicProgram;
 use App\Models\Application;
 use App\Models\FixedList;
 use App\Models\FixedListItem;
@@ -53,13 +54,12 @@ class ReportsFilterAndExportTest extends TestCase
         ]);
 
         // Student 1: Unassigned Campus (like Maria Santos in canonical DB), Urban, Female, BSIT
-        $bsitProgram = \App\Models\AcademicProgram::factory()->create(['name' => 'Bachelor of Science in Information Technology']);
-        $polSciProgram = \App\Models\AcademicProgram::factory()->create(['name' => 'Bachelor of Arts in Political Science']);
+        $bsitProgram = AcademicProgram::factory()->create(['name' => 'Bachelor of Science in Information Technology']);
+        $polSciProgram = AcademicProgram::factory()->create(['name' => 'Bachelor of Arts in Political Science']);
 
         $profile1 = StudentProfile::factory()->create([
             'academic_program_id' => $bsitProgram->program_id,
             'campus' => null,
-            'is_rural' => false,
             'gender' => 'Female',
             'course' => 'Bachelor of Science in Information Technology',
             'student_id_number' => '2024-00001',
@@ -69,7 +69,6 @@ class ReportsFilterAndExportTest extends TestCase
         $profile2 = StudentProfile::factory()->create([
             'academic_program_id' => $bsitProgram->program_id,
             'campus' => 'Tarragona Campus',
-            'is_rural' => true,
             'gender' => 'Male',
             'course' => 'Bachelor of Science in Information Technology',
             'student_id_number' => '2024-00002',
@@ -79,7 +78,6 @@ class ReportsFilterAndExportTest extends TestCase
         $profile3 = StudentProfile::factory()->create([
             'academic_program_id' => $polSciProgram->program_id,
             'campus' => 'Main Campus (City of Mati)',
-            'is_rural' => false,
             'gender' => 'Male',
             'course' => 'Bachelor of Arts in Political Science',
             'student_id_number' => '2024-00003',
@@ -90,6 +88,7 @@ class ReportsFilterAndExportTest extends TestCase
             'student_profile_id' => $profile1->id,
             'sponsorship_program_id' => $this->filterTestProgram->id,
             'status' => ApplicationStatus::Approved,
+            'is_rural_submitted' => false,
             'submitted_at' => '2026-09-15 10:00:00',
             'approved_at' => '2026-09-16 10:00:00',
         ]);
@@ -99,6 +98,7 @@ class ReportsFilterAndExportTest extends TestCase
             'student_profile_id' => $profile2->id,
             'sponsorship_program_id' => $this->filterTestProgram->id,
             'status' => ApplicationStatus::Verified,
+            'is_rural_submitted' => true,
             'submitted_at' => '2026-09-16 11:00:00',
         ]);
 
@@ -107,6 +107,7 @@ class ReportsFilterAndExportTest extends TestCase
             'student_profile_id' => $profile3->id,
             'sponsorship_program_id' => $this->filterTestProgram->id,
             'status' => ApplicationStatus::Rejected,
+            'is_rural_submitted' => false,
             'submitted_at' => '2026-09-16 12:00:00',
         ]);
 
@@ -115,6 +116,7 @@ class ReportsFilterAndExportTest extends TestCase
             'student_profile_id' => $profile1->id,
             'sponsorship_program_id' => $this->otherProgram->id,
             'status' => ApplicationStatus::Pending,
+            'is_rural_submitted' => false,
             'submitted_at' => '2026-09-16 14:00:00',
         ]);
 
