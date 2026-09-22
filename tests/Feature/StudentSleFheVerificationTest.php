@@ -170,7 +170,8 @@ class StudentSleFheVerificationTest extends TestCase
         $response = $this->actingAsStudent($profile->user)->get(route('student.sle-fhe'));
 
         $response->assertOk()
-            ->assertSee('Verification Request Pending Review')
+            ->assertDontSee('Verification Request Pending Review')
+            ->assertSee('Your submitted address is under review and can no longer be edited.', false)
             ->assertSee('disabled', false)
             ->assertSee('Davao de Oro', false)
             ->assertSee('Nabunturan', false)

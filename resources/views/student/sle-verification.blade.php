@@ -46,29 +46,6 @@
                     Your SLE-FHE status has been verified. You are eligible to apply for open sponsorship programs.
                 </p>
             </div>
-        @elseif ($isPending)
-            <div class="alert border-0 border-start border-4 rounded-3 p-4 mb-4"
-                style="background-color: #FFF8E7; border-left-color: #fbbf24;">
-                <div class="d-flex align-items-center gap-2 mb-1">
-                    <span class="d-inline-flex text-slate-900"><x-sf-hourglass class="fs-5" /></span>
-                    <h3 class="h6 sf-heading mb-0 text-slate-900">Verification Status: Pending Review</h3>
-                </div>
-                <p class="small mb-0 ms-md-4" style="color: #475569;">
-                    Your records are being evaluated by FASSG. Your Student ID is being cross-checked against the
-                    institutional masterlist.
-                </p>
-            </div>
-        @else
-            <div class="alert border-0 border-start border-4 rounded-3 p-4 mb-4"
-                style="background-color: #FFF8E7; border-left-color: #fbbf24;">
-                <div class="d-flex align-items-center gap-2 mb-1">
-                    <span class="d-inline-flex text-slate-900"><x-sf-hourglass class="fs-5" /></span>
-                    <h3 class="h6 sf-heading mb-0 text-slate-900">Verification Status: Not Yet Verified</h3>
-                </div>
-                <p class="small mb-0 ms-md-4" style="color: #475569;">
-                    Submit your residential address below to start the SLE-FHE verification process.
-                </p>
-            </div>
         @endif
 
         <div class="row g-4 align-items-stretch">
@@ -164,13 +141,7 @@
                             <h3 class="h6 sf-heading mb-0 d-flex align-items-center gap-2">
                                 <i class="fa-solid fa-location-dot text-primary"></i> Residential Address
                             </h3>
-                            @if ($isPending)
-                                <span class="badge rounded-pill d-inline-flex align-items-center gap-1 fw-semibold bg-cream border text-slate-900"
-                                    style="font-size: 0.75rem; font-weight: 600; padding: 0.3125rem 0.75rem; border-color: #FCD34D;">
-                                    <x-sf-hourglass filled style="width: 0.85em; height: 0.85em;" />
-                                    Verification Request Pending Review
-                                </span>
-                            @elseif ($isVerified)
+                            @if ($isVerified)
                                 <span class="badge rounded-pill d-inline-flex align-items-center gap-1 fw-semibold bg-cyan-50 text-cyan-700 border border-cyan-200"
                                     style="font-size: 0.75rem; font-weight: 600; padding: 0.3125rem 0.75rem;">
                                     <i class="bi bi-lock-fill"></i> Verification Status: Verified - Profile Locked

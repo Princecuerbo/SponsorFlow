@@ -99,8 +99,8 @@
             </div>
         </div>
 
-        {{-- Verification Action Banner --}}
-        @if ($studentProfile && !$isVerified)
+        {{-- SLE-FHE Verification Action Banner --}}
+        @if ($studentProfile && !$isVerified && ($studentProfile->sle_fhe_status ?? null) === 'Pending Review')
             <div class="card border-0 rounded-3 mb-4"
                 style="background-color: #FFF8E7; border-left: 4px solid #fbbf24;">
                 <div class="d-flex align-items-start gap-3 p-4">
@@ -109,26 +109,16 @@
                         <x-sf-hourglass class="fs-5" />
                     </div>
                     <div>
-                        <h3 class="h6 sf-heading mb-3 text-slate-900">Complete your SLE-FHE verification setup.</h3>
-                        <p class="mb-2 small" style="color: #475569; font-size: 0.85rem;">Your request is pending review. Update your verification details before applying for sponsorship programs.</p>
+                        <h3 class="h6 sf-heading mb-1 text-slate-900">SLE-FHE Verification Pending</h3>
+                        <p class="mb-3 small" style="color: #475569; font-size: 0.85rem;">Your SLE-FHE verification
+                            request is currently under review by FASSG.</p>
                         <a href="{{ route('student.verification.show') }}"
                             class="btn btn-sm fw-semibold shadow-sm px-3 py-1"
                             style="background-color: #0f172a; color: #fff; border: none; border-radius: 6px; font-size: 0.8rem;">
-                            Go to SLE-FHE Verification
+                            View Verification Status
                         </a>
                     </div>
                 </div>
-            </div>
-        @elseif ($studentProfile && $isVerified)
-            <div class="alert border-0 border-start border-4 rounded-3 p-3 mb-4"
-                style="background-color: #ECFEFF; border-left-color: #06b6d4;">
-                <div class="d-flex align-items-center gap-2 mb-1">
-                    <i class="bi bi-patch-check-fill fs-5" style="color: #0891b2;"></i>
-                    <h3 class="h6 sf-heading mb-0">Verification Status: Verified</h3>
-                </div>
-                <p class="small mb-0 ms-md-4" style="color: #475569;">
-                    Your SLE-FHE status has been verified. You are eligible to apply for open sponsorship programs.
-                </p>
             </div>
         @endif
 
