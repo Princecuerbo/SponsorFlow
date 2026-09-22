@@ -31,24 +31,7 @@
         );
         $isStep3Done = in_array($timelineStatus, ['Sponsor Reviewed', 'Approved', 'Confirmed'], true);
         $isStep4Done = in_array($timelineStatus, ['Approved', 'Confirmed'], true);
-        $latestApp = auth()->user()->studentProfile?->applications()->with('documents')->latest()->first();
-        $latestStatus = strtolower((string) ($latestApp?->status?->value ?? ($latestApp?->status ?? '')));
-        $isActiveApplication = in_array(
-            $latestStatus,
-            ['pending', 'under_review', 'verified', 'approved', 'ongoing'],
-            true,
-        );
-        $hasDocument = static fn(string $type): bool => $isActiveApplication &&
-            ($latestApp?->documents ?? collect())->contains(
-                static fn($document): bool => $document->document_type?->value === $type,
-            );
-        $docs = [
-            ['label' => 'Certificate of Grades (CG / Grade Slip)', 'type' => 'certificate_of_grades'],
-            ['label' => 'Proof of Residence', 'type' => 'proof_of_residence'],
-            ['label' => 'Barangay Certification', 'type' => 'barangay_cert'],
-        ];
         $isVerified = ($studentProfile?->sle_fhe_status ?? null) === 'Verified';
-        $featured = $activeGrant ?? $activeApplication ?? $latestApp;
     @endphp
 
     <div>
@@ -98,29 +81,6 @@
                 </div>
             </div>
         </div>
-
-        {{-- SLE-FHE Verification Action Banner --}}
-        @if ($studentProfile && !$isVerified && ($studentProfile->sle_fhe_status ?? null) === 'Pending Review')
-            <div class="card border-0 rounded-3 mb-4"
-                style="background-color: #FFF8E7; border-left: 4px solid #fbbf24;">
-                <div class="d-flex align-items-start gap-3 p-4">
-                    <div class="d-flex align-items-center justify-content-center flex-shrink-0"
-                        style="color: #0f172a; width: 48px; height: 48px; background-color: #FFF8E7; border: 1px solid #FDE68A; border-radius: 1rem;">
-                        <x-sf-hourglass class="fs-5" />
-                    </div>
-                    <div>
-                        <h3 class="h6 sf-heading mb-1 text-slate-900">SLE-FHE Verification Pending</h3>
-                        <p class="mb-3 small" style="color: #475569; font-size: 0.85rem;">Your SLE-FHE verification
-                            request is currently under review by FASSG.</p>
-                        <a href="{{ route('student.verification.show') }}"
-                            class="btn btn-sm fw-semibold shadow-sm px-3 py-1"
-                            style="background-color: #0f172a; color: #fff; border: none; border-radius: 6px; font-size: 0.8rem;">
-                            View Verification Status
-                        </a>
-                    </div>
-                </div>
-            </div>
-        @endif
 
         {{-- Grant Awarded Alert --}}
         @if ($activeGrant)
@@ -211,49 +171,6 @@
                 </div>
             </div>
         @endif
-
-        <!-- Document Verification Check Section -->
-        <div class="card border-0 shadow-sm rounded-3 bg-white mb-4">
-            <div class="card-header bg-white border-0 pt-3 px-4 pb-2">
-                <h3 class="h6 sf-heading mb-0 d-flex align-items-center gap-2">
-                    <i class="bi bi-file-earmark-text text-secondary"></i> Document Verification Check
-                </h3>
-            </div>
-            <div class="card-body px-4 pt-0 pb-3">
-                <div class="small mb-3" style="color: #64748b; font-size: 0.75rem;">
-                    <i class="bi bi-info-circle me-1 text-primary"></i>
-                    Accepted formats: PDF, JPG, PNG <span class="fw-semibold" style="color: #475569;">(Max: 5MB)</span>
-                </div>
-                <div class="list-group list-group-flush">
-                    @foreach ($docs as $document)
-                        @php
-                            $uploaded = $hasDocument($document['type']);
-                        @endphp
-                        <div class="list-group-item px-0 py-2 d-flex align-items-center justify-content-between border-bottom">
-                            <span class="small fw-medium text-dark" style="font-size: 0.875rem;">{{ $document['label'] }}</span>
-                            <div class="d-flex align-items-center gap-2">
-                                @if ($latestStatus === 'needs_resubmission')
-                                    <span class="badge px-2 py-1 rounded-2 fw-normal"
-                                        style="font-size: 0.7rem; background-color: #fef3c7; color: #b45309;">Re-upload Required</span>
-                                @elseif ($uploaded)
-                                    <span class="badge px-2 py-1 rounded-2 fw-normal"
-                                        style="font-size: 0.7rem; background-color: #dcfce7; color: #166534;">
-                                        <i class="bi bi-check-lg me-1"></i>Uploaded
-                                    </span>
-                                @else
-                                    <span class="badge bg-secondary px-2 py-1 rounded-2 fw-normal"
-                                        style="font-size: 0.7rem; background-color: #64748b !important;">Not Uploaded</span>
-                                @endif
-                                <a href="{{ route('student.verification.show') }}"
-                                    class="btn btn-sm btn-outline-primary rounded-2 px-2 py-1 fw-medium" style="font-size: 0.72rem;">
-                                    <i class="bi bi-upload me-1"></i>Upload
-                                </a>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
 
         <!-- FASSG Announcements & Policy Section -->
         <div class="row">

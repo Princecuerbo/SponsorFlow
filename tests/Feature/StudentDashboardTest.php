@@ -42,7 +42,7 @@ class StudentDashboardTest extends TestCase
             ->assertSee('Approved &amp; Confirmed', false);
     }
 
-    public function test_student_without_applications_sees_documents_as_not_uploaded(): void
+    public function test_student_without_applications_dashboard_renders_without_legacy_document_section(): void
     {
         $student = User::factory()->create(['role' => UserRole::Student]);
         $student->update(['privacy_consent_at' => now()]);
@@ -54,7 +54,9 @@ class StudentDashboardTest extends TestCase
             ->withSession(['privacy_consented_session' => true])
             ->get(route('student.dashboard'))
             ->assertOk()
-            ->assertSee('Not Uploaded')
+            ->assertSee('My Applications')
+            ->assertDontSee('Document Verification Check')
+            ->assertDontSee('Not Uploaded')
             ->assertDontSee('[cite:');
     }
 
