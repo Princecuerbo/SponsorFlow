@@ -12,6 +12,8 @@
         $isPending = ! $isVerified && $sleFheStatus === 'Pending Review';
         $isEditable = ! $isVerified && ! $isPending;
         $requestedAddress = $profile?->sleFheRequest;
+        $selectedProvince = old('province', $requestedAddress?->province ?? '');
+        $selectedCity = old('municipality_city', $requestedAddress?->municipality_city ?? '');
     @endphp
 
     <div class="container-fluid px-3 px-md-4 py-4 mb-5" style="background-color: #f8fafc; min-height: calc(100vh - 70px);">
@@ -294,16 +296,34 @@
                         <form method="POST" action="{{ route('student.sle-fhe.request') }}" class="row g-3">
                             @csrf
                             <div class="col-12 col-md-6">
-                                <label class="form-label" for="province">Province</label>
-                                <input type="text" class="form-control" id="province" name="province"
-                                    value="{{ old('province', $requestedAddress?->province) }}"
+                                <label class="form-label" for="province-select">Province</label>
+                                <select class="form-select" id="province-select" name="province"
                                     @disabled(! $isEditable) required>
+                                    <option value="">Select Province</option>
+                                    @foreach ($provinces as $province)
+                                        <option value="{{ $province }}" @selected($province === $selectedProvince)>
+                                            {{ $province }}
+                                        </option>
+                                    @endforeach
+                                    @if ($selectedProvince !== '' && ! $provinces->contains($selectedProvince))
+                                        <option value="{{ $selectedProvince }}" selected>{{ $selectedProvince }}</option>
+                                    @endif
+                                </select>
                             </div>
                             <div class="col-12 col-md-6">
-                                <label class="form-label" for="municipality_city">Municipality / City</label>
-                                <input type="text" class="form-control" id="municipality_city" name="municipality_city"
-                                    value="{{ old('municipality_city', $requestedAddress?->municipality_city) }}"
+                                <label class="form-label" for="city-select">Municipality / City</label>
+                                <select class="form-select" id="city-select" name="municipality_city"
                                     @disabled(! $isEditable) required>
+                                    <option value="">Select Municipality / City</option>
+                                    @foreach ($municipalities as $municipality)
+                                        <option value="{{ $municipality }}" @selected($municipality === $selectedCity)>
+                                            {{ $municipality }}
+                                        </option>
+                                    @endforeach
+                                    @if ($selectedCity !== '' && ! $municipalities->contains($selectedCity))
+                                        <option value="{{ $selectedCity }}" selected>{{ $selectedCity }}</option>
+                                    @endif
+                                </select>
                             </div>
                             <div class="col-12 col-md-6">
                                 <label class="form-label" for="barangay">Barangay</label>
@@ -332,6 +352,61 @@
                                 @endif
                             </div>
                         </form>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                var provinceSelect = document.getElementById('province-select');
+                                var citySelect = document.getElementById('city-select');
+                                var citiesUrl = @json(route('student.api.municipalities', 'PROVINCE'));
+
+                                if (!provinceSelect || !citySelect) {
+                                    return;
+                                }
+
+                                var selectedCity = citySelect.value;
+
+                                function loadMunicipalities() {
+                                    var province = provinceSelect.value;
+                                    var current = selectedCity;
+                                    citySelect.length = 0;
+
+                                    var placeholder = document.createElement('option');
+                                    placeholder.value = '';
+                                    placeholder.textContent = 'Select Municipality / City';
+                                    citySelect.appendChild(placeholder);
+
+                                    if (!province) {
+                                        selectedCity = current;
+                                        return;
+                                    }
+
+                                    fetch(citiesUrl.replace('PROVINCE', encodeURIComponent(province)), {
+                                        headers: {
+                                            'Accept': 'application/json',
+                                            'X-Requested-With': 'XMLHttpRequest'
+                                        }
+                                    })
+                                        .then(function(response) {
+                                            return response.json();
+                                        })
+                                        .then(function(cities) {
+                                            cities.forEach(function(city) {
+                                                var option = document.createElement('option');
+                                                option.value = city;
+                                                option.textContent = city;
+                                                citySelect.appendChild(option);
+                                            });
+                                            if (current !== '') {
+                                                citySelect.value = current;
+                                                selectedCity = current;
+                                            }
+                                        });
+                                }
+
+                                provinceSelect.addEventListener('change', loadMunicipalities);
+                                loadMunicipalities();
+                            });
+                        </script>
                     </div>
                 </div>
             </div>

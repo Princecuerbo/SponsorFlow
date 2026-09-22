@@ -9,8 +9,10 @@ use App\Http\Requests\Student\UpdateVerificationRequest;
 use App\Models\AcademicProgram;
 use App\Models\SleFheRequest;
 use App\Models\StudentProfile;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class SleVerificationController extends Controller
@@ -28,11 +30,44 @@ class SleVerificationController extends Controller
             ->orderBy('name')
             ->get();
 
+        $provinces = DB::table('localaddress')
+            ->distinct()
+            ->orderBy('province')
+            ->pluck('province')
+            ->filter()
+            ->values();
+
+        $selectedProvince = old('province', $profile?->sleFheRequest?->province ?? '');
+        $municipalities = $selectedProvince !== ''
+            ? DB::table('localaddress')
+                ->where('province', $selectedProvince)
+                ->distinct()
+                ->orderBy('city')
+                ->pluck('city')
+                ->filter()
+                ->values()
+            : collect();
+
         return view('student.sle-verification', [
             'user' => $user,
             'profile' => $profile,
             'programs' => $programs,
+            'provinces' => $provinces,
+            'municipalities' => $municipalities,
         ]);
+    }
+
+    public function municipalities(string $province): JsonResponse
+    {
+        $cities = DB::table('localaddress')
+            ->where('province', trim($province))
+            ->distinct()
+            ->orderBy('city')
+            ->pluck('city')
+            ->filter()
+            ->values();
+
+        return response()->json($cities);
     }
 
     public function update(UpdateVerificationRequest $request): RedirectResponse

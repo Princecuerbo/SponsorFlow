@@ -107,6 +107,8 @@ Route::middleware(['web', 'auth', 'EnsureUserRole:student'])
         Route::post('/sle-fhe/request', [SleVerificationController::class, 'submit'])->name('sle-fhe.request');
         Route::get('/verify', [SleVerificationController::class, 'show'])->name('verification');
         Route::post('/verify', [SleVerificationController::class, 'update'])->name('verify.store');
+        Route::get('/api/municipalities/{province}', [SleVerificationController::class, 'municipalities'])
+            ->name('api.municipalities');
 
         Route::get('/programs', [StudentApplicationController::class, 'programs'])->name('programs.index');
         Route::get('/applications/create/{sponsorshipProgram}', [StudentApplicationController::class, 'create'])->name('applications.create');
