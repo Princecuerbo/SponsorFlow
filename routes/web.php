@@ -189,6 +189,7 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
         Route::patch('/fixed-lists/{fixedList}/submit', [FixedListController::class, 'submit'])->name('fixed-lists.submit');
         Route::patch('/fixed-lists/{fixedList}/publish', [FixedListController::class, 'publish'])->name('fixed-lists.publish');
         Route::post('/fixed-lists/{fixedList}/forward', [FixedListController::class, 'submit'])->name('fixed-lists.forward');
+        Route::patch('/fixed-lists/{fixedList}/finalize', [FixedListController::class, 'finalize'])->name('fixed-lists.finalize');
         Route::patch('/fixed-lists/{fixedList}/items/{fixedListItem}/verify', [FixedListController::class, 'verifyItem'])
             ->name('fixed-lists.items.verify');
         Route::patch('/fixed-lists/{fixedList}/items/{fixedListItem}/endorse', [FixedListController::class, 'endorseItem'])

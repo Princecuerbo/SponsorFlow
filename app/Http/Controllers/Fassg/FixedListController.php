@@ -15,6 +15,7 @@ use App\Models\FixedList;
 use App\Models\FixedListItem;
 use App\Models\SleFheVerification;
 use App\Models\SponsorshipProgram;
+use App\Models\StudentProfile;
 use App\Notifications\ApplicationStatusUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -236,9 +237,14 @@ class FixedListController extends Controller
 
         $fixedList = FixedList::query()->findOrFail($validated['fixed_list_id']);
         $this->assertListEditable($fixedList);
+        $isSleFheVerified = StudentProfile::query()
+            ->where('student_id_number', $validated['student_id_number'])
+            ->sleFheVerified()
+            ->exists();
+
         $fixedList->items()->updateOrCreate(
             ['student_id_number' => $validated['student_id_number']],
-            [...$validated, 'is_sle_fhe_verified' => false, 'is_fixed_list' => true, 'origin_type' => 'fixed_list', 'status' => FixedListItemStatus::Pending],
+            [...$validated, 'is_sle_fhe_verified' => $isSleFheVerified, 'is_fixed_list' => true, 'origin_type' => 'fixed_list', 'status' => FixedListItemStatus::Pending],
         );
         $this->refreshTotalNames($fixedList);
         $this->audit($request, 'fassg.fixed_list.item_encoded', 'fixed_list_items');
@@ -250,11 +256,18 @@ class FixedListController extends Controller
     {
         $this->assertListEditable($fixedList);
 
+        $studentId = $request->string('student_id_number')->toString();
+
+        $isSleFheVerified = StudentProfile::query()
+            ->where('student_id_number', $studentId)
+            ->sleFheVerified()
+            ->exists();
+
         $item = $fixedList->items()->updateOrCreate(
-            ['student_id_number' => $request->string('student_id_number')->toString()],
+            ['student_id_number' => $studentId],
             [
                 ...$request->validated(),
-                'is_sle_fhe_verified' => false,
+                'is_sle_fhe_verified' => $isSleFheVerified,
                 'is_fixed_list' => true,
                 'origin_type' => 'fixed_list',
                 'status' => FixedListItemStatus::Pending,
@@ -326,6 +339,25 @@ class FixedListController extends Controller
         return $this->submit($request, $fixedList);
     }
 
+    public function finalize(Request $request, FixedList $fixedList): RedirectResponse
+    {
+        $this->assertListEditable($fixedList);
+
+        if ($fixedList->items()->count() === 0) {
+            return back()->withErrors(['list' => 'Encode or upload at least one student before finalizing.']);
+        }
+
+        $fixedList->update([
+            'status' => FixedListStatus::Finalized,
+            'fassg_assigned_at' => now(),
+            'fassg_assigned_by_id' => $this->actor($request)->id,
+        ]);
+
+        $this->audit($request, 'fassg.fixed_list.finalized', 'fixed_lists');
+
+        return back()->with('status', 'Fixed List has been finalized and is ready for batch generation.');
+    }
+
     public function verifyItem(Request $request, FixedList $fixedList, FixedListItem $fixedListItem): RedirectResponse
     {
         abort_unless($fixedListItem->fixed_list_id === $fixedList->id, 404);
@@ -355,15 +387,21 @@ class FixedListController extends Controller
             ]);
         }
 
-        DB::transaction(function () use ($fixedListItem, $profile): void {
+        $fassg = $this->actor($request);
+
+        DB::transaction(function () use ($fixedListItem, $profile, $fassg): void {
             $fixedListItem->update([
                 'is_sle_fhe_verified' => true,
                 'status' => FixedListItemStatus::Verified,
             ]);
 
-            SleFheVerification::firstOrCreate(
+            SleFheVerification::query()->updateOrCreate(
                 ['student_profile_id' => $profile->id],
-                ['verified_address' => '', 'verified_at' => now()],
+                [
+                    'verified_address' => '',
+                    'verified_by' => $fassg->id,
+                    'verified_at' => now(),
+                ],
             );
         });
 
@@ -420,6 +458,15 @@ class FixedListController extends Controller
         $file->setFlags(SplFileObject::READ_CSV | SplFileObject::SKIP_EMPTY | SplFileObject::DROP_NEW_LINE);
         $header = null;
 
+        $verifiedByStudentId = [];
+
+        $isSleFheVerified = static function (string $studentId) use (&$verifiedByStudentId): bool {
+            return $verifiedByStudentId[$studentId] ??= StudentProfile::query()
+                ->where('student_id_number', $studentId)
+                ->sleFheVerified()
+                ->exists();
+        };
+
         foreach ($file as $row) {
             if (! is_array($row) || $row === [null] || $row === false) {
                 continue;
@@ -467,7 +514,7 @@ class FixedListController extends Controller
                     'course' => $rowCourse !== '' ? $rowCourse : 'Unspecified',
                     'year_level' => (int) ($record['year_level'] ?? $record['year'] ?? 1),
                     'campus' => $rowCampus !== '' ? $rowCampus : null,
-                    'is_sle_fhe_verified' => false,
+                    'is_sle_fhe_verified' => $isSleFheVerified($studentId),
                     'is_fixed_list' => true,
                     'origin_type' => 'fixed_list',
                     'status' => FixedListItemStatus::Pending,

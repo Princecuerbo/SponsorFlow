@@ -2,7 +2,10 @@
 
 @section('title', 'Encode Beneficiary List')
 @section('eyebrow', 'FASSG Office · Fixed Lists')
-@section('page-title', $list->batch_name ?: 'Batch #' . $list->id . ' - ' . ($list->sponsorshipProgram->program_name ?? 'Unassigned Program'))
+@section('page-title')
+    {{ $list->batch_name ?: 'Batch #' . $list->id . ' - ' . ($list->sponsorshipProgram->program_name ?? 'Unassigned Program') }}
+    <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-200">Fixed List Registry</span>
+@endsection
 @section('subtitle', $list->sponsorshipProgram->program_name . ' · Total Names: ' . $list->items->count())
 
 @section('header-actions')
@@ -155,13 +158,20 @@
                                     </td>
                                     <td>
                                         @if ($item->is_fixed_list)
-                                            <span class="badge bg-purple-subtle text-purple fw-bold">★ Endorsed by Sponsor</span>
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-semibold rounded-md bg-amber-50 text-amber-800 border border-amber-300">★ Endorsed by Sponsor</span>
                                         @else
                                             <span class="badge bg-info-subtle text-info fw-bold">Ranked Queue</span>
                                         @endif
                                     </td>
                                     <td>
-                                        <x-status-badge :status="$item->is_sle_fhe_verified ? 'Verified' : 'Pending'" />
+                                        @php
+                                            $isVerified = $item->is_sle_fhe_verified || ($item->studentProfile && $item->studentProfile->isSleFheVerified());
+                                        @endphp
+                                        @if ($isVerified)
+                                            <span class="px-2 py-0.5 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md">✓ Verified</span>
+                                        @else
+                                            <span class="px-2 py-0.5 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-md">⏳ Pending</span>
+                                        @endif
                                     </td>
                                     <td>
                                         @if ($item->status === \App\Enums\FixedListItemStatus::Endorsed)
@@ -231,17 +241,26 @@
 
                 <div class="card sf-card border-0 shadow-sm">
                     <div class="card-body p-4 text-center">
-                        <h3 class="h6 fw-bold mb-2">Submit to Sponsor</h3>
-                        <p class="text-secondary small mb-3">Once submitted, this list will be forwarded to the sponsor for
-                            review.</p>
-                        <form method="POST" action="{{ route('fassg.fixed-lists.submit', $list) }}">
+                        <h3 class="h6 fw-bold mb-2">Finalize Fixed List</h3>
+                        <p class="text-secondary small mb-3">Once finalized, candidates in this fixed list will be locked into top slots when generating program batches.</p>
+                        <form method="POST" action="{{ route('fassg.fixed-lists.finalize', $list) }}">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn btn-sf-navy w-100 py-2" @disabled($list->items->isEmpty())
-                                onClick="if ({{ $list->items->where('is_sle_fhe_verified', true)->count() }} !== {{ $list->items->count() }}) { alert('Verify all students before forwarding this list to the sponsor.'); return false; } return confirm('All students are verified. Forward this list to the sponsor?');">
-                                <i class="bi bi-send me-1"></i>Submit List
+                                onClick="if ({{ $list->items->where('is_sle_fhe_verified', true)->count() }} !== {{ $list->items->count() }}) { alert('Verify all students before finalizing this list.'); return false; } return confirm('All students are verified. Finalize this list for batch generation?');">
+                                <i class="bi bi-send me-1"></i>Finalize List
                             </button>
                         </form>
+                    </div>
+                </div>
+            @elseif ($list->status === \App\Enums\FixedListStatus::Finalized)
+                <div class="card sf-card border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <h3 class="h6 fw-bold mb-2 text-success"><i class="bi bi-lock-fill me-1"></i>Finalized / Ready for Batch Generation</h3>
+                        <p class="text-secondary small mb-3">This fixed list is closed and locked. Candidates will be reserved into the top slots of generated program batches.</p>
+                        <span class="badge bg-indigo-50 text-indigo-700 border border-indigo-200 px-3 py-2 fw-semibold">
+                            <i class="bi bi-gear-wide-connected me-1"></i>Finalized
+                        </span>
                     </div>
                 </div>
             @elseif ($list->status === \App\Enums\FixedListStatus::Submitted)

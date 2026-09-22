@@ -9,4 +9,5 @@ enum FixedListStatus: string
     case Approved = 'Approved';
     case Rejected = 'Rejected';
     case Saved = 'Saved';
+    case Finalized = 'Finalized';
 }

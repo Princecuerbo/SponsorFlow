@@ -40,6 +40,7 @@
         'In Progress' => ['bg-indigo-50 text-indigo-700 border border-indigo-200', 'bi-arrows-move'],
         'Ongoing'     => ['bg-indigo-50 text-indigo-700 border border-indigo-200', 'bi-arrows-move'],
         'Endorsed'    => ['bg-indigo-50 text-indigo-700 border border-indigo-200', 'bi-arrows-move'],
+        'Finalized'   => ['bg-indigo-50 text-indigo-700 border border-indigo-200', 'bi-lock-fill'],
         'SLE-FHE'     => ['bg-indigo-50 text-indigo-700 border border-indigo-200', 'bi-arrows-move'],
     ];
 
