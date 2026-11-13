@@ -3,7 +3,7 @@
 @section('title', 'Application Queue')
 @section('eyebrow', 'FASSG Office · Applications')
 @section('page-title', 'Application Queue')
-@section('subtitle', 'Review submitted scholarship applications from SLE-FHE verified students.')
+@section('subtitle', 'Prepare draft batches, then verify each member in Generated Batch review.')
 
 @section('header-actions')
     @php
@@ -200,6 +200,9 @@
                         <div>
                             <h3 class="h6 sf-heading mb-3">Program Eligibility Criteria: {{ $selectedProgram->program_name }}</h3>
                             <small class="text-secondary">{{ $selectedProgram->sponsor->company_organization_name ?? 'Sponsor' }}</small>
+                            @if ($selectedProgram->fixedLists->isNotEmpty())
+                                <span class="badge bg-warning-subtle text-warning-emphasis">Fixed List Available</span>
+                            @endif
                         </div>
                     </div>
                     @if ($availableSlots !== null)
@@ -268,6 +271,14 @@
         </div>
     @endif
 
+    <div class="d-flex justify-content-end mb-3">
+        <button type="button" id="createBatchBtn" class="btn btn-batch-nav"
+            data-bs-toggle="modal" data-bs-target="#createBatchModal">
+            <i class="bi bi-list-check text-white"></i>
+            <span id="createBatchBtnLabel">Select Candidates / Create Batch</span>
+        </button>
+    </div>
+
     {{-- Queue Table --}}
     @if ($pendingApplications->isEmpty())
         <div class="card sf-card">
@@ -281,19 +292,15 @@
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
             <div class="small text-secondary">
                 <i class="bi bi-stack me-1"></i>
-                Showing {{ $pendingApplications->count() }} of {{ $pendingApplications->total() }} applicant(s)
+                Showing all {{ $pendingApplications->count() }} applicant(s) matching the filters; capacity does not hide applicants.
                 @if ($selectedProgram)
                     <span class="mx-1">·</span>
                     <span class="badge bg-cyan-50 text-cyan-700 border border-cyan-200">
-                        <i class="bi bi-arrow-down-up me-1"></i>Ranked by GWA, then Submission Date
+                        <i class="bi bi-person-check me-1"></i>Manual FASSG selection — oldest submitted first for display
                     </span>
                 @endif
             </div>
-            <button type="button" id="createBatchBtn" class="btn btn-batch-nav"
-                data-bs-toggle="modal" data-bs-target="#createBatchModal" disabled>
-                <i class="bi bi-list-check text-white"></i>
-                <span id="createBatchBtnLabel">Create Batch List from Selected</span>
-            </button>
+
         </div>
 
         <div class="card sf-card">
@@ -327,33 +334,25 @@
                         @foreach ($pendingApplications as $application)
                             @php
                                 $profile = $application->studentProfile;
-                                $slots = $availableSlots ?? ($selectedProgram->available_slots ?? 0);
-                                $rank = ($pendingApplications instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                                    ? ($pendingApplications->firstItem() + $loop->index)
-                                    : $loop->iteration;
-                                $isTopCandidate = $selectedProgram && $slots > 0 && $rank <= $slots;
-                                // Only Pending / Verified applications that are not yet
-                                // linked to another batch may be selected for batching.
-                                $isBatchable = in_array(
-                                    $application->status,
-                                    [\App\Enums\ApplicationStatus::Pending, \App\Enums\ApplicationStatus::Verified],
-                                    true,
-                                ) && $application->batchCandidates()->doesntExist();
+                                $isBatchable = in_array($application->id, $selectableApplicationIds, true);
+                                $draftBatch = $application->batchCandidates->first()?->generatedBatch;
                                 $isEndorsed = in_array(
                                     $application->sponsorship_program_id . '|' . trim((string) ($profile->student_id_number ?? '')),
                                     $endorsedKeys ?? [],
                                     true,
                                 );
                             @endphp
-                            <tr class="{{ $isTopCandidate ? 'table-success bg-opacity-10' : '' }}"
-                                style="{{ $isTopCandidate ? 'border-left: 4px solid #16a34a !important; background-color: rgba(22, 163, 74, 0.04);' : '' }}">
+                            <tr>
                                 {{-- Selection --}}
                                 <td class="ps-3">
                                     <input type="checkbox" class="form-check-input app-checkbox"
                                         name="selected_applications[]" value="{{ $application->id }}"
-                                        data-status="{{ $application->status?->value }}"
+                                        data-program-id="{{ $application->sponsorship_program_id }}"
+                                        data-student-id="{{ $application->student_profile_id }}"
+                                        data-student-label="{{ $profile->student_id_number }} — {{ $profile->full_name ?: $profile->user?->name }}"
+                                        @checked($isBatchable && in_array($application->id, array_map('intval', (array) old('selected_applications', [])), true))
                                         @disabled(! $isBatchable)
-                                        @if (! $isBatchable) title="Application already processed or batched" @endif
+                                        @if (! $isBatchable) title="Requires Pending/Verified status, documented SLE-FHE verification, no active sponsorship, and no existing batch" @endif
                                         aria-label="Select {{ $profile->user->name ?? $profile->student_id_number }}">
                                 </td>
 
@@ -367,13 +366,9 @@
 <div class="d-flex align-items-center gap-2 flex-wrap">
                                             <div class="fw-semibold">{{ $profile->user->name ?? trim($profile->first_name . ' ' . ($profile->middle_name ?? '') . ' ' . $profile->last_name . ($profile->extension_name ? ' ' . $profile->extension_name : '')) }}</div>
                                             @if ($isEndorsed)
-                                                <span class="badge bg-warning-subtle text-warning-emphasis fw-bold" title="Endorsed by Sponsor on the finalized fixed list for this program">★ Endorsed by Sponsor</span>
+                                                <span class="badge bg-warning-subtle text-warning-emphasis fw-bold" title="FASSG-endorsed entry on a finalized fixed list for this program">On Finalized Fixed List</span>
                                             @endif
-                                            @if ($isTopCandidate)
-                                            <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle d-inline-flex align-items-center gap-1" style="font-size: 0.72rem;">
-                                                <i class="bi bi-star-fill text-warning"></i> Top {{ $slots }} Candidate
-                                            </span>
-                                        @endif
+
                                     </div>
                                 </td>
 
@@ -394,12 +389,8 @@
                                 {{-- GWA --}}
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
-                                        <span class="fw-semibold sf-mono">{{ number_format($application->gpa_submitted, 2) }}</span>
-                                        @if ($isTopCandidate)
-                                            <span class="badge bg-success bg-opacity-25 text-success-emphasis border border-success-subtle" style="font-size: 0.68rem;" title="Rank in program-filtered queue">
-                                                #{{ $rank }}
-                                            </span>
-                                        @endif
+                                        <span class="fw-semibold sf-mono">{{ $application->gpa_submitted === null ? 'Not recorded' : number_format($application->gpa_submitted, 2) }}</span>
+
                                     </div>
                                 </td>
 
@@ -411,6 +402,9 @@
                                     <div class="small text-secondary">
                                         {{ $application->sponsorshipProgram->sponsor->company_organization_name }}
                                     </div>
+                                    @if ($programs->firstWhere('id', $application->sponsorship_program_id)?->fixedLists->isNotEmpty())
+                                        <span class="badge bg-warning-subtle text-warning-emphasis">Fixed List Available</span>
+                                    @endif
                                 </td>
 
                                 {{-- Date Submitted --}}
@@ -434,9 +428,9 @@
 
                                 {{-- Actions --}}
                                 <td class="text-end pe-4">
-                                    <a href="{{ route('fassg.applications.show', $application) }}"
+                                    <a href="{{ $draftBatch ? route('fassg.generated-batches.applications.show', [$draftBatch, $application]) : route('fassg.applications.show', $application) }}"
                                         class="btn btn-sm btn-sf-navy">
-                                        Review Application <i class="bi bi-chevron-right"></i>
+                                        {{ $draftBatch ? 'Review Batch Member' : 'View Application' }} <i class="bi bi-chevron-right"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -446,16 +440,11 @@
             </div>
         </div>
 
-        @if ($pendingApplications->hasPages())
-            <div class="mt-3 d-flex justify-content-end">
-                {{ $pendingApplications->withQueryString()->links() }}
-            </div>
-        @endif
     @endif
 
     {{-- Create Batch List Modal --}}
     <div class="modal fade" id="createBatchModal" tabindex="-1" aria-labelledby="createBatchModalLabel"
-        aria-hidden="true">
+        aria-hidden="true" data-open-on-load="{{ $openBatchModal ? '1' : '0' }}">
         <div class="modal-dialog modal-dialog-centered">
             <form method="POST" action="{{ route('fassg.applications.create-batch') }}" class="modal-content"
                 id="createBatchForm">
@@ -468,7 +457,7 @@
                 </div>
                 <div class="modal-body">
                     <div id="selectedCountNote" class="alert alert-info py-2 small mb-3">
-                        <i class="bi bi-info-circle me-1"></i>0 applicant(s) selected.
+                        <i class="bi bi-info-circle me-1"></i>Select ordinary applicants or a finalized Fixed List.
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-semibold text-dark mb-2">Save As</label>
@@ -495,13 +484,14 @@
                             <option value="">Select batch…</option>
                             @foreach ($savedFixedLists as $savedList)
                                 <option value="{{ $savedList->id }}" data-program-id="{{ $savedList->sponsorship_program_id }}"
+                                    data-student-ids="{{ $savedList->items->pluck('application.student_profile_id')->filter()->unique()->values()->toJson() }}"
                                     @selected((int) old('existing_fixed_list_id') === $savedList->id)>
                                     {{ $savedList->batch_name }} ({{ $savedList->total_slots }} {{ Str::plural('slot', $savedList->total_slots) }})
                                 </option>
                             @endforeach
                         </select>
                         <div class="form-text small text-secondary">
-                            Only Saved or Draft batches from the target program can be appended to.
+                            Only Saved batches from the target program can be appended to.
                         </div>
                     </div>
                     <div class="mb-2">
@@ -509,31 +499,36 @@
                         <select id="batch_program" name="sponsorship_program_id" class="form-select" required>
                             <option value="">Select program…</option>
                             @foreach ($programs as $prog)
-                                <option value="{{ $prog->id }}" @selected((int) request('program_id') === $prog->id)>
+                                <option value="{{ $prog->id }}" data-capacity="{{ $programCapacities[$prog->id] }}"
+                                    @selected((int) old('sponsorship_program_id', $selectedProgramId) === $prog->id)>
                                     {{ $prog->program_name }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-text small text-secondary">
-                        Only applicants applied to the target program will be included in the batch.
+                        Manually select candidates from either source, or both, within available capacity.
+                        A Fixed List-only batch needs no ordinary applicants. Saving a draft does not verify or approve anyone.
                     </div>
                     <div id="finalizedListGroup" class="mb-3">
-                        <label class="form-label small fw-semibold text-dark" for="locked_fixed_list_id">Lock from Finalized Fixed List</label>
-                        <select id="locked_fixed_list_id" name="locked_fixed_list_id" class="form-select">
-                            <option value="">None / General Applicants Only</option>
+                        <label class="form-label small fw-semibold text-dark" for="fixed_list_source">Include Finalized Fixed List</label>
+                        <select id="fixed_list_source" name="fixed_list_source" class="form-select">
+                            <option value="">No Fixed List selected</option>
                             @foreach ($finalizedFixedLists as $finalizedList)
-                                <option value="{{ $finalizedList->id }}"
-                                    data-program-id="{{ $finalizedList->sponsorship_program_id }}"
-                                    @selected((int) old('locked_fixed_list_id') === $finalizedList->id)>
-                                    {{ $finalizedList->batch_name }} ({{ $finalizedList->total_names }} {{ Str::plural('name', $finalizedList->total_names) }})
+                                <option value="{{ $finalizedList->id }}" data-program-id="{{ $finalizedList->sponsorship_program_id }}"
+                                    data-candidate-count="{{ $finalizedList->items->count() }}"
+                                    data-student-ids="{{ $finalizedList->items->map(fn ($item) => $item->studentProfile?->id ?? ('unmatched:' . $item->id))->values()->toJson() }}"
+                                    @selected((int) old('fixed_list_source', $selectedFixedListId) === $finalizedList->id)>
+                                    {{ $finalizedList->batch_name }} ({{ $finalizedList->items->count() }} candidates)
                                 </option>
                             @endforeach
                         </select>
                         <div class="form-text small text-secondary">
-                            Candidates from the selected finalized list are locked into the top slots; remaining slots are auto-ranked by GWA, then submission date.
+                            Selecting a list deliberately includes its complete stored roster. Any ineligible member blocks saving; nobody is silently omitted.
+                            Fixed-list students need no separate online application. Review each member in the saved Generated Batch before submission.
                         </div>
                     </div>
+                    <div class="small mb-3"><strong>Manually selected ordinary applicants</strong><ul id="selectedOrdinarySummary" class="mb-0"></ul></div>
                     <div id="selectedApplicantsContainer"></div>
                 </div>
                 <div class="modal-footer">
@@ -550,161 +545,141 @@
     @push('scripts')
         <script>
             (function () {
-                const selectAll = document.getElementById('selectAllApps');
-                const checkboxes = Array.from(document.querySelectorAll('.app-checkbox'));
-                const selectable = () => checkboxes.filter(chk => !chk.disabled);
                 const modalForm = document.getElementById('createBatchForm');
+                if (!modalForm || modalForm.dataset.selectionInitialized === '1') return;
+                modalForm.dataset.selectionInitialized = '1';
+                const selectAll = document.getElementById('selectAllApps');
+                const applications = Array.from(document.querySelectorAll('.app-checkbox'));
                 const container = document.getElementById('selectedApplicantsContainer');
                 const countNote = document.getElementById('selectedCountNote');
-                const availableSlots = {{ $availableSlots ?? 0 }};
+                const batchProgram = document.getElementById('batch_program');
+                const fixedListSource = document.getElementById('fixed_list_source');
+                const existingList = document.getElementById('existing_fixed_list_id');
+                const batchModeAppend = document.getElementById('batchModeAppend');
+                const batchNameInput = document.getElementById('batch_name');
+                const submitButton = modalForm.querySelector('button[type="submit"]');
+
+                const selected = candidates => candidates.filter(box =>
+                    !box.disabled && box.checked && box.dataset.programId === batchProgram.value);
+                const identity = box => box.dataset.studentId;
+                const capacity = () => Number(batchProgram.selectedOptions[0]?.dataset.capacity || 0);
+                const existingStudents = () => batchModeAppend.checked && existingList.value
+                    ? JSON.parse(existingList.selectedOptions[0].dataset.studentIds || '[]').map(String) : [];
+                // These IDs only preview unique counts. The server loads the roster by list ID.
+                const fixedStudents = () => fixedListSource.value && !fixedListSource.selectedOptions[0]?.disabled
+                    ? JSON.parse(fixedListSource.selectedOptions[0]?.dataset.studentIds || '[]').map(String) : [];
+                const selectedStudents = () => new Set([...selected(applications).map(identity), ...fixedStudents()]);
 
                 function updateState() {
-                    if (!selectAll) {
-                        return;
+                    const active = applications.filter(box => !box.disabled && box.dataset.programId === batchProgram.value);
+                    const ordinaryCount = selected(applications).length;
+                    if (selectAll) {
+                        selectAll.disabled = active.length === 0;
+                        selectAll.checked = ordinaryCount > 0 && ordinaryCount === active.length;
+                        selectAll.indeterminate = ordinaryCount > 0 && ordinaryCount < active.length;
                     }
-                    const active = selectable();
-                    const checked = active.filter(chk => chk.checked);
-                    selectAll.checked = checked.length > 0 && checked.length === active.length;
-
-                    const batchBtn = document.getElementById('createBatchBtn');
-                    const batchLabel = document.getElementById('createBatchBtnLabel');
-                    const selectAllBadge = document.getElementById('selectAllAppsBadge');
-                    if (batchBtn) {
-                        const count = checked.length;
-                        batchBtn.disabled = count === 0;
-                        if (batchLabel) {
-                            batchLabel.textContent = count > 0
-                                ? 'Create Batch List (' + count + ' Selected)'
-                                : 'Create Batch List from Selected';
-                        }
+                    const badge = document.getElementById('selectAllAppsBadge');
+                    if (badge) {
+                        badge.textContent = ordinaryCount;
+                        badge.classList.toggle('d-none', ordinaryCount === 0);
+                        badge.classList.toggle('d-inline-flex', ordinaryCount > 0);
                     }
-                    if (selectAllBadge) {
-                        const count = checked.length;
-                        selectAllBadge.textContent = count;
-                        selectAllBadge.classList.toggle('d-none', count === 0);
-                        selectAllBadge.classList.toggle('d-inline-flex', count > 0);
-                    }
+                    container.replaceChildren();
+                    const summary = document.getElementById('selectedOrdinarySummary');
+                    summary.replaceChildren();
+                    selected(applications).forEach(box => {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'selected_applications[]';
+                        input.value = box.value;
+                        container.appendChild(input);
+                        const label = document.createElement('li');
+                        label.textContent = box.dataset.studentLabel;
+                        summary.appendChild(label);
+                    });
+                    if (ordinaryCount === 0) summary.textContent = 'None selected';
+                    const count = selectedStudents().size;
+                    const total = new Set([...existingStudents(), ...selectedStudents()]).size;
+                    const exceedsCapacity = total > capacity();
+                    const overlap = ordinaryCount + fixedStudents().length - count;
+                    countNote.className = 'alert py-2 small mb-3 ' + (exceedsCapacity ? 'alert-danger' : 'alert-info');
+                    countNote.textContent = count + ' student(s) selected; ' + total + ' in the resulting draft; '
+                        + capacity() + ' available slot(s).'
+                        + ' Fixed List: ' + fixedStudents().length + '; ordinary applicants: ' + ordinaryCount + '.'
+                        + (overlap > 0 ? ' ' + overlap + ' overlapping student(s) counted once; Fixed List provenance retained.' : '')
+                        + (exceedsCapacity ? ' Uncheck ordinary applicants or choose a smaller finalized list. Nobody will be omitted.' : ' Review and verify each member after saving.');
+                    submitButton.disabled = !batchProgram.value || count === 0 || exceedsCapacity;
+                    document.getElementById('createBatchBtnLabel').textContent = count > 0
+                        ? 'Create Batch (' + count + ' Student(s) Selected)'
+                        : 'Select Candidates / Create Batch';
                 }
 
-                function syncSelected() {
-                    const checked = checkboxes.filter(chk => chk.checked);
-                    if (container) {
-                        container.innerHTML = '';
-                        checked.forEach(chk => {
-                            const input = document.createElement('input');
-                            input.type = 'hidden';
-                            input.name = 'selected_applications[]';
-                            input.value = chk.value;
-                            container.appendChild(input);
+                function filterProgramOptions() {
+                    [existingList, fixedListSource].forEach(select => {
+                        Array.from(select.options).forEach(option => {
+                            const wrongProgram = option.value !== '' && option.dataset.programId !== batchProgram.value;
+                            option.hidden = wrongProgram;
+                            option.disabled = wrongProgram;
                         });
-                    }
-                    if (countNote) {
-                        countNote.className = 'alert alert-info py-2 small mb-3';
-                        countNote.innerHTML = '<i class="bi bi-info-circle me-1"></i>' + checked.length +
-                            ' applicant(s) selected.';
-                    }
-                    return checked.length;
-                }
-
-                if (selectAll) {
-                    selectAll.addEventListener('change', function () {
-                        selectable().forEach(chk => { chk.checked = selectAll.checked; });
-                        updateState();
+                        if (select.selectedOptions[0]?.hidden) select.value = '';
                     });
-                }
-
-                checkboxes.forEach(chk => chk.addEventListener('change', updateState));
-
-                if (modalForm) {
-                    modalForm.addEventListener('submit', function (e) {
-                        if (syncSelected() === 0) {
-                            e.preventDefault();
-                            if (countNote) {
-                                countNote.className = 'alert alert-danger py-2 small mb-3';
-                                countNote.textContent =
-                                    'Select at least one applicant to include in this batch list.';
-                            }
-                            return;
-                        }
-                        const appendChecked = batchModeAppend && batchModeAppend.checked;
-                        if (appendChecked && existingListSelect && existingListSelect.value === '') {
-                            e.preventDefault();
-                            if (countNote) {
-                                countNote.className = 'alert alert-danger py-2 small mb-3';
-                                countNote.textContent =
-                                    'Select the existing saved batch you want to append to.';
-                            }
-                        }
+                    applications.forEach(box => {
+                        if (box.dataset.programId !== batchProgram.value) box.checked = false;
                     });
-                }
-
-                const modalEl = document.getElementById('createBatchModal');
-                if (modalEl) {
-                    modalEl.addEventListener('show.bs.modal', function () {
-                        syncSelected();
-                    });
-                }
-
-                // Auto-check the top available non-disabled applicants matching the
-                // program's available slots (only meaningful when a program is
-                // selected and the queue is GPA-ranked).
-                if (availableSlots > 0) {
-                    const eligible = selectable();
-                    const precheck = Math.min(availableSlots, eligible.length);
-                    eligible.forEach((chk, index) => { chk.checked = index < precheck; });
                     updateState();
                 }
 
-                // Batch mode toggle: "Create New Batch List" vs "Append to Existing Saved Batch"
-                const batchModeNew = document.getElementById('batchModeNew');
-                const batchModeAppend = document.getElementById('batchModeAppend');
-                const batchNameGroup = document.getElementById('batchNameGroup');
-                const appendListGroup = document.getElementById('appendListGroup');
-                const batchNameInput = document.getElementById('batch_name');
-                const existingListSelect = document.getElementById('existing_fixed_list_id');
-                const batchProgramSelect = document.getElementById('batch_program');
-const finalizedListSelect = document.getElementById('locked_fixed_list_id');
-
                 function syncBatchMode() {
-                    if (!batchModeNew) return;
-                    const append = batchModeAppend && batchModeAppend.checked;
-                    if (batchNameGroup) {
-                        batchNameGroup.classList.toggle('d-none', append);
-                    }
-                    if (appendListGroup) {
-                        appendListGroup.classList.toggle('d-none', !append);
-                    }
-                    if (batchNameInput) {
-                        batchNameInput.required = !append;
-                    }
-                    if (existingListSelect) {
-                        existingListSelect.required = append;
-                    }
+                    const append = batchModeAppend.checked;
+                    document.getElementById('batchNameGroup').classList.toggle('d-none', append);
+                    document.getElementById('appendListGroup').classList.toggle('d-none', !append);
+                    batchNameInput.required = !append;
+                    batchNameInput.disabled = append;
+                    existingList.required = append;
+                    existingList.disabled = !append;
+                    updateState();
                 }
 
-                function filterAppendOptions() {
-                    if (!batchProgramSelect || !existingListSelect) return;
-                    const pid = batchProgramSelect.value;
-                    Array.from(existingListSelect.options).forEach(opt => {
-                        opt.hidden = opt.value !== '' && opt.dataset.programId !== pid;
-                    });
-                    if (finalizedListSelect) {
-                        Array.from(finalizedListSelect.options).forEach(opt => {
-                            opt.hidden = opt.value !== '' && opt.dataset.programId !== pid;
-                        });
+                selectAll?.addEventListener('change', () => {
+                    applications.filter(box => !box.disabled && box.dataset.programId === batchProgram.value)
+                        .forEach(box => { box.checked = selectAll.checked; });
+                    // Server and form validation reject overflow; selection never hides other applicants.
+                    updateState();
+                });
+                applications.forEach(box => box.addEventListener('change', () => {
+                    if (box.checked && box.dataset.programId !== batchProgram.value) {
+                        batchProgram.value = box.dataset.programId;
+                        filterProgramOptions();
                     }
-                    [existingListSelect, finalizedListSelect].forEach(sel => {
-                        if (sel && sel.value && sel.selectedOptions.length > 0 && sel.selectedOptions[0].hidden) {
-                            sel.value = '';
-                        }
-                    });
-                }
-
-                if (batchModeNew) batchModeNew.addEventListener('change', syncBatchMode);
-                if (batchModeAppend) batchModeAppend.addEventListener('change', syncBatchMode);
-                if (batchProgramSelect) batchProgramSelect.addEventListener('change', filterAppendOptions);
+                    if (box.checked) {
+                        applications.filter(other => other !== box && other.dataset.programId === box.dataset.programId
+                            && identity(other) === identity(box)).forEach(other => { other.checked = false; });
+                    }
+                    updateState();
+                }));
+                fixedListSource.addEventListener('change', updateState);
+                existingList.addEventListener('change', updateState);
+                batchProgram.addEventListener('change', () => {
+                    applications.forEach(box => { box.checked = false; });
+                    filterProgramOptions();
+                    updateState();
+                });
+                document.querySelectorAll('input[name="batch_mode"]').forEach(radio => {
+                    radio.addEventListener('change', syncBatchMode);
+                });
+                document.getElementById('createBatchModal').addEventListener('show.bs.modal', updateState);
+                modalForm.addEventListener('submit', event => {
+                    updateState();
+                    if (submitButton.disabled) event.preventDefault();
+                });
+                // Restore only the user's explicit selections after validation errors.
+                // Ordinary applicants are never preselected. A chosen list includes its entire roster.
+                filterProgramOptions();
                 syncBatchMode();
-                filterAppendOptions();
+                const modal = document.getElementById('createBatchModal');
+                if (modal.dataset.openOnLoad === '1' && typeof bootstrap !== 'undefined') {
+                    bootstrap.Modal.getOrCreateInstance(modal).show();
+                }
             })();
         </script>
     @endpush

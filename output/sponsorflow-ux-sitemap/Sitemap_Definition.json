@@ -1,0 +1,732 @@
+{
+  "nodes": [
+    {
+      "id": "portal",
+      "x": 1190,
+      "y": 145,
+      "w": 420,
+      "h": 53,
+      "label": "SponsorFlow Web Portal",
+      "subtext": [],
+      "route": null,
+      "kind": "group"
+    },
+    {
+      "id": "landing",
+      "x": 60,
+      "y": 270,
+      "w": 480,
+      "h": 53,
+      "label": "Public Home / Landing Page",
+      "subtext": [],
+      "route": "landing",
+      "kind": "page"
+    },
+    {
+      "id": "staff-login",
+      "x": 1160,
+      "y": 270,
+      "w": 480,
+      "h": 83,
+      "label": "Staff / Sponsor Login",
+      "subtext": [
+        "FASSG / Sponsor / Accounting"
+      ],
+      "route": "staff.login",
+      "kind": "page"
+    },
+    {
+      "id": "admin-login",
+      "x": 2260,
+      "y": 270,
+      "w": 480,
+      "h": 53,
+      "label": "Administrator Login",
+      "subtext": [],
+      "route": "admin.login",
+      "kind": "page"
+    },
+    {
+      "id": "registration",
+      "x": 60,
+      "y": 370,
+      "w": 235,
+      "h": 82,
+      "label": "Student / Registration",
+      "subtext": [],
+      "route": "register",
+      "kind": "page"
+    },
+    {
+      "id": "student-login",
+      "x": 310,
+      "y": 370,
+      "w": 235,
+      "h": 82,
+      "label": "Student Login / and consent dialog",
+      "subtext": [],
+      "route": "login",
+      "kind": "page"
+    },
+    {
+      "id": "student-navigation",
+      "label": "STUDENT APPLICANT",
+      "kind": "group"
+    },
+    {
+      "id": "student-home",
+      "x": 92,
+      "y": 669,
+      "w": 458,
+      "h": 53,
+      "label": "Home / Dashboard",
+      "subtext": [],
+      "route": "student.dashboard",
+      "kind": "page"
+    },
+    {
+      "id": "student-verification",
+      "x": 92,
+      "y": 739,
+      "w": 458,
+      "h": 108,
+      "label": "SLE-FHE Verification",
+      "subtext": [
+        "Profile / address and request status",
+        "Request verification"
+      ],
+      "route": "student.sle-fhe",
+      "kind": "page"
+    },
+    {
+      "id": "student-programs",
+      "x": 92,
+      "y": 864,
+      "w": 458,
+      "h": 83,
+      "label": "Sponsorship Opportunities",
+      "subtext": [
+        "Search / filter programs"
+      ],
+      "route": "student.programs.index",
+      "kind": "page"
+    },
+    {
+      "id": "student-apply",
+      "x": 117,
+      "y": 960,
+      "w": 433,
+      "h": 83,
+      "label": "Application Form",
+      "subtext": [
+        "Required documents / submit"
+      ],
+      "route": "student.applications.create",
+      "kind": "page"
+    },
+    {
+      "id": "student-applications",
+      "x": 92,
+      "y": 1064,
+      "w": 458,
+      "h": 53,
+      "label": "My Applications",
+      "subtext": [],
+      "route": "student.applications.index",
+      "kind": "page"
+    },
+    {
+      "id": "student-application",
+      "x": 117,
+      "y": 1130,
+      "w": 433,
+      "h": 83,
+      "label": "Application Details",
+      "subtext": [
+        "Status / documents / resubmission"
+      ],
+      "route": "student.applications.show",
+      "kind": "page"
+    },
+    {
+      "id": "student-notifications",
+      "x": 92,
+      "y": 1234,
+      "w": 458,
+      "h": 83,
+      "label": "Notifications",
+      "subtext": [
+        "Read / mark as read"
+      ],
+      "route": "notifications.index",
+      "kind": "page"
+    },
+    {
+      "id": "student-profile",
+      "x": 92,
+      "y": 1334,
+      "w": 458,
+      "h": 83,
+      "label": "My Profile",
+      "subtext": [
+        "Personal details / change password"
+      ],
+      "route": "student.profile",
+      "kind": "page"
+    },
+    {
+      "id": "fassg-navigation",
+      "label": "FASSG PERSONNEL",
+      "kind": "group"
+    },
+    {
+      "id": "fassg-home",
+      "x": 642,
+      "y": 669,
+      "w": 458,
+      "h": 53,
+      "label": "Dashboard",
+      "subtext": [],
+      "route": "fassg.dashboard",
+      "kind": "page"
+    },
+    {
+      "id": "fassg-programs",
+      "x": 642,
+      "y": 739,
+      "w": 458,
+      "h": 53,
+      "label": "Programs",
+      "subtext": [],
+      "route": "fassg.programs.index",
+      "kind": "page"
+    },
+    {
+      "id": "fassg-program-edit",
+      "x": 667,
+      "y": 805,
+      "w": 433,
+      "h": 83,
+      "label": "Create / Edit Program",
+      "subtext": [
+        "Criteria / capacity / requirements"
+      ],
+      "route": "fassg.programs.create",
+      "kind": "page"
+    },
+    {
+      "id": "fassg-verification",
+      "x": 642,
+      "y": 909,
+      "w": 458,
+      "h": 83,
+      "label": "SLE-FHE Verification",
+      "subtext": [
+        "Student details / decision dialogs"
+      ],
+      "route": "fassg.sle-fhe.index",
+      "kind": "page"
+    },
+    {
+      "id": "fassg-verified",
+      "x": 642,
+      "y": 1009,
+      "w": 458,
+      "h": 53,
+      "label": "Verified Students",
+      "subtext": [],
+      "route": "fassg.sle-fhe.verified",
+      "kind": "page"
+    },
+    {
+      "id": "fassg-queue",
+      "x": 642,
+      "y": 1079,
+      "w": 458,
+      "h": 83,
+      "label": "Application Queue",
+      "subtext": [
+        "Manual selection / Create Batch dialog"
+      ],
+      "route": "fassg.applications.index",
+      "kind": "page"
+    },
+    {
+      "id": "fassg-applicant",
+      "x": 667,
+      "y": 1175,
+      "w": 433,
+      "h": 53,
+      "label": "Applicant Details",
+      "subtext": [],
+      "route": "fassg.applications.show",
+      "kind": "page"
+    },
+    {
+      "id": "fassg-fixed-lists",
+      "x": 642,
+      "y": 1249,
+      "w": 458,
+      "h": 83,
+      "label": "Fixed Lists",
+      "subtext": [
+        "New Fixed List dialog"
+      ],
+      "route": "fassg.fixed-lists.index",
+      "kind": "page"
+    },
+    {
+      "id": "fassg-fixed-list",
+      "x": 667,
+      "y": 1345,
+      "w": 433,
+      "h": 108,
+      "label": "List Details / Edit Draft",
+      "subtext": [
+        "Encode / import / endorse / finalize",
+        "Create Batch shortcut"
+      ],
+      "route": "fassg.fixed-lists.show",
+      "kind": "page"
+    },
+    {
+      "id": "fassg-batches",
+      "x": 642,
+      "y": 1474,
+      "w": 458,
+      "h": 53,
+      "label": "Generated Batches",
+      "subtext": [],
+      "route": "fassg.generated-batches.index",
+      "kind": "page"
+    },
+    {
+      "id": "fassg-batch",
+      "x": 667,
+      "y": 1540,
+      "w": 433,
+      "h": 108,
+      "label": "Batch Details",
+      "subtext": [
+        "Submit / record Sponsor decision receipt",
+        "Explicitly forward approved batch"
+      ],
+      "route": "fassg.generated-batches.show",
+      "kind": "page"
+    },
+    {
+      "id": "fassg-member",
+      "x": 692,
+      "y": 1661,
+      "w": 408,
+      "h": 83,
+      "label": "Batch Member Review",
+      "subtext": [
+        "Qualifications / documents / verify"
+      ],
+      "route": "fassg.generated-batches.applications.show",
+      "kind": "page"
+    },
+    {
+      "id": "fassg-reports",
+      "x": 642,
+      "y": 1769,
+      "w": 458,
+      "h": 83,
+      "label": "Reports",
+      "subtext": [
+        "Filters / PDF and CSV exports"
+      ],
+      "route": "fassg.reports.index",
+      "kind": "page"
+    },
+    {
+      "id": "sponsor-navigation",
+      "label": "SPONSOR",
+      "kind": "group"
+    },
+    {
+      "id": "sponsor-home",
+      "x": 1192,
+      "y": 669,
+      "w": 458,
+      "h": 53,
+      "label": "Dashboard",
+      "subtext": [],
+      "route": "sponsor.dashboard",
+      "kind": "page"
+    },
+    {
+      "id": "sponsor-queue",
+      "x": 1192,
+      "y": 739,
+      "w": 458,
+      "h": 83,
+      "label": "Approvals Queue",
+      "subtext": [
+        "Assigned-program filter"
+      ],
+      "route": "sponsor.approvals.index",
+      "kind": "page"
+    },
+    {
+      "id": "sponsor-batch",
+      "x": 1217,
+      "y": 835,
+      "w": 433,
+      "h": 108,
+      "label": "Submitted Batch Details",
+      "subtext": [
+        "Exact roster / confirmation upload",
+        "Approve or reject the whole batch"
+      ],
+      "route": "sponsor.lists.show",
+      "kind": "page"
+    },
+    {
+      "id": "sponsor-history",
+      "x": 1192,
+      "y": 964,
+      "w": 458,
+      "h": 83,
+      "label": "Approval History",
+      "subtext": [
+        "Batch decisions / historical evidence"
+      ],
+      "route": "sponsor.approvals.history",
+      "kind": "page"
+    },
+    {
+      "id": "sponsor-document",
+      "x": 1217,
+      "y": 1060,
+      "w": 433,
+      "h": 83,
+      "label": "Confirmation Document",
+      "subtext": [
+        "View / download original file"
+      ],
+      "route": "sponsor.approvals.download",
+      "kind": "page"
+    },
+    {
+      "id": "accounting-navigation",
+      "label": "ACCOUNTING OFFICE",
+      "kind": "group"
+    },
+    {
+      "id": "accounting-home",
+      "x": 1742,
+      "y": 669,
+      "w": 458,
+      "h": 53,
+      "label": "Dashboard",
+      "subtext": [],
+      "route": "accounting.dashboard",
+      "kind": "page"
+    },
+    {
+      "id": "accounting-beneficiaries",
+      "x": 1742,
+      "y": 739,
+      "w": 458,
+      "h": 83,
+      "label": "Confirmed Beneficiaries",
+      "subtext": [
+        "Eligible records / filters / Print / CSV"
+      ],
+      "route": "accounting.beneficiaries.index",
+      "kind": "page"
+    },
+    {
+      "id": "accounting-beneficiary",
+      "x": 1767,
+      "y": 835,
+      "w": 433,
+      "h": 53,
+      "label": "Beneficiary Details",
+      "subtext": [],
+      "route": "accounting.beneficiaries.show",
+      "kind": "page"
+    },
+    {
+      "id": "accounting-batch",
+      "x": 1767,
+      "y": 905,
+      "w": 433,
+      "h": 53,
+      "label": "Approved Batch Reference",
+      "subtext": [],
+      "route": "accounting.beneficiaries.reference",
+      "kind": "page"
+    },
+    {
+      "id": "accounting-documents",
+      "x": 1767,
+      "y": 975,
+      "w": 433,
+      "h": 83,
+      "label": "Confirmation Documents",
+      "subtext": [
+        "Authorized document viewing"
+      ],
+      "route": "accounting.documents.view",
+      "kind": "page"
+    },
+    {
+      "id": "admin-navigation",
+      "label": "SYSTEM ADMINISTRATOR",
+      "kind": "group"
+    },
+    {
+      "id": "admin-home",
+      "x": 2292,
+      "y": 669,
+      "w": 458,
+      "h": 53,
+      "label": "Dashboard",
+      "subtext": [],
+      "route": "admin.dashboard",
+      "kind": "page"
+    },
+    {
+      "id": "admin-users",
+      "x": 2292,
+      "y": 739,
+      "w": 458,
+      "h": 83,
+      "label": "User Accounts",
+      "subtext": [
+        "Add / edit dialogs / roles / status"
+      ],
+      "route": "admin.users.index",
+      "kind": "page"
+    },
+    {
+      "id": "admin-logs",
+      "x": 2292,
+      "y": 839,
+      "w": 458,
+      "h": 83,
+      "label": "Audit Logs",
+      "subtext": [
+        "Search / filter recorded activity"
+      ],
+      "route": "admin.audit-logs.index",
+      "kind": "page"
+    },
+    {
+      "id": "admin-settings",
+      "x": 2292,
+      "y": 939,
+      "w": 458,
+      "h": 83,
+      "label": "Security Settings",
+      "subtext": [
+        "Maintenance / security controls"
+      ],
+      "route": "admin.settings.index",
+      "kind": "page"
+    },
+    {
+      "id": "admin-backups",
+      "x": 2292,
+      "y": 1039,
+      "w": 458,
+      "h": 83,
+      "label": "Backups",
+      "subtext": [
+        "Create / download / authorized restore"
+      ],
+      "route": "admin.backups.index",
+      "kind": "page"
+    }
+  ],
+  "connections": [
+    [
+      "portal",
+      "landing"
+    ],
+    [
+      "portal",
+      "staff-login"
+    ],
+    [
+      "portal",
+      "admin-login"
+    ],
+    [
+      "landing",
+      "registration"
+    ],
+    [
+      "landing",
+      "student-login"
+    ],
+    [
+      "student-login",
+      "student-navigation"
+    ],
+    [
+      "student-navigation",
+      "student-home"
+    ],
+    [
+      "student-navigation",
+      "student-verification"
+    ],
+    [
+      "student-navigation",
+      "student-programs"
+    ],
+    [
+      "student-programs",
+      "student-apply"
+    ],
+    [
+      "student-navigation",
+      "student-applications"
+    ],
+    [
+      "student-applications",
+      "student-application"
+    ],
+    [
+      "student-navigation",
+      "student-notifications"
+    ],
+    [
+      "student-navigation",
+      "student-profile"
+    ],
+    [
+      "staff-login",
+      "fassg-navigation"
+    ],
+    [
+      "fassg-navigation",
+      "fassg-home"
+    ],
+    [
+      "fassg-navigation",
+      "fassg-programs"
+    ],
+    [
+      "fassg-programs",
+      "fassg-program-edit"
+    ],
+    [
+      "fassg-navigation",
+      "fassg-verification"
+    ],
+    [
+      "fassg-navigation",
+      "fassg-verified"
+    ],
+    [
+      "fassg-navigation",
+      "fassg-queue"
+    ],
+    [
+      "fassg-queue",
+      "fassg-applicant"
+    ],
+    [
+      "fassg-navigation",
+      "fassg-fixed-lists"
+    ],
+    [
+      "fassg-fixed-lists",
+      "fassg-fixed-list"
+    ],
+    [
+      "fassg-navigation",
+      "fassg-batches"
+    ],
+    [
+      "fassg-batches",
+      "fassg-batch"
+    ],
+    [
+      "fassg-batch",
+      "fassg-member"
+    ],
+    [
+      "fassg-navigation",
+      "fassg-reports"
+    ],
+    [
+      "staff-login",
+      "sponsor-navigation"
+    ],
+    [
+      "sponsor-navigation",
+      "sponsor-home"
+    ],
+    [
+      "sponsor-navigation",
+      "sponsor-queue"
+    ],
+    [
+      "sponsor-queue",
+      "sponsor-batch"
+    ],
+    [
+      "sponsor-navigation",
+      "sponsor-history"
+    ],
+    [
+      "sponsor-history",
+      "sponsor-document"
+    ],
+    [
+      "staff-login",
+      "accounting-navigation"
+    ],
+    [
+      "accounting-navigation",
+      "accounting-home"
+    ],
+    [
+      "accounting-navigation",
+      "accounting-beneficiaries"
+    ],
+    [
+      "accounting-beneficiaries",
+      "accounting-beneficiary"
+    ],
+    [
+      "accounting-beneficiaries",
+      "accounting-batch"
+    ],
+    [
+      "accounting-beneficiaries",
+      "accounting-documents"
+    ],
+    [
+      "admin-login",
+      "admin-navigation"
+    ],
+    [
+      "admin-navigation",
+      "admin-home"
+    ],
+    [
+      "admin-navigation",
+      "admin-users"
+    ],
+    [
+      "admin-navigation",
+      "admin-logs"
+    ],
+    [
+      "admin-navigation",
+      "admin-settings"
+    ],
+    [
+      "admin-navigation",
+      "admin-backups"
+    ]
+  ],
+  "notes": "Page hierarchy and key in-page actions. No data flow or automatic approval is implied."
+}

@@ -51,40 +51,27 @@ class StudentSleFheVerificationTest extends TestCase
         $this->assertSame(SleFheStatus::PendingReview->value, $profile->fresh()->sle_fhe_status);
     }
 
-    public function test_student_can_resubmit_and_update_sle_fhe_address_request(): void
+    public function test_resubmission_retains_previous_request_facts_and_timestamp(): void
     {
         $profile = StudentProfile::factory()->create();
         $existing = SleFheRequest::create([
-            'student_profile_id' => $profile->id,
-            'province' => 'Davao del Sur',
-            'municipality_city' => 'Davao City',
-            'barangay' => 'Buhangin',
-            'street_purok' => 'Old Street',
-            'status' => 'pending',
-            'submitted_at' => now()->subDay(),
+            'student_profile_id' => $profile->id, 'province' => 'Davao del Sur',
+            'municipality_city' => 'Davao City', 'barangay' => 'Buhangin', 'street_purok' => 'Old Street',
+            'status' => 'pending', 'submitted_at' => now()->subDay(),
         ]);
-
+        $facts = $existing->only(['province', 'municipality_city', 'barangay', 'street_purok', 'submitted_at']);
         $this->actingAsStudent($profile->user)->post(route('student.sle-fhe.request'), [
-            'province' => 'Davao Oriental',
-            'municipality_city' => 'Mati City',
-            'barangay' => 'Central',
-            'street_purok' => 'Purok 5',
-        ])->assertRedirect(route('student.sle-fhe'));
-
-        $this->assertDatabaseCount('sle_fhe_requests', 1);
-        $this->assertDatabaseHas('sle_fhe_requests', [
-            'id' => $existing->id,
-            'province' => 'Davao Oriental',
-            'municipality_city' => 'Mati City',
-            'barangay' => 'Central',
-            'street_purok' => 'Purok 5',
-            'status' => 'pending',
-        ]);
-
-        $this->assertTrue(
-            $existing->fresh()->submitted_at->gt($existing->submitted_at),
-            'Resubmission must refresh submitted_at',
-        );
+            'province' => 'Davao Oriental', 'municipality_city' => 'Mati City',
+            'barangay' => 'Central', 'street_purok' => 'Purok 5',
+        ])->assertRedirect(route('student.sle-fhe'))->assertSessionHasNoErrors();
+        $this->assertDatabaseCount('sle_fhe_requests', 2);
+        $this->assertSame('superseded', $existing->fresh()->status);
+        $this->assertEquals($facts, $existing->fresh()->only(array_keys($facts)));
+        $latest = $profile->fresh()->sleFheRequest;
+        $this->assertNotSame($existing->id, $latest->id);
+        $this->assertSame('Central', $latest->barangay);
+        $this->assertSame('pending', $latest->status);
+        $this->assertSame(SleFheStatus::PendingReview->value, $profile->fresh()->sle_fhe_status);
     }
 
     public function test_student_cannot_submit_address_request_when_verification_exists(): void
@@ -93,6 +80,7 @@ class StudentSleFheVerificationTest extends TestCase
         SleFheVerification::create([
             'student_profile_id' => $profile->id,
             'verified_at' => now(),
+            'verified_by' => User::factory()->create(['role' => \App\Enums\UserRole::Fassg])->id,
         ]);
 
         $this->actingAsStudent($profile->user)
@@ -102,8 +90,8 @@ class StudentSleFheVerificationTest extends TestCase
                 'barangay' => 'San Isidro',
                 'street_purok' => 'Purok 2',
             ])
-            ->assertRedirect(route('student.sle-fhe'))
-            ->assertSessionHas('error');
+            ->assertRedirect()
+            ->assertSessionHasErrors('verification');
 
         $this->assertDatabaseMissing('sle_fhe_requests', ['student_profile_id' => $profile->id]);
     }
@@ -187,6 +175,7 @@ class StudentSleFheVerificationTest extends TestCase
             'student_profile_id' => $profile->id,
             'verified_address' => 'Purok 2, San Isidro, Mati City, Davao Oriental',
             'verified_at' => now(),
+            'verified_by' => User::factory()->create(['role' => \App\Enums\UserRole::Fassg])->id,
         ]);
 
         $response = $this->actingAsStudent($profile->user)->get(route('student.sle-fhe'));
@@ -204,8 +193,8 @@ class StudentSleFheVerificationTest extends TestCase
                 'barangay' => 'San Isidro',
                 'street_purok' => 'Purok 2',
             ])
-            ->assertRedirect(route('student.sle-fhe'))
-            ->assertSessionHas('error');
+            ->assertRedirect()
+            ->assertSessionHasErrors('verification');
 
         $this->assertDatabaseMissing('sle_fhe_requests', ['student_profile_id' => $profile->id]);
     }

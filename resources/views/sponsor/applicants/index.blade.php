@@ -8,7 +8,7 @@
 @section('header-actions')
     <span class="badge px-3 py-2 text-white" style="background-color: #0F2942;">{{ $applicants->count() }}
         applications</span>
-    <span class="badge text-bg-light border text-dark px-3 py-2">{{ $fixedLists->count() }} fixed lists</span>
+    <span class="badge text-bg-light border text-dark px-3 py-2">{{ $fixedLists->count() }} Generated Batches</span>
 @endsection
 
 @section('content')
@@ -99,7 +99,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $application->sponsorshipProgram->program_name }}</td>
-                                    <td><span class="sf-mono fw-semibold">{{ number_format($application->gpa_submitted, 2) }}</span></td>
+                                    <td><span class="sf-mono fw-semibold">{{ $application->gpa_submitted !== null ? number_format((float) $application->gpa_submitted, 2) : 'Not recorded' }}</span></td>
                                     <td><x-status-badge :status="$application->status" /></td>
                                     <td class="text-end pe-4">
                                         <a href="{{ route('sponsor.applicants.show', $application) }}"
@@ -129,7 +129,7 @@
             <div class="card sf-card border-0 shadow-sm">
                 <div class="sf-empty-state text-center p-5">
                     <i class="bi bi-inboxes text-secondary fs-1 d-block mb-3"></i>
-                    <div class="fw-semibold">No fixed lists forwarded yet</div>
+                    <div class="fw-semibold">No Generated Batches forwarded yet</div>
                     <div class="small text-secondary">FASSG lists will appear here once submitted.</div>
                 </div>
             </div>

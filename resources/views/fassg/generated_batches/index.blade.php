@@ -3,7 +3,7 @@
 @section('title', 'Generated Batches')
 @section('eyebrow', 'FASSG Office')
 @section('page-title', 'Generated Batches')
-@section('subtitle', 'Batch beneficiary lists generated directly from the ranked Application Queue.')
+@section('subtitle', 'Manually selected batches, Sponsor decisions, FASSG receipt, and Accounting forwarding.')
 
 @push('styles')
 @endpush

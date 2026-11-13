@@ -1,0 +1,84 @@
+{
+  "status": "REVIEW_DRAFT_TIMING_LIMITS_PENDING",
+  "date": "2026-11-11",
+  "forms": [
+    {
+      "role": "STUDENTS",
+      "source": "C:\\Users\\princ\\Blackcloudie\\IT4B FILES\\1ST SEM\\ITP 140 - CAPSTONE PROJECT & RESEARCH 2\\SPONSORFLOW LATEST DOCS CAPS2\\QUESTIONNAIRE AND VALIDATION\\SURVEY_QUESTIONNAIRE FOR STUDENTS.docx",
+      "source_sha256_before": "39e5ff04b14f3aff9e6e705a92d4bf843e173d950a56bfb40d5dcbd6fb48a77b",
+      "source_sha256_after": "39e5ff04b14f3aff9e6e705a92d4bf843e173d950a56bfb40d5dcbd6fb48a77b",
+      "output": "SURVEY_QUESTIONNAIRE_FOR_STUDENTS_REVISED_REVIEW.docx",
+      "output_sha256": "de8f05ed979d9cb0661a6e9923ae1c00b78f28a7709d8a009f5b276a4233c9e5",
+      "counts": {
+        "FS": 7,
+        "DS": 2,
+        "PE": 3,
+        "UX": 4,
+        "RE": 3
+      }
+    },
+    {
+      "role": "SPONSOR",
+      "source": "C:\\Users\\princ\\Blackcloudie\\IT4B FILES\\1ST SEM\\ITP 140 - CAPSTONE PROJECT & RESEARCH 2\\SPONSORFLOW LATEST DOCS CAPS2\\QUESTIONNAIRE AND VALIDATION\\SURVEY_QUESTIONNAIRE FOR SPONSOR.docx",
+      "source_sha256_before": "562c80baf67d33a05ff2005500a3d33514455749ec06a706509e5b9860b6fb4e",
+      "source_sha256_after": "562c80baf67d33a05ff2005500a3d33514455749ec06a706509e5b9860b6fb4e",
+      "output": "SURVEY_QUESTIONNAIRE_FOR_SPONSOR_REVISED_REVIEW.docx",
+      "output_sha256": "349a221734e910b3949bf880a309766cccd4c620a6028a1a201a9cd5a8c7a14d",
+      "counts": {
+        "FS": 5,
+        "DS": 3,
+        "PE": 4,
+        "UX": 2,
+        "RE": 2
+      }
+    },
+    {
+      "role": "FASSG",
+      "source": "C:\\Users\\princ\\Blackcloudie\\IT4B FILES\\1ST SEM\\ITP 140 - CAPSTONE PROJECT & RESEARCH 2\\SPONSORFLOW LATEST DOCS CAPS2\\QUESTIONNAIRE AND VALIDATION\\SURVEY_QUESTIONNAIRE FOR FASSG.docx",
+      "source_sha256_before": "a6181352d902ac6175a351679480a326dd4183ab9f9b910dac9a5dedb3886161",
+      "source_sha256_after": "a6181352d902ac6175a351679480a326dd4183ab9f9b910dac9a5dedb3886161",
+      "output": "SURVEY_QUESTIONNAIRE_FOR_FASSG_REVISED_REVIEW.docx",
+      "output_sha256": "ce9e48c648d81c41da5875dfeb2c92a4c7f31d9194c938743e1b8af07c5b368a",
+      "counts": {
+        "FS": 12,
+        "DS": 5,
+        "PE": 3,
+        "UX": 3,
+        "RE": 3,
+        "SEC": 2
+      }
+    },
+    {
+      "role": "DICT",
+      "source": "C:\\Users\\princ\\Blackcloudie\\IT4B FILES\\1ST SEM\\ITP 140 - CAPSTONE PROJECT & RESEARCH 2\\SPONSORFLOW LATEST DOCS CAPS2\\QUESTIONNAIRE AND VALIDATION\\SURVEY_QUESTIONNAIRE FOR DICT.docx",
+      "source_sha256_before": "e469ec804a1929e77c5e1d07a6a0b221618d8846765354a2a0b2ff8989df1ab2",
+      "source_sha256_after": "e469ec804a1929e77c5e1d07a6a0b221618d8846765354a2a0b2ff8989df1ab2",
+      "output": "SURVEY_QUESTIONNAIRE_FOR_DICT_REVISED_REVIEW.docx",
+      "output_sha256": "3bc3e097b95e8b37c44b1a3e0c312f275e5f900013200f34b374667ca8b1de19",
+      "counts": {
+        "FS": 3,
+        "DS": 2,
+        "PE": 3,
+        "UX": 2,
+        "RE": 2,
+        "SEC": 2
+      }
+    },
+    {
+      "role": "ACCOUNTING",
+      "source": "C:\\Users\\princ\\Blackcloudie\\IT4B FILES\\1ST SEM\\ITP 140 - CAPSTONE PROJECT & RESEARCH 2\\SPONSORFLOW LATEST DOCS CAPS2\\QUESTIONNAIRE AND VALIDATION\\SURVEY_QUESTIONNAIRE FOR ACCOUNTING.docx",
+      "source_sha256_before": "82f5cbeb769cb929d9c0160142fd99481d4358e711a3440afbf2ddff0c07cdbb",
+      "source_sha256_after": "82f5cbeb769cb929d9c0160142fd99481d4358e711a3440afbf2ddff0c07cdbb",
+      "output": "SURVEY_QUESTIONNAIRE_FOR_ACCOUNTING_REVISED_REVIEW.docx",
+      "output_sha256": "3fdaeab3d1092a1edef59ebc3d59358e880d7f42f18bb3007887915734888455",
+      "counts": {
+        "FS": 5,
+        "DS": 3,
+        "PE": 2,
+        "UX": 2,
+        "RE": 3,
+        "SEC": 2
+      }
+    }
+  ]
+}

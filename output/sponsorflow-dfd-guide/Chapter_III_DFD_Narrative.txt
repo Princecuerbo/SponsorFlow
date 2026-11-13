@@ -1,0 +1,19 @@
+SponsorFlow Data Flow Diagrams - Chapter III Narrative
+
+Level 0 - Context Diagram
+
+The Level 0 Data Flow Diagram presents SponsorFlow as a single process that exchanges information with five external entities: Student, FASSG Office, Sponsor, Accounting Office, and System Administrator. Students submit registration information, verification requests, applications, and supporting documents, and receive program information, verification results, application status, and notifications. FASSG supplies program configuration, verification decisions, sponsor-proposed fixed-list data, manual batch selections, and explicit receipt and forwarding instructions. Sponsors review submitted batches and provide whole-batch decisions and confirmation evidence. Accounting requests and receives read-only references for eligible beneficiaries, while the Administrator manages accounts, settings, and authorized backup/restore operations. The diagram defines the system boundary and the information exchanged with each role.
+
+Level 1 - Data Flow Diagram
+
+The Level 1 Data Flow Diagram decomposes SponsorFlow into eight processes. Process 1.0 manages account information and authentication. Process 2.0 retrieves student identities, institutional registry references, and previous verification records to support FASSG's explicit SLE-FHE verification decision. Process 3.0 records sponsorship-program requirements and availability, while Process 4.0 receives student applications and documents and makes their status and evidence available for review.
+
+Process 5.0 supports FASSG's preparation of fixed lists and Generated Batches. Candidates may originate from ordinary applications, sponsor-proposed fixed lists, or both. FASSG manually determines the roster and explicitly verifies each applicant's applicable qualifications and supporting evidence before Sponsor submission. Pending applications may enter a saved draft; draft creation itself does not verify or approve them. Fixed-list candidates are not required to submit a separate online application.
+
+Process 6.0 presents the exact submitted roster to the assigned Sponsor, accepts an explicit whole-batch approval or rejection, and records the decision and supporting evidence. Successful approval updates the applicable beneficiary records and active-sponsorship references. Process 7.0 separately records FASSG's acknowledgement of the Sponsor decision and explicit forwarding instruction. It supplies Accounting with read-only beneficiary references only when documented SLE-FHE verification, individual Approved/Ongoing status, valid Sponsor confirmation, and FASSG forwarding requirements are satisfied. It also retrieves status information, stored notifications, and reporting data. Process 8.0 supports administrative settings, audit-log access, and authorized backup/restore operations.
+
+Named data flows connect each external entity to a process and each process to the relevant logical data stores. This separation supports consistent retrieval, authorized updates, and traceable decisions while preserving the distinction between FASSG verification and Sponsor approval.
+
+Diagram conventions
+
+Circles represent processes, rectangles represent external entities, open-ended rectangles represent logical data stores, and arrowheads identify the direction of data movement. Repeated store identifiers and entity names denote the same store or entity; they do not create additional databases or user roles. The two enlarged Level 1 parts are sections of the same diagram, not additional decomposition levels. The diagrams show primary business flows; common access-control and audit mechanisms also apply across the application.

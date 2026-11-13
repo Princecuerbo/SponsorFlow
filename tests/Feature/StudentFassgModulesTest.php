@@ -24,6 +24,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class StudentFassgModulesTest extends TestCase
@@ -124,8 +125,11 @@ class StudentFassgModulesTest extends TestCase
         ]);
     }
 
-    public function test_application_detail_syncs_approval_from_approved_fixed_list(): void
-    {
+    #[DataProvider('applicationDetailReadOnlyCases')]
+    public function test_application_detail_preserves_records_even_with_an_approved_batch(
+        ApplicationStatus $status,
+        ?string $activeReference,
+    ): void {
         $profile = StudentProfile::factory()->verified()->create([
             'active_sponsorship_id' => null,
         ]);
@@ -133,7 +137,24 @@ class StudentFassgModulesTest extends TestCase
         $application = Application::factory()->create([
             'student_profile_id' => $profile->id,
             'sponsorship_program_id' => $program->id,
-            'status' => ApplicationStatus::Pending,
+            'status' => $status,
+            'approved_at' => $status->isActiveSponsorship() || $status === ApplicationStatus::Expired
+                ? now()->subDay() : null,
+        ]);
+        $active = match ($activeReference) {
+            'current' => $application,
+            'other' => Application::factory()->create([
+                'student_profile_id' => $profile->id,
+                'status' => ApplicationStatus::Ongoing,
+                'approved_at' => now()->subDays(2),
+            ]),
+            default => null,
+        };
+        $profile->update(['active_sponsorship_id' => $active?->id]);
+        $document = $application->documents()->create([
+            'document_type' => DocumentType::CertificateOfGrades,
+            'file_path' => 'applications/cap003-grades.pdf',
+            'file_name' => 'cap003-grades.pdf',
         ]);
         $list = GeneratedBatch::factory()->create([
             'sponsorship_program_id' => $program->id,
@@ -144,14 +165,148 @@ class StudentFassgModulesTest extends TestCase
             'application_id' => $application->id,
         ]);
 
+        $applicationBefore = $application->fresh()->getRawOriginal();
+        $profileBefore = $profile->fresh()->getRawOriginal();
+        $activeBefore = $active?->fresh()->getRawOriginal();
+        $documentBefore = $document->fresh()->getRawOriginal();
+        $this->travel(1)->minutes();
+
         $this->actingAsStudent($profile->user)
             ->get(route('student.applications.show', $application))
             ->assertOk()
-            ->assertSee('Approved');
+            ->assertViewIs('student.applications.show')
+            ->assertViewHas('application', fn(Application $shown) => $shown->id === $application->id
+                && $shown->status === $status
+                && $shown->relationLoaded('documents')
+                && $shown->sponsorshipProgram->relationLoaded('sponsor'))
+            ->assertSee($status->value)
+            ->assertSee($program->program_name)
+            ->assertSee('cap003-grades.pdf');
 
-        $this->assertSame(ApplicationStatus::Approved, $application->fresh()->status);
-        $this->assertSame($application->id, $profile->fresh()->active_sponsorship_id);
-        $this->assertNotNull($application->fresh()->approved_at);
+        // Compare stored attributes so accessors cannot mask status or timestamp changes.
+        $this->assertSame($applicationBefore, $application->fresh()->getRawOriginal());
+        $this->assertSame($profileBefore, $profile->fresh()->getRawOriginal());
+        $this->assertSame($activeBefore, $active?->fresh()->getRawOriginal());
+        $this->assertSame($documentBefore, $document->fresh()->getRawOriginal());
+    }
+
+    public static function applicationDetailReadOnlyCases(): array
+    {
+        return [
+            'pending without active reference' => [ApplicationStatus::Pending, null],
+            'verified without active reference' => [ApplicationStatus::Verified, null],
+            'pending with another active sponsorship' => [ApplicationStatus::Pending, 'other'],
+            'verified with another active sponsorship' => [ApplicationStatus::Verified, 'other'],
+            'rejected remains rejected' => [ApplicationStatus::Rejected, 'other'],
+            'resubmission remains requested' => [ApplicationStatus::ResubmissionRequested, 'other'],
+            'expired retains historical approval' => [ApplicationStatus::Expired, 'other'],
+            'approved remains approved' => [ApplicationStatus::Approved, 'current'],
+            'ongoing remains ongoing' => [ApplicationStatus::Ongoing, 'current'],
+            'approved does not repair missing reference' => [ApplicationStatus::Approved, null],
+        ];
+    }
+
+    public function test_application_detail_requires_authentication_and_student_ownership(): void
+    {
+        $owner = StudentProfile::factory()->verified()->create();
+        $otherStudent = StudentProfile::factory()->verified()->create();
+        $application = Application::factory()->create(['student_profile_id' => $owner->id]);
+        $applicationBefore = $application->fresh()->getRawOriginal();
+        $ownerBefore = $owner->fresh()->getRawOriginal();
+        $otherStudentBefore = $otherStudent->fresh()->getRawOriginal();
+
+        $this->get(route('student.applications.show', $application))
+            ->assertRedirect(route('login'));
+
+        $this->actingAsStudent($otherStudent->user)
+            ->get(route('student.applications.show', $application))
+            ->assertForbidden();
+
+        $this->assertSame($applicationBefore, $application->fresh()->getRawOriginal());
+        $this->assertSame($ownerBefore, $owner->fresh()->getRawOriginal());
+        $this->assertSame($otherStudentBefore, $otherStudent->fresh()->getRawOriginal());
+    }
+
+    #[DataProvider('activeSponsorshipReadOnlyCases')]
+    public function test_active_sponsorship_inspection_preserves_records_and_checks_ownership_status_and_expiration(
+        ApplicationStatus $status,
+        ProgramStatus $programStatus,
+        ?int $endDateOffset,
+        bool $belongsToStudent,
+        bool $expected,
+    ): void {
+        $this->travelTo(now()->startOfDay()->addHours(12));
+        $profile = StudentProfile::factory()->create();
+        $program = SponsorshipProgram::factory()->create([
+            'status' => $programStatus,
+            'end_date' => $endDateOffset === null ? null : now()->addDays($endDateOffset)->toDateString(),
+        ]);
+        $application = Application::factory()->create([
+            'student_profile_id' => $belongsToStudent ? $profile->id : StudentProfile::factory()->create()->id,
+            'sponsorship_program_id' => $program->id,
+            'status' => $status,
+        ]);
+
+        foreach ([null, $application->id] as $reference) {
+            $profile->update(['active_sponsorship_id' => $reference]);
+            $profileBefore = $profile->fresh()->getRawOriginal();
+            $applicationBefore = $application->fresh()->getRawOriginal();
+            $inspected = $profile->fresh();
+
+            $this->assertSame($expected, $inspected->hasActiveSponsorship());
+            $this->assertSame($profileBefore, $inspected->getAttributes());
+            $this->assertSame($profileBefore, $profile->fresh()->getRawOriginal());
+            $this->assertSame($applicationBefore, $application->fresh()->getRawOriginal());
+        }
+    }
+
+    public static function activeSponsorshipReadOnlyCases(): array
+    {
+        return [
+            'approved without end date' => [ApplicationStatus::Approved, ProgramStatus::Open, null, true, true],
+            'ongoing without end date' => [ApplicationStatus::Ongoing, ProgramStatus::Open, null, true, true],
+            'future end date' => [ApplicationStatus::Approved, ProgramStatus::Open, 1, true, true],
+            'end date is today' => [ApplicationStatus::Ongoing, ProgramStatus::Open, 0, true, true],
+            'closed program remains active' => [ApplicationStatus::Approved, ProgramStatus::Closed, 1, true, true],
+            'past end date' => [ApplicationStatus::Ongoing, ProgramStatus::Open, -1, true, false],
+            'explicitly expired program' => [ApplicationStatus::Approved, ProgramStatus::Expired, 1, true, false],
+            'pending is not active' => [ApplicationStatus::Pending, ProgramStatus::Open, null, true, false],
+            'verified is not active' => [ApplicationStatus::Verified, ProgramStatus::Open, null, true, false],
+            'rejected is not active' => [ApplicationStatus::Rejected, ProgramStatus::Open, null, true, false],
+            'expired application is not active' => [ApplicationStatus::Expired, ProgramStatus::Open, null, true, false],
+            'resubmission is not active' => [ApplicationStatus::ResubmissionRequested, ProgramStatus::Open, null, true, false],
+            'another students approved application' => [ApplicationStatus::Approved, ProgramStatus::Open, null, false, false],
+            'another students ongoing application' => [ApplicationStatus::Ongoing, ProgramStatus::Open, null, false, false],
+        ];
+    }
+
+    public function test_active_sponsorship_inspection_finds_owned_application_without_repairing_foreign_reference(): void
+    {
+        $foreignApplication = Application::factory()->create(['status' => ApplicationStatus::Approved]);
+        $profile = StudentProfile::factory()->create(['active_sponsorship_id' => $foreignApplication->id]);
+        Application::factory()->create([
+            'student_profile_id' => $profile->id,
+            'status' => ApplicationStatus::Ongoing,
+        ]);
+        $profileBefore = $profile->fresh()->getRawOriginal();
+
+        $this->assertTrue($profile->fresh()->hasActiveSponsorship());
+        $this->assertSame($profileBefore, $profile->fresh()->getRawOriginal());
+    }
+
+    public function test_active_sponsorship_inspection_does_not_clear_a_soft_deleted_application_reference(): void
+    {
+        $profile = StudentProfile::factory()->create();
+        $application = Application::factory()->create([
+            'student_profile_id' => $profile->id,
+            'status' => ApplicationStatus::Approved,
+        ]);
+        $profile->update(['active_sponsorship_id' => $application->id]);
+        $application->delete();
+        $profileBefore = $profile->fresh()->getRawOriginal();
+
+        $this->assertFalse($profile->fresh()->hasActiveSponsorship());
+        $this->assertSame($profileBefore, $profile->fresh()->getRawOriginal());
     }
 
     public function test_pending_application_does_not_block_a_different_program(): void
@@ -243,6 +398,42 @@ class StudentFassgModulesTest extends TestCase
             ->assertSessionHasErrors('application');
 
         $this->assertSame(1, $profile->applications()->count());
+    }
+
+    public function test_student_can_apply_when_previous_sponsorship_end_date_has_passed_even_if_status_is_ongoing(): void
+    {
+        Storage::fake('local');
+
+        $profile = StudentProfile::factory()->verified()->create();
+
+        // The program is still raw-Open, but its end_date has already lapsed.
+        // No scheduled job flips the status to Expired, so this is the exact
+        // window where a status-only lockout wrongly blocks the student.
+        $expiredProgram = SponsorshipProgram::factory()->create([
+            'end_date' => now()->subDay()->toDateString(),
+        ]);
+
+        $active = Application::factory()->create([
+            'student_profile_id' => $profile->id,
+            'sponsorship_program_id' => $expiredProgram->id,
+            'status' => ApplicationStatus::Ongoing,
+        ]);
+        $profile->update(['active_sponsorship_id' => $active->id]);
+
+        $this->assertFalse($profile->fresh()->hasActiveSponsorship());
+
+        $program = SponsorshipProgram::factory()->create([
+            'target_course' => $profile->course,
+            'address_requirement' => 'Rural barangay in Davao Oriental',
+        ]);
+
+        $this->actingAsStudent($profile->user)
+            ->post(route('student.applications.store'), $this->applicationPayload($program->id))
+            ->assertRedirect(route('student.applications.index'))
+            ->assertSessionHas('success', 'Application submitted successfully!');
+
+        $this->assertSame(2, $profile->applications()->count());
+        $this->assertTrue($profile->applications()->where('status', ApplicationStatus::Pending)->exists());
     }
 
     public function test_student_can_submit_application_with_required_documents(): void
@@ -507,7 +698,7 @@ class StudentFassgModulesTest extends TestCase
         Storage::fake('local');
 
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
-        $profile = StudentProfile::factory()->create();
+        $profile = StudentProfile::factory()->verified()->create();
         $program = SponsorshipProgram::factory()->create(['min_gpa' => 2.50]);
         $application = Application::factory()->create([
             'student_profile_id' => $profile->id,
@@ -521,14 +712,20 @@ class StudentFassgModulesTest extends TestCase
                 'application_id' => $application->id,
                 'document_type' => $type,
                 'file_path' => "application-documents/{$application->id}/{$type->value}.pdf",
-                'file_name' => $type->value.'.pdf',
+                'file_name' => $type->value . '.pdf',
             ]);
         }
 
-        $this->actingAs($fassg)->patch(route('fassg.applications.verify', $application), [
+        $this->actingAs($fassg)->post(route('fassg.applications.create-batch'), [
+            'batch_name' => 'Individual verification', 'sponsorship_program_id' => $program->id,
+            'selected_applications' => [$application->id],
+        ])->assertSessionHasNoErrors();
+        $batch = GeneratedBatch::query()->sole();
+        $this->patch(route('fassg.generated-batches.applications.verify', [$batch, $application]), [
+            'confirm_eligibility' => '1',
             'grades_verified' => '1',
             'address_verified' => '1',
-        ])->assertRedirect();
+        ])->assertRedirect()->assertSessionHasNoErrors();
 
         $this->assertSame(ApplicationStatus::Verified, $application->fresh()->status);
         $this->assertNotNull($application->fresh()->verified_at);
@@ -714,51 +911,58 @@ class StudentFassgModulesTest extends TestCase
         );
     }
 
-    public function test_application_queue_ranks_by_gwa_primary_then_submission_date(): void
+    public function test_application_queue_uses_submission_order_without_gwa_priority(): void
     {
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
         $program = SponsorshipProgram::factory()->create(['available_slots' => 5]);
 
-        $studentA = StudentProfile::factory()->verified()->create();
-        $studentB = StudentProfile::factory()->verified()->create();
-        $studentC = StudentProfile::factory()->verified()->create();
+        $studentA = StudentProfile::factory()->verified()->create(['student_id_number' => '2024-00001']);
+        $studentB = StudentProfile::factory()->verified()->create(['student_id_number' => '2024-00003']);
+        $studentC = StudentProfile::factory()->verified()->create(['student_id_number' => '2024-00002']);
 
-        // Student A: Earlier submission, higher GWA (2.25)
+        // Submission date controls presentation even when qualifications differ.
         $appA = Application::factory()->create([
             'student_profile_id' => $studentA->id,
             'sponsorship_program_id' => $program->id,
             'gpa_submitted' => 2.25,
             'status' => ApplicationStatus::Pending,
-            'created_at' => now()->subHours(5),
+            'submitted_at' => now()->subHours(5),
         ]);
 
-        // Student B: Later submission, lower GWA (1.25) - Should be #1
+        // A better GWA does not move this applicant ahead of others.
         $appB = Application::factory()->create([
             'student_profile_id' => $studentB->id,
             'sponsorship_program_id' => $program->id,
             'gpa_submitted' => 1.25,
             'status' => ApplicationStatus::Pending,
-            'created_at' => now()->subHours(2),
+            'submitted_at' => now()->subHours(2),
         ]);
 
-        // Student C: Same GWA as Student B (1.25), but even later submission - Should be #2
+        // The most recent application follows earlier submissions.
         $appC = Application::factory()->create([
             'student_profile_id' => $studentC->id,
             'sponsorship_program_id' => $program->id,
             'gpa_submitted' => 1.25,
             'status' => ApplicationStatus::Pending,
-            'created_at' => now()->subHours(1),
+            'submitted_at' => now()->subHours(1),
         ]);
 
         $response = $this->actingAs($fassg)
             ->get(route('fassg.applications.index', ['program_id' => $program->id]))
             ->assertOk()
-            ->assertSee('Ranked by GWA, then Submission Date');
+            ->assertSee('Manual FASSG selection')
+            ->assertDontSee('Ranked by GWA')
+            ->assertDontSee('Top 5 Candidate');
 
         $apps = $response->viewData('pendingApplications');
-        $this->assertSame($appB->id, $apps[0]->id);
-        $this->assertSame($appC->id, $apps[1]->id);
-        $this->assertSame($appA->id, $apps[2]->id);
+        $this->assertSame($appA->id, $apps[0]->id);
+        $this->assertSame($appB->id, $apps[1]->id);
+        $this->assertSame($appC->id, $apps[2]->id);
+        $this->assertDatabaseCount('generated_batch_items', 0);
+        $this->assertDoesNotMatchRegularExpression(
+            '/<input\\b(?=[^>]*class="[^"]*app-checkbox)[^>]*\\schecked\\b/s',
+            $response->getContent(),
+        );
     }
 
     public function test_program_can_save_year_5_and_unchecking_checkboxes_persists_empty_arrays(): void

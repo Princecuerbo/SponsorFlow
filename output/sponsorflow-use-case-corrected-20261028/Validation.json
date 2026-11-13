@@ -1,0 +1,15 @@
+{
+  "actors": 5,
+  "unique_use_cases": 27,
+  "oval_representations": 35,
+  "plain_actor_associations": 33,
+  "correct_include_extend_relationships": 4,
+  "text_overlap_count": 0,
+  "svg_xml_valid": true,
+  "text_fits_ovals": true,
+  "png_dimensions": [
+    4880,
+    5760
+  ],
+  "application_or_database_access": false
+}

@@ -7,7 +7,7 @@
 
 @section('header-actions')
     <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-2">
-        {{ $approvals->count() }} {{ Str::plural('finalized record', $approvals->count()) }}
+        {{ $approvals->count() }} {{ Str::plural('decision record', $approvals->count()) }}
     </span>
 @endsection
 
@@ -15,8 +15,8 @@
     <section>
         <div class="d-flex align-items-center justify-content-between mb-3">
             <div>
-                <h3 class="h6 sf-heading mb-3 fw-bold">Confirmed Beneficiary Batches</h3>
-                <p class="small text-secondary mb-0">Beneficiary lists confirmed with sponsor endorsement documents.</p>
+                <h3 class="h6 sf-heading mb-3 fw-bold">Sponsor Batch Decisions</h3>
+                <p class="small text-secondary mb-0">Whole-batch approvals and rejections, with original confirmation documents retained.</p>
             </div>
             <i class="bi bi-people fs-3" style="color: #0F2942;"></i>
         </div>
@@ -29,7 +29,7 @@
                             <th class="ps-4">Batch</th>
                             <th>Program</th>
                             <th>Status</th>
-                            <th>Confirmed</th>
+                            <th>Decision recorded</th>
                             <th class="text-end pe-4">Document</th>
                         </tr>
                     </thead>
@@ -38,12 +38,12 @@
                             <tr>
                                 <td class="ps-4">
                                     @php($approvalBatch = $approval->generatedBatch ?? $approval->fixedList)
-                                    <div class="fw-semibold">{{ $approvalBatch?->batch_name }}</div>
-                                    <div class="small text-secondary">{{ $approvalBatch?->items?->reject(fn($item) => $item->application?->status?->value === 'Rejected')->count() ?? 0 }} beneficiary(ies)</div>
+                                    <div class="fw-semibold">{{ $approvalBatch?->batch_name }} · {{ $approval->submission_version ? 'Submission '.$approval->submission_version : 'Legacy record' }}</div>
+                                    <div class="small text-secondary">{{ $approvalBatch?->items?->count() ?? 0 }} roster member(s)</div>
                                 </td>
                                 <td>{{ $approval->sponsorshipProgram->program_name }}</td>
-                                <td><x-status-badge :status="'Confirmed'" /></td>
-                                <td>{{ $approval->updated_at?->format('M d, Y, h:i A') ?? '—' }}</td>
+                                <td><x-status-badge :status="$approval->confirmation_status" /></td>
+                                <td>{{ $approval->decided_at?->format('M d, Y, h:i A') ?? '—' }}</td>
                                 <td class="text-end pe-4">
                                     <div class="d-inline-flex flex-nowrap gap-2 align-items-center justify-content-end">
                                         @if ($approval->approval_document_path)
@@ -59,7 +59,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center text-secondary py-5">No confirmed fixed lists yet.
+                                <td colspan="5" class="text-center text-secondary py-5">No Sponsor decisions recorded.
                                 </td>
                             </tr>
                         @endforelse
@@ -75,4 +75,19 @@
             </div>
         </div>
     </section>
+    @php($legacyApplications = $approvedApplications->filter(fn ($application) => filled($application->sponsor_approval_path)))
+    @if ($legacyApplications->isNotEmpty())
+        <section class="card sf-card mt-4">
+            <div class="card-body">
+                <h3 class="h6">Historical Individual Approvals</h3>
+                <p class="small text-secondary">Original individual approval records and documents are retained. They do not establish a new FASSG Accounting handoff.</p>
+                @foreach ($legacyApplications as $application)
+                    <div class="d-flex justify-content-between border-top py-2 gap-3">
+                        <span>{{ $application->studentProfile?->user?->name }} · {{ $application->sponsorshipProgram?->program_name }} · {{ $application->status?->value }}</span>
+                        <a href="{{ route('sponsor.applicants.approval-document', $application) }}" target="_blank" rel="noopener">Original approval document</a>
+                    </div>
+                @endforeach
+            </div>
+        </section>
+    @endif
 @endsection

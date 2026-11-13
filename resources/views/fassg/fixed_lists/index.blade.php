@@ -61,7 +61,7 @@
 
                                 <a href="{{ route('fassg.fixed-lists.show', $list) }}" class="btn btn-outline-primary btn-sm"
                                     title="View &amp; Manage Fixed List" aria-label="View &amp; Manage Fixed List">
-                                    <i class="bi bi-eye"></i>
+                                    <i class="bi bi-eye"></i> View List
                                 </a>
 
                                 @if (in_array($list->status, [\App\Enums\FixedListStatus::Draft, \App\Enums\FixedListStatus::Rejected], true))
@@ -71,12 +71,12 @@
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <form method="POST" action="{{ route('fassg.fixed-lists.destroy', $list) }}"
-                                        class="d-inline" onsubmit="return confirm('Delete this fixed list?');">
+                                        class="d-inline" onsubmit="return confirm('Archive this obsolete list? Its members and evidence will be retained. Lists with historical references cannot be archived.');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger btn-sm"
-                                            title="Delete Fixed List" aria-label="Delete Fixed List">
-                                            <i class="bi bi-trash"></i>
+                                            title="Archive Fixed List" aria-label="Archive Fixed List">
+                                            <i class="bi bi-archive"></i>
                                         </button>
                                     </form>
                                 @endif

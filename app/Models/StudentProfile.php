@@ -98,7 +98,7 @@ class StudentProfile extends Model
 
     public function sleFheRequest(): HasOne
     {
-        return $this->hasOne(SleFheRequest::class);
+        return $this->hasOne(SleFheRequest::class)->latestOfMany();
     }
 
     public function sleFheRequests(): HasMany
@@ -118,11 +118,11 @@ class StudentProfile extends Model
 
     public function getSleFheStatusAttribute(): string
     {
-        if ($this->sleFheVerification()->exists()) {
+        if ($this->hasDocumentedSleFheVerification()) {
             return SleFheStatus::Verified->value;
         }
 
-        if ($this->sleFheRequest()->exists()) {
+        if ($this->sleFheRequest()->where('status', 'pending')->exists()) {
             return SleFheStatus::PendingReview->value;
         }
 
@@ -135,14 +135,17 @@ class StudentProfile extends Model
 
     public function hasActiveSponsorship(): bool
     {
-        // Check if there is an active sponsorship and verify the program is not expired
+        // Only count this student's approved/ongoing sponsorship if its program is active.
         if ($this->active_sponsorship_id !== null) {
             $activeApp = $this->activeSponsorship;
-            if ($activeApp && $this->isProgramActive($activeApp->sponsorshipProgram)) {
+            if (
+                $activeApp
+                && (int) $activeApp->student_profile_id === (int) $this->id
+                && $activeApp->isActiveSponsorship()
+                && $this->isProgramActive($activeApp->sponsorshipProgram)
+            ) {
                 return true;
             }
-            // Clear the inactive sponsorship reference
-            $this->update(['active_sponsorship_id' => null]);
         }
 
         // Check for any approved/ongoing applications with active programs
@@ -190,34 +193,41 @@ class StudentProfile extends Model
             && $this->year_level !== null;
     }
 
-    public function syncSleFheFromFixedLists(): bool
+    public function hasDocumentedSleFheVerification(): bool
     {
-        $verified = FixedListItem::query()
-            ->where('student_id_number', $this->student_id_number)
-            ->where('is_sle_fhe_verified', true)
-            ->exists();
+        return $this->sleFheVerification()->whereNotNull('verified_by')->whereNotNull('verified_at')->exists();
+    }
 
-        if ($verified === true) {
-            SleFheVerification::firstOrCreate(
-                ['student_profile_id' => $this->id],
-                ['verified_address' => '', 'verified_at' => now()]
-            );
+    /** Inspection only: never repair an active pointer or infer verification. */
+    public function hasConflictingActiveSponsorship(?int $exceptApplicationId = null, bool $lock = false): bool
+    {
+        $active = $this->activeSponsorship()->first();
+        if ($active !== null && (int) $active->student_profile_id !== (int) $this->id) {
+            return true;
         }
 
-        return $verified;
+        $query = $this->applications()->approvedBeneficiaries()
+            ->when($exceptApplicationId !== null, fn ($query) => $query->whereKeyNot($exceptApplicationId))
+            ->whereHas('sponsorshipProgram', fn ($query) => $query->where('status', '!=', 'Expired')
+                ->where(fn ($dates) => $dates->whereNull('end_date')->orWhere('end_date', '>=', now()->toDateString())));
+
+        return $lock ? $query->orderBy('id')->lockForUpdate()->get(['applications.id'])->isNotEmpty() : $query->exists();
+    }
+
+    /** Compatibility inspection only. A fixed-list match is never verification evidence. */
+    public function syncSleFheFromFixedLists(): bool
+    {
+        return $this->hasDocumentedSleFheVerification();
     }
 
     public function scopeSleFheVerified(Builder $query): Builder
     {
-        return $query->where(function (Builder $query): void {
-            $query->whereHas('sleFheVerification')
-                ->orWhereHas('sleFheRequest', fn ($query) => $query->where('status', 'verified'));
-        });
+        return $query->whereHas('sleFheVerification', fn (Builder $verification) =>
+            $verification->whereNotNull('verified_by')->whereNotNull('verified_at'));
     }
 
     public function isSleFheVerified(): bool
     {
-        return $this->sleFheVerification()->exists()
-            || $this->sleFheRequest()->where('status', 'verified')->exists();
+        return $this->hasDocumentedSleFheVerification();
     }
 }

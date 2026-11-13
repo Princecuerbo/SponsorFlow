@@ -21,6 +21,13 @@ class SponsorApproval extends Model
         'approval_document_path',
         'confirmation_status',
         'uploaded_by_sponsor_id',
+        'submission_version',
+        'decided_by_id',
+        'decided_at',
+        'fassg_recorded_by_id',
+        'fassg_recorded_at',
+        'accounting_forwarded_by_id',
+        'accounting_forwarded_at',
     ];
 
     /**
@@ -30,6 +37,10 @@ class SponsorApproval extends Model
     {
         return [
             'confirmation_status' => ConfirmationStatus::class,
+            'submission_version' => 'integer',
+            'decided_at' => 'datetime',
+            'fassg_recorded_at' => 'datetime',
+            'accounting_forwarded_at' => 'datetime',
         ];
     }
 
@@ -56,6 +67,37 @@ class SponsorApproval extends Model
     public function isConfirmed(): bool
     {
         return $this->confirmation_status === ConfirmationStatus::Confirmed;
+    }
+
+    public function decidedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'decided_by_id');
+    }
+
+    public function recordedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'fassg_recorded_by_id');
+    }
+
+    public function forwardedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'accounting_forwarded_by_id');
+    }
+
+    public function hasConfirmationEvidence(): bool
+    {
+        return $this->isConfirmed() && $this->decided_by_id !== null && $this->decided_at !== null
+            && $this->uploaded_by_sponsor_id !== null && filled($this->approval_document_path)
+            && \Illuminate\Support\Facades\Storage::disk('local')->exists($this->approval_document_path);
+    }
+
+    public function isForwardedToAccounting(): bool
+    {
+        return $this->hasConfirmationEvidence()
+            && $this->fassg_recorded_by_id !== null && $this->fassg_recorded_at !== null
+            && $this->accounting_forwarded_by_id !== null && $this->accounting_forwarded_at !== null
+            && $this->fassg_recorded_at->gte($this->decided_at)
+            && $this->accounting_forwarded_at->gte($this->fassg_recorded_at);
     }
 
     public function isPending(): bool

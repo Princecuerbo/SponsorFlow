@@ -4,12 +4,10 @@ namespace App\Http\Controllers\Student;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\DocumentType;
-use App\Enums\GeneratedBatchStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Student\StoreApplicationRequest;
 use App\Models\Application;
-use App\Models\BatchCandidate;
 use App\Models\SponsorshipProgram;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -50,9 +48,7 @@ class ApplicationController extends Controller
             $programs = collect();
         }
 
-        $hasActiveGrant = $profile ? Application::where('student_profile_id', $profile->id)
-            ->whereIn('status', [ApplicationStatus::Approved, ApplicationStatus::Ongoing])
-            ->exists() : false;
+        $hasActiveGrant = $profile?->hasActiveSponsorship() ?? false;
 
         return view('student.programs.index', [
             'user' => $this->actor($request),
@@ -111,9 +107,7 @@ class ApplicationController extends Controller
         }
 
         // Check for strictly active grants
-        $hasActiveGrant = Application::where('student_profile_id', $student->id)
-            ->whereIn('status', [ApplicationStatus::Approved, ApplicationStatus::Ongoing])
-            ->exists();
+        $hasActiveGrant = $student->hasActiveSponsorship();
 
         if ($hasActiveGrant) {
             return back()->with('error', 'You already have an active sponsorship. New applications are disabled until your current grant expires.');
@@ -181,28 +175,6 @@ class ApplicationController extends Controller
         $profile = $this->studentProfile($request);
         $this->assertOwnsApplication($profile->id, $application);
 
-        $isApprovedOnFixedList = BatchCandidate::query()
-            ->whereHas('application', fn ($query) => $query->where('student_profile_id', $profile->id))
-            ->whereHas('generatedBatch', function ($query) use ($application): void {
-                $query->where('sponsorship_program_id', $application->sponsorship_program_id)
-                    ->where('status', GeneratedBatchStatus::Approved);
-            })
-            ->exists();
-
-        if ($isApprovedOnFixedList && $application->status !== ApplicationStatus::Approved) {
-            DB::transaction(function () use ($application, $profile): void {
-                SponsorshipProgram::query()
-                    ->lockForUpdate()
-                    ->findOrFail($application->sponsorship_program_id);
-
-                $application->update([
-                    'status' => ApplicationStatus::Approved,
-                    'approved_at' => now(),
-                ]);
-                $profile->update(['active_sponsorship_id' => $application->id]);
-            });
-        }
-
         $application->load(['sponsorshipProgram.sponsor', 'documents']);
 
         return view('student.applications.show', [
@@ -223,9 +195,7 @@ class ApplicationController extends Controller
         }
 
         // Check for strictly active grants
-        $hasActiveGrant = Application::where('student_profile_id', $student->id)
-            ->whereIn('status', [ApplicationStatus::Approved, ApplicationStatus::Ongoing])
-            ->exists();
+        $hasActiveGrant = $student->hasActiveSponsorship();
 
         if ($hasActiveGrant) {
             return back()
@@ -278,7 +248,7 @@ class ApplicationController extends Controller
             ->where(function ($q) use ($student, $userId): void {
                 $q->where('student_profile_id', $student->id);
                 if ($userId) {
-                    $q->orWhereHas('studentProfile', fn ($sq) => $sq->where('user_id', $userId));
+                    $q->orWhereHas('studentProfile', fn($sq) => $sq->where('user_id', $userId));
                 }
             })
             ->where(function ($query): void {
@@ -405,7 +375,7 @@ class ApplicationController extends Controller
         ]);
 
         $validKeys = collect(DocumentType::cases())
-            ->map(fn (DocumentType $type): string => DocumentType::canonicalValue($type))
+            ->map(fn(DocumentType $type): string => DocumentType::canonicalValue($type))
             ->unique()
             ->values()
             ->all();
@@ -424,7 +394,7 @@ class ApplicationController extends Controller
                     $canon = DocumentType::canonicalValue((string) $documentType);
 
                     $existing = $application->documents->first(
-                        fn ($doc): bool => DocumentType::canonicalValue($doc->document_type) === $canon,
+                        fn($doc): bool => DocumentType::canonicalValue($doc->document_type) === $canon,
                     );
 
                     $newPath = $file->store('applications/documents', 'local');
@@ -483,6 +453,13 @@ class ApplicationController extends Controller
                 ApplicationStatus::Approved,
                 ApplicationStatus::Ongoing,
             ])
+            ->whereHas('sponsorshipProgram', function ($query) {
+                $query->where('status', '!=', 'Expired')
+                    ->where(function ($q) {
+                        $q->whereNull('end_date')
+                            ->orWhere('end_date', '>=', now()->toDateString());
+                    });
+            })
             ->exists();
     }
 }

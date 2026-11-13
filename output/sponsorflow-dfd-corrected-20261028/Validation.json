@@ -1,0 +1,21 @@
+{
+  "processes": 8,
+  "external_entities": 5,
+  "logical_data_stores": 10,
+  "flows": 82,
+  "one_recipient_arrowhead_per_flow": true,
+  "required_read_and_update_flows": true,
+  "text_overlaps": 0,
+  "svg_xml_valid": true,
+  "png_dimensions": [
+    4800,
+    8229
+  ],
+  "application_bootstrap": false,
+  "database_access": false,
+  "source_sha256": {
+    "app/Http/Controllers/Sponsor/ApprovalUploadController.php": "ce08ccff7381a6cff0adda8d64cc8d27696361edd0c785168f893a019fe6a028",
+    "app/Http/Controllers/Fassg/GeneratedBatchController.php": "ee9475f7fc83dae213a705615ea0710dd625092692bc9c1dd78b0021c7155d1c",
+    "app/Models/SponsorshipProgram.php": "e58683b09cb96a2f9bd862bce61eab8040dd6696ae119050376cf3bc6b23165f"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "source_attachment_sha256": "e1d1d5dd6ce26f399b71cdc215149492eb92dbbbb3e1ef0689cb6556d0c33625",
+  "preserved_role_sections": true,
+  "declared_nodes": 43,
+  "checked_links": 71,
+  "rbac_branches": 5,
+  "rendered": false,
+  "database_accessed": false,
+  "application_source_modified": false
+}

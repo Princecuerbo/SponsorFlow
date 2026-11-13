@@ -1,0 +1,270 @@
+@startuml
+title SponsorFlow — UX Sitemap
+caption Figure 3.X. UX Sitemap of SponsorFlow
+
+top to bottom direction
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam dpi 160
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundcorner 16
+skinparam linetype ortho
+skinparam nodesep 14
+skinparam ranksep 18
+skinparam ArrowColor #A0A7AF
+skinparam ArrowThickness 1
+skinparam packageStyle rectangle
+skinparam packageBorderColor #E0E4E8
+skinparam packageBackgroundColor #FFFFFF
+
+hide stereotype
+
+skinparam rectangle {
+    FontColor #FFFFFF
+    BorderColor #FFFFFF
+
+    BackgroundColor<<Shared>> #687582
+    BackgroundColor<<Student>> #2877B5
+    BackgroundColor<<Fassg>> #25834D
+    BackgroundColor<<Sponsor>> #8351AA
+    BackgroundColor<<Accounting>> #197C83
+    BackgroundColor<<Admin>> #B95048
+    BackgroundColor<<Access>> #435466
+}
+
+skinparam usecase {
+    BackgroundColor #ED7D31
+    BorderColor #ED7D31
+    FontColor #FFFFFF
+}
+
+' ==================================================
+' ENTRY POINTS
+' ==================================================
+
+usecase "Landing Page" as HOME
+
+rectangle "Student Login\n<size:9>Student accounts</size>" as S_LOGIN <<Shared>>
+rectangle "Student Registration" as REGISTER <<Student>>
+rectangle "Staff / Sponsor Login\n<size:9>Designated URL\nFASSG / Sponsor / Accounting</size>" as STAFF_LOGIN <<Shared>>
+rectangle "Administrator Login\n<size:9>Designated URL / Admin accounts</size>" as ADMIN_LOGIN <<Shared>>
+
+HOME -down- S_LOGIN
+HOME -down- REGISTER
+REGISTER -left-> S_LOGIN
+
+' These links arrange separate entry pages only.
+' Staff/Admin login links are not present on the public landing page.
+HOME -[hidden]down-> STAFF_LOGIN
+HOME -[hidden]down-> ADMIN_LOGIN
+S_LOGIN -[hidden]right-> STAFF_LOGIN
+STAFF_LOGIN -[hidden]right-> ADMIN_LOGIN
+
+rectangle "RBAC: Role-Based Access\n<size:10>Active account + permitted role\nSystem control, not a page</size>" as RBAC <<Access>>
+
+' ==================================================
+' STUDENT
+' ==================================================
+
+package "Student Applicant" {
+
+    rectangle "Student Navigation" as S_NAV <<Student>>
+
+    rectangle "Home / Dashboard" as S_HOME <<Student>>
+    rectangle "SLE-FHE Verification" as S_VERIFY <<Student>>
+    rectangle "Sponsorship\nOpportunities" as S_PROGRAMS <<Student>>
+    rectangle "Application Form" as S_FORM <<Student>>
+    rectangle "My Applications" as S_APPS <<Student>>
+    rectangle "Application Details" as S_DETAILS <<Student>>
+    rectangle "Notifications" as S_NOTICES <<Student>>
+    rectangle "My Profile" as S_PROFILE <<Student>>
+
+    S_NAV -down- S_HOME
+    S_NAV -down- S_VERIFY
+    S_NAV -down- S_PROGRAMS
+    S_NAV -down- S_APPS
+    S_NAV -down- S_NOTICES
+    S_NAV -down- S_PROFILE
+
+    S_PROGRAMS -down- S_FORM
+    S_APPS -down- S_DETAILS
+
+    ' Hidden links only arrange the boxes.
+    S_HOME -[hidden]down-> S_VERIFY
+    S_VERIFY -[hidden]down-> S_PROGRAMS
+    S_FORM -[hidden]down-> S_APPS
+    S_DETAILS -[hidden]down-> S_NOTICES
+    S_NOTICES -[hidden]down-> S_PROFILE
+}
+
+' ==================================================
+' FASSG
+' ==================================================
+
+package "FASSG Personnel" {
+
+    rectangle "FASSG Navigation" as F_NAV <<Fassg>>
+
+    rectangle "Dashboard" as F_HOME <<Fassg>>
+    rectangle "Programs" as F_PROGRAMS <<Fassg>>
+    rectangle "SLE-FHE Verification" as F_VERIFY <<Fassg>>
+    rectangle "Verified Students" as F_VERIFIED <<Fassg>>
+    rectangle "Application Queue" as F_QUEUE <<Fassg>>
+    rectangle "Fixed Lists" as F_LISTS <<Fassg>>
+    rectangle "List Details" as F_LIST_DETAILS <<Fassg>>
+    rectangle "Generated Batches" as F_BATCHES <<Fassg>>
+    rectangle "Batch Details" as F_BATCH_DETAILS <<Fassg>>
+    rectangle "Batch Member Review" as F_MEMBER <<Fassg>>
+    rectangle "Reports" as F_REPORTS <<Fassg>>
+
+    F_NAV -down- F_HOME
+    F_NAV -down- F_PROGRAMS
+    F_NAV -down- F_VERIFY
+    F_NAV -down- F_VERIFIED
+    F_NAV -down- F_QUEUE
+    F_NAV -down- F_LISTS
+    F_NAV -down- F_BATCHES
+    F_NAV -down- F_REPORTS
+
+    F_LISTS -down- F_LIST_DETAILS
+    F_BATCHES -down- F_BATCH_DETAILS
+    F_BATCH_DETAILS -down- F_MEMBER
+
+    F_HOME -[hidden]down-> F_PROGRAMS
+    F_PROGRAMS -[hidden]down-> F_VERIFY
+    F_VERIFY -[hidden]down-> F_VERIFIED
+    F_VERIFIED -[hidden]down-> F_QUEUE
+    F_QUEUE -[hidden]down-> F_LISTS
+    F_LIST_DETAILS -[hidden]down-> F_BATCHES
+    F_MEMBER -[hidden]down-> F_REPORTS
+}
+
+' ==================================================
+' SPONSOR
+' ==================================================
+
+package "Sponsor" {
+
+    rectangle "Sponsor Navigation" as P_NAV <<Sponsor>>
+
+    rectangle "Dashboard" as P_HOME <<Sponsor>>
+    rectangle "Approvals Queue" as P_QUEUE <<Sponsor>>
+    rectangle "Submitted Batch\nDetails" as P_DETAILS <<Sponsor>>
+    rectangle "Approval History" as P_HISTORY <<Sponsor>>
+
+    P_NAV -down- P_HOME
+    P_NAV -down- P_QUEUE
+    P_NAV -down- P_HISTORY
+
+    P_QUEUE -down- P_DETAILS
+
+    P_HOME -[hidden]down-> P_QUEUE
+    P_DETAILS -[hidden]down-> P_HISTORY
+}
+
+' ==================================================
+' ACCOUNTING
+' ==================================================
+
+package "Accounting Office" {
+
+    rectangle "Accounting Navigation" as A_NAV <<Accounting>>
+
+    rectangle "Dashboard" as A_HOME <<Accounting>>
+    rectangle "Confirmed Beneficiaries" as A_BENEFICIARIES <<Accounting>>
+    rectangle "Beneficiary Details" as A_DETAILS <<Accounting>>
+    rectangle "Approved Batch\nReference" as A_REFERENCE <<Accounting>>
+
+    A_NAV -down- A_HOME
+    A_NAV -down- A_BENEFICIARIES
+
+    A_BENEFICIARIES -down- A_DETAILS
+    A_BENEFICIARIES -down- A_REFERENCE
+
+    A_HOME -[hidden]down-> A_BENEFICIARIES
+    A_DETAILS -[hidden]down-> A_REFERENCE
+}
+
+' ==================================================
+' ADMINISTRATOR
+' ==================================================
+
+package "System Administrator" {
+
+    rectangle "Administrator Navigation" as D_NAV <<Admin>>
+
+    rectangle "Dashboard" as D_HOME <<Admin>>
+    rectangle "User Accounts" as D_USERS <<Admin>>
+    rectangle "Audit Logs" as D_LOGS <<Admin>>
+    rectangle "Security Settings" as D_SETTINGS <<Admin>>
+    rectangle "Backups" as D_BACKUPS <<Admin>>
+
+    D_NAV -down- D_HOME
+    D_NAV -down- D_USERS
+    D_NAV -down- D_LOGS
+    D_NAV -down- D_SETTINGS
+    D_NAV -down- D_BACKUPS
+
+    D_HOME -[hidden]down-> D_USERS
+    D_USERS -[hidden]down-> D_LOGS
+    D_LOGS -[hidden]down-> D_SETTINGS
+    D_SETTINGS -[hidden]down-> D_BACKUPS
+}
+
+' ==================================================
+' ROLE ACCESS
+' Navigation headings are groupings, not extra pages.
+' ==================================================
+
+S_LOGIN -down-> RBAC
+STAFF_LOGIN -down-> RBAC
+ADMIN_LOGIN -down-> RBAC
+
+' RBAC grants only the authenticated account's assigned role branch.
+' A user does not choose or switch roles through this diagram.
+RBAC -down-> S_NAV
+RBAC -down-> F_NAV
+RBAC -down-> P_NAV
+RBAC -down-> A_NAV
+RBAC -down-> D_NAV
+
+' Arrange role branches horizontally.
+S_NAV -[hidden]right-> F_NAV
+F_NAV -[hidden]right-> P_NAV
+P_NAV -[hidden]right-> A_NAV
+A_NAV -[hidden]right-> D_NAV
+
+' ==================================================
+' COMPACT LEGEND
+' ==================================================
+
+<style>
+legend {
+    BackgroundColor white
+    LineColor transparent
+    FontName Arial
+    FontSize 11
+    FontColor #222222
+    HorizontalAlignment right
+    Padding 6
+}
+</style>
+
+legend top right
+<b>Entry Pages</b>  <color:#687582><size:24>■</size></color>
+<b>Student</b>  <color:#2877B5><size:24>■</size></color>
+<b>FASSG Personnel</b>  <color:#25834D><size:24>■</size></color>
+<b>Sponsors</b>  <color:#8351AA><size:24>■</size></color>
+<b>Accounting Personnel</b>  <color:#197C83><size:24>■</size></color>
+<b>System Administrators</b>  <color:#B95048><size:24>■</size></color>
+endlegend
+
+footer
+Role headings group pages. RBAC is a system control enforced on protected routes.
+Designated Staff/Admin login URLs are separate entrances; only authorized roles gain access.
+Accounting beneficiary access is read-only. Sign Out is available to all authenticated roles.
+endfooter
+
+@enduml

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\FixedListItemStatus;
+use App\Enums\ProgramStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -84,5 +85,41 @@ class FixedListItem extends Model
     public function matchingStudentProfile(): ?StudentProfile
     {
         return $this->studentProfile;
+    }
+
+    /** List preparation only; qualification documents are verified in Generated Batch review. */
+    public function endorsementErrors(SponsorshipProgram $program): array
+    {
+        $profile = $this->studentProfile;
+        if ($profile === null) {
+            return ['A matching registered student profile is required.'];
+        }
+
+        $errors = [];
+        if (! $this->is_sle_fhe_verified || ! $profile->hasDocumentedSleFheVerification()) {
+            $errors[] = 'Verify this list entry against documented FASSG SLE-FHE evidence first.';
+        }
+        if ($this->status === FixedListItemStatus::Ineligible) {
+            $errors[] = 'An ineligible candidate cannot be endorsed through ordinary endorsement.';
+        }
+        if ($profile->hasConflictingActiveSponsorship()) {
+            $errors[] = 'A conflicting active sponsorship prevents endorsement.';
+        }
+        $errors = array_merge($errors, $program->checkEligibility($profile)['reasons']);
+        if ($program->status === ProgramStatus::Expired
+            || ($program->end_date !== null && $program->end_date->toDateString() < now()->toDateString())) {
+            $errors[] = 'The sponsorship program has expired.';
+        }
+        if (! empty($program->eligible_year_levels) && $profile->year_level === null) {
+            $errors[] = 'Record the student year level required by this program.';
+        }
+
+        return array_values(array_unique($errors));
+    }
+
+    public function hasRecordedEndorsement(): bool
+    {
+        return $this->is_manually_endorsed && $this->status === FixedListItemStatus::Endorsed
+            && $this->endorsed_by_id !== null && $this->endorsed_at !== null;
     }
 }

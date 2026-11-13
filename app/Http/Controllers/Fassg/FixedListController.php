@@ -9,8 +9,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Fassg\ImportFixedListRequest;
 use App\Http\Requests\Fassg\StoreFixedListItemRequest;
 use App\Http\Requests\Fassg\StoreFixedListRequest;
+use App\Models\AcademicProgram;
+use App\Models\AuditLog;
+use App\Models\BatchCandidate;
 use App\Models\FixedList;
 use App\Models\FixedListItem;
+use App\Models\GeneratedBatch;
 use App\Models\SleFheVerification;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
@@ -18,6 +22,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use SplFileObject;
 
@@ -49,6 +54,11 @@ class FixedListController extends Controller
             'user' => $this->actor($request),
             'list' => $fixedList,
             'fixedList' => $fixedList,
+            'endorsementErrors' => $fixedList->items->mapWithKeys(fn (FixedListItem $item) =>
+                [$item->id => $item->endorsementErrors($fixedList->sponsorshipProgram)]),
+            'academicPrograms' => AcademicProgram::query()->where('is_active', true)
+                ->where('is_undergraduate', true)->orderBy('name')->get(),
+            'yearLevels' => StoreFixedListItemRequest::YEAR_LEVELS,
         ]);
     }
 
@@ -88,14 +98,60 @@ class FixedListController extends Controller
 
     public function destroy(Request $request, FixedList $fixedList): RedirectResponse
     {
-        $this->assertListEditable($fixedList);
-
-        $fixedList->delete();
-        $this->audit($request, 'fassg.fixed_list.deleted', 'fixed_lists');
+        abort_unless($request->user()?->isFassg(), 403);
+        DB::transaction(function () use ($request, $fixedList): void {
+            SponsorshipProgram::query()->lockForUpdate()->findOrFail($fixedList->sponsorship_program_id);
+            $list = FixedList::query()->lockForUpdate()->findOrFail($fixedList->id);
+            $this->assertListEditable($list);
+            $this->assertNoListReferences($list, $list->items()->pluck('id')->all());
+            AuditLog::record('fassg.fixed_list.archived', 'fixed_lists', $request->user(), $request->ip(),
+                json_encode(['fixed_list_id' => $list->id, 'before' => $list->getAttributes()]));
+            $list->delete(); // Existing SoftDeletes retains the list and all its original members.
+        }, 3);
 
         return redirect()
             ->route('fassg.fixed-lists.index')
-            ->with('status', 'Fixed list deleted successfully.');
+            ->with('status', 'Fixed list archived. Its original members and evidence were retained.');
+    }
+
+    public function removeItem(Request $request, FixedList $fixedList, FixedListItem $fixedListItem): RedirectResponse
+    {
+        abort_unless($request->user()?->isFassg(), 403);
+        DB::transaction(function () use ($request, $fixedList, $fixedListItem): void {
+            SponsorshipProgram::query()->lockForUpdate()->findOrFail($fixedList->sponsorship_program_id);
+            $list = FixedList::query()->lockForUpdate()->findOrFail($fixedList->id);
+            abort_unless($list->status === FixedListStatus::Draft, 403, 'Only an editable Draft Fixed List permits student removal.');
+            $item = $list->items()->whereKey($fixedListItem->id)->lockForUpdate()->firstOrFail();
+            $this->assertNoListReferences($list, [$item->id]);
+            if ($item->fassg_assigned_at !== null || $item->fassg_assigned_by_id !== null) {
+                throw ValidationException::withMessages(['fixed_list' => 'This student has historical forwarding evidence and cannot be removed.']);
+            }
+            AuditLog::record('fassg.fixed_list.student_removed', 'fixed_list_items', $request->user(), $request->ip(),
+                json_encode(['fixed_list_id' => $list->id, 'item_id' => $item->id, 'before' => $item->getAttributes()]));
+            $item->delete();
+            $list->update(['total_names' => $list->items()->count()]);
+        }, 3);
+
+        return back()->with('status', 'Student removed from this draft list. Student and verification records were retained.');
+    }
+
+    private function assertNoListReferences(FixedList $list, array $itemIds): void
+    {
+        $referenced = $list->fassg_assigned_at !== null || $list->fassg_assigned_by_id !== null
+            || $list->sponsorApprovals()->exists()
+            || GeneratedBatch::withTrashed()->where('fixed_list_id', $list->id)->exists()
+            || BatchCandidate::query()->whereIn('fixed_list_item_id', $itemIds)->exists();
+        // Also protect frozen source identities even if a historical membership link is missing.
+        if (! $referenced && $itemIds !== []) {
+            $referenced = GeneratedBatch::withTrashed()->where(function ($query) use ($itemIds): void {
+                foreach ($itemIds as $id) {
+                    $query->orWhereJsonContains('submitted_roster->members', ['fixed_list_item_id' => (int) $id]);
+                }
+            })->exists();
+        }
+        if ($referenced) {
+            throw ValidationException::withMessages(['fixed_list' => 'This list or student is referenced by a Generated Batch or historical approval/forwarding evidence. Removal and archiving are blocked.']);
+        }
     }
 
     public function store(StoreFixedListRequest $request): RedirectResponse
@@ -149,16 +205,9 @@ class FixedListController extends Controller
         return redirect()->route('fassg.fixed-lists.show', $fixedList)->with('status', 'Fixed list uploaded and ready for verification.');
     }
 
-    public function encode(Request $request): RedirectResponse
+    public function encode(StoreFixedListItemRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'fixed_list_id' => ['required', 'integer', 'exists:fixed_lists,id'],
-            'student_name' => ['required', 'string', 'max:150'],
-            'student_id_number' => ['required', 'string', 'max:50'],
-            'course' => ['required', 'string', 'max:150'],
-            'year_level' => ['required', 'integer', 'min:1', 'max:5'],
-            'campus' => ['required', 'string', 'max:150'],
-        ]);
+        $validated = $request->validated();
 
         $fixedList = FixedList::query()->findOrFail($validated['fixed_list_id']);
         $this->assertListEditable($fixedList);
@@ -216,38 +265,35 @@ class FixedListController extends Controller
 
     public function finalize(Request $request, FixedList $fixedList): RedirectResponse
     {
-        $this->assertListEditable($fixedList);
-
-        if ($fixedList->items()->count() === 0) {
-            return back()->withErrors(['list' => 'Encode or upload at least one student before finalizing.']);
-        }
-
-        $fixedList->loadMissing('items.studentProfile');
-
-        $hasUnverifiedOrUnendorsed = $fixedList->items->contains(
-            static fn (FixedListItem $item): bool => ! ($item->is_sle_fhe_verified || $item->studentProfile?->isSleFheVerified())
-                || ! $item->is_manually_endorsed,
-        );
-
-        if ($hasUnverifiedOrUnendorsed) {
-            return back()->withErrors([
-                'list' => 'Cannot finalize list until all candidates are SLE-FHE verified and endorsed.',
+        abort_unless($request->user()?->isFassg(), 403);
+        DB::transaction(function () use ($request, $fixedList): void {
+            $program = SponsorshipProgram::query()->lockForUpdate()->findOrFail($fixedList->sponsorship_program_id);
+            $list = FixedList::query()->lockForUpdate()->findOrFail($fixedList->id);
+            $this->assertListEditable($list);
+            $items = $this->lockListItems($list);
+            if ($items->isEmpty()) {
+                throw ValidationException::withMessages(['list' => 'Encode or upload at least one student before finalizing.']);
+            }
+            foreach ($items as $item) {
+                if (! $item->hasRecordedEndorsement() || $item->endorsementErrors($program) !== []) {
+                    throw ValidationException::withMessages(['list' => 'Cannot finalize list: every candidate must have documented SLE-FHE verification, a recorded FASSG endorsement, and satisfy the list preparation checks. Review entry '.$item->id.'.']);
+                }
+            }
+            $list->update([
+                'status' => FixedListStatus::Finalized,
+                'fassg_assigned_at' => now(),
+                'fassg_assigned_by_id' => $request->user()->id,
             ]);
-        }
-
-        $fixedList->update([
-            'status' => FixedListStatus::Finalized,
-            'fassg_assigned_at' => now(),
-            'fassg_assigned_by_id' => $this->actor($request)->id,
-        ]);
-
-        $this->audit($request, 'fassg.fixed_list.finalized', 'fixed_lists');
+            AuditLog::record('fassg.fixed_list.finalized', 'fixed_lists', $request->user(), $request->ip(),
+                json_encode(['fixed_list_id' => $list->id, 'item_ids' => $items->modelKeys()]));
+        }, 3);
 
         return back()->with('status', 'Fixed List has been finalized and is ready for batch generation.');
     }
 
     public function verifyItem(Request $request, FixedList $fixedList, FixedListItem $fixedListItem): RedirectResponse
     {
+        $this->assertListEditable($fixedList);
         abort_unless($fixedListItem->fixed_list_id === $fixedList->id, 404);
 
         if (blank($fixedListItem->student_id_number)) {
@@ -261,7 +307,7 @@ class FixedListController extends Controller
         if ($profile === null) {
             $fixedListItem->update([
                 'is_sle_fhe_verified' => false,
-                'status' => FixedListItemStatus::Ineligible,
+                'status' => FixedListItemStatus::Pending,
             ]);
 
             return back()->withErrors([
@@ -269,7 +315,7 @@ class FixedListController extends Controller
             ]);
         }
 
-        if (! $profile->isSleFheVerified()) {
+        if (! $profile->hasDocumentedSleFheVerification()) {
             return back()->withErrors([
                 'verify' => "Student account {$fixedListItem->student_id_number} exists, but their SLE-FHE profile has not been verified yet.",
             ]);
@@ -283,14 +329,7 @@ class FixedListController extends Controller
                 'status' => FixedListItemStatus::Verified,
             ]);
 
-            SleFheVerification::query()->updateOrCreate(
-                ['student_profile_id' => $profile->id],
-                [
-                    'verified_address' => '',
-                    'verified_by' => $fassg->id,
-                    'verified_at' => now(),
-                ],
-            );
+            // A list check references existing SLE-FHE evidence; it never rewrites that evidence.
         });
 
         $this->audit($request, 'fassg.fixed_list.sle_fhe_verified', 'fixed_list_items');
@@ -300,22 +339,92 @@ class FixedListController extends Controller
 
     public function endorseItem(Request $request, FixedList $fixedList, FixedListItem $fixedListItem): RedirectResponse
     {
-        abort_unless($fixedListItem->fixed_list_id === $fixedList->id, 404);
-
-        $newStatus = ! $fixedListItem->is_manually_endorsed;
-
-        $fixedListItem->update([
-            'is_manually_endorsed' => $newStatus,
-            'endorsed_by_id' => $newStatus ? $this->actor($request)->id : null,
-            'endorsed_at' => $newStatus ? now() : null,
-            'status' => $newStatus ? FixedListItemStatus::Endorsed : FixedListItemStatus::Pending,
+        abort_unless($request->user()?->isFassg(), 403);
+        abort_unless((int) $fixedListItem->fixed_list_id === (int) $fixedList->id, 404);
+        $request->validate([
+            'endorse' => ['sometimes', 'boolean'],
+            ...$this->noCriteriaOverrideRules(),
         ]);
+        // Repeating Endorse is idempotent. Revocation must be explicitly requested.
+        $endorse = $request->boolean('endorse', true);
+        $this->updateEndorsements($request, $fixedList, [$fixedListItem->id], $endorse);
 
-        $this->audit($request, $newStatus ? 'fassg.fixed_list.item_endorsed' : 'fassg.fixed_list.item_endorsement_revoked', 'fixed_list_items');
-
-        return back()->with('status', $newStatus
-            ? "{$fixedListItem->student_name} has been manually endorsed."
+        return back()->with('status', $endorse
+            ? "{$fixedListItem->student_name} has been endorsed by FASSG for list preparation. Sponsor approval is separate."
             : "Endorsement removed for {$fixedListItem->student_name}.");
+    }
+
+    public function endorseSelected(Request $request, FixedList $fixedList): RedirectResponse
+    {
+        abort_unless($request->user()?->isFassg(), 403);
+        $validated = $request->validate([
+            'selected_items' => ['required', 'array', 'min:1'],
+            'selected_items.*' => ['required', 'integer', 'min:1'],
+            ...$this->noCriteriaOverrideRules(),
+        ]);
+        $ids = array_values(array_unique(array_map('intval', $validated['selected_items'])));
+        $this->updateEndorsements($request, $fixedList, $ids, true);
+
+        return back()->with('status', count($ids).' selected student(s) endorsed by FASSG for list preparation. Sponsor approval is separate.');
+    }
+
+    private function noCriteriaOverrideRules(): array
+    {
+        return array_fill_keys(['outside_criteria', 'is_outside_criteria', 'override_criteria', 'exception_reason'], ['prohibited']);
+    }
+
+    private function updateEndorsements(Request $request, FixedList $fixedList, array $ids, bool $endorse): void
+    {
+        DB::transaction(function () use ($request, $fixedList, $ids, $endorse): void {
+            $program = SponsorshipProgram::query()->lockForUpdate()->findOrFail($fixedList->sponsorship_program_id);
+            $list = FixedList::query()->lockForUpdate()->findOrFail($fixedList->id);
+            $this->assertListEditable($list);
+            $items = $this->lockListItems($list, $ids);
+            if ($items->count() !== count($ids)) {
+                throw ValidationException::withMessages(['selected_items' => 'Every selected entry must belong to this fixed list.']);
+            }
+            // Validate the complete selection before changing any endorsement.
+            if ($endorse) {
+                foreach ($items as $item) {
+                    $errors = $item->endorsementErrors($program);
+                    if ($errors !== []) {
+                        throw ValidationException::withMessages(['endorsement' => 'Entry '.$item->id.': '.implode(' ', $errors)]);
+                    }
+                }
+            }
+            foreach ($items as $item) {
+                if ($item->is_manually_endorsed === $endorse) {
+                    continue; // Preserve the original officer and timestamp on retries.
+                }
+                $before = $item->only(['status', 'is_manually_endorsed', 'endorsed_by_id', 'endorsed_at']);
+                $item->update([
+                    'is_manually_endorsed' => $endorse,
+                    'endorsed_by_id' => $endorse ? $request->user()->id : null,
+                    'endorsed_at' => $endorse ? now() : null,
+                    'status' => $endorse ? FixedListItemStatus::Endorsed : FixedListItemStatus::Pending,
+                ]);
+                AuditLog::record($endorse ? 'fassg.fixed_list.item_endorsed' : 'fassg.fixed_list.item_endorsement_revoked',
+                    'fixed_list_items', $request->user(), $request->ip(), json_encode([
+                        'fixed_list_id' => $list->id, 'item_id' => $item->id, 'action_route' => $request->route()?->getName(),
+                        'before' => $before, 'after' => $item->only(array_keys($before)),
+                    ]));
+            }
+        }, 3);
+    }
+
+    private function lockListItems(FixedList $list, ?array $ids = null): \Illuminate\Database\Eloquent\Collection
+    {
+        $items = $list->items()->when($ids !== null, fn ($query) => $query->whereIn('id', $ids))
+            ->orderBy('id')->lockForUpdate()->get();
+        $profiles = StudentProfile::query()->whereIn('student_id_number', $items->pluck('student_id_number'))
+            ->orderBy('id')->lockForUpdate()->get()->keyBy('student_id_number');
+        SleFheVerification::query()->whereIn('student_profile_id', $profiles->pluck('id'))
+            ->orderBy('id')->lockForUpdate()->get();
+        foreach ($items as $item) {
+            $item->setRelation('studentProfile', $profiles->get($item->student_id_number));
+        }
+
+        return $items;
     }
 
     private function assertListEditable(FixedList $fixedList): void

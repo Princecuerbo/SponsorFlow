@@ -1,0 +1,77 @@
+{
+  "status": "PASS",
+  "style": "Sample colors and guide layout: stores left, circular processes center, rectangular entities right",
+  "counts": {
+    "SponsorFlow_Level_1": {
+      "processes": [
+        "1.0",
+        "2.0",
+        "3.0",
+        "4.0",
+        "5.0",
+        "6.0",
+        "7.0",
+        "8.0"
+      ],
+      "arrows": 79,
+      "pixels": [
+        3800,
+        7220
+      ]
+    },
+    "SponsorFlow_Level_1_Part_1": {
+      "processes": [
+        "1.0",
+        "2.0",
+        "3.0",
+        "4.0"
+      ],
+      "arrows": 30,
+      "pixels": [
+        3800,
+        3940
+      ]
+    },
+    "SponsorFlow_Level_1_Part_2": {
+      "processes": [
+        "5.0",
+        "6.0",
+        "7.0",
+        "8.0"
+      ],
+      "arrows": 49,
+      "pixels": [
+        3800,
+        3940
+      ]
+    }
+  },
+  "all_79_previously_verified_flows_preserved": true,
+  "checks": [
+    "Eight true circular processes in Level 1",
+    "Five external entity types preserved",
+    "No direct entity-store or store-store flows",
+    "Read/write arrow direction preserved",
+    "All data store IDs resolve to a single consistent name",
+    "5.0 writes application verification to D6 and notifications to D10",
+    "7.0 reads notifications only",
+    "No immutable-audit claim",
+    "Text bounds checked and all SVG files parsed",
+    "No existing output overwritten"
+  ],
+  "source_flow_sha256": "600d09f0e98851c8abd6ea0926a8c19e2c0ed88f5e22e7d362975633a429b6d8",
+  "files": [
+    "C:\\xampp\\htdocs\\SponsorFlow\\output\\sponsorflow-dfd-sample\\SponsorFlow_Level_0.png",
+    "C:\\xampp\\htdocs\\SponsorFlow\\output\\sponsorflow-dfd-sample\\SponsorFlow_Level_0.svg",
+    "C:\\xampp\\htdocs\\SponsorFlow\\output\\sponsorflow-dfd-sample\\SponsorFlow_Level_1.png",
+    "C:\\xampp\\htdocs\\SponsorFlow\\output\\sponsorflow-dfd-sample\\SponsorFlow_Level_1.svg",
+    "C:\\xampp\\htdocs\\SponsorFlow\\output\\sponsorflow-dfd-sample\\SponsorFlow_Level_1_Part_1.png",
+    "C:\\xampp\\htdocs\\SponsorFlow\\output\\sponsorflow-dfd-sample\\SponsorFlow_Level_1_Part_1.svg",
+    "C:\\xampp\\htdocs\\SponsorFlow\\output\\sponsorflow-dfd-sample\\SponsorFlow_Level_1_Part_2.png",
+    "C:\\xampp\\htdocs\\SponsorFlow\\output\\sponsorflow-dfd-sample\\SponsorFlow_Level_1_Part_2.svg",
+    "C:\\xampp\\htdocs\\SponsorFlow\\output\\sponsorflow-dfd-sample\\SponsorFlow_Level_0.pdf",
+    "C:\\xampp\\htdocs\\SponsorFlow\\output\\sponsorflow-dfd-sample\\SponsorFlow_Level_1.pdf",
+    "C:\\xampp\\htdocs\\SponsorFlow\\output\\sponsorflow-dfd-sample\\SponsorFlow_Level_1_Two_Pages.pdf",
+    "C:\\xampp\\htdocs\\SponsorFlow\\output\\sponsorflow-dfd-sample\\Chapter_III_DFD_Narrative.txt"
+  ]
+}

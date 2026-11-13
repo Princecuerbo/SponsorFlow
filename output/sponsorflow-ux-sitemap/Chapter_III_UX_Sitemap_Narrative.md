@@ -1,0 +1,9 @@
+# UX Sitemap
+
+The UX Sitemap presents the organization of SponsorFlow’s user interface and the navigation available to its five user roles: Student Applicant, FASSG Personnel, Sponsor, Accounting Office Personnel, and System Administrator. The public landing page provides access to student registration and login, while staff, sponsors, and administrators use their designated login pages. After authentication, users access the pages permitted by their assigned role. Student login initially opens the SLE-FHE Verification page.
+
+Students can request SLE-FHE verification, browse sponsorship opportunities after verification, submit applications and supporting documents, monitor application status, view notifications, and access their profiles. FASSG personnel manage programs, review verification requests, maintain Fixed Lists, manually prepare Generated Batches, review batch members, and submit eligible batches to Sponsors. Sponsor pages provide whole-batch review, confirmation-document upload, explicit approval or rejection, and decision history. FASSG separately records the Sponsor’s decision and explicitly forwards eligible approved beneficiaries to Accounting. Accounting personnel can view, print, and export only authorized beneficiary references. Administrators manage user accounts, audit logs, security settings, and backups.
+
+The figure uses colored branches to distinguish role-specific navigation. Connected rectangles represent pages or navigation groupings, while smaller text identifies controls, forms, and dialogs within those pages. The hierarchy separates each role’s responsibilities and provides clear paths between lists, detail views, and authorized actions. Page visibility and action availability remain subject to authentication, permissions, verification, and record status.
+
+*Figure 3.X. UX Sitemap of SponsorFlow.*

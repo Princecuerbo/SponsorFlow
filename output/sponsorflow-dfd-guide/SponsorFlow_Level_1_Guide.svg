@@ -1,0 +1,562 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="3610" viewBox="0 0 1900 3610"><rect width="100%" height="100%" fill="white"/>
+<text x="45" y="28" fill="#202830" font-family="Arial, sans-serif" font-size="34" font-weight="700" text-anchor="start" dominant-baseline="text-before-edge">LEVEL 1 - DATA FLOW DIAGRAM</text>
+<text x="46" y="76" fill="#535F6B" font-family="Arial, sans-serif" font-size="19" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">SponsorFlow - Decomposition of process 0</text>
+<text x="60" y="130" fill="#202830" font-family="Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" dominant-baseline="text-before-edge">DATA STORES</text>
+<text x="970" y="130" fill="#202830" font-family="Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">PROCESSES</text>
+<text x="1725.0" y="130" fill="#202830" font-family="Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">EXTERNAL ENTITIES</text>
+<rect x="25" y="112" width="1850" height="3445" rx="0" fill="none" stroke="#202830" stroke-width="1.3"/>
+<polyline points="35,164 1865,164" fill="none" stroke="#D8DEE3" stroke-width="1" stroke-linejoin="round"/>
+<circle cx="970" cy="390.0" r="180" fill="#FFFFFF" stroke="#3C4853" stroke-width="1.8"/>
+<text x="970" y="336.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">1.0</text>
+<text x="970" y="363.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Manage User</text>
+<text x="970" y="390.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Accounts and</text>
+<text x="970" y="417.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Authentication</text>
+<rect x="50" y="360.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,360.0 50,360.0 50,388.0 425,388.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,360.0 97,388.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="366.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D1</text>
+<text x="108" y="366.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Users and Student Profiles</text>
+<polyline points="790.7125213518802,374.0 425,374.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="425,374.0 433.0,377.8 433.0,370.2" fill="#3C4853"/>
+<text x="607.5" y="353.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Account / profile records</text>
+<rect x="50" y="392.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,392.0 50,392.0 50,420.0 425,420.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,392.0 97,420.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="398.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D1</text>
+<text x="108" y="398.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Users and Student Profiles</text>
+<polyline points="425,406.0 790.7125213518802,406.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="790.7125213518802,406.0 782.7125213518802,402.2 782.7125213518802,409.8" fill="#3C4853"/>
+<text x="607.5" y="385.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Account credentials and profiles</text>
+<polyline points="1600,330.0 1139.7056274847714,330.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1139.7056274847714,330.0 1147.7056274847714,333.8 1147.7056274847714,326.2" fill="#3C4853"/>
+<text x="1375.0" y="308.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Registration / login credentials</text>
+<polyline points="1148.8854381999831,370.0 1600,370.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1600,370.0 1592.0,366.2 1592.0,373.8" fill="#3C4853"/>
+<text x="1375.0" y="348.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Account-access result</text>
+<polyline points="1600,410.0 1148.8854381999831,410.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1148.8854381999831,410.0 1156.8854381999831,413.8 1156.8854381999831,406.2" fill="#3C4853"/>
+<text x="1375.0" y="388.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">User accounts and roles</text>
+<polyline points="1139.7056274847714,450.0 1600,450.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1600,450.0 1592.0,446.2 1592.0,453.8" fill="#3C4853"/>
+<text x="1375.0" y="428.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Account and role status</text>
+<rect x="1600" y="311.0" width="250" height="78.0" rx="0" fill="white" stroke="#3C4853" stroke-width="1.4"/>
+<text x="1725.0" y="337.5" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Student</text>
+<rect x="1600" y="391.0" width="250" height="78.0" rx="0" fill="white" stroke="#3C4853" stroke-width="1.4"/>
+<text x="1725.0" y="405.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">System</text>
+<text x="1725.0" y="430.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Administrator</text>
+<rect x="27" y="594" width="1846" height="410" rx="0" fill="#F9FAFB" stroke="none" stroke-width="0"/>
+<polyline points="35,594 1865,594" fill="none" stroke="#E2E6EA" stroke-width="1" stroke-linejoin="round"/>
+<circle cx="970" cy="800.0" r="180" fill="#FFFFFF" stroke="#3C4853" stroke-width="1.8"/>
+<text x="970" y="746.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">2.0</text>
+<text x="970" y="773.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Verify SLE-FHE</text>
+<text x="970" y="800.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Student</text>
+<text x="970" y="827.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Information</text>
+<rect x="50" y="738.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,738.0 50,738.0 50,766.0 425,766.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,738.0 97,766.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="744.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D1</text>
+<text x="108" y="744.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Users and Student Profiles</text>
+<polyline points="425,752.0 796.5180124623885,752.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="796.5180124623885,752.0 788.5180124623885,748.2 788.5180124623885,755.8" fill="#3C4853"/>
+<text x="607.5" y="731.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Student identity and profile</text>
+<rect x="50" y="770.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,770.0 50,770.0 50,798.0 425,798.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,770.0 97,798.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="776.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D2</text>
+<text x="108" y="776.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Institutional SLE-FHE Registry</text>
+<polyline points="425,784.0 790.7125213518802,784.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="790.7125213518802,784.0 782.7125213518802,780.2 782.7125213518802,787.8" fill="#3C4853"/>
+<text x="607.5" y="763.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Registry reference record</text>
+<rect x="50" y="802.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,802.0 50,802.0 50,830.0 425,830.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,802.0 97,830.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="808.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D3</text>
+<text x="108" y="808.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Verification Requests and Decisions</text>
+<polyline points="425,816.0 790.7125213518802,816.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="790.7125213518802,816.0 782.7125213518802,812.2 782.7125213518802,819.8" fill="#3C4853"/>
+<text x="607.5" y="795.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Existing requests and decisions</text>
+<rect x="50" y="834.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,834.0 50,834.0 50,862.0 425,862.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,834.0 97,862.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="840.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D3</text>
+<text x="108" y="840.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Verification Requests and Decisions</text>
+<polyline points="796.5180124623885,848.0 425,848.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="425,848.0 433.0,851.8 433.0,844.2" fill="#3C4853"/>
+<text x="607.5" y="827.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Verification request / decision / evidence</text>
+<polyline points="1600,740.0 1139.7056274847714,740.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1139.7056274847714,740.0 1147.7056274847714,743.8 1147.7056274847714,736.2" fill="#3C4853"/>
+<text x="1375.0" y="718.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Verification request / documents</text>
+<polyline points="1148.8854381999831,780.0 1600,780.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1600,780.0 1592.0,776.2 1592.0,783.8" fill="#3C4853"/>
+<text x="1375.0" y="758.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Verification result</text>
+<polyline points="1600,820.0 1148.8854381999831,820.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1148.8854381999831,820.0 1156.8854381999831,823.8 1156.8854381999831,816.2" fill="#3C4853"/>
+<text x="1375.0" y="798.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Manual verification decision</text>
+<polyline points="1139.7056274847714,860.0 1600,860.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1600,860.0 1592.0,856.2 1592.0,863.8" fill="#3C4853"/>
+<text x="1375.0" y="838.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Verification queue and evidence</text>
+<rect x="1600" y="721.0" width="250" height="78.0" rx="0" fill="white" stroke="#3C4853" stroke-width="1.4"/>
+<text x="1725.0" y="747.5" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Student</text>
+<rect x="1600" y="801.0" width="250" height="78.0" rx="0" fill="white" stroke="#3C4853" stroke-width="1.4"/>
+<text x="1725.0" y="827.5" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">FASSG Office</text>
+<polyline points="35,1004 1865,1004" fill="none" stroke="#E2E6EA" stroke-width="1" stroke-linejoin="round"/>
+<circle cx="970" cy="1210.0" r="180" fill="#FFFFFF" stroke="#3C4853" stroke-width="1.8"/>
+<text x="970" y="1156.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">3.0</text>
+<text x="970" y="1183.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Manage</text>
+<text x="970" y="1210.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Sponsorship</text>
+<text x="970" y="1237.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Programs</text>
+<rect x="50" y="1164.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,1164.0 50,1164.0 50,1192.0 425,1192.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,1164.0 97,1192.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="1170.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D4</text>
+<text x="108" y="1170.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Academic Program Catalog</text>
+<polyline points="425,1178.0 792.8672813961238,1178.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="792.8672813961238,1178.0 784.8672813961238,1174.2 784.8672813961238,1181.8" fill="#3C4853"/>
+<text x="607.5" y="1157.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Academic program catalog</text>
+<rect x="50" y="1196.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,1196.0 50,1196.0 50,1224.0 425,1224.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,1196.0 97,1224.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="1202.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D5</text>
+<text x="108" y="1202.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Sponsorship Programs and Eligibility</text>
+<polyline points="425,1210.0 790.0,1210.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="790.0,1210.0 782.0,1206.2 782.0,1213.8" fill="#3C4853"/>
+<text x="607.5" y="1189.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Current programs / availability</text>
+<rect x="50" y="1228.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,1228.0 50,1228.0 50,1256.0 425,1256.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,1228.0 97,1256.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="1234.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D5</text>
+<text x="108" y="1234.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Sponsorship Programs and Eligibility</text>
+<polyline points="792.8672813961238,1242.0 425,1242.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="425,1242.0 433.0,1245.8 433.0,1238.2" fill="#3C4853"/>
+<text x="607.5" y="1221.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Program details and requirements</text>
+<polyline points="1600,1150.0 1139.7056274847714,1150.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1139.7056274847714,1150.0 1147.7056274847714,1153.8 1147.7056274847714,1146.2" fill="#3C4853"/>
+<text x="1375.0" y="1128.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Program configuration / status instruction</text>
+<polyline points="1148.8854381999831,1190.0 1600,1190.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1600,1190.0 1592.0,1186.2 1592.0,1193.8" fill="#3C4853"/>
+<text x="1375.0" y="1168.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Program status / slot information</text>
+<polyline points="1600,1230.0 1148.8854381999831,1230.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1148.8854381999831,1230.0 1156.8854381999831,1233.8 1156.8854381999831,1226.2" fill="#3C4853"/>
+<text x="1375.0" y="1208.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Available-program inquiry</text>
+<polyline points="1139.7056274847714,1270.0 1600,1270.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1600,1270.0 1592.0,1266.2 1592.0,1273.8" fill="#3C4853"/>
+<text x="1375.0" y="1248.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Open program list</text>
+<rect x="1600" y="1131.0" width="250" height="78.0" rx="0" fill="white" stroke="#3C4853" stroke-width="1.4"/>
+<text x="1725.0" y="1157.5" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">FASSG Office</text>
+<rect x="1600" y="1211.0" width="250" height="78.0" rx="0" fill="white" stroke="#3C4853" stroke-width="1.4"/>
+<text x="1725.0" y="1237.5" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Student</text>
+<rect x="27" y="1414" width="1846" height="410" rx="0" fill="#F9FAFB" stroke="none" stroke-width="0"/>
+<polyline points="35,1414 1865,1414" fill="none" stroke="#E2E6EA" stroke-width="1" stroke-linejoin="round"/>
+<circle cx="970" cy="1620.0" r="180" fill="#FFFFFF" stroke="#3C4853" stroke-width="1.8"/>
+<text x="970" y="1566.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">4.0</text>
+<text x="970" y="1593.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Process Student</text>
+<text x="970" y="1620.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Applications and</text>
+<text x="970" y="1647.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Documents</text>
+<rect x="50" y="1542.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,1542.0 50,1542.0 50,1570.0 425,1570.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,1542.0 97,1570.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="1548.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D1</text>
+<text x="108" y="1548.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Users and Student Profiles</text>
+<polyline points="425,1556.0 801.7620732414953,1556.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="801.7620732414953,1556.0 793.7620732414953,1552.2 793.7620732414953,1559.8" fill="#3C4853"/>
+<text x="607.5" y="1535.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Student profile</text>
+<rect x="50" y="1574.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,1574.0 50,1574.0 50,1602.0 425,1602.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,1574.0 97,1602.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="1580.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D3</text>
+<text x="108" y="1580.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Verification Requests and Decisions</text>
+<polyline points="425,1588.0 792.8672813961238,1588.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="792.8672813961238,1588.0 784.8672813961238,1584.2 784.8672813961238,1591.8" fill="#3C4853"/>
+<text x="607.5" y="1567.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Documented SLE-FHE verification</text>
+<rect x="50" y="1606.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,1606.0 50,1606.0 50,1634.0 425,1634.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,1606.0 97,1634.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="1612.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D5</text>
+<text x="108" y="1612.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Sponsorship Programs and Eligibility</text>
+<polyline points="425,1620.0 790.0,1620.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="790.0,1620.0 782.0,1616.2 782.0,1623.8" fill="#3C4853"/>
+<text x="607.5" y="1599.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Open programs, slots and criteria</text>
+<rect x="50" y="1638.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,1638.0 50,1638.0 50,1666.0 425,1666.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,1638.0 97,1666.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="1644.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D6</text>
+<text x="108" y="1644.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Applications and Supporting Files</text>
+<polyline points="425,1652.0 792.8672813961238,1652.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="792.8672813961238,1652.0 784.8672813961238,1648.2 784.8672813961238,1655.8" fill="#3C4853"/>
+<text x="607.5" y="1631.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Existing application / documents</text>
+<rect x="50" y="1670.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,1670.0 50,1670.0 50,1698.0 425,1698.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,1670.0 97,1698.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="1676.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D6</text>
+<text x="108" y="1676.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Applications and Supporting Files</text>
+<polyline points="801.7620732414953,1684.0 425,1684.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="425,1684.0 433.0,1687.8 433.0,1680.2" fill="#3C4853"/>
+<text x="607.5" y="1663.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Application / document records</text>
+<polyline points="1600,1560.0 1139.7056274847714,1560.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1139.7056274847714,1560.0 1147.7056274847714,1563.8 1147.7056274847714,1556.2" fill="#3C4853"/>
+<text x="1375.0" y="1538.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Application form / documents</text>
+<polyline points="1148.8854381999831,1600.0 1600,1600.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1600,1600.0 1592.0,1596.2 1592.0,1603.8" fill="#3C4853"/>
+<text x="1375.0" y="1578.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Application status</text>
+<polyline points="1600,1640.0 1148.8854381999831,1640.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1148.8854381999831,1640.0 1156.8854381999831,1643.8 1156.8854381999831,1636.2" fill="#3C4853"/>
+<text x="1375.0" y="1618.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Application review request</text>
+<polyline points="1139.7056274847714,1680.0 1600,1680.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1600,1680.0 1592.0,1676.2 1592.0,1683.8" fill="#3C4853"/>
+<text x="1375.0" y="1658.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Applicant queue and evidence</text>
+<rect x="1600" y="1541.0" width="250" height="78.0" rx="0" fill="white" stroke="#3C4853" stroke-width="1.4"/>
+<text x="1725.0" y="1567.5" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Student</text>
+<rect x="1600" y="1621.0" width="250" height="78.0" rx="0" fill="white" stroke="#3C4853" stroke-width="1.4"/>
+<text x="1725.0" y="1647.5" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">FASSG Office</text>
+<polyline points="35,1824 1865,1824" fill="none" stroke="#E2E6EA" stroke-width="1" stroke-linejoin="round"/>
+<circle cx="970" cy="2030.0" r="180" fill="#FFFFFF" stroke="#3C4853" stroke-width="1.8"/>
+<text x="970" y="1976.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">5.0</text>
+<text x="970" y="2003.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Manage Fixed Lists</text>
+<text x="970" y="2030.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">and Prepare</text>
+<text x="970" y="2057.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Generated Batches</text>
+<rect x="50" y="1888.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,1888.0 50,1888.0 50,1916.0 425,1916.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,1888.0 97,1916.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="1894.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D1</text>
+<text x="108" y="1894.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Users and Student Profiles</text>
+<polyline points="425,1902.0 843.445663843549,1902.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="843.445663843549,1902.0 835.445663843549,1898.2 835.445663843549,1905.8" fill="#3C4853"/>
+<text x="607.5" y="1881.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Student identity / active sponsorship</text>
+<rect x="50" y="1920.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,1920.0 50,1920.0 50,1948.0 425,1948.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,1920.0 97,1948.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="1926.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D2</text>
+<text x="108" y="1926.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Institutional SLE-FHE Registry</text>
+<polyline points="425,1934.0 817.7370695146058,1934.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="817.7370695146058,1934.0 809.7370695146058,1930.2 809.7370695146058,1937.8" fill="#3C4853"/>
+<text x="607.5" y="1913.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Institutional registry reference</text>
+<rect x="50" y="1952.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,1952.0 50,1952.0 50,1980.0 425,1980.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,1952.0 97,1980.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="1958.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D3</text>
+<text x="108" y="1958.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Verification Requests and Decisions</text>
+<polyline points="425,1966.0 801.7620732414953,1966.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="801.7620732414953,1966.0 793.7620732414953,1962.2 793.7620732414953,1969.8" fill="#3C4853"/>
+<text x="607.5" y="1945.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Documented verification decisions</text>
+<rect x="50" y="1984.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,1984.0 50,1984.0 50,2012.0 425,2012.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,1984.0 97,2012.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="1990.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D5</text>
+<text x="108" y="1990.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Sponsorship Programs and Eligibility</text>
+<polyline points="425,1998.0 792.8672813961238,1998.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="792.8672813961238,1998.0 784.8672813961238,1994.2 784.8672813961238,2001.8" fill="#3C4853"/>
+<text x="607.5" y="1977.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Program requirements and slots</text>
+<rect x="50" y="2016.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2016.0 50,2016.0 50,2044.0 425,2044.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2016.0 97,2044.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2022.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D6</text>
+<text x="108" y="2022.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Applications and Supporting Files</text>
+<polyline points="425,2030.0 790.0,2030.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="790.0,2030.0 782.0,2026.2 782.0,2033.8" fill="#3C4853"/>
+<text x="607.5" y="2009.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Pending / Verified candidates and evidence</text>
+<rect x="50" y="2048.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2048.0 50,2048.0 50,2076.0 425,2076.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2048.0 97,2076.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2054.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D7</text>
+<text x="108" y="2054.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Fixed Lists and Generated Batches</text>
+<polyline points="425,2062.0 792.8672813961238,2062.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="792.8672813961238,2062.0 784.8672813961238,2058.2 784.8672813961238,2065.8" fill="#3C4853"/>
+<text x="607.5" y="2041.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Finalized list / saved batch roster</text>
+<rect x="50" y="2080.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2080.0 50,2080.0 50,2108.0 425,2108.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2080.0 97,2108.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2086.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D7</text>
+<text x="108" y="2086.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Fixed Lists and Generated Batches</text>
+<polyline points="801.7620732414953,2094.0 425,2094.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="425,2094.0 433.0,2097.8 433.0,2090.2" fill="#3C4853"/>
+<text x="607.5" y="2073.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Fixed-list records / selected batch roster</text>
+<rect x="50" y="2112.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2112.0 50,2112.0 50,2140.0 425,2140.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2112.0 97,2140.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2118.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D6</text>
+<text x="108" y="2118.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Applications and Supporting Files</text>
+<polyline points="817.7370695146058,2126.0 425,2126.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="425,2126.0 433.0,2129.8 433.0,2122.2" fill="#3C4853"/>
+<text x="607.5" y="2105.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Application verification status / evidence</text>
+<rect x="50" y="2144.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2144.0 50,2144.0 50,2172.0 425,2172.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2144.0 97,2172.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2150.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D10</text>
+<text x="108" y="2150.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Notifications</text>
+<polyline points="843.445663843549,2158.0 425,2158.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="425,2158.0 433.0,2161.8 433.0,2154.2" fill="#3C4853"/>
+<text x="607.5" y="2137.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Application verification notification</text>
+<polyline points="1600,1970.0 1139.7056274847714,1970.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1139.7056274847714,1970.0 1147.7056274847714,1973.8 1147.7056274847714,1966.2" fill="#3C4853"/>
+<text x="1375.0" y="1948.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Sponsor-proposed fixed-list data</text>
+<polyline points="1600,2010.0 1148.8854381999831,2010.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1148.8854381999831,2010.0 1156.8854381999831,2013.8 1156.8854381999831,2006.2" fill="#3C4853"/>
+<text x="1375.0" y="1988.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Eligibility / document verification decisions</text>
+<polyline points="1600,2050.0 1148.8854381999831,2050.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1148.8854381999831,2050.0 1156.8854381999831,2053.8 1156.8854381999831,2046.2" fill="#3C4853"/>
+<text x="1375.0" y="2028.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Manual roster selection / submission</text>
+<polyline points="1139.7056274847714,2090.0 1600,2090.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1600,2090.0 1592.0,2086.2 1592.0,2093.8" fill="#3C4853"/>
+<text x="1375.0" y="2068.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Draft, roster and submission status</text>
+<rect x="1600" y="1951.0" width="250" height="158.0" rx="0" fill="white" stroke="#3C4853" stroke-width="1.4"/>
+<text x="1725.0" y="2017.5" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">FASSG Office</text>
+<rect x="27" y="2234" width="1846" height="410" rx="0" fill="#F9FAFB" stroke="none" stroke-width="0"/>
+<polyline points="35,2234 1865,2234" fill="none" stroke="#E2E6EA" stroke-width="1" stroke-linejoin="round"/>
+<circle cx="970" cy="2440.0" r="180" fill="#FFFFFF" stroke="#3C4853" stroke-width="1.8"/>
+<text x="970" y="2386.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">6.0</text>
+<text x="970" y="2413.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Process Sponsor</text>
+<text x="970" y="2440.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Whole-Batch</text>
+<text x="970" y="2467.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Decision</text>
+<rect x="50" y="2266.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2266.0 50,2266.0 50,2294.0 425,2294.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2266.0 97,2294.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2272.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D1</text>
+<text x="108" y="2272.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Users and Student Profiles</text>
+<polyline points="425,2280.0 887.5378874876468,2280.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="887.5378874876468,2280.0 879.5378874876468,2276.2 879.5378874876468,2283.8" fill="#3C4853"/>
+<text x="607.5" y="2259.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Current active sponsorship</text>
+<rect x="50" y="2298.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2298.0 50,2298.0 50,2326.0 425,2326.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2298.0 97,2326.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2304.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D3</text>
+<text x="108" y="2304.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Verification Requests and Decisions</text>
+<polyline points="425,2312.0 843.445663843549,2312.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="843.445663843549,2312.0 835.445663843549,2308.2 835.445663843549,2315.8" fill="#3C4853"/>
+<text x="607.5" y="2291.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Verified eligibility evidence</text>
+<rect x="50" y="2330.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2330.0 50,2330.0 50,2358.0 425,2358.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2330.0 97,2358.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2336.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D5</text>
+<text x="108" y="2336.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Sponsorship Programs and Eligibility</text>
+<polyline points="425,2344.0 817.7370695146058,2344.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="817.7370695146058,2344.0 809.7370695146058,2340.2 809.7370695146058,2347.8" fill="#3C4853"/>
+<text x="607.5" y="2323.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Program criteria / slot capacity</text>
+<rect x="50" y="2362.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2362.0 50,2362.0 50,2390.0 425,2390.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2362.0 97,2390.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2368.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D6</text>
+<text x="108" y="2368.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Applications and Supporting Files</text>
+<polyline points="425,2376.0 801.7620732414953,2376.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="801.7620732414953,2376.0 793.7620732414953,2372.2 793.7620732414953,2379.8" fill="#3C4853"/>
+<text x="607.5" y="2355.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Applicants and document evidence</text>
+<rect x="50" y="2394.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2394.0 50,2394.0 50,2422.0 425,2422.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2394.0 97,2422.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2400.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D7</text>
+<text x="108" y="2400.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Fixed Lists and Generated Batches</text>
+<polyline points="425,2408.0 792.8672813961238,2408.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="792.8672813961238,2408.0 784.8672813961238,2404.2 784.8672813961238,2411.8" fill="#3C4853"/>
+<text x="607.5" y="2387.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Exact submitted roster</text>
+<rect x="50" y="2426.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2426.0 50,2426.0 50,2454.0 425,2454.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2426.0 97,2454.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2432.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D8</text>
+<text x="108" y="2432.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Sponsor Decisions and Handoff</text>
+<polyline points="425,2440.0 790.0,2440.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="790.0,2440.0 782.0,2436.2 782.0,2443.8" fill="#3C4853"/>
+<text x="607.5" y="2419.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Prior decisions / confirmation evidence</text>
+<rect x="50" y="2458.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2458.0 50,2458.0 50,2486.0 425,2486.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2458.0 97,2486.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2464.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D7</text>
+<text x="108" y="2464.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Fixed Lists and Generated Batches</text>
+<polyline points="792.8672813961238,2472.0 425,2472.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="425,2472.0 433.0,2475.8 433.0,2468.2" fill="#3C4853"/>
+<text x="607.5" y="2451.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Whole-batch decision / status</text>
+<rect x="50" y="2490.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2490.0 50,2490.0 50,2518.0 425,2518.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2490.0 97,2518.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2496.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D6</text>
+<text x="108" y="2496.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Applications and Supporting Files</text>
+<polyline points="801.7620732414953,2504.0 425,2504.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="425,2504.0 433.0,2507.8 433.0,2500.2" fill="#3C4853"/>
+<text x="607.5" y="2483.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Approved application records</text>
+<rect x="50" y="2522.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2522.0 50,2522.0 50,2550.0 425,2550.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2522.0 97,2550.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2528.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D1</text>
+<text x="108" y="2528.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Users and Student Profiles</text>
+<polyline points="817.7370695146058,2536.0 425,2536.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="425,2536.0 433.0,2539.8 433.0,2532.2" fill="#3C4853"/>
+<text x="607.5" y="2515.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Active sponsorship status</text>
+<rect x="50" y="2554.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2554.0 50,2554.0 50,2582.0 425,2582.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2554.0 97,2582.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2560.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D8</text>
+<text x="108" y="2560.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Sponsor Decisions and Handoff</text>
+<polyline points="843.445663843549,2568.0 425,2568.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="425,2568.0 433.0,2571.8 433.0,2564.2" fill="#3C4853"/>
+<text x="607.5" y="2547.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Sponsor decision and evidence</text>
+<rect x="50" y="2586.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2586.0 50,2586.0 50,2614.0 425,2614.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2586.0 97,2614.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2592.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D10</text>
+<text x="108" y="2592.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Notifications</text>
+<polyline points="887.5378874876468,2600.0 425,2600.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="425,2600.0 433.0,2603.8 433.0,2596.2" fill="#3C4853"/>
+<text x="607.5" y="2579.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Sponsor-approval notifications</text>
+<polyline points="1145.4992877478423,2400.0 1600,2400.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1600,2400.0 1592.0,2396.2 1592.0,2403.8" fill="#3C4853"/>
+<text x="1375.0" y="2378.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Exact submitted batch for review</text>
+<polyline points="1600,2440.0 1150.0,2440.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1150.0,2440.0 1158.0,2443.8 1158.0,2436.2" fill="#3C4853"/>
+<text x="1375.0" y="2418.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Whole-batch decision / confirmation evidence</text>
+<polyline points="1145.4992877478423,2480.0 1600,2480.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1600,2480.0 1592.0,2476.2 1592.0,2483.8" fill="#3C4853"/>
+<text x="1375.0" y="2458.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Decision / confirmation status</text>
+<rect x="1600" y="2381.0" width="250" height="118.0" rx="0" fill="white" stroke="#3C4853" stroke-width="1.4"/>
+<text x="1725.0" y="2427.5" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Sponsor</text>
+<polyline points="35,2644 1865,2644" fill="none" stroke="#E2E6EA" stroke-width="1" stroke-linejoin="round"/>
+<circle cx="970" cy="2850.0" r="180" fill="#FFFFFF" stroke="#3C4853" stroke-width="1.8"/>
+<text x="970" y="2796.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">7.0</text>
+<text x="970" y="2823.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Record FASSG Receipt,</text>
+<text x="970" y="2850.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Forward Beneficiaries</text>
+<text x="970" y="2877.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">and Provide Reports</text>
+<rect x="50" y="2708.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2708.0 50,2708.0 50,2736.0 425,2736.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2708.0 97,2736.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2714.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D1</text>
+<text x="108" y="2714.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Users and Student Profiles</text>
+<polyline points="425,2722.0 843.445663843549,2722.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="843.445663843549,2722.0 835.445663843549,2718.2 835.445663843549,2725.8" fill="#3C4853"/>
+<text x="607.5" y="2701.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Student profiles / active sponsorship</text>
+<rect x="50" y="2740.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2740.0 50,2740.0 50,2768.0 425,2768.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2740.0 97,2768.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2746.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D3</text>
+<text x="108" y="2746.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Verification Requests and Decisions</text>
+<polyline points="425,2754.0 817.7370695146058,2754.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="817.7370695146058,2754.0 809.7370695146058,2750.2 809.7370695146058,2757.8" fill="#3C4853"/>
+<text x="607.5" y="2733.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Verified SLE-FHE decisions</text>
+<rect x="50" y="2772.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2772.0 50,2772.0 50,2800.0 425,2800.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2772.0 97,2800.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2778.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D5</text>
+<text x="108" y="2778.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Sponsorship Programs and Eligibility</text>
+<polyline points="425,2786.0 801.7620732414953,2786.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="801.7620732414953,2786.0 793.7620732414953,2782.2 793.7620732414953,2789.8" fill="#3C4853"/>
+<text x="607.5" y="2765.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Program criteria and status</text>
+<rect x="50" y="2804.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2804.0 50,2804.0 50,2832.0 425,2832.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2804.0 97,2832.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2810.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D6</text>
+<text x="108" y="2810.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Applications and Supporting Files</text>
+<polyline points="425,2818.0 792.8672813961238,2818.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="792.8672813961238,2818.0 784.8672813961238,2814.2 784.8672813961238,2821.8" fill="#3C4853"/>
+<text x="607.5" y="2797.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Individual Approved/Ongoing records</text>
+<rect x="50" y="2836.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2836.0 50,2836.0 50,2864.0 425,2864.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2836.0 97,2864.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2842.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D7</text>
+<text x="108" y="2842.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Fixed Lists and Generated Batches</text>
+<polyline points="425,2850.0 790.0,2850.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="790.0,2850.0 782.0,2846.2 782.0,2853.8" fill="#3C4853"/>
+<text x="607.5" y="2829.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Exact submitted batch membership</text>
+<rect x="50" y="2868.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2868.0 50,2868.0 50,2896.0 425,2896.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2868.0 97,2896.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2874.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D8</text>
+<text x="108" y="2874.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Sponsor Decisions and Handoff</text>
+<polyline points="425,2882.0 792.8672813961238,2882.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="792.8672813961238,2882.0 784.8672813961238,2878.2 784.8672813961238,2885.8" fill="#3C4853"/>
+<text x="607.5" y="2861.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Sponsor confirmation / decision</text>
+<rect x="50" y="2900.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2900.0 50,2900.0 50,2928.0 425,2928.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2900.0 97,2928.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2906.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D10</text>
+<text x="108" y="2906.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Notifications</text>
+<polyline points="425,2914.0 801.7620732414953,2914.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="801.7620732414953,2914.0 793.7620732414953,2910.2 793.7620732414953,2917.8" fill="#3C4853"/>
+<text x="607.5" y="2893.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Stored notifications</text>
+<rect x="50" y="2932.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2932.0 50,2932.0 50,2960.0 425,2960.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2932.0 97,2960.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2938.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D8</text>
+<text x="108" y="2938.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Sponsor Decisions and Handoff</text>
+<polyline points="817.7370695146058,2946.0 425,2946.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="425,2946.0 433.0,2949.8 433.0,2942.2" fill="#3C4853"/>
+<text x="607.5" y="2925.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">FASSG receipt / forwarding records</text>
+<rect x="50" y="2964.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,2964.0 50,2964.0 50,2992.0 425,2992.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,2964.0 97,2992.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="2970.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D9</text>
+<text x="108" y="2970.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Audit Logs, Settings and Backups</text>
+<polyline points="843.445663843549,2978.0 425,2978.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="425,2978.0 433.0,2981.8 433.0,2974.2" fill="#3C4853"/>
+<text x="607.5" y="2957.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Audit event</text>
+<polyline points="1600,2730.0 1104.1640786499875,2730.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1104.1640786499875,2730.0 1112.1640786499875,2733.8 1112.1640786499875,2726.2" fill="#3C4853"/>
+<text x="1375.0" y="2708.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Sponsor-decision acknowledgement</text>
+<polyline points="1600,2770.0 1131.2451549659709,2770.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1131.2451549659709,2770.0 1139.2451549659709,2773.8 1139.2451549659709,2766.2" fill="#3C4853"/>
+<text x="1375.0" y="2748.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Explicit Accounting-forwarding instruction</text>
+<polyline points="1145.4992877478423,2810.0 1600,2810.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1600,2810.0 1592.0,2806.2 1592.0,2813.8" fill="#3C4853"/>
+<text x="1375.0" y="2788.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Decisions, evidence and reports</text>
+<polyline points="1600,2850.0 1150.0,2850.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1150.0,2850.0 1158.0,2853.8 1158.0,2846.2" fill="#3C4853"/>
+<text x="1375.0" y="2828.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Read-only reference / CSV request</text>
+<polyline points="1145.4992877478423,2890.0 1600,2890.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1600,2890.0 1592.0,2886.2 1592.0,2893.8" fill="#3C4853"/>
+<text x="1375.0" y="2868.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Eligible forwarded beneficiary list / CSV</text>
+<polyline points="1600,2930.0 1131.2451549659709,2930.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1131.2451549659709,2930.0 1139.2451549659709,2933.8 1139.2451549659709,2926.2" fill="#3C4853"/>
+<text x="1375.0" y="2908.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Status / notification inquiry</text>
+<polyline points="1104.1640786499875,2970.0 1600,2970.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1600,2970.0 1592.0,2966.2 1592.0,2973.8" fill="#3C4853"/>
+<text x="1375.0" y="2948.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Status and stored notifications</text>
+<rect x="1600" y="2711.0" width="250" height="118.0" rx="0" fill="white" stroke="#3C4853" stroke-width="1.4"/>
+<text x="1725.0" y="2757.5" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">FASSG Office</text>
+<rect x="1600" y="2831.0" width="250" height="78.0" rx="0" fill="white" stroke="#3C4853" stroke-width="1.4"/>
+<text x="1725.0" y="2845.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Accounting</text>
+<text x="1725.0" y="2870.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Office</text>
+<rect x="1600" y="2911.0" width="250" height="78.0" rx="0" fill="white" stroke="#3C4853" stroke-width="1.4"/>
+<text x="1725.0" y="2937.5" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Student</text>
+<rect x="27" y="3054" width="1846" height="410" rx="0" fill="#F9FAFB" stroke="none" stroke-width="0"/>
+<polyline points="35,3054 1865,3054" fill="none" stroke="#E2E6EA" stroke-width="1" stroke-linejoin="round"/>
+<circle cx="970" cy="3260.0" r="180" fill="#FFFFFF" stroke="#3C4853" stroke-width="1.8"/>
+<text x="970" y="3206.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">8.0</text>
+<text x="970" y="3233.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Manage Settings,</text>
+<text x="970" y="3260.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Audit Logs and</text>
+<text x="970" y="3287.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Backups</text>
+<rect x="50" y="3214.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,3214.0 50,3214.0 50,3242.0 425,3242.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,3214.0 97,3242.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="3220.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D1</text>
+<text x="108" y="3220.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Users and Student Profiles</text>
+<polyline points="425,3228.0 792.8672813961238,3228.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="792.8672813961238,3228.0 784.8672813961238,3224.2 784.8672813961238,3231.8" fill="#3C4853"/>
+<text x="607.5" y="3207.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Current accounts and roles</text>
+<rect x="50" y="3246.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,3246.0 50,3246.0 50,3274.0 425,3274.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,3246.0 97,3274.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="3252.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D9</text>
+<text x="108" y="3252.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Audit Logs, Settings and Backups</text>
+<polyline points="425,3260.0 790.0,3260.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="790.0,3260.0 782.0,3256.2 782.0,3263.8" fill="#3C4853"/>
+<text x="607.5" y="3239.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Audit events and settings</text>
+<rect x="50" y="3278.0" width="375" height="28" rx="0" fill="white" stroke="none" stroke-width="0"/>
+<polyline points="425,3278.0 50,3278.0 50,3306.0 425,3306.0" fill="none" stroke="#3C4853" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="97,3278.0 97,3306.0" fill="none" stroke="#3C4853" stroke-width="1" stroke-linejoin="round"/>
+<text x="73.5" y="3284.0" fill="#202830" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">D9</text>
+<text x="108" y="3284.0" fill="#202830" font-family="Arial, sans-serif" font-size="14.5" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Audit Logs, Settings and Backups</text>
+<polyline points="792.8672813961238,3292.0 425,3292.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="425,3292.0 433.0,3295.8 433.0,3288.2" fill="#3C4853"/>
+<text x="607.5" y="3271.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Settings / backup metadata</text>
+<polyline points="1600,3220.0 1145.4992877478423,3220.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1145.4992877478423,3220.0 1153.4992877478423,3223.8 1153.4992877478423,3216.2" fill="#3C4853"/>
+<text x="1375.0" y="3198.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Settings changes</text>
+<polyline points="1600,3260.0 1150.0,3260.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1150.0,3260.0 1158.0,3263.8 1158.0,3256.2" fill="#3C4853"/>
+<text x="1375.0" y="3238.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Authorized backup / restore request</text>
+<polyline points="1145.4992877478423,3300.0 1600,3300.0" fill="none" stroke="#3C4853" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="1600,3300.0 1592.0,3296.2 1592.0,3303.8" fill="#3C4853"/>
+<text x="1375.0" y="3278.0" fill="#202830" font-family="Arial, sans-serif" font-size="15.5" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge">Audit logs and system status</text>
+<rect x="1600" y="3201.0" width="250" height="118.0" rx="0" fill="white" stroke="#3C4853" stroke-width="1.4"/>
+<text x="1725.0" y="3235.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">System</text>
+<text x="1725.0" y="3260.0" fill="#202830" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">Administrator</text>
+<text x="45" y="3485" fill="#535F6B" font-family="Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Circles: processes | Rectangles: external entities | Open-ended rectangles: logical data stores.</text>
+<text x="45" y="3510" fill="#535F6B" font-family="Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Arrowheads point to data recipients. Repeated store IDs and entity names represent the same store or entity.</text>
+<text x="45" y="3535" fill="#535F6B" font-family="Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge">Accounting is read-only: verified SLE-FHE, Approved/Ongoing, Sponsor-confirmed and explicitly FASSG-forwarded.</text>
+<text x="950.0" y="3573" fill="#202830" font-family="Arial, sans-serif" font-size="19" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge">SponsorFlow - Level 1 Data Flow Diagram</text>
+</svg>

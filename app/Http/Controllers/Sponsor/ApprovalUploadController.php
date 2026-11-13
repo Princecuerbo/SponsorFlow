@@ -19,6 +19,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ApprovalUploadController extends Controller
@@ -29,92 +30,118 @@ class ApprovalUploadController extends Controller
     {
         $sponsor = $this->sponsorOrganization($request);
         $this->assertCanActOnBatch($sponsor, $generatedBatch);
+        $request->validate(['submission_version' => ['required', 'integer', 'min:1']]);
+        $path = $request->file('approval_document')->store("sponsor-approvals/{$generatedBatch->id}", 'local');
 
-        $path = $request->file('approval_document')->store(
-            "sponsor-approvals/{$generatedBatch->id}",
-            'local',
-        );
+        try {
+            DB::transaction(function () use ($request, $generatedBatch, $sponsor, $path): void {
+                $program = SponsorshipProgram::query()->lockForUpdate()->findOrFail($generatedBatch->sponsorship_program_id);
+                $batch = GeneratedBatch::query()->lockForUpdate()->findOrFail($generatedBatch->id);
+                $this->assertCanActOnBatch($sponsor, $batch);
+                $batch->assertSubmittedRoster();
+                $this->assertSubmissionVersion($request, $batch);
+                $approval = $batch->sponsorApprovals()->create([
+                    'sponsorship_program_id' => $program->id,
+                    'submission_version' => $batch->submission_version,
+                    'approval_document_path' => $path,
+                    'confirmation_status' => ConfirmationStatus::Pending,
+                    'uploaded_by_sponsor_id' => $this->actor($request)->id,
+                ]);
+                \App\Models\AuditLog::record('sponsor.approval.uploaded', 'sponsor_approvals', $request->user(), $request->ip(),
+                    json_encode(['batch_id' => $batch->id, 'submission_version' => $batch->submission_version, 'approval_id' => $approval->id]));
+            }, 3);
+        } catch (\Throwable $exception) {
+            Storage::disk('local')->delete($path);
+            throw $exception;
+        }
 
-        $approval = SponsorApproval::query()->updateOrCreate(
-            [
-                'sponsorship_program_id' => $generatedBatch->sponsorship_program_id,
-                'generated_batch_id' => $generatedBatch->id,
-            ],
-            [
-                'approval_document_path' => $path,
-                'confirmation_status' => ConfirmationStatus::Pending,
-                'uploaded_by_sponsor_id' => $this->actor($request)->id,
-            ],
-        );
-
-        $this->audit($request, 'sponsor.approval.uploaded', 'sponsor_approvals');
-
-        return redirect()
-            ->route('sponsor.lists.show', $generatedBatch)
-            ->with('status', 'Signed approval document uploaded. Confirm the beneficiary list to finalize.');
+        return redirect()->route('sponsor.lists.show', $generatedBatch)
+            ->with('status', 'Evidence saved. Explicitly approve or reject the entire displayed batch.');
     }
 
     public function confirm(Request $request, GeneratedBatch $generatedBatch): RedirectResponse
     {
         $sponsor = $this->sponsorOrganization($request);
         $this->assertCanActOnBatch($sponsor, $generatedBatch);
+        $request->validate([
+            'submission_version' => ['required', 'integer', 'min:1'],
+            'approval_id' => ['required', 'integer'],
+        ]);
 
-        $generatedBatch->load('latestApproval');
-        $approval = $generatedBatch->latestApproval;
+        $approvedApplications = DB::transaction(function () use ($generatedBatch, $sponsor, $request): array {
+            $program = SponsorshipProgram::query()->lockForUpdate()->findOrFail($generatedBatch->sponsorship_program_id);
+            $batch = GeneratedBatch::query()->lockForUpdate()->findOrFail($generatedBatch->id);
+            $this->assertCanActOnBatch($sponsor, $batch);
+            $this->assertSubmissionVersion($request, $batch);
+            $batch->assertSubmittedRoster();
+            $approval = $batch->sponsorApprovals()->where('submission_version', $batch->submission_version)
+                ->where('sponsorship_program_id', $program->id)->lockForUpdate()->find($request->integer('approval_id'));
+            if ($approval === null || ! $approval->isPending() || $approval->id !== $batch->currentApproval()?->id
+                || blank($approval->approval_document_path) || $approval->uploaded_by_sponsor_id === null
+                || ! Storage::disk('local')->exists($approval->approval_document_path)) {
+                throw ValidationException::withMessages(['approval' => 'Select the current submission evidence before approving the whole batch.']);
+            }
 
-        if ($approval === null || blank($approval->approval_document_path)) {
-            return back()->withErrors([
-                'approval' => 'Upload a signed PDF or JPG approval document before confirming this batch.',
+            $approvedApplications = $this->promoteMatchingApplications($batch, $program);
+            $approval->update([
+                'confirmation_status' => ConfirmationStatus::Confirmed,
+                'decided_by_id' => $request->user()->id,
+                'decided_at' => now(),
             ]);
+            // Sponsor confirmation is not FASSG receipt or Accounting forwarding.
+            $batch->update(['status' => GeneratedBatchStatus::Approved]);
+            \App\Models\AuditLog::record('sponsor.approval.confirmed', 'sponsor_approvals', $request->user(), $request->ip(),
+                json_encode(['batch_id' => $batch->id, 'submission_version' => $batch->submission_version,
+                    'approval_id' => $approval->id, 'members' => $batch->submitted_roster['members']]));
+
+            return $approvedApplications;
+        }, 3);
+
+        foreach ($approvedApplications as $application) {
+            $application->studentProfile?->user?->notify(new ApplicationStatusUpdated($application, ApplicationStatus::Approved));
         }
 
-        DB::transaction(function () use ($generatedBatch, $approval, $request): void {
-            $approval->update(['confirmation_status' => ConfirmationStatus::Confirmed]);
-
-            // Automatic Accounting hand-off: stamp FASSG assignment on the batch
-            // so confirmed beneficiaries appear in Accounting immediately without
-            // requiring a manual post-sponsor assignment step.
-            $generatedBatch->update([
-                'status' => GeneratedBatchStatus::Approved,
-                'fassg_assigned_at' => now(),
-                'fassg_assigned_by_id' => $this->actor($request)->id,
-            ]);
-
-            $program = SponsorshipProgram::query()
-                ->lockForUpdate()
-                ->findOrFail($generatedBatch->sponsorship_program_id);
-            $this->promoteMatchingApplications($generatedBatch, $program);
-        });
-
-        $this->audit($request, 'sponsor.approval.confirmed', 'sponsor_approvals');
-
-        return back()->with('status', "Beneficiary batch {$generatedBatch->batch_name} confirmed.");
+        return back()->with('status', 'Entire batch approved. Awaiting FASSG receipt and forwarding to Accounting.');
     }
 
     public function reject(Request $request, GeneratedBatch $generatedBatch): RedirectResponse
     {
         $sponsor = $this->sponsorOrganization($request);
         $this->assertCanActOnBatch($sponsor, $generatedBatch);
+        $request->validate(['submission_version' => ['required', 'integer', 'min:1']]);
 
-        DB::transaction(function () use ($request, $generatedBatch): void {
-            SponsorApproval::query()->updateOrCreate(
-                [
-                    'sponsorship_program_id' => $generatedBatch->sponsorship_program_id,
-                    'generated_batch_id' => $generatedBatch->id,
-                ],
-                [
-                    'approval_document_path' => $generatedBatch->latestApproval?->approval_document_path ?? '',
-                    'confirmation_status' => ConfirmationStatus::Rejected,
-                    'uploaded_by_sponsor_id' => $this->actor($request)->id,
-                ],
-            );
+        DB::transaction(function () use ($request, $generatedBatch, $sponsor): void {
+            $program = SponsorshipProgram::query()->lockForUpdate()->findOrFail($generatedBatch->sponsorship_program_id);
+            $batch = GeneratedBatch::query()->lockForUpdate()->findOrFail($generatedBatch->id);
+            $this->assertCanActOnBatch($sponsor, $batch);
+            $this->assertSubmissionVersion($request, $batch);
+            $batch->assertSubmittedRoster();
+            // A separate decision row preserves every previously uploaded document.
+            $uploaded = $batch->currentApproval();
+            $approval = $batch->sponsorApprovals()->create([
+                'sponsorship_program_id' => $program->id,
+                'submission_version' => $batch->submission_version,
+                'approval_document_path' => $uploaded?->approval_document_path,
+                'uploaded_by_sponsor_id' => $uploaded?->uploaded_by_sponsor_id,
+                'confirmation_status' => ConfirmationStatus::Rejected,
+                'decided_by_id' => $request->user()->id,
+                'decided_at' => now(),
+            ]);
+            $batch->update(['status' => GeneratedBatchStatus::Rejected]);
+            \App\Models\AuditLog::record('sponsor.approval.rejected', 'sponsor_approvals', $request->user(), $request->ip(),
+                json_encode(['batch_id' => $batch->id, 'submission_version' => $batch->submission_version,
+                    'approval_id' => $approval->id, 'members' => $batch->submitted_roster['members']]));
+            // Batch rejection does not rewrite application qualification/approval history.
+        }, 3);
 
-            $generatedBatch->update(['status' => GeneratedBatchStatus::Rejected]);
-        });
+        return back()->with('status', 'Entire batch rejected and returned to FASSG. Application qualification records were preserved.');
+    }
 
-        $this->audit($request, 'sponsor.approval.rejected', 'sponsor_approvals');
-
-        return back()->with('status', "Beneficiary batch {$generatedBatch->batch_name} returned to FASSG.");
+    private function assertSubmissionVersion(Request $request, GeneratedBatch $batch): void
+    {
+        if ($request->integer('submission_version') !== $batch->submission_version) {
+            throw ValidationException::withMessages(['batch' => 'This submission has changed. Reload the complete batch before deciding.']);
+        }
     }
 
     public function download(Request $request, SponsorApproval $sponsorApproval): BinaryFileResponse
@@ -145,57 +172,40 @@ class ApprovalUploadController extends Controller
         );
     }
 
-    private function promoteMatchingApplications(GeneratedBatch $generatedBatch, SponsorshipProgram $program): void
+    /** @return list<Application> */
+    private function promoteMatchingApplications(GeneratedBatch $generatedBatch, SponsorshipProgram $program): array
     {
-        $applicationIds = $generatedBatch->items()->pluck('application_id')->filter()->unique()->values();
+        $applicationIds = $generatedBatch->items()->orderBy('id')->lockForUpdate()->pluck('application_id');
+        $applications = Application::query()->whereIn('id', $applicationIds)->orderBy('id')->lockForUpdate()->get();
+        StudentProfile::query()->whereIn('id', $applications->pluck('student_profile_id'))
+            ->orderBy('id')->lockForUpdate()->get();
 
-        if ($applicationIds->isEmpty()) {
-            return;
+        // Validate the entire roster before computing capacity or changing any member.
+        $generatedBatch->assertEligibleMembers(false, true);
+        $requiredSlots = $applications->count();
+        $occupiedSlots = $program->applications()->approvedBeneficiaries()
+            ->distinct('student_profile_id')->count('student_profile_id');
+        $remainingSlots = max(0, min(
+            $program->available_slots,
+            (int) $program->getRawOriginal('available_slots'),
+            max(0, $program->total_slots - $occupiedSlots),
+        ));
+        if ($requiredSlots > $remainingSlots) {
+            throw ValidationException::withMessages([
+                'approval' => 'This confirmation exceeds the remaining sponsorship capacity. No approval changes were saved.',
+            ]);
         }
-
-        $applications = Application::query()
-            ->where('sponsorship_program_id', $generatedBatch->sponsorship_program_id)
-            ->whereIn('id', $applicationIds)
-            ->whereIn('status', [ApplicationStatus::Pending, ApplicationStatus::Verified])
-            ->with('studentProfile')
-            ->get();
-
-        $profiles = StudentProfile::query()
-            ->whereIn('id', $applications->pluck('student_profile_id'))
-            ->lockForUpdate()
-            ->get()
-            ->keyBy('id');
 
         foreach ($applications as $application) {
-            /** @var StudentProfile|null $profile */
-            $profile = $profiles->get($application->student_profile_id);
-
-            if ($profile === null || $profile->hasActiveSponsorship()) {
-                continue;
-            }
-
-            $previousStatus = $application->status;
-            $application->update([
-                'status' => ApplicationStatus::Approved,
-                'approved_at' => now(),
-            ]);
-
-            $profile->update(['active_sponsorship_id' => $application->id]);
-
+            $application->update(['status' => ApplicationStatus::Approved, 'approved_at' => now()]);
+            $application->studentProfile->update(['active_sponsorship_id' => $application->id]);
             if (! $program->decrementAvailableSlot()) {
-                $application->update([
-                    'status' => $previousStatus,
-                    'approved_at' => null,
+                throw ValidationException::withMessages([
+                    'approval' => 'The program has no remaining sponsorship slots. No approval changes were saved.',
                 ]);
-                $profile->update(['active_sponsorship_id' => null]);
-                break;
-            }
-
-            $studentUser = $application->studentProfile->user ?? null;
-
-            if ($studentUser !== null) {
-                $studentUser->notify(new ApplicationStatusUpdated($application, ApplicationStatus::Approved));
             }
         }
+
+        return $applications->all();
     }
 }

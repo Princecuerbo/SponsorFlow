@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers\Accounting;
 
-use App\Enums\ApplicationStatus;
-use App\Enums\ConfirmationStatus;
-use App\Enums\GeneratedBatchStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
-use App\Models\Application;
 use App\Models\BatchCandidate;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -18,58 +14,21 @@ class DashboardController extends Controller
 
     public function index(Request $request): View
     {
-        $approvedApplications = Application::query()
-            ->approvedBeneficiaries()
-            ->with(['studentProfile.user', 'sponsorshipProgram.sponsor'])
-            ->latest('approved_at')
-            ->get();
-
-        $confirmedCandidates = BatchCandidate::query()
-            ->whereDoesntHave('application', fn ($q) => $q->where('status', ApplicationStatus::Rejected))
-            ->whereHas('generatedBatch', function ($query): void {
-                $query->where('status', GeneratedBatchStatus::Approved)
-                    ->whereHas('latestApproval', fn ($approval) => $approval->where('confirmation_status', ConfirmationStatus::Confirmed))
-                    ->whereNotNull('fassg_assigned_at');
-            })
-            ->with('generatedBatch.sponsorshipProgram.sponsor')
-            ->get();
-
-        $applicationBeneficiaries = $approvedApplications->map(function (Application $application): array {
-            $program = $application->sponsorshipProgram;
+        $allBeneficiaries = BatchCandidate::accountingBeneficiaries()->map(function (BatchCandidate $item): array {
+            $application = $item->application;
+            $program = $item->generatedBatch->sponsorshipProgram;
 
             return [
-                'type' => 'application',
-                'student_name' => $application->studentProfile->user->name,
+                'type' => $item->is_fixed_list ? 'fixed_list' : 'ordinary_application',
+                'student_name' => $application->studentProfile->full_name,
                 'student_id' => $application->studentProfile->student_id_number,
                 'program_name' => $program->program_name,
                 'program_category' => $program->category?->value ?? 'General',
-                'sponsor_name' => $program->sponsor->company_organization_name,
+                'sponsor_name' => $program->sponsor?->company_organization_name,
                 'sponsor_id' => $program->sponsor_id,
-                'date_approved' => $application->approved_at ?? $application->updated_at,
+                'date_approved' => $application->approved_at,
             ];
-        });
-
-        $fixedListBeneficiaries = $confirmedCandidates->map(function (BatchCandidate $item): array {
-            $batch = $item->generatedBatch;
-            $program = $batch->sponsorshipProgram;
-
-            return [
-                'type' => 'fixed_list',
-                'student_name' => $item->student_name,
-                'student_id' => $item->student_id_number ?: 'N/A',
-                'program_name' => $program->program_name,
-                'program_category' => $program->category?->value ?? 'General',
-                'sponsor_name' => $program->sponsor->company_organization_name,
-                'sponsor_id' => $program->sponsor_id,
-                'date_approved' => $batch->fassg_assigned_at ?? $batch->updated_at,
-            ];
-        });
-
-        $allBeneficiaries = $applicationBeneficiaries->concat($fixedListBeneficiaries)
-            ->sortByDesc('date_approved')
-            ->unique('student_id')
-            ->sortByDesc('date_approved')
-            ->values();
+        })->sortByDesc('date_approved')->values();
         $sponsorAllocation = $allBeneficiaries
             ->groupBy('sponsor_name')
             ->map(fn ($beneficiaries, string $sponsor): array => [

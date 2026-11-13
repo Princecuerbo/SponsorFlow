@@ -112,7 +112,7 @@
                                     <td>{{ $list->total_slots }} {{ Str::plural('student', $list->total_slots) }}</td>
                                     <td><x-status-badge :status="'Submitted'" /></td>
                                     <td>
-                                        @if (!empty($list->approval_document_path))
+                                        @if ($list->currentApproval()?->approval_document_path)
                                             <span
                                                 class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-1">
                                                 <i class="bi bi-file-check me-1"></i>Uploaded

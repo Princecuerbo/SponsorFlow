@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Sponsor;
 use App\Enums\ApplicationStatus;
 use App\Enums\ConfirmationStatus;
 use App\Enums\GeneratedBatchStatus;
-use App\Enums\ProgramStatus;
 use App\Http\Controllers\Concerns\ResolvesModuleContext;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicProgram;
@@ -13,12 +12,9 @@ use App\Models\Application;
 use App\Models\GeneratedBatch;
 use App\Models\Sponsor;
 use App\Models\SponsorApproval;
-use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
-use App\Notifications\ApplicationStatusUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -36,7 +32,6 @@ class ReviewController extends Controller
         $pendingReviewCount = GeneratedBatch::query()
             ->whereIn('sponsorship_program_id', $sponsorProgramIds)
             ->where('status', GeneratedBatchStatus::Submitted)
-            ->whereHas('items.application', fn ($applicationQuery) => $applicationQuery->where('status', '!=', ApplicationStatus::Rejected))
             ->count();
 
         return view('sponsor.dashboard', [
@@ -47,7 +42,6 @@ class ReviewController extends Controller
             'uploadedApprovals' => GeneratedBatch::query()
                 ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor?->id))
                 ->where('status', GeneratedBatchStatus::Approved)
-                ->whereNotNull('fassg_assigned_at')
                 ->whereHas('latestApproval', fn ($approval) => $approval
                     ->whereNotNull('approval_document_path')
                     ->where('confirmation_status', ConfirmationStatus::Confirmed))
@@ -97,13 +91,14 @@ class ReviewController extends Controller
     {
         $sponsor = $this->sponsorOrganization($request);
         $this->assertOwnsBatch($sponsor, $generatedBatch);
+        abort_if($generatedBatch->status === GeneratedBatchStatus::Saved, 403, 'FASSG must submit this batch before Sponsor review.');
 
         $generatedBatch->load([
             'sponsorshipProgram',
-            'items' => fn ($query) => $query
-                ->whereDoesntHave('application', fn ($applicationQuery) => $applicationQuery->where('status', ApplicationStatus::Rejected)),
+            'items',
             'items.application.studentProfile.user',
             'latestApproval',
+            'sponsorApprovals',
             'createdByFassg',
         ]);
 
@@ -112,6 +107,7 @@ class ReviewController extends Controller
             'sponsor' => $sponsor,
             'list' => $generatedBatch,
             'generatedBatch' => $generatedBatch,
+            'currentApproval' => $generatedBatch->currentApproval(),
         ]);
     }
 
@@ -126,6 +122,7 @@ class ReviewController extends Controller
         $applicants = Application::query()
             ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsor->id))
             ->where('status', ApplicationStatus::Verified)
+            ->whereHas('batchCandidates.generatedBatch', fn ($batch) => $batch->where('status', GeneratedBatchStatus::Submitted))
             ->when($academicProgramId > 0, fn ($query) => $query->whereHas('studentProfile', fn ($pq) => $pq->where('academic_program_id', $academicProgramId)))
             ->when($course !== '', fn ($query) => $query->whereHas('studentProfile', fn ($pq) => $pq
                 ->where('course', $course)
@@ -172,100 +169,17 @@ class ReviewController extends Controller
     public function confirmApplication(Request $request, Application $application): RedirectResponse
     {
         $sponsor = $this->sponsorOrganization($request);
-        $application->load(['studentProfile', 'sponsorshipProgram']);
-
         abort_unless($sponsor->ownsProgram($application->sponsorshipProgram), 403);
 
-        $validated = $request->validate([
-            'approval_document' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
-        ]);
-
-        if ($application->status !== ApplicationStatus::Verified) {
-            return back()->withErrors(['application' => 'Only FASSG-verified applications can be confirmed.']);
-        }
-
-        $path = $validated['approval_document']->store('sponsor-approvals/applications', 'local');
-
-        $approved = DB::transaction(function () use ($application, $path): bool {
-            $program = SponsorshipProgram::query()
-                ->lockForUpdate()
-                ->findOrFail($application->sponsorship_program_id);
-            $profile = StudentProfile::query()
-                ->lockForUpdate()
-                ->findOrFail($application->student_profile_id);
-
-            if ($program->available_slots < 1 || $profile->hasActiveSponsorship()) {
-                return false;
-            }
-
-            $application->update([
-                'status' => ApplicationStatus::Approved,
-                'approved_at' => now(),
-                'sponsor_approval_path' => $path,
-            ]);
-
-            $profile->update(['active_sponsorship_id' => $application->id]);
-            $program->decrementAvailableSlot();
-            $program->refresh();
-
-            if ($program->status === ProgramStatus::Closed || (int) $program->getRawOriginal('available_slots') <= 0 || $program->available_slots <= 0) {
-                $program->update(['status' => ProgramStatus::Closed]);
-
-                $pendingApplications = $program->applications()
-                    ->whereIn('status', [ApplicationStatus::Pending, ApplicationStatus::Verified])
-                    ->get();
-
-                foreach ($pendingApplications as $pendingApp) {
-                    $pendingApp->update([
-                        'status' => ApplicationStatus::Rejected,
-                        'rejection_reason' => 'Program capacity reached (0 slots remaining).',
-                    ]);
-                }
-            }
-
-            return true;
-        });
-
-        if (! $approved) {
-            Storage::disk('local')->delete($path);
-
-            return back()->withErrors(['application' => 'This student already has an active sponsorship or the program has no remaining slots.']);
-        }
-
-        $this->audit($request, 'sponsor.application.confirmed', 'applications');
-
-        $studentUser = $application->studentProfile->user ?? null;
-
-        if ($studentUser !== null) {
-            $studentUser->notify(new ApplicationStatusUpdated($application, ApplicationStatus::Approved));
-        }
-
-        return redirect()->route('sponsor.applicants.index')->with('status', 'Application confirmed and forwarded to Accounting.');
+        return back()->withErrors(['approval' => 'Sponsor decisions require the complete FASSG-created Generated Batch. Open that batch to approve or reject it.']);
     }
 
     public function reject(Request $request, Application $application): RedirectResponse
     {
         $sponsor = $this->sponsorOrganization($request);
-        $application->load('sponsorshipProgram');
-
         abort_unless($sponsor->ownsProgram($application->sponsorshipProgram), 403);
 
-        $validated = $request->validate([
-            'rejection_reason' => ['nullable', 'string', 'max:500'],
-        ]);
-
-        if ($application->status !== ApplicationStatus::Verified) {
-            return back()->withErrors(['application' => 'Only FASSG-verified applications can be declined.']);
-        }
-
-        $application->update([
-            'status' => ApplicationStatus::Rejected,
-            'rejection_reason' => $validated['rejection_reason'] ?? 'Not selected by sponsor.',
-        ]);
-
-        return redirect()
-            ->route('sponsor.applicants.index')
-            ->with('success', 'Applicant has been declined and removed from your queue.');
+        return back()->withErrors(['approval' => 'Individual Sponsor decisions are disabled. Review the complete FASSG-created Generated Batch.']);
     }
 
     public function downloadApprovalDocument(Request $request, Application $application): BinaryFileResponse
@@ -313,7 +227,7 @@ class ReviewController extends Controller
 
         $approvals = SponsorApproval::query()
             ->whereHas('sponsorshipProgram', fn ($query) => $query->where('sponsor_id', $sponsorId))
-            ->where('confirmation_status', ConfirmationStatus::Confirmed)
+            ->whereIn('confirmation_status', [ConfirmationStatus::Confirmed, ConfirmationStatus::Rejected])
             ->with(['generatedBatch.items.application', 'sponsorshipProgram'])
             ->latest()
             ->get();

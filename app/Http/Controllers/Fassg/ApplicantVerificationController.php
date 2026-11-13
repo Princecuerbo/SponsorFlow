@@ -15,16 +15,15 @@ use App\Models\ApplicationDocument;
 use App\Models\FixedList;
 use App\Models\FixedListItem;
 use App\Models\GeneratedBatch;
-use App\Models\SleFheVerification;
 use App\Models\SponsorshipProgram;
 use App\Models\StudentProfile;
 use App\Services\NotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -36,12 +35,18 @@ class ApplicantVerificationController extends Controller
     {
         $search = $request->string('q')->trim()->toString();
         $programId = $request->integer('program_id', 0);
+        $sourceFixedListId = $request->integer('fixed_list_id', 0);
+        if ($sourceFixedListId > 0) {
+            $sourceList = FixedList::query()->where('status', FixedListStatus::Finalized)->findOrFail($sourceFixedListId);
+            abort_if($programId > 0 && $programId !== (int) $sourceList->sponsorship_program_id, 404);
+            $programId = (int) $sourceList->sponsorship_program_id;
+        }
         $campus = $request->string('campus')->trim()->toString();
         $status = $request->string('status')->trim()->toString();
 
         $statusEnum = $status !== ''
             ? collect(ApplicationStatus::cases())->first(
-                fn ($case) => strcasecmp($case->value, $status) === 0,
+                fn($case) => strcasecmp($case->value, $status) === 0,
             )
             : null;
 
@@ -50,10 +55,10 @@ class ApplicantVerificationController extends Controller
                 'studentProfile.user',
                 'sponsorshipProgram.sponsor',
                 'documents',
+                'batchCandidates.generatedBatch',
             ])
             ->where('is_auto_provisioned', false)
             ->whereHas('studentProfile', function ($q) use ($campus): void {
-                $q->whereHas('sleFheVerification');
                 if ($campus !== '') {
                     $q->where('campus', $campus);
                 }
@@ -62,35 +67,29 @@ class ApplicantVerificationController extends Controller
                 $q->whereHas('studentProfile', function ($pq) use ($search): void {
                     $pq->where('student_id_number', 'like', "%{$search}%")
                         ->orWhere('course', 'like', "%{$search}%")
-                        ->orWhereHas('academicProgram', fn ($ap) => $ap->where('name', 'like', "%{$search}%"))
-                        ->orWhereHas('user', fn ($uq) => $uq->where('name', 'like', "%{$search}%"));
+                        ->orWhereHas('academicProgram', fn($ap) => $ap->where('name', 'like', "%{$search}%"))
+                        ->orWhereHas('user', fn($uq) => $uq->where('name', 'like', "%{$search}%"));
                 });
             })
-            ->when($programId > 0, fn ($q) => $q->where('sponsorship_program_id', $programId))
+            ->when($programId > 0, fn($q) => $q->where('sponsorship_program_id', $programId))
             ->when(
                 $statusEnum !== null,
-                fn ($q) => $q->where('status', $statusEnum->value),
+                fn($q) => $q->where('status', $statusEnum->value),
             )
-            ->when(
-                $programId > 0,
-                fn ($q) => $q->select(['applications.*'])
-                    ->orderBy('applications.gpa_submitted', 'asc')
-                    ->orderBy('applications.submitted_at', 'asc'),
-                fn ($q) => $q
-                    ->orderBy('applications.gpa_submitted', 'asc')
-                    ->orderBy('applications.submitted_at', 'asc')
-            )
-            ->paginate(15)
-            ->withQueryString();
+            // Display order only; candidates are never selected automatically.
+            ->orderByRaw('applications.submitted_at IS NULL')
+            ->orderBy('applications.submitted_at')
+            ->orderBy('applications.id')
+            ->get();
 
-        $endorsedKeys = $this->finalizedEndorsedKeys($applications->getCollection()->all());
+        $endorsedKeys = $this->finalizedEndorsedKeys($applications->all());
 
         $programs = SponsorshipProgram::query()
             ->with([
                 'sponsor',
                 'academicPrograms',
-                'fixedLists' => fn ($q) => $q->orderBy('batch_name'),
-                'generatedBatches' => fn ($q) => $q->orderBy('batch_name'),
+                'fixedLists' => fn($q) => $q->with('items.studentProfile')->orderBy('batch_name'),
+                'generatedBatches' => fn($q) => $q->with('items.application')->withExists('sponsorApprovals')->orderBy('batch_name'),
             ])
             ->orderBy('program_name')
             ->get();
@@ -98,7 +97,10 @@ class ApplicantVerificationController extends Controller
         $savedFixedLists = $programs
             ->pluck('generatedBatches')
             ->flatten()
-            ->filter(fn (GeneratedBatch $batch): bool => $batch->status === GeneratedBatchStatus::Saved)
+            ->filter(fn(GeneratedBatch $batch): bool => $batch->status === GeneratedBatchStatus::Saved
+                && $batch->submission_version === 0 && $batch->submitted_roster === null
+                && $batch->fassg_assigned_at === null && $batch->fassg_assigned_by_id === null
+                && ! $batch->sponsor_approvals_exists)
             ->values();
 
         $finalizedFixedLists = $programs
@@ -109,19 +111,16 @@ class ApplicantVerificationController extends Controller
 
         $selectedProgram = $programId > 0 ? $programs->firstWhere('id', $programId) : null;
 
-        // Program capacity minus only Approved applications. Pending, Verified,
-        // and Rejected applications never reduce the remaining slot quota, so
-        // rejecting an applicant instantly frees capacity in the queue.
-        $availableSlots = $selectedProgram !== null
-            ? max(0, $selectedProgram->total_slots - $selectedProgram->applications()
-                ->where('status', ApplicationStatus::Approved)
-                ->distinct('student_profile_id')
-                ->count('student_profile_id'))
-            : null;
-
+        $programCapacities = $programs->mapWithKeys(fn ($program) => [$program->id => $this->draftCapacity($program)]);
+        $availableSlots = $selectedProgram !== null ? $programCapacities[$selectedProgram->id] : null;
+        $selectableApplicationIds = $applications->filter(fn ($application) =>
+            in_array($application->status, [ApplicationStatus::Pending, ApplicationStatus::Verified], true)
+            && $application->studentProfile->hasDocumentedSleFheVerification()
+            && ! $application->studentProfile->hasActiveSponsorship()
+            && $application->batch_id === null && $application->batchCandidates->isEmpty())
+            ->pluck('id')->all();
         $scoped = Application::query()
-            ->where('is_auto_provisioned', false)
-            ->whereHas('studentProfile', fn ($q) => $q->whereHas('sleFheVerification'));
+            ->where('is_auto_provisioned', false)->whereHas('studentProfile');
 
         $pendingCount = (clone $scoped)->where('status', ApplicationStatus::Pending)->count();
         $verifiedCount = (clone $scoped)->where('status', ApplicationStatus::Verified)->count();
@@ -142,6 +141,10 @@ class ApplicantVerificationController extends Controller
             'finalizedFixedLists' => $finalizedFixedLists,
             'selectedProgram' => $selectedProgram,
             'availableSlots' => $availableSlots,
+            'programCapacities' => $programCapacities,
+            'selectableApplicationIds' => $selectableApplicationIds,
+            'selectedFixedListId' => $sourceFixedListId,
+            'openBatchModal' => $request->boolean('prepare_batch'),
             'endorsedKeys' => $endorsedKeys,
             'selectedProgramId' => $programId,
             'selectedStatus' => $statusEnum?->value,
@@ -150,6 +153,7 @@ class ApplicantVerificationController extends Controller
 
     public function createBatch(Request $request): RedirectResponse
     {
+        abort_unless($request->user()?->isFassg(), 403);
         $validated = $request->validate([
             'batch_name' => [
                 'nullable',
@@ -158,273 +162,242 @@ class ApplicantVerificationController extends Controller
                 Rule::requiredIf($request->filled('existing_fixed_list_id') === false),
             ],
             'sponsorship_program_id' => ['required', 'integer', 'exists:sponsorship_programs,id'],
-            'selected_applications' => ['sometimes', 'array', 'min:1'],
+            'selected_applications' => ['sometimes', 'array'],
             'selected_applications.*' => ['integer'],
+            'fixed_list_source' => ['nullable', 'integer', 'exists:fixed_lists,id'],
+            'selected_fixed_list_items' => ['prohibited'],
             'existing_fixed_list_id' => ['nullable', 'integer', 'exists:generated_batches,id'],
-            'locked_fixed_list_id' => ['nullable', 'integer', 'exists:fixed_lists,id'],
+            // Use the explicit source-list selector, never legacy member payloads.
+            'locked_fixed_list_id' => ['prohibited'],
         ]);
 
-        $programId = (int) $validated['sponsorship_program_id'];
         $applicationIds = array_values(array_unique(array_map('intval', $validated['selected_applications'] ?? [])));
-
-        $appendToId = isset($validated['existing_fixed_list_id']) && $validated['existing_fixed_list_id'] !== null
-            ? (int) $validated['existing_fixed_list_id']
-            : null;
-
-        $targetList = null;
-        if ($appendToId !== null) {
-            $targetList = GeneratedBatch::query()
-                ->where('id', $appendToId)
-                ->where('sponsorship_program_id', $programId)
-                ->where('status', GeneratedBatchStatus::Saved)
-                ->first();
-
-            if ($targetList === null) {
-                return back()->withErrors([
-                    'existing_fixed_list_id' => 'The selected batch is no longer available for appending. Only Saved batches from the target program can be modified.',
-                ]);
-            }
-        }
-
-        // Optional finalized Fixed List whose verified candidates are locked
-        // into the top slots (Stage 1). Only Finalized lists belonging to the
-        // target program qualify; anything else is rejected.
-        $lockedFixedListId = filled($validated['locked_fixed_list_id'] ?? null)
-            ? (int) $validated['locked_fixed_list_id']
-            : null;
-
-        $lockedList = null;
-        if ($lockedFixedListId !== null) {
-            $lockedList = FixedList::query()
-                ->where('id', $lockedFixedListId)
-                ->where('sponsorship_program_id', $programId)
-                ->where('status', FixedListStatus::Finalized)
-                ->first();
-
-            if ($lockedList === null) {
-                return back()->withErrors([
-                    'locked_fixed_list_id' => 'The selected fixed list is no longer available. Only Finalized lists from the target program can be locked into the top slots.',
-                ]);
-            }
-        }
-
-        // Candidates must belong to the target program and be Pending or Verified
-        // with no active batch link. Approved, Rejected, or already-batched
-        // applications are guarded out here.
-        $baseQuery = Application::query()
-            ->where('sponsorship_program_id', $programId)
-            ->with('studentProfile.user')
-            ->whereIn('status', [ApplicationStatus::Pending, ApplicationStatus::Verified])
-            ->whereDoesntHave('batchCandidates')
-            ->orderBy('gpa_submitted', 'asc')
-            ->orderBy('submitted_at', 'asc');
-
-        if ($applicationIds !== []) {
-            $applications = Application::query()
-                ->where('sponsorship_program_id', $programId)
-                ->whereIn('id', $applicationIds)
-                ->with('studentProfile.user')
-                ->get();
-
-            if ($applications->count() !== count($applicationIds)) {
-                return back()->withErrors([
-                    'selected_applications' => 'One or more of the selected applications no longer belongs to the target program. Please refresh the queue and reselect.',
-                ])->withInput();
-            }
-
-            $eligible = $applications->filter(
-                static fn (Application $application): bool => in_array(
-                    $application->status,
-                    [ApplicationStatus::Pending, ApplicationStatus::Verified],
-                    true,
-                ) && $application->batchCandidates()->doesntExist(),
-            );
-
-            if ($eligible->count() !== $applications->count()) {
-                return back()->withErrors([
-                    'selected_applications' => 'Some selected applications are already approved, rejected, or assigned to a batch and cannot be included. Please deselect them and try again.',
-                ])->withInput();
-            }
-        } else {
-            $eligible = $baseQuery->get();
-        }
-
-        // Stage 1 (Fixed List Lock): the SLE-FHE-verified, sponsor-endorsed
-        // entries of the selected Finalized Fixed List resolve to an existing
-        // Application for the target program, or are auto-provisioned a Verified
-        // Application so they can be locked into the top slots. Stage 2
-        // (Auto-Ranking Queue): everyone else fills the remaining slots sorted
-        // by best GWA, then submission date.
-        $lockedEntries = $lockedList === null
-            ? collect()
-            : $this->lockedCandidateEntries($lockedList, $programId, $targetList?->id);
-
-        if ($eligible->isEmpty() && $lockedEntries->isEmpty()) {
-            return back()->withErrors([
-                'selected_applications' => $applicationIds !== []
-                    ? 'Select at least one eligible application belonging to the target program. Only pending or verified, unbatched applications can be bundled into a batch list.'
-                    : 'There are no pending or verified, unbatched applications left for this program to auto-generate a batch.',
+        $sourceListId = filled($validated['fixed_list_source'] ?? null) ? (int) $validated['fixed_list_source'] : null;
+        if ($applicationIds === [] && $sourceListId === null) {
+            throw ValidationException::withMessages([
+                'selected_applications' => 'Select at least one Pending/Verified applicant or a finalized Fixed List for the draft.',
             ]);
         }
 
-        $reservedApplications = collect();
+        $programId = (int) $validated['sponsorship_program_id'];
+        $appendToId = filled($validated['existing_fixed_list_id'] ?? null)
+            ? (int) $validated['existing_fixed_list_id'] : null;
 
-        foreach ($lockedEntries as $lockKey => $entry) {
-            $application = $entry['application'] ?? null;
-
-            if ($application === null) {
-                $application = $this->createAutoVerifiedApplication($entry['profile'], $programId);
+        [$list, $added] = DB::transaction(function () use ($request, $validated, $programId, $applicationIds, $sourceListId, $appendToId): array {
+            // Serialize membership/capacity checks for this program, including appends.
+            $program = SponsorshipProgram::query()->lockForUpdate()->findOrFail($programId);
+            if (! $program->isOpen() || $program->effective_status === \App\Enums\ProgramStatus::Expired) {
+                throw ValidationException::withMessages(['sponsorship_program_id' => 'Select an open, unexpired sponsorship program.']);
             }
+            $list = $appendToId === null ? null : GeneratedBatch::query()
+                ->whereKey($appendToId)
+                ->where('sponsorship_program_id', $programId)
+                ->where('status', GeneratedBatchStatus::Saved)
+                ->where('submission_version', 0)->whereNull('submitted_roster')
+                ->whereNull('fassg_assigned_at')->whereNull('fassg_assigned_by_id')->whereDoesntHave('sponsorApprovals')
+                ->lockForUpdate()
+                ->first();
 
-            $reservedApplications->put($lockKey, $application);
-        }
-
-        $reservedApplicationIds = $reservedApplications
-            ->map(static fn (Application $application): int => $application->id)
-            ->values()
-            ->all();
-
-        $queueCandidates = $eligible->reject(
-            static fn (Application $application): bool => in_array($application->id, $reservedApplicationIds, true),
-        )->values();
-
-        $sortCandidates = static fn ($collection) => $collection->sortBy([
-            static fn (Application $application): float => (float) $application->gpa_submitted,
-            static fn (Application $application): int => $application->submitted_at?->getTimestamp() ?? PHP_INT_MAX,
-        ])->values();
-
-        $candidates = $sortCandidates($reservedApplications->values())
-            ->map(static fn (Application $application) => [$application, true])
-            ->concat($sortCandidates($queueCandidates)->map(static fn (Application $application) => [$application, false]))
-            ->values();
-
-        [$list, $added] = DB::transaction(function () use ($candidates, $programId, $request, $validated, $targetList): array {
-            $list = $targetList;
-
-            if ($list === null) {
-                $list = GeneratedBatch::query()->create([
-                    'sponsorship_program_id' => $programId,
-                    'batch_name' => $validated['batch_name'],
-                    'created_by_fassg_id' => $this->actor($request)->id,
-                    'total_slots' => 0,
-                    'status' => GeneratedBatchStatus::Saved,
+            if ($appendToId !== null && $list === null) {
+                throw ValidationException::withMessages([
+                    'existing_fixed_list_id' => 'Only Saved batches from the target program can be modified.',
                 ]);
             }
 
-            $nextRank = ((int) $list->items()->max('rank_position')) + 1;
-            $added = 0;
+            $applications = Application::query()
+                ->where('sponsorship_program_id', $programId)
+                ->whereIn('id', $applicationIds)
+                ->where('is_auto_provisioned', false)
+                ->with('studentProfile')
+                ->lockForUpdate()
+                ->get();
 
-            foreach ($candidates as [$application, $isFixedList]) {
-                if ($application->batchCandidates()->where('generated_batch_id', $list->id)->exists()) {
-                    continue;
+            if ($applications->count() !== count($applicationIds)) {
+                throw ValidationException::withMessages([
+                    'selected_applications' => 'Select ordinary applications belonging to the target program.',
+                ]);
+            }
+
+            $fixedItems = collect();
+            if ($sourceListId !== null) {
+                $sourceList = FixedList::query()->lockForUpdate()->find($sourceListId);
+                if ($sourceList === null || $sourceList->status !== FixedListStatus::Finalized
+                    || (int) $sourceList->sponsorship_program_id !== $programId) {
+                    throw ValidationException::withMessages([
+                        'fixed_list_source' => 'Select a finalized Fixed List belonging to the target program.',
+                    ]);
+                }
+                // Include every stored member. Never filter or truncate a selected roster.
+                $fixedItems = $sourceList->items()->with(['fixedList', 'studentProfile'])->orderBy('id')->lockForUpdate()->get();
+                if ($fixedItems->isEmpty()) {
+                    throw ValidationException::withMessages(['fixed_list_source' => 'The selected Fixed List has no candidates.']);
+                }
+            }
+
+            // Key by student identity, not qualification, source priority, or submission time.
+            $candidates = collect();
+            foreach ($applications as $application) {
+                $profile = $application->studentProfile;
+                if ($profile === null || $candidates->has($profile->id)) {
+                    throw ValidationException::withMessages([
+                        'selected_applications' => 'Select only one application per student.',
+                    ]);
+                }
+                $candidates->put($profile->id, ['profile' => $profile, 'application' => $application, 'fixed' => false]);
+            }
+
+            foreach ($fixedItems as $item) {
+                $profile = $item->studentProfile;
+                if (
+                    $item->fixedList?->status !== FixedListStatus::Finalized
+                    || (int) $item->fixedList->sponsorship_program_id !== $programId
+                    || ! $item->is_sle_fhe_verified || ! $item->hasRecordedEndorsement() || $profile === null
+                ) {
+                    throw ValidationException::withMessages([
+                        'fixed_list_source' => "Fixed List student {$item->student_id_number} lacks documented SLE-FHE verification or FASSG endorsement. No candidates were omitted.",
+                    ]);
                 }
 
+                $entry = $candidates->get($profile->id);
+                if ($entry === null) {
+                    $existing = Application::query()
+                        ->where('sponsorship_program_id', $programId)
+                        ->where('student_profile_id', $profile->id)
+                        ->where('status', '!=', ApplicationStatus::Expired)
+                        ->lockForUpdate()
+                        ->get();
+
+                    if ($existing->count() > 1) {
+                        throw ValidationException::withMessages([
+                            'fixed_list_source' => "Multiple application records exist for {$item->student_id_number}. Review those records before batching.",
+                        ]);
+                    }
+                    $entry = ['profile' => $profile, 'application' => $existing->first(), 'fixed' => true];
+                }
+                $entry['fixed'] = true;
+                if (isset($entry['fixed_list_item_id']) && $entry['fixed_list_item_id'] !== $item->id) {
+                    throw ValidationException::withMessages(['fixed_list_source' => 'The Fixed List contains duplicate student identities. Review the source records before batching.']);
+                }
+                $entry['fixed_list_item_id'] = $item->id;
+                $candidates->put($profile->id, $entry);
+            }
+
+            $newCandidates = collect();
+            foreach ($candidates as $studentId => $entry) {
+                $profile = StudentProfile::query()->lockForUpdate()->findOrFail($studentId);
+                $application = $entry['application'];
+                if (isset($entry['fixed_list_item_id'])) {
+                    $fixedItem = $fixedItems->firstWhere('id', $entry['fixed_list_item_id']);
+                    $fixedItem->setRelation('studentProfile', $profile);
+                    $sourceErrors = $fixedItem->endorsementErrors($program);
+                    if ($sourceErrors !== []) {
+                        throw ValidationException::withMessages(['fixed_list_source' => array_map(
+                            fn ($error) => "{$fixedItem->student_id_number}: {$error}", $sourceErrors)]);
+                    }
+                }
+                if (! $profile->hasDocumentedSleFheVerification() || $profile->hasActiveSponsorship()) {
+                    throw ValidationException::withMessages([
+                        'selected_applications' => "Student {$profile->student_id_number} must have documented SLE-FHE verification and no active sponsorship.",
+                    ]);
+                }
+                $errors = [];
+                // A draft records selection, not an eligibility decision. Qualifications
+                // and documents are checked during explicit member review and submission.
+                if ($application !== null && ! in_array($application->status,
+                    [ApplicationStatus::Pending, ApplicationStatus::Verified], true)) {
+                    $errors[] = 'Only Pending or Verified applications may be included in a Saved batch.';
+                }
+                if ($errors !== []) {
+                    throw ValidationException::withMessages(['selected_applications' => $errors]);
+                }
+                if ($list !== null && $application !== null && $list->items()->where('application_id', $application->id)->exists()) {
+                    continue; // Repeating a draft selection never recreates or verifies its processing record.
+                }
+                $memberships = Application::query()
+                    ->where('student_profile_id', $studentId)
+                    ->where('sponsorship_program_id', $programId)
+                    ->whereHas('batchCandidates')
+                    ->with('batchCandidates.application.sponsorshipProgram')
+                    ->get()
+                    ->flatMap->batchCandidates;
+                if (
+                    $memberships->contains(fn($item) => (int) $item->generated_batch_id !== (int) $list?->id
+                        && $item->application?->status !== ApplicationStatus::Expired)
+                    || ($application?->batch_id !== null && (int) $application->batch_id !== (int) $list?->id)
+                ) {
+                    throw ValidationException::withMessages([
+                        'selected_applications' => 'A selected student is already assigned to another batch for this program.',
+                    ]);
+                }
+                if ($memberships->contains(fn($item) => (int) $item->generated_batch_id === (int) $list?->id)) {
+                    continue; // Repeated selection in the same saved batch is idempotent.
+                }
+                $entry['profile'] = $profile;
+                $newCandidates->put($studentId, $entry);
+            }
+
+            if (($list?->items()->count() ?? 0) + $newCandidates->count() > $this->draftCapacity($program)) {
+                throw ValidationException::withMessages([
+                    'selected_applications' => 'The complete selection exceeds available capacity. Uncheck ordinary applicants or choose a smaller finalized list. No candidates were omitted.',
+                ]);
+            }
+
+            $list ??= GeneratedBatch::query()->create([
+                'sponsorship_program_id' => $programId,
+                'batch_name' => $validated['batch_name'],
+                'created_by_fassg_id' => $this->actor($request)->id,
+                'total_slots' => 0,
+                'status' => GeneratedBatchStatus::Saved,
+            ]);
+
+            foreach ($newCandidates as $entry) {
+                $application = $entry['application']
+                    ?? $this->createFixedListApplication($entry['profile'], $programId);
                 $list->items()->create([
                     'application_id' => $application->id,
-                    'rank_position' => $nextRank,
-                    'origin_type' => $isFixedList ? 'fixed_list' : 'ranked_queue',
+                    'rank_position' => null,
+                    // Retain the legacy enum value for schema compatibility, not ranking.
+                    'origin_type' => $entry['fixed'] ? 'fixed_list' : 'ranked_queue',
+                    'fixed_list_item_id' => $entry['fixed_list_item_id'] ?? null,
                 ]);
-
-                $application->update([
-                    'is_batched' => true,
-                    'batch_id' => $list->id,
-                ]);
-
-                $nextRank++;
-                $added++;
+                $application->update(['is_batched' => true, 'batch_id' => $list->id]);
             }
-
             $list->update(['total_slots' => $list->items()->count()]);
+            \App\Models\AuditLog::record($appendToId !== null
+                ? 'fassg.generated_batch.appended_from_applications' : 'fassg.generated_batch.generated_from_applications',
+                'generated_batches', $request->user(), $request->ip(), json_encode([
+                    'batch_id' => $list->id, 'fixed_list_id' => $sourceListId,
+                    'selected_fixed_list_item_ids' => $fixedItems->pluck('id')->all(),
+                    'selected_application_ids' => $applicationIds,
+                    'added_student_profile_ids' => $newCandidates->keys()->all(),
+                ]));
 
-            return [$list, $added];
+            return [$list, $newCandidates->count()];
         });
 
-        if ($appendToId !== null) {
-            $this->audit($request, 'fassg.generated_batch.appended_from_applications', 'generated_batches');
-
-            return redirect()
-                ->route('fassg.generated-batches.show', $list)
-                ->with('status', "Successfully added {$added} student(s) to {$list->batch_name}.");
-        }
-
-        $this->audit($request, 'fassg.generated_batch.generated_from_applications', 'generated_batches');
-
-        return redirect()
-            ->route('fassg.generated-batches.show', $list)
-            ->with('status', "Batch list '{$list->batch_name}' created from {$list->total_slots} applicant(s). Review and submit when ready.");
+        return redirect()->route('fassg.generated-batches.show', $list)
+            ->with('status', "Saved {$added} manually selected student(s) to {$list->batch_name}. Review and submit when ready.");
     }
 
-    /**
-     * Resolve the SLE-FHE-verified, sponsor-endorsed entries of the selected
-     * Finalized Fixed List to reusable Applications for the target program.
-     * This performs no writes; missing applications are provisioned later in
-     * {@see createBatch} via {@see createAutoVerifiedApplication}.
-     *
-     * @return Collection<string, array{profile: StudentProfile, application: ?Application}>
-     */
-    private function lockedCandidateEntries(FixedList $lockedList, int $programId, ?int $targetBatchId): Collection
+    private function draftCapacity(SponsorshipProgram $program): int
     {
-        $resolved = [];
+        $occupied = $program->applications()->approvedBeneficiaries()->distinct('student_profile_id')->count('student_profile_id');
 
-        foreach ($lockedList->items()->with('studentProfile')->get() as $item) {
-            if (! $item->is_sle_fhe_verified || ! $item->is_manually_endorsed) {
-                continue;
-            }
-
-            $profile = $item->studentProfile ?? StudentProfile::query()
-                ->where('student_id_number', $item->student_id_number)
-                ->first();
-
-            if ($profile === null) {
-                continue;
-            }
-
-            $lockKey = trim((string) $profile->student_id_number);
-
-            if ($lockKey === '') {
-                continue;
-            }
-
-            $application = Application::query()
-                ->where('sponsorship_program_id', $programId)
-                ->where('student_profile_id', $profile->id)
-                ->first();
-
-            // Candidates already claimed by another active batch are left
-            // untouched (append-only batches may reference their own items).
-            if ($application !== null
-                && $targetBatchId !== null
-                && $application->batchCandidates()
-                    ->where('generated_batch_id', '!=', $targetBatchId)
-                    ->whereHas('generatedBatch', fn ($query) => $query->whereIn('status', [
-                        GeneratedBatchStatus::Saved,
-                        GeneratedBatchStatus::Submitted,
-                        GeneratedBatchStatus::Approved,
-                    ]))
-                    ->exists()) {
-                continue;
-            }
-
-            $resolved[$lockKey] = [
-                'profile' => $profile,
-                'application' => $application,
-            ];
-        }
-
-        return collect($resolved);
+        return max(0, min($program->available_slots, (int) $program->getRawOriginal('available_slots'),
+            $program->total_slots - $occupied));
     }
 
-    private function createAutoVerifiedApplication(StudentProfile $profile, int $programId): Application
+    private function createFixedListApplication(StudentProfile $profile, int $programId): Application
     {
         return Application::query()->create([
             'student_profile_id' => $profile->id,
             'sponsorship_program_id' => $programId,
-            'gpa_submitted' => 0.00,
-            'address_submitted' => $profile->full_address,
-            'is_rural_submitted' => false,
-            'status' => ApplicationStatus::Verified,
-            'verified_at' => now(),
-            'submitted_at' => now(),
+            'gpa_submitted' => null,
+            'address_submitted' => null,
+            'is_rural_submitted' => null,
+            'status' => ApplicationStatus::Pending,
+            'verified_at' => null,
+            'submitted_at' => null,
             'is_manually_endorsed' => true,
             'is_auto_provisioned' => true,
         ]);
@@ -433,8 +406,7 @@ class ApplicantVerificationController extends Controller
     /**
      * Build the set of "programId|studentIdNumber" keys for the applications
      * on the current queue page whose students are SLE-FHE-verified and
-     * sponsor-endorsed on a Finalized Fixed List, so the queue can render the
-     * "★ Endorsed by Sponsor" badge.
+     * FASSG-endorsed on a Finalized Fixed List. This is not Sponsor approval.
      *
      * @param  Application[]  $applications
      * @return array<int, string>
@@ -442,11 +414,11 @@ class ApplicantVerificationController extends Controller
     private function finalizedEndorsedKeys(array $applications): array
     {
         $pairs = collect($applications)
-            ->map(static fn (Application $application): array => [
+            ->map(static fn(Application $application): array => [
                 (int) $application->sponsorship_program_id,
                 trim((string) ($application->studentProfile?->student_id_number ?? '')),
             ])
-            ->filter(static fn (array $pair): bool => $pair[1] !== '');
+            ->filter(static fn(array $pair): bool => $pair[1] !== '');
 
         if ($pairs->isEmpty()) {
             return [];
@@ -464,7 +436,7 @@ class ApplicantVerificationController extends Controller
             ->where('fixed_lists.status', FixedListStatus::Finalized)
             ->whereIn('fixed_lists.sponsorship_program_id', $programIds)
             ->get()
-            ->map(static fn (FixedListItem $item): string => (int) $item->sponsorship_program_id.'|'.trim((string) $item->student_id_number))
+            ->map(static fn(FixedListItem $item): string => (int) $item->sponsorship_program_id . '|' . trim((string) $item->student_id_number))
             ->unique()
             ->values()
             ->all();
@@ -474,12 +446,7 @@ class ApplicantVerificationController extends Controller
     {
         $application->load(['studentProfile.user', 'sponsorshipProgram.sponsor', 'documents']);
 
-        $eligibilityErrors = $application->sponsorshipProgram->eligibilityErrors(
-            $application->studentProfile,
-            (float) $application->gpa_submitted,
-            $application->address_submitted,
-            (bool) $application->is_rural_submitted,
-        );
+        $eligibilityErrors = $application->sponsorshipProgram->beneficiaryEligibilityErrors($application);
 
         return view('fassg.applications.show', [
             'user' => $this->actor($request),
@@ -490,51 +457,64 @@ class ApplicantVerificationController extends Controller
 
     public function verify(VerifyApplicationRequest $request, Application $application): RedirectResponse
     {
-        if ($application->status !== ApplicationStatus::Pending) {
-            return back()->withErrors([
-                'application' => 'Only pending applications can be verified.',
-            ]);
+        $newFiles = [];
+        try {
+            DB::transaction(function () use ($request, $application, &$newFiles): void {
+                $program = SponsorshipProgram::query()->lockForUpdate()->findOrFail($application->sponsorship_program_id);
+                $requestedBatch = $request->route('generatedBatch');
+                if (! $requestedBatch instanceof GeneratedBatch) {
+                    throw ValidationException::withMessages(['batch' => 'Review and verify this member from a Saved Generated Batch.']);
+                }
+                $batch = GeneratedBatch::query()->lockForUpdate()->findOrFail($requestedBatch->id);
+                abort_unless($batch->status === GeneratedBatchStatus::Saved && $batch->submission_version === 0
+                    && $batch->submitted_roster === null, 403, 'Only an unsubmitted Saved batch can be verified.');
+                $record = Application::query()->lockForUpdate()->findOrFail($application->id);
+                abort_unless((int) $record->batch_id === (int) $batch->id
+                    && (int) $batch->sponsorship_program_id === (int) $program->id
+                    && $batch->items()->where('application_id', $record->id)->exists(), 404);
+                StudentProfile::query()->lockForUpdate()->findOrFail($record->student_profile_id);
+                abort_unless($record->status === ApplicationStatus::Pending, 403, 'Only pending processing records can be verified.');
+                abort_if($record->batchCandidates()->whereHas('generatedBatch', fn ($batch) => $batch->where('submission_version', '>', 0))->exists(), 403, 'Submitted records require a new review process.');
+
+                if ($record->is_auto_provisioned) {
+                    $values = $request->safe()->only(['gpa_submitted', 'address_submitted', 'is_rural_submitted',
+                        'employee_name', 'employee_id_number', 'employee_relationship']);
+                    $record->fill($values);
+                    foreach ($request->file('qualification_documents', []) as $type => $file) {
+                        $path = $file->store('applications/documents', 'local');
+                        $newFiles[] = $path;
+                        $record->documents()->create([
+                            'document_type' => $type, 'file_path' => $path, 'file_name' => $file->getClientOriginalName(),
+                        ]);
+                    }
+                }
+                $record->unsetRelation('documents');
+                $errors = $program->beneficiaryEligibilityErrors($record);
+                if ($record->studentProfile?->hasConflictingActiveSponsorship()) {
+                    $errors[] = 'An active sponsorship prevents verification for another award.';
+                }
+                if ($errors !== []) {
+                    throw ValidationException::withMessages(['application' => $errors]);
+                }
+                $record->fill(['status' => ApplicationStatus::Verified, 'verified_at' => now()]);
+                if ($record->is_auto_provisioned) {
+                    $record->fill(['endorsed_by_id' => $record->endorsed_by_id ?? $request->user()->id, 'endorsed_at' => $record->endorsed_at ?? now()]);
+                }
+                $record->save();
+                \App\Models\AuditLog::record('fassg.application.verified', 'applications', $request->user(), $request->ip(),
+                    json_encode(['application_id' => $record->id, 'generated_batch_id' => $batch->id, 'fixed_list_processing' => $record->is_auto_provisioned,
+                        'verification_id' => $record->studentProfile->sleFheVerification?->id,
+                        'qualifications' => $record->only(['gpa_submitted', 'address_submitted', 'is_rural_submitted'])]));
+            });
+        } catch (\Throwable $exception) {
+            foreach ($newFiles as $path) {
+                Storage::disk('local')->delete($path);
+            }
+            throw $exception;
         }
+        NotificationService::notifyApplicationProgress($application->fresh(), ApplicationStatus::Verified);
 
-        $application->loadMissing(['studentProfile', 'sponsorshipProgram', 'documents']);
-
-        $requiredDocumentTypes = $application->sponsorshipProgram?->requiredDocumentCanonicalValues() ?? [];
-
-        $submittedDocumentTypes = $application->documents
-            ->pluck('document_type')
-            ->map(static fn ($type): string => DocumentType::canonicalValue($type))
-            ->unique()
-            ->values()
-            ->all();
-
-        if (array_diff($requiredDocumentTypes, $submittedDocumentTypes) !== []) {
-            return back()->withErrors([
-                'application' => 'The Certificate of Grades and Proof of Residence / Barangay Certificate are required.',
-            ]);
-        }
-
-        $eligibilityErrors = $application->sponsorshipProgram->eligibilityErrors(
-            $application->studentProfile,
-            (float) $application->gpa_submitted,
-            $application->address_submitted,
-            (bool) $application->is_rural_submitted,
-            enforceMinimumGwa: false,
-        );
-
-        if ($eligibilityErrors !== []) {
-            return back()->withErrors(['application' => $eligibilityErrors]);
-        }
-
-        $application->update([
-            'status' => ApplicationStatus::Verified,
-            'verified_at' => now(),
-        ]);
-
-        NotificationService::notifyApplicationProgress($application, ApplicationStatus::Verified);
-
-        $this->audit($request, 'fassg.application.verified', 'applications');
-
-        return back()->with('status', 'Application marked as Verified.');
+        return back()->with('status', 'FASSG verification recorded. Sponsor approval still requires the submitted Generated Batch.');
     }
 
     public function reject(RejectApplicationRequest $request, Application $application): RedirectResponse
@@ -583,7 +563,7 @@ class ApplicantVerificationController extends Controller
     public function requestResubmission(Request $request, Application $application): RedirectResponse
     {
         $validDocumentTypes = collect(DocumentType::cases())
-            ->map(static fn (DocumentType $type): string => DocumentType::canonicalValue($type))
+            ->map(static fn(DocumentType $type): string => DocumentType::canonicalValue($type))
             ->unique()
             ->values()
             ->all();
@@ -613,37 +593,15 @@ class ApplicantVerificationController extends Controller
 
     private function verifyStatus(Request $request, Application $application): RedirectResponse
     {
-        if ($application->status !== ApplicationStatus::Pending) {
-            return back()->withErrors(['application' => 'Only pending applications can be verified.']);
-        }
-
-        $application->loadMissing(['studentProfile', 'sponsorshipProgram', 'documents']);
-
-        $required = $application->sponsorshipProgram?->requiredDocumentCanonicalValues() ?? [];
-
-        $submitted = $application->documents
-            ->pluck('document_type')
-            ->map(static fn ($type): string => DocumentType::canonicalValue($type))
-            ->unique()
-            ->values()
-            ->all();
-
-        if (array_diff($required, $submitted) !== []) {
-            return back()->withErrors(['application' => 'All required application documents must be uploaded.']);
-        }
-
-        $application->update(['status' => ApplicationStatus::Verified, 'verified_at' => now()]);
-        NotificationService::notifyApplicationProgress($application, ApplicationStatus::Verified);
-        $this->audit($request, 'fassg.application.verified', 'applications');
-
-        return back()->with('status', 'Application marked as Verified.');
+        return back()->withErrors(['batch' => 'Review and verify this member from a Saved Generated Batch.']);
     }
 
     public function downloadDocument(Application $application, ApplicationDocument $applicationDocument): BinaryFileResponse
     {
         abort_unless($applicationDocument->application_id === $application->id, 404);
 
-        $path = Storage::disk('public')->path($applicationDocument->file_path);
+        $disk = Storage::disk('local')->exists($applicationDocument->file_path) ? 'local' : 'public';
+        $path = Storage::disk($disk)->path($applicationDocument->file_path);
         abort_unless(is_file($path), 404, 'Document file not found.');
 
         $fileName = addcslashes(basename($applicationDocument->file_name), '\\"');
@@ -651,19 +609,12 @@ class ApplicantVerificationController extends Controller
 
         return response()->file($path, [
             'Content-Type' => $mimeType,
-            'Content-Disposition' => 'inline; filename="'.$fileName.'"',
+            'Content-Disposition' => 'inline; filename="' . $fileName . '"',
         ]);
     }
 
     public function verifySleFhe(Request $request, StudentProfile $studentProfile): RedirectResponse
     {
-        SleFheVerification::firstOrCreate(
-            ['student_profile_id' => $studentProfile->id],
-            ['verified_address' => '', 'verified_at' => now()],
-        );
-
-        $this->audit($request, 'fassg.student.sle_fhe_verified', 'student_profiles');
-
-        return back()->with('status', "SLE-FHE verified for {$studentProfile->student_id_number}.");
+        return back()->withErrors(['verification' => 'Use the FASSG SLE-FHE verification screen to review and record actual eligibility evidence.']);
     }
 }

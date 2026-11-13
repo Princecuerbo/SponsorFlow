@@ -51,7 +51,17 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
             'student_id_number' => ['required', 'string', 'regex:/^\d{4}-\d{4}$/', 'unique:student_profiles,student_id_number'],
             'campus' => ['required', 'string', Rule::in($campusOptions)],
-            'academic_program_id' => ['required', 'exists:academic_programs,program_id'],
+            'academic_program_id' => [
+                'bail', 'required',
+                function (string $attribute, mixed $value, \Closure $fail): void {
+                    if (! is_int($value) && ! is_string($value)) {
+                        $fail('The academic program id must be an integer.');
+                    }
+                },
+                'integer', 'min:1', 'regex:/\A[1-9][0-9]*\z/',
+                Rule::exists('academic_programs', 'program_id')
+                    ->where('is_active', true)->where('is_undergraduate', true),
+            ],
             'course' => ['nullable', 'string', 'max:150'],
             'year_level' => ['required', 'integer', 'min:1', 'max:5'],
             'birthdate' => ['required', 'date', 'before:today'],
@@ -63,7 +73,13 @@ class RegisteredUserController extends Controller
             'privacy_consent.accepted' => 'You must certify the accuracy of your information and consent to FASSG verifying your SLE-FHE records under the Data Privacy Act.',
         ]);
 
-        $program = AcademicProgram::query()->findOrFail($validated['academic_program_id']);
+        $program = AcademicProgram::query()->where('is_active', true)
+            ->where('is_undergraduate', true)->find($validated['academic_program_id']);
+        if ($program === null) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'academic_program_id' => 'Select an active undergraduate Academic Program from the official list.',
+            ]);
+        }
         $course = $program->name;
 
         $user = DB::transaction(function () use ($validated, $course): User {

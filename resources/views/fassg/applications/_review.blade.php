@@ -69,15 +69,11 @@
             'approveRoute' => 'fassg.verification.approve',
             'rejectRoute' => 'fassg.verification.reject',
             'resubmissionRoute' => 'fassg.verification.request-resubmission',
-            'approveLabel' => 'Verify &amp; Forward to Sponsor',
-            'settledTitle' => 'Application Verified &amp; Forwarded',
-            'settledNote' => 'This application was verified and is currently under Sponsor Review.',
+            'approveLabel' => 'Record Eligibility Verification',
+            'settledTitle' => 'Application Eligibility Verified',
+            'settledNote' => 'FASSG eligibility verification is recorded. Sponsor review requires a separately submitted Generated Batch.',
             'approveButtonClass' => 'btn-approve',
-            'confirmMessage' => 'Confirm verification: This will verify '
-                . addslashes($profile->user->name)
-                . ' and forward the application to '
-                . addslashes($program->program_name)
-                . ' for sponsor review. Continue?',
+            'confirmMessage' => 'Record eligibility verification? Sponsor review requires a separately submitted Generated Batch.',
         ]
         : [
             'backRoute' => 'fassg.applications.index',
@@ -95,12 +91,17 @@
             'confirmMessage' => 'Mark this application as Verified? This forwards nothing to the sponsor yet but confirms your review.',
         ];
 
-    $canAct = $isVerification
-        ? in_array($application->status, [
-            \App\Enums\ApplicationStatus::Pending,
-            \App\Enums\ApplicationStatus::ResubmissionRequested,
-        ], true)
-        : $application->status === \App\Enums\ApplicationStatus::Pending;
+    $isBatchReview = isset($generatedBatch);
+    if ($isBatchReview) {
+        $config['backRoute'] = 'fassg.generated-batches.show';
+        $config['backLabel'] = 'Back to Generated Batch';
+        $config['approveRoute'] = 'fassg.generated-batches.applications.verify';
+        $config['approveLabel'] = 'Verify Batch Member';
+    }
+    $canAct = $application->status === \App\Enums\ApplicationStatus::Pending
+        && (! $isBatchReview || ($generatedBatch->status === \App\Enums\GeneratedBatchStatus::Saved
+            && $generatedBatch->submission_version === 0 && $generatedBatch->submitted_roster === null));
+    $qualificationRequirements = $program->beneficiaryQualificationRequirements();
 
     $isSettledVerified = in_array($application->status, [
         \App\Enums\ApplicationStatus::Verified,
@@ -108,7 +109,7 @@
     ], true);
 
     $meetsGpa = $program->min_gpa === null
-        || (float) $application->gpa_submitted <= (float) $program->min_gpa;
+        || ($application->gpa_submitted !== null && (float) $application->gpa_submitted <= (float) $program->min_gpa);
 
     $allowedYearLevels = $program->eligible_year_levels ?? [];
     $studentYearLevel = $profile->year_level;
@@ -118,11 +119,11 @@
 
     $attCanon = static fn ($type) => \App\Enums\DocumentType::canonicalValue($type);
     $attAllTypes = array_values(array_unique(array_merge(
-        $program->requiredDocumentCanonicalValues() ?? [],
+        $program->beneficiaryRequiredDocumentTypes(),
         $application->documents->map(fn ($d) => $attCanon($d->document_type))->all(),
     )));
-    $needsCorAttest = in_array(\App\Enums\DocumentType::CertificateOfRegistration->value, $attAllTypes, true);
-    $needsKinshipAttest = in_array(\App\Enums\DocumentType::EmployeeProofOfKinship->value, $attAllTypes, true);
+    $needsCorAttest = in_array(\App\Enums\DocumentType::CertificateOfRegistration->value, $program->beneficiaryRequiredDocumentTypes(), true);
+    $needsKinshipAttest = in_array(\App\Enums\DocumentType::EmployeeProofOfKinship->value, $program->beneficiaryRequiredDocumentTypes(), true);
 
     $resubReqTypes = $attAllTypes;
     $resubReqLabels = [];
@@ -141,7 +142,7 @@
 {{-- Page Header --}}
 <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
     <div>
-        <a href="{{ route($config['backRoute']) }}" class="btn btn-sm btn-outline-secondary mb-3">
+        <a href="{{ route($config['backRoute'], $generatedBatch ?? []) }}" class="btn btn-sm btn-outline-secondary mb-3">
             <i class="bi bi-arrow-left me-1"></i> {{ $config['backLabel'] }}
         </a>
         <span class="sf-eyebrow d-block mb-1">{{ $config['eyebrow'] }}</span>
@@ -226,7 +227,7 @@
                         <div class="stat-highlight">
                             <div class="detail-label"><i class="bi bi-award me-1"></i> Submitted GWA</div>
                             <div class="detail-value fs-6 d-flex align-items-center gap-1">
-                                {{ number_format($application->gpa_submitted, 2) }}
+                                {{ $application->gpa_submitted === null ? 'Not recorded' : number_format($application->gpa_submitted, 2) }}
                                 @if ($program->min_gpa !== null)
                                     @if ($meetsGpa)
                                         <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle ms-1" style="font-size: 0.7rem;">
@@ -269,8 +270,10 @@
                         <div class="stat-highlight">
                             <div class="detail-label"><i class="bi bi-geo-alt me-1"></i> Residence &amp; Barangay</div>
                             <div class="detail-value fs-6 text-truncate d-flex align-items-center gap-2">
-                                <span class="text-truncate">{{ $application->address_submitted ?: ($profile->full_address ?: 'Address not provided') }}</span>
-                                @if ($application->is_rural_submitted)
+                                <span class="text-truncate">{{ $application->address_submitted ?: 'Address not recorded' }}</span>
+                                @if ($application->is_rural_submitted === null)
+                                    <span class="small text-secondary">Residence classification not recorded</span>
+                                @elseif ($application->is_rural_submitted)
                                     <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle flex-shrink-0" style="font-size: 0.7rem;">
                                         <i class="bi bi-tree me-1"></i>Rural
                                     </span>
@@ -420,15 +423,7 @@
                         'strval',
                         (array) ($program->required_documents ?? []),
                     )));
-                    $requiredTypes = [];
-                    foreach ($programLabels as $label) {
-                        foreach (\App\Enums\DocumentType::typesForLabel($label) as $type) {
-                            $requiredTypes[] = $type;
-                        }
-                    }
-                    if ($requiredTypes === []) {
-                        $requiredTypes = \App\Enums\DocumentType::requiredForApplication();
-                    }
+                    $requiredTypes = array_map(fn ($type) => \App\Enums\DocumentType::from($type), $program->beneficiaryRequiredDocumentTypes());
 
                     $docGroups = [];
                     $covered = [];
@@ -573,7 +568,7 @@
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <div>
                         <h3 class="h6 sf-heading mb-0">Decision Controls</h3>
-                        <p class="small text-secondary mb-0">Review decision and slot reservation</p>
+                        <p class="small text-secondary mb-0">FASSG eligibility review</p>
                     </div>
                     <span class="badge {{ $program->available_slots > 0 ? 'bg-success-subtle text-success-emphasis' : 'bg-danger-subtle text-danger-emphasis' }} border px-2 py-1">
                         {{ $program->available_slots }} slot{{ $program->available_slots !== 1 ? 's' : '' }} left
@@ -581,30 +576,69 @@
                 </div>
 
                 @if ($canAct)
-                    {{-- ── 1. VERIFY / VERIFY & FORWARD ACTION ── --}}
+                    @if ($isBatchReview)
+                    {{-- Eligibility verification; submission is a separate batch action. --}}
                     <div class="mb-4">
-                        <form method="POST" action="{{ route($config['approveRoute'], $application) }}"
+                        <form method="POST" enctype="multipart/form-data" action="{{ route($config['approveRoute'], [$generatedBatch, $application]) }}"
                             onsubmit="return confirm('{{ $config['confirmMessage'] }}');">
                             @csrf
                             @method('PATCH')
+                            @if ($application->is_auto_provisioned)
+                                <div class="border rounded-3 p-3 mb-3 bg-white">
+                                    <h4 class="h6">Fixed-list qualification evidence</h4>
+                                    <p class="small text-secondary">Record only documented facts. Leave unknown optional values blank. This internal processing record does not require a student application.</p>
+                                    <label for="gpa_submitted" class="form-label small">Documented GWA</label>
+                                    <input id="gpa_submitted" name="gpa_submitted" type="number" step="0.01" min="1" max="5"
+                                        class="form-control mb-2" value="{{ old('gpa_submitted', $application->gpa_submitted) }}"
+                                        @required($qualificationRequirements['gpa_submitted'])>
+                                    <label for="address_submitted" class="form-label small">Documented address</label>
+                                    <input id="address_submitted" name="address_submitted" class="form-control mb-2" maxlength="255"
+                                        value="{{ old('address_submitted', $application->address_submitted) }}"
+                                        @required($qualificationRequirements['address_submitted'])>
+                                    <label for="is_rural_submitted" class="form-label small">Documented residence classification</label>
+                                    <select id="is_rural_submitted" name="is_rural_submitted" class="form-select mb-2"
+                                        @required($qualificationRequirements['is_rural_submitted'])>
+                                        <option value="" @selected(old('is_rural_submitted', $application->is_rural_submitted) === null)>Not recorded</option>
+                                        <option value="1" @selected((string) old('is_rural_submitted', $application->is_rural_submitted) === '1')>Rural</option>
+                                        <option value="0" @selected(old('is_rural_submitted', $application->is_rural_submitted) === false || (string) old('is_rural_submitted', $application->is_rural_submitted) === '0')>Urban</option>
+                                    </select>
+                                    @if ($program->requiresBeneficiaryRelationshipEvidence())
+                                        @foreach (['employee_name' => 'Employee name', 'employee_id_number' => 'Employee ID', 'employee_relationship' => 'Relationship'] as $field => $label)
+                                            <label class="form-label small" for="{{ $field }}">{{ $label }}</label>
+                                            <input class="form-control mb-2" id="{{ $field }}" name="{{ $field }}" required maxlength="255"
+                                                value="{{ old($field, $application->$field) }}">
+                                        @endforeach
+                                    @endif
+                                    @foreach (array_unique($program->beneficiaryRequiredDocumentTypes()) as $documentType)
+                                        <label class="form-label small" for="evidence-{{ $loop->index }}">{{ \App\Enums\DocumentType::from($documentType)->label() }}</label>
+                                        <input class="form-control mb-2" type="file" id="evidence-{{ $loop->index }}"
+                                            name="qualification_documents[{{ $documentType }}]" accept=".pdf,.jpg,.jpeg,.png">
+                                    @endforeach
+                                    <p class="small text-secondary mb-0">Existing documents are retained. Upload any missing program-required evidence (maximum 5 MB per file).</p>
+                                </div>
+                            @endif
                             <div class="p-3 bg-white border rounded-3 mb-3">
                                 <div class="d-flex align-items-center gap-2 mb-2">
                                     <i class="bi bi-patch-check" style="color:#0F2942;"></i>
                                     <span class="small fw-semibold text-dark">Verification Attestation</span>
                                 </div>
                                 <p class="small text-secondary mb-2">
-                                    Check each box to confirm you have reviewed the corresponding document.
+                                    Confirm eligibility and each applicable qualification. Optional facts must not be invented.
                                 </p>
                                 <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="confirm_eligibility" value="1" id="confirm_eligibility" required>
+                                    <label class="form-check-label small" for="confirm_eligibility">I reviewed the genuine SLE-FHE verification and all applicable program requirements.</label>
+                                </div>
+                                <div class="form-check mb-2">
                                     <input class="form-check-input" type="checkbox" name="confirm_gwa" value="1"
-                                        id="confirm_gwa" required>
+                                        id="confirm_gwa" @required($qualificationRequirements['gpa_submitted'])>
                                     <label class="form-check-label small" for="confirm_gwa">
                                         Confirm that the grade slip matches the submitted GWA.
                                     </label>
                                 </div>
                                 <div class="form-check mb-2">
                                     <input class="form-check-input" type="checkbox" name="confirm_address" value="1"
-                                        id="confirm_address" required>
+                                        id="confirm_address" @required($qualificationRequirements['address_submitted'])>
                                     <label class="form-check-label small" for="confirm_address">
                                         Confirm that the proof of residence and barangay certificate match the submitted address.
                                     </label>
@@ -628,7 +662,7 @@
                                     </div>
                                 @endif
 
-                                @foreach (['confirm_gwa', 'confirm_address', 'confirm_cor', 'confirm_kinship'] as $confirmField)
+                                @foreach (['confirm_eligibility', 'confirm_gwa', 'confirm_address', 'confirm_cor', 'confirm_kinship'] as $confirmField)
                                     @error($confirmField)
                                         <div class="text-danger small mt-2"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
                                     @enderror
@@ -642,13 +676,17 @@
                         <p class="small text-muted mb-0 mt-2">
                             <i class="bi bi-shield-check me-1 text-success"></i>
                             @if ($isVerification)
-                                Verifies the application and forwards it to the Sponsor Review queue for final approval. Slot reservation happens when the sponsor approves.
+                                Records eligibility only. Submit the Generated Batch separately after every member is verified.
                             @else
                                 Marks the application as Verified and moves it into the verified review set.
                             @endif
                         </p>
                     </div>
-
+                    @else
+                        <div class="alert alert-info">
+                            Add this applicant to a Saved Generated Batch, then review the member's eligibility and documents from that batch.
+                        </div>
+                    @endif
                     <hr class="my-3">
 
                     {{-- ── 2. REJECT APPLICATION ACTION (Mandatory Reason) ── --}}
@@ -733,11 +771,7 @@
 
                     <div class="small text-secondary mt-4 pt-3 border-top">
                         <i class="bi bi-info-circle me-1"></i>
-                        @if ($isVerification)
-                            Verifying forwards the application to the Sponsor Review queue. The sponsor's final approval reserves the program slot and registers the student for beneficiary processing.
-                        @else
-                            Marks the application as Verified and prepares it for sponsor review.
-                        @endif
+                        Verification records eligibility only. It does not submit the batch, approve sponsorship, or forward anyone to Accounting.
                     </div>
                 @elseif ($isSettledVerified)
                     {{-- Application Verified (read-only) --}}
@@ -749,10 +783,13 @@
                         <p class="small text-secondary mb-0">
                             This application was verified on
                             <strong>{{ $application->verified_at?->format('M d, Y, h:i A') ?? '—' }}</strong>
-                            {!! $isVerification
-                                ? 'and is currently under Sponsor Review.'
-                                : 'and no further review decisions can be submitted.' !!}
+                            . Sponsor review requires a separately submitted Generated Batch.
                         </p>
+                    </div>
+                @elseif ($application->status === \App\Enums\ApplicationStatus::Pending)
+                    <div class="alert alert-info mb-0">
+                        Add this applicant to a Saved Generated Batch, then review the member's eligibility and documents from that batch.
+                        Submitted batch records cannot be verified again here.
                     </div>
                 @else
                     {{-- Application Already Finalized --}}

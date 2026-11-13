@@ -20,5 +20,8 @@ class DatabaseSeeder extends Seeder
             RoleAndUserSeeder::class,
             SponsorshipProgramSeeder::class,
         ]);
+
+        // Institutional registry imports are excluded from general/container seeding.
+        // Phase B1 provides only sponsorflow:registry-preflight; it cannot persist data.
     }
 }

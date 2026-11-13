@@ -3,7 +3,7 @@
 @section('title', 'Beneficiary Batch Reference')
 @section('eyebrow', 'Accounting Office · Tuition Adjustment Reference')
 @section('page-title', $fixedList->batch_name)
-@section('subtitle', $fixedList->sponsorshipProgram?->program_name ?? 'Unspecified Program' . ' · ' . $fixedList->total_slots . ' ' . Str::plural('beneficiary', $fixedList->total_slots) . ' · Confirmed ' . ($approval?->created_at?->format('M d, Y, h:i A') ?? '—'))
+@section('subtitle', ($fixedList->sponsorshipProgram?->program_name ?? 'Unspecified Program') . ' · ' . $fixedList->items->count() . ' ' . Str::plural('beneficiary', $fixedList->items->count()) . ' · Confirmed ' . ($approval?->decided_at?->format('M d, Y, h:i A') ?? '—'))
 
 @section('header-actions')
     <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -77,16 +77,16 @@
                                 {{ $fixedList->sponsorshipProgram?->sponsor?->contact_person ?: 'Not provided' }}
                             </dd>
                             <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Total Names</dt>
-                            <dd class="col-sm-8 py-2 mb-0 border-top">{{ $fixedList->total_slots }}</dd>
-                            @if ($fixedList->fassg_assigned_at)
-                                <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">FASSG Assigned</dt>
+                            <dd class="col-sm-8 py-2 mb-0 border-top">{{ $fixedList->items->count() }}</dd>
+                            @if ($approval->accounting_forwarded_at)
+                                <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Forwarded by FASSG</dt>
                                 <dd class="col-sm-8 py-2 mb-0 border-top">
-                                    {{ $fixedList->fassg_assigned_at->format('M d, Y, h:i A') }}</dd>
+                                    {{ $approval->accounting_forwarded_at->format('M d, Y, h:i A') }}</dd>
                             @endif
-                            @if ($approval?->created_at)
+                            @if ($approval?->decided_at)
                                 <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Sponsor Confirmed</dt>
                                 <dd class="col-sm-8 py-2 mb-0 border-top">
-                                    {{ $approval->created_at->format('M d, Y, h:i A') }}</dd>
+                                    {{ $approval->decided_at->format('M d, Y, h:i A') }}</dd>
                             @endif
                         </dl>
                     </div>
@@ -105,7 +105,7 @@
                             <div class="small text-secondary mt-3 d-flex align-items-center gap-2">
                                 <i class="bi bi-file-earmark-pdf"></i>
                                 Sponsor-signed beneficiary list
-                                {{ $approval->created_at?->format('M d, Y, h:i A') ? '· uploaded '.$approval->created_at->format('M d, Y, h:i A') : '' }}
+                                {{ $approval->decided_at?->format('M d, Y, h:i A') ? '· decision '.$approval->decided_at->format('M d, Y, h:i A') : '' }}
                             </div>
                         @else
                             <div class="text-secondary small">No signed approval document has been uploaded for this
@@ -172,15 +172,13 @@
                                     @if ($item->is_fixed_list)
                                         <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle fw-semibold">Fixed List</span>
                                     @else
-                                        <span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle fw-semibold">Ranked Queue</span>
+                                        <span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle fw-semibold">Ordinary applicant</span>
                                     @endif
                                 </td>
                                 <td>
                                     @php
                                         $app = $item->application;
-                                        $rurality = ($app !== null && $app->is_rural_submitted)
-                                            ? 'Rural'
-                                            : null;
+                                        $rurality = $app?->is_rural_submitted === null ? null : ($app->is_rural_submitted ? 'Rural' : 'Urban');
                                     @endphp
                                     @if ($rurality)
                                         <span class="badge {{ $rurality === 'Rural' ? 'bg-info-subtle text-info-emphasis' : 'bg-secondary-subtle text-secondary-emphasis' }}">

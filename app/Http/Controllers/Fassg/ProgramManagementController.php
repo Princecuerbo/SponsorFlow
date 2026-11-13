@@ -139,7 +139,12 @@ class ProgramManagementController extends Controller
             || ($request->filled('end_date') && Carbon::parse($request->input('end_date'))->isPast()));
 
         DB::transaction(function () use ($request, $sponsorshipProgram, $shouldExpire, $shouldOpen): void {
+            $sponsorshipProgram = SponsorshipProgram::query()->lockForUpdate()->findOrFail($sponsorshipProgram->id);
             $attributes = $request->validated();
+            $occupied = $sponsorshipProgram->applications()->approvedBeneficiaries()->distinct('student_profile_id')->count('student_profile_id');
+            if ((int) $attributes['total_slots'] < $occupied) {
+                throw \Illuminate\Validation\ValidationException::withMessages(['total_slots' => 'Capacity cannot be reduced below existing Approved/Ongoing beneficiaries.']);
+            }
 
             if ($shouldOpen) {
                 $attributes['status'] = ProgramStatus::Open;

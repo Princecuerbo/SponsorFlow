@@ -32,35 +32,35 @@ class VerifyApplicationRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
-            'confirm_gwa' => ['required', 'accepted'],
-            'confirm_address' => ['required', 'accepted'],
-        ];
-
         $application = $this->route('application');
-
         if (is_scalar($application)) {
-            $application = $application !== null ? Application::query()->find($application) : null;
+            $application = Application::query()->find($application);
         }
-
-        if ($application instanceof Application) {
-            $required = $application->sponsorshipProgram?->requiredDocumentCanonicalValues() ?? [];
-            $uploaded = $application->documents
-                ->pluck('document_type')
-                ->map(fn ($type): string => DocumentType::canonicalValue($type))
-                ->unique()
-                ->values()
-                ->all();
-
-            $combined = array_values(array_unique(array_merge($required, $uploaded)));
-
-            if (in_array(DocumentType::CertificateOfRegistration->value, $combined, true)) {
-                $rules['confirm_cor'] = ['required', 'accepted'];
+        if (! $application instanceof Application) {
+            return ['confirm_eligibility' => ['required', 'accepted']];
+        }
+        $requirements = $application->sponsorshipProgram->beneficiaryQualificationRequirements();
+        $documents = $application->sponsorshipProgram->beneficiaryRequiredDocumentTypes();
+        $rules = ['confirm_eligibility' => ['required', 'accepted']];
+        foreach (['gpa_submitted' => 'confirm_gwa', 'address_submitted' => 'confirm_address'] as $field => $confirmation) {
+            $rules[$confirmation] = $requirements[$field] ? ['required', 'accepted'] : ['nullable', 'accepted'];
+        }
+        if (in_array(DocumentType::CertificateOfRegistration->value, $documents, true)) {
+            $rules['confirm_cor'] = ['required', 'accepted'];
+        }
+        if (in_array(DocumentType::EmployeeProofOfKinship->value, $documents, true)) {
+            $rules['confirm_kinship'] = ['required', 'accepted'];
+        }
+        if ($application->is_auto_provisioned) {
+            $rules['gpa_submitted'] = [$requirements['gpa_submitted'] ? 'required' : 'nullable', 'numeric', 'between:1,5'];
+            $rules['address_submitted'] = [$requirements['address_submitted'] ? 'required' : 'nullable', 'string', 'max:255'];
+            $rules['is_rural_submitted'] = [$requirements['is_rural_submitted'] ? 'required' : 'nullable', 'boolean'];
+            foreach (['employee_name', 'employee_id_number', 'employee_relationship'] as $field) {
+                $rules[$field] = [$application->sponsorshipProgram->requiresBeneficiaryRelationshipEvidence() ? 'required' : 'nullable', 'string', 'max:255'];
             }
-
-            if (in_array(DocumentType::EmployeeProofOfKinship->value, $combined, true)) {
-                $rules['confirm_kinship'] = ['required', 'accepted'];
-            }
+            $types = array_map(fn ($type) => $type->value, DocumentType::cases());
+            $rules['qualification_documents'] = ['sometimes', 'array:'.implode(',', $types)];
+            $rules['qualification_documents.*'] = ['file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'];
         }
 
         return $rules;

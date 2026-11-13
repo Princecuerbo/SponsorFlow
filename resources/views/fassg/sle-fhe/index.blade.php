@@ -111,7 +111,10 @@
                     </thead>
                     <tbody>
                         @foreach ($pendingRequests as $pendingRequest)
-                            @php $profile = $pendingRequest->studentProfile; @endphp
+                            @php
+                                $profile = $pendingRequest->studentProfile;
+                                $registryMatch = $registryMatches[$profile->student_id_number] ?? null;
+                            @endphp
                             <tr>
                                 {{-- Student ID --}}
                                 <td class="ps-4 text-nowrap">
@@ -148,6 +151,13 @@
 
                                 {{-- Status --}}
                                 <td class="text-nowrap">
+                                    @if ($registryMatch)
+                                        <span class="badge rounded-2 fw-semibold mb-1 d-inline-block"
+                                            style="background-color: rgba(13,148,136,0.12); color:#0f766e;"
+                                            title="Matched in the master SLE-FHE registry ({{ $registryMatch->municipality ?: 'municipality not recorded' }}{{ $registryMatch->barangay ? ', ' . $registryMatch->barangay : '' }})">
+                                            <i class="bi bi-patch-check-fill me-1"></i>Master Registry Match Found
+                                        </span>
+                                    @endif
                                     <x-status-badge :status="'Pending SLE-FHE Verification'" />
                                 </td>
 
@@ -159,12 +169,11 @@
                                             data-bs-target="#viewStudentModal-{{ $pendingRequest->id }}">
                                             <i class="bi bi-person-vcard me-1"></i>View Student Profile Details
                                         </button>
-                                        <form method="POST" action="{{ route('fassg.sle-fhe.verify', $profile) }}">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm btn-sf-navy">
-                                                <i class="bi bi-check2-circle me-1"></i>Verify SLE-FHE Student
-                                            </button>
-                                        </form>
+                                        <button type="button" class="btn btn-sm btn-sf-navy"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#verifyStudentModal-{{ $pendingRequest->id }}">
+                                            <i class="bi bi-check2-circle me-1"></i>Verify SLE-FHE Student
+                                        </button>
                                         <button type="button" class="btn btn-sm btn-outline-danger"
                                             data-bs-toggle="modal"
                                             data-bs-target="#rejectStudentModal-{{ $pendingRequest->id }}">
@@ -180,7 +189,111 @@
         </div>
 
         @foreach ($pendingRequests as $pendingRequest)
-            @php $profile = $pendingRequest->studentProfile; @endphp
+            @php
+                $profile = $pendingRequest->studentProfile;
+                $registryMatch = $registryMatches[$profile->student_id_number] ?? null;
+                $noMatchReason = 'Student ID not found in official SLE-FHE Master Registry';
+            @endphp
+
+            {{-- Verify Eligibility Modal --}}
+            <div class="modal fade" id="verifyStudentModal-{{ $pendingRequest->id }}" tabindex="-1"
+                aria-labelledby="verifyStudentModalLabel-{{ $pendingRequest->id }}" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content border-0 shadow rounded-4">
+                        <form method="POST" action="{{ route('fassg.sle-fhe.verify', $profile) }}">
+                            @csrf
+                            <input type="hidden" name="verification_request_id" value="{{ $pendingRequest->id }}">
+                            <div class="modal-header border-bottom-0 pb-0 px-4 pt-4">
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-0" id="verifyStudentModalLabel-{{ $pendingRequest->id }}">Verify SLE-FHE Eligibility</h5>
+                                    <span class="small text-secondary">{{ $profile->student_id_number ?: 'No student ID' }}</span>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body px-4 py-3">
+                                {{-- Applicant Details --}}
+                                <dl class="row mb-0 small">
+                                    <dt class="col-sm-3 text-secondary">Student Name:</dt>
+                                    <dd class="col-sm-9 fw-semibold">{{ $profile->user->name ?? $profile->full_name ?: '—' }}</dd>
+                                    <dt class="col-sm-3 text-secondary">Submitted Student ID:</dt>
+                                    <dd class="col-sm-9 sf-mono">{{ $profile->student_id_number ?: '—' }}</dd>
+                                    <dt class="col-sm-3 text-secondary">Submitted Address:</dt>
+                                    <dd class="col-sm-9">{{ $pendingRequest->full_address ?: '—' }}</dd>
+                                </dl>
+
+                                <hr>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="confirm_identity" value="1"
+                                        id="identity-{{ $pendingRequest->id }}" required>
+                                    <label class="form-check-label small" for="identity-{{ $pendingRequest->id }}">
+                                        I have checked this student's identity, submitted address, and SLE-FHE eligibility against the evidence shown or referenced below.
+                                    </label>
+                                </div>
+
+                                {{-- Master Registry Match Result --}}
+                                <div class="fw-semibold small mb-2">Master Registry Match Result:</div>
+                                @if ($registryMatch)
+                                    <div class="alert alert-success py-2 px-3 mb-2" role="alert">
+                                        <span class="badge rounded-2 fw-semibold" style="background-color:#0f766e; color:#fff;">
+                                            &check; MATCH FOUND IN SLE-FHE REGISTRY
+                                        </span>
+                                    </div>
+                                    <ul class="list-unstyled small mb-0">
+                                        <li class="mb-1"><span class="text-secondary">Registry Campus:</span> {{ $registryMatch->campus ?: '—' }}</li>
+                                        <li class="mb-1"><span class="text-secondary">Registry Course:</span> {{ $registryMatch->course ?: '—' }}</li>
+                                        <li class="mb-0"><span class="text-secondary">Registry Address:</span> {{ $registryMatch->municipality ?: '—' }}</li>
+                                    </ul>
+                                @else
+                                    <div class="alert alert-warning py-2 px-3 mb-2" role="alert">
+                                        <span class="badge rounded-2 fw-semibold" style="background-color:#b45309; color:#fff;">
+                                            &#9888; NO MATCH FOUND IN SLE-FHE REGISTRY
+                                        </span>
+                                    </div>
+                                    <p class="small mb-2">
+                                        {{ $profile->student_id_number ?: 'This student ID' }} does not match any of the
+                                        {{ number_format($registryTotalCount) }} records in the official master list.
+                                        This is most likely a data-entry error, so returning the request for correction is
+                                        usually the right action.
+                                    </p>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="override_registry_mismatch" value="1"
+                                            id="override-{{ $pendingRequest->id }}"
+                                            onchange="this.form.querySelector('[data-confirm-verify]').disabled = !this.checked;">
+                                        <label class="form-check-label small" for="override-{{ $pendingRequest->id }}">
+                                            Manual override: I have confirmed this student's eligibility outside the master registry and wish to verify anyway.
+                                        </label>
+                                    </div>
+                                    <label class="form-label small" for="override-reason-{{ $pendingRequest->id }}">Reason for registry mismatch override</label>
+                                    <textarea class="form-control mb-2" name="override_reason" id="override-reason-{{ $pendingRequest->id }}"
+                                        required minlength="10" maxlength="1000">{{ old('override_reason') }}</textarea>
+                                    <label class="form-label small" for="evidence-{{ $pendingRequest->id }}">Official evidence reference</label>
+                                    <input class="form-control mb-2" name="evidence_reference" id="evidence-{{ $pendingRequest->id }}"
+                                        required minlength="5" maxlength="500" value="{{ old('evidence_reference') }}"
+                                        placeholder="Office record, document reference, and issuing authority">
+                                    <div class="form-text mb-2">The reason, reference, officer, and decision time are retained in the verification audit record.</div>
+                                    <div class="alert alert-light border small mb-0">
+                                        <strong>Pre-filled rejection reason:</strong> {{ $noMatchReason }}
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="modal-footer border-top-0 px-4 pb-4 pt-0">
+                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                    data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-sm btn-outline-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#rejectStudentModal-{{ $pendingRequest->id }}">
+                                    &#10005; Reject Application
+                                </button>
+                                <button type="submit" class="btn btn-sm btn-sf-navy" data-confirm-verify
+                                    @if (! $registryMatch) disabled @endif>
+                                    &#10003; Confirm Verification
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
             {{-- View Student Profile Details Modal --}}
                             <div class="modal fade" id="viewStudentModal-{{ $pendingRequest->id }}" tabindex="-1"
@@ -272,7 +385,15 @@
                                             <div class="modal-body px-4 py-3">
                                                 <label for="reason-{{ $pendingRequest->id }}" class="form-label fw-semibold">Rejection Reason</label>
                                                 <textarea name="reason" id="reason-{{ $pendingRequest->id }}" class="form-control" rows="3"
-                                                    required placeholder="e.g. Student ID does not match the SLE-FHE masterlist"></textarea>
+                                                    required placeholder="e.g. Student ID does not match the SLE-FHE masterlist"
+                                                    @if (! $registryMatch) value="{{ $noMatchReason }}" @endif
+                                                ></textarea>
+                                                @unless ($registryMatch)
+                                                    <div class="form-text">
+                                                        Pre-filled because <strong>{{ $profile->student_id_number ?: 'this student ID' }}</strong>
+                                                        has no match in the SLE-FHE Master Registry. Edit the text as needed before confirming.
+                                                    </div>
+                                                @endunless
                                             </div>
                                             <div class="modal-footer border-top-0 px-4 pb-4 pt-0">
                                                 <button type="button" class="btn btn-sm fw-semibold" style="background-color:#eef2f6; color:#0F2942;"

@@ -1,0 +1,405 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>SponsorFlow Use Case Descriptions</title><style>body{font-family:Arial,sans-serif;color:#253542;max-width:1000px;margin:36px auto;padding:0 20px;line-height:1.45}h1{font-size:27px}h2{font-size:21px}table{border-collapse:collapse;width:100%;margin:15px 0 32px}th,td{border:1px solid #bdc5cb;padding:8px 10px;text-align:left;vertical-align:top}th{background:#fff0cf}td:first-child{width:19%;font-weight:bold}p{margin:0 0 8px}li{margin-bottom:7px}img{max-width:100%}.case{break-before:page}.index td:first-child{width:10%}@media print{body{font-size:10pt;margin:0;max-width:none}.case{break-before:page}tr{break-inside:avoid}thead{display:table-header-group}@page{size:A4;margin:15mm}}</style></head><body>
+<h1>SponsorFlow — Corrected Use Case Descriptions</h1>
+<p>The Use Case Diagram presents the interactions of five actors with SponsorFlow: Student Applicant, FASSG Personnel, Sponsor, Accounting Office Personnel, and System Administrator. Students register, request SLE-FHE verification, browse open programs, submit applications and documents, and monitor their status. FASSG manages programs and Fixed Lists, manually prepares Generated Batches, reviews member qualifications, submits the exact roster, records Sponsor decisions, and explicitly forwards eligible approved beneficiaries. Sponsors review submitted batches and approve or reject each entire batch. Accounting views and exports eligible forwarded beneficiary references without editing beneficiary records. The System Administrator manages accounts, audit-log access, and backup operations. Associations identify actor participation; include and extend relationships represent reused or conditional behavior rather than chronological handoffs.</p>
+<h2>Common interpretation</h2><ul>
+<li>UC-01 to UC-22 retain the original numbering with corrected names and behavior. UC-23 to UC-26 add the missing request, member-review, receipt, and forwarding interactions.</li>
+<li>An Active account is distinct from documented SLE-FHE verification. A Verified application is distinct from Sponsor approval.</li>
+<li>Application statuses: Pending, Verified, Approved, Rejected, Ongoing, Expired, and Resubmission Requested. Batch membership is not a separate application status.</li>
+<li>Generated Batch statuses: Saved, Submitted, Approved, and Rejected. FASSG receipt and Accounting forwarding are separate recorded actions, not additional batch-status labels.</li>
+<li>A Saved batch may contain ordinary Pending/Verified applicants, the complete explicitly selected finalized Fixed List roster, or both. Draft creation and source-list finalization do not consume slots.</li>
+<li>Fixed List members need no separate online application. Internal processing records preserve source provenance and do not manufacture grades, documents, or verification.</li>
+<li>Authentication is a precondition for protected functions. Includes/extends do not represent the chronological Sponsor-to-FASSG-to-Accounting handoff.</li>
+<li>For Accounting, read-only means beneficiary and approval records cannot be edited; an authorized export may still create an audit entry.</li>
+</ul><h2>Use case index</h2><table class="index"><thead><tr><th>ID</th><th>Use case</th><th>Primary actor</th></tr></thead><tbody>
+<tr><td>UC-01</td><td>Login / Authenticate</td><td>All five user roles</td></tr>
+<tr><td>UC-02</td><td>Register Student Account</td><td>Student Applicant</td></tr>
+<tr><td>UC-03</td><td>View Available Programs</td><td>Student Applicant</td></tr>
+<tr><td>UC-04</td><td>Submit Sponsorship Application</td><td>Student Applicant</td></tr>
+<tr><td>UC-05</td><td>Apply After Previous Sponsorship Expires</td><td>Student Applicant</td></tr>
+<tr><td>UC-06</td><td>Track Application Status</td><td>Student Applicant</td></tr>
+<tr><td>UC-07</td><td>Manage Sponsorship Programs</td><td>FASSG Personnel</td></tr>
+<tr><td>UC-08</td><td>Verify SLE-FHE Eligibility</td><td>FASSG Personnel</td></tr>
+<tr><td>UC-09</td><td>Encode / Import Sponsor Fixed List</td><td>FASSG Personnel</td></tr>
+<tr><td>UC-10</td><td>Upload Required Documents</td><td>Student Applicant</td></tr>
+<tr><td>UC-11</td><td>Configure Program Eligibility Criteria</td><td>FASSG Personnel</td></tr>
+<tr><td>UC-12</td><td>Finalize Fixed List</td><td>FASSG Personnel</td></tr>
+<tr><td>UC-13</td><td>Manually Prepare Generated Batch</td><td>FASSG Personnel</td></tr>
+<tr><td>UC-14</td><td>Submit Batch to Sponsor</td><td>FASSG Personnel</td></tr>
+<tr><td>UC-15</td><td>Review Submitted Generated Batches</td><td>Sponsor</td></tr>
+<tr><td>UC-16</td><td>Approve or Reject Entire Submitted Batch</td><td>Sponsor</td></tr>
+<tr><td>UC-17</td><td>Upload Sponsor Confirmation Evidence</td><td>Sponsor</td></tr>
+<tr><td>UC-18</td><td>View Forwarded Approved Beneficiary Records</td><td>Accounting Office Personnel</td></tr>
+<tr><td>UC-19</td><td>Print / Export Beneficiary References</td><td>Accounting Office Personnel</td></tr>
+<tr><td>UC-20</td><td>Generate Summary Reports</td><td>FASSG Personnel</td></tr>
+<tr><td>UC-21</td><td>Manage User Accounts and Roles</td><td>System Administrator</td></tr>
+<tr><td>UC-22</td><td>View Audit Logs and Manage Backups</td><td>System Administrator</td></tr>
+<tr><td>UC-23</td><td>Request SLE-FHE Verification</td><td>Student Applicant</td></tr>
+<tr><td>UC-24</td><td>Verify Batch Member Qualifications and Documents</td><td>FASSG Personnel</td></tr>
+<tr><td>UC-25</td><td>Record Receipt of Sponsor Decision</td><td>FASSG Personnel</td></tr>
+<tr><td>UC-26</td><td>Forward Approved Beneficiaries to Accounting</td><td>FASSG Personnel</td></tr>
+</tbody></table>
+<section class="case"><h2>Table 3.24: Login / Authenticate</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-01</p></td></tr>
+<tr><td>Use case name</td><td><p>Login / Authenticate</p></td></tr>
+<tr><td>Primary actor</td><td><p>All five user roles</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Authenticates an active user and opens the dashboard assigned to the user&#x27;s role.</p></td></tr>
+<tr><td>Preconditions</td><td><p>The user has an existing active account and is not currently authenticated.</p></td></tr>
+<tr><td>Trigger</td><td><p>The user opens the login page and submits credentials.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system displays the email and password fields.</p><p>2. The user enters their email and password and submits the form.</p><p>3. The system validates the credentials and account status.</p><p>4. The system regenerates the session and determines the user&#x27;s role.</p><p>5. The system redirects the user to the Student, FASSG, Sponsor, Accounting, or Administrator dashboard.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. The user selects Remember me to request persistent authentication.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. Invalid credentials or an inactive account prevent authentication and produce a validation message.</p><p>2. A credential-verification failure returns an error without granting access.</p></td></tr>
+<tr><td>Postconditions</td><td><p>An authenticated session exists with role-restricted access. No SLE-FHE verification or sponsorship decision is created.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. Authentication is a precondition for protected use cases, not a login interaction repeated within each use case.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.25: Register Student Account</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-02</p></td></tr>
+<tr><td>Use case name</td><td><p>Register Student Account</p></td></tr>
+<tr><td>Primary actor</td><td><p>Student Applicant</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Creates a student account and profile using validated identity information and the official academic-program catalog.</p></td></tr>
+<tr><td>Preconditions</td><td><p>The student does not already have an account using the submitted institutional email or Student ID.</p></td></tr>
+<tr><td>Trigger</td><td><p>The student opens the registration form.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system displays the registration form and active undergraduate academic programs.</p><p>2. The student supplies identity and contact details, institutional email, Student ID, campus, year level, academic program, birthdate, and password confirmation.</p><p>3. The student accepts the required accuracy and privacy consent and submits the form.</p><p>4. The system validates required values, Student ID format, institutional email, password, duplicates, and the academic-program selection.</p><p>5. The system creates an Active student account and linked profile, storing the selected catalog program and canonical course name.</p><p>6. The system redirects to Login with a registration-success message.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. The student supplies optional middle-name or name-extension information.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. Duplicate identifiers, invalid fields, missing consent, or an inactive, postgraduate, or nonexistent program prevent registration.</p></td></tr>
+<tr><td>Postconditions</td><td><p>The account and profile exist. The student remains unverified for SLE-FHE until FASSG separately records legitimate verification.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. UC-01 is a subsequent action, not an included automatic login.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.26: View Available Programs</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-03</p></td></tr>
+<tr><td>Use case name</td><td><p>View Available Programs</p></td></tr>
+<tr><td>Primary actor</td><td><p>Student Applicant</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Displays open sponsorship opportunities and their requirements to a verified student.</p></td></tr>
+<tr><td>Preconditions</td><td><p>The student is authenticated and has documented SLE-FHE verification for access to the student program catalog.</p></td></tr>
+<tr><td>Trigger</td><td><p>The student opens Sponsorship Opportunities.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system checks the student&#x27;s SLE-FHE verification.</p><p>2. The system retrieves open sponsorship programs and related Sponsor and academic-program information.</p><p>3. The system displays program availability, criteria, and requirements.</p><p>4. The student reviews an opportunity and may proceed to its application form, where eligibility is checked.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. The student searches by program or Sponsor name or filters by program category.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. An unverified student sees a verification-required state.</p><p>2. An empty result displays a no-programs-found message.</p></td></tr>
+<tr><td>Postconditions</td><td><p>The student has viewed available opportunities. Displaying a program does not certify eligibility or reserve a slot.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. Application submission is handled by UC-04.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.27: Submit Sponsorship Application</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-04</p></td></tr>
+<tr><td>Use case name</td><td><p>Submit Sponsorship Application</p></td></tr>
+<tr><td>Primary actor</td><td><p>Student Applicant</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None; FASSG reviews the stored application in a later interaction.</p></td></tr>
+<tr><td>Description</td><td><p>Submits an ordinary student application and applicable supporting evidence for an open program.</p></td></tr>
+<tr><td>Preconditions</td><td><p>The student is authenticated, has documented SLE-FHE verification, satisfies applicable program checks, has no conflicting active sponsorship, and is not barred by an existing application or prior rejection for the same program. The application period is open.</p></td></tr>
+<tr><td>Trigger</td><td><p>The student selects Apply for an open program.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system checks application access and displays the form.</p><p>2. The student reviews profile details and enters the current GPA/GWA, address, rurality declaration, and any required employee-relative information.</p><p>3. At the document attachment step, UC-10 supplies attachments when required or provided.</p><p>4. The student submits the form.</p><p>5. The system validates fields, program eligibility, and applicable required files.</p><p>6. The system saves the application and documents and returns a submission confirmation.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. Employee-based program requirements request the relevant relationship and evidence.</p><p>2. UC-05 reuses this submission flow after the student&#x27;s previous sponsorship has expired.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. An active sponsorship, duplicate active/pending application, prior rejection for the same program, closed period, failed criterion, or missing/invalid required evidence blocks submission.</p></td></tr>
+<tr><td>Postconditions</td><td><p>A Pending application exists for later FASSG selection and review. Submission does not verify or approve the applicant or reserve a slot.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>Included by UC-05. Extended by UC-10 at Attach supporting documents when documents are required or supplied. No student application Save as draft feature is represented.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.28: Apply After Previous Sponsorship Expires</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-05</p></td></tr>
+<tr><td>Use case name</td><td><p>Apply After Previous Sponsorship Expires</p></td></tr>
+<tr><td>Primary actor</td><td><p>Student Applicant</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Reuses ordinary application submission when a previous sponsorship has ended and a new eligible opportunity is open.</p></td></tr>
+<tr><td>Preconditions</td><td><p>The previous sponsorship has expired, no conflicting active sponsorship remains, and all UC-04 preconditions for the chosen open program are satisfied.</p></td></tr>
+<tr><td>Trigger</td><td><p>The student selects Apply on an eligible open program after the prior sponsorship ends.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system checks current sponsorship and application restrictions for the selected program.</p><p>2. The student reviews current profile information and supplies fresh qualifications and applicable evidence through UC-04.</p><p>3. UC-04 validates and saves a new Pending application.</p><p>4. The previous sponsorship and its historical evidence remain intact.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. The student chooses a different open program that satisfies the applicable restrictions.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. The previous award remains active, the selected program is closed, or another UC-04 restriction prevents a new application.</p></td></tr>
+<tr><td>Postconditions</td><td><p>A new Pending application exists while prior sponsorship history is preserved. Previous attachments are not automatically carried over.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>Includes UC-04. This documents a specific application scenario, not a separate Re-apply endpoint or an application to an expired program.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.29: Track Application Status</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-06</p></td></tr>
+<tr><td>Use case name</td><td><p>Track Application Status</p></td></tr>
+<tr><td>Primary actor</td><td><p>Student Applicant</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Shows the student&#x27;s current saved application information, reviewer notes, and relevant status history.</p></td></tr>
+<tr><td>Preconditions</td><td><p>The student is authenticated and may access only their own application records.</p></td></tr>
+<tr><td>Trigger</td><td><p>The student opens My Applications or an application detail page.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system retrieves applications linked to the student&#x27;s profile.</p><p>2. The system displays the applicable status: Pending, Verified, Approved, Rejected, Ongoing, Expired, or Resubmission Requested.</p><p>3. The student opens a record to inspect its details and available review notes.</p><p>4. The system displays current stored information and relevant notification content.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. For Resubmission Requested, the student supplies corrected evidence through the resubmission form using UC-10; a successful resubmission returns the application to Pending.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. No applications produces an empty state.</p><p>2. An attempt to access another student&#x27;s record is denied.</p></td></tr>
+<tr><td>Postconditions</td><td><p>The student has viewed current information. Viewing alone does not change approval or verification. Batch membership is separate from application status.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. Reapplication is a separate scenario, not an automatic extension of viewing status.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.30: Manage Sponsorship Programs</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-07</p></td></tr>
+<tr><td>Use case name</td><td><p>Manage Sponsorship Programs</p></td></tr>
+<tr><td>Primary actor</td><td><p>FASSG Personnel</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Creates and maintains sponsorship programs, Sponsor assignment, capacity, application dates, and applicable requirements.</p></td></tr>
+<tr><td>Preconditions</td><td><p>The user is authenticated as FASSG. A valid Sponsor is available for program assignment.</p></td></tr>
+<tr><td>Trigger</td><td><p>FASSG opens program creation, editing, or status controls.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system displays the relevant program form.</p><p>2. FASSG enters or updates the program name, Sponsor, category, capacity, dates, and required documents.</p><p>3. When configuring or changing eligibility, FASSG performs UC-11.</p><p>4. FASSG submits the configuration.</p><p>5. The system validates supported fields and preserves capacity consistency with existing beneficiaries.</p><p>6. The system saves the program; newly created programs are opened by the implemented creation action.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. FASSG uses the available close, open/reopen, or expire actions, subject to their checks.</p><p>2. An edit preserves existing criteria where no change is requested.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. Invalid Sponsor or configuration values, invalid dates, or reducing capacity below existing beneficiaries prevents the relevant operation.</p></td></tr>
+<tr><td>Postconditions</td><td><p>The program configuration or status is saved. Opening or editing a program does not select or approve candidates.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>Extended by UC-11 at Configure program eligibility when criteria are configured or changed.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.31: Verify SLE-FHE Eligibility</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-08</p></td></tr>
+<tr><td>Use case name</td><td><p>Verify SLE-FHE Eligibility</p></td></tr>
+<tr><td>Primary actor</td><td><p>FASSG Personnel</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None; the student&#x27;s request is submitted separately through UC-23.</p></td></tr>
+<tr><td>Description</td><td><p>Records a genuine FASSG decision on a pending SLE-FHE verification request using identity, registry, and office evidence.</p></td></tr>
+<tr><td>Preconditions</td><td><p>FASSG is authenticated. A matching submitted pending request and complete student identity/address information exist. Existing verification evidence must not be overwritten.</p></td></tr>
+<tr><td>Trigger</td><td><p>FASSG selects a pending SLE-FHE request for review.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system displays the request, student identity, address information, and institutional registry comparison.</p><p>2. FASSG examines the evidence and explicitly confirms the student&#x27;s identity.</p><p>3. FASSG submits the verification decision for the selected request.</p><p>4. The system validates the request and supporting match or authorized evidence-based override.</p><p>5. The system records the verifying officer, timestamp, and verified address; marks the request verified; and records the audit evidence.</p><p>6. The system makes the verification result available to the student.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. FASSG returns a pending request for correction with a reason, preserving its evidence.</p><p>2. A registry mismatch requires an explicit FASSG override, a reason, and a traceable office-evidence reference; matching alone is not an automatic verification decision.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. No matching pending request, incomplete identity/address, missing override evidence, or an existing verification record prevents an unsupported overwrite or verification.</p></td></tr>
+<tr><td>Postconditions</td><td><p>A documented verification decision exists. No application is automatically approved, and no batch is automatically submitted.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. UC-23 precedes this interaction. Program-specific member verification is UC-24.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.32: Encode / Import Sponsor Fixed List</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-09</p></td></tr>
+<tr><td>Use case name</td><td><p>Encode / Import Sponsor Fixed List</p></td></tr>
+<tr><td>Primary actor</td><td><p>FASSG Personnel</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None; the Sponsor is the originator of the list supplied to FASSG.</p></td></tr>
+<tr><td>Description</td><td><p>Records a Sponsor-provided candidate list as an editable Fixed List for a specific program.</p></td></tr>
+<tr><td>Preconditions</td><td><p>FASSG is authenticated, the program exists, and the source list is available. Editing requires a Draft list.</p></td></tr>
+<tr><td>Trigger</td><td><p>FASSG creates a Fixed List or opens its manual encoding/import controls.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. FASSG identifies the program and source list details.</p><p>2. FASSG manually encodes candidates or uploads the supported CSV/Excel source.</p><p>3. The system validates the submitted/imported candidate information and source association.</p><p>4. The system saves candidate entries and displays their current review states.</p><p>5. FASSG reviews the stored entries and completes the permitted verification and endorsement actions before later finalization.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. FASSG removes an editable draft entry only when the existing historical-reference protections permit it.</p><p>2. Manual academic-program and year-level selections are checked against their supported values and matching institutional/profile information.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. Invalid data, source discrepancies, a protected historical reference, or a finalized list blocks the affected operation.</p><p>2. A candidate without documented SLE-FHE verification cannot be treated as verified through list encoding.</p></td></tr>
+<tr><td>Postconditions</td><td><p>The Draft Fixed List contains candidate-source records. No sponsorship slots are reserved or consumed, and no separate online application is demanded from a Fixed List candidate.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. UC-12 is a later explicit action, not a mandatory part of every encoding/import operation.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.33: Upload Required Documents</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-10</p></td></tr>
+<tr><td>Use case name</td><td><p>Upload Required Documents</p></td></tr>
+<tr><td>Primary actor</td><td><p>Student Applicant</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Supplies applicable supporting files within application submission or an authorized document-resubmission interaction.</p></td></tr>
+<tr><td>Preconditions</td><td><p>The student is authenticated and is completing an allowed application or resubmission form.</p></td></tr>
+<tr><td>Trigger</td><td><p>The student selects supporting files in the relevant form.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The form displays document fields for the applicable requirements.</p><p>2. The student selects PDF, JPG/JPEG, or PNG files.</p><p>3. The student submits the application or resubmission form.</p><p>4. The system checks required document types, supported file formats, and the 5120 KB per-file limit.</p><p>5. On successful form processing, the system stores the files and links document records to the application.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. A requested resubmission supplies corrected documents through the existing resubmission form.</p><p>2. Optional supported attachments may be supplied when the form permits them.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. A missing required document, unsupported format, excessive size, or unauthorized resubmission is rejected.</p></td></tr>
+<tr><td>Postconditions</td><td><p>Successfully submitted files are available for authorized review. Selecting a local file alone does not persist evidence or verify eligibility.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>Extends UC-04 at Attach supporting documents when documents are required or supplied. The resubmission context is described in UC-06.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.34: Configure Program Eligibility Criteria</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-11</p></td></tr>
+<tr><td>Use case name</td><td><p>Configure Program Eligibility Criteria</p></td></tr>
+<tr><td>Primary actor</td><td><p>FASSG Personnel</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Defines the qualifications applicable to a sponsorship program without ranking or selecting candidates.</p></td></tr>
+<tr><td>Preconditions</td><td><p>FASSG is authenticated and is creating or editing a program.</p></td></tr>
+<tr><td>Trigger</td><td><p>FASSG configures or changes eligibility fields in the program form.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system displays supported academic-program, year-level, campus, grade, location, document, and applicable employee-relative criteria.</p><p>2. FASSG selects the criteria required by the program and leaves optional restrictions unset when appropriate.</p><p>3. FASSG submits the program form.</p><p>4. The system validates the configured values using the current request rules.</p><p>5. The system saves the criteria and relevant academic-program associations.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. No program-specific grade or location restriction is set where the program does not require it.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. Unsupported or invalid academic-program, year-level, numerical, or other validated values prevent saving.</p></td></tr>
+<tr><td>Postconditions</td><td><p>The saved criteria are available for application and beneficiary checks. They do not establish ranking, automatic selection, or approval.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>Extends UC-07 at Configure program eligibility when criteria are configured or changed. This description does not claim server-side province/municipality membership validation absent from the current request rules.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.35: Finalize Fixed List</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-12</p></td></tr>
+<tr><td>Use case name</td><td><p>Finalize Fixed List</p></td></tr>
+<tr><td>Primary actor</td><td><p>FASSG Personnel</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Locks a reviewed Sponsor-provided source list so FASSG can deliberately use it in Generated Batch preparation.</p></td></tr>
+<tr><td>Preconditions</td><td><p>FASSG is authenticated. A nonempty editable Draft Fixed List exists for the program, with documented verification and recorded endorsements for its members.</p></td></tr>
+<tr><td>Trigger</td><td><p>FASSG selects Finalize List.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system checks the list&#x27;s editable state and retrieves its stored members.</p><p>2. The system checks each member&#x27;s recorded endorsement, documented SLE-FHE verification, and list-preparation requirements.</p><p>3. If every member passes, the system sets the list to Finalized.</p><p>4. The system records the responsible FASSG officer, timestamp, and audit event.</p><p>5. The interface presents the finalized list as protected and available for batch preparation.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. FASSG postpones finalization and completes permitted draft corrections or reviews.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. An empty list, missing evidence or endorsement, or a failed preparation check blocks finalization.</p></td></tr>
+<tr><td>Postconditions</td><td><p>The source list is Finalized. No program slots are reserved or consumed; no candidate receives priority, Sponsor approval, or Accounting access.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. A finalized list may later be explicitly selected in UC-13.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.36: Manually Prepare Generated Batch</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-13</p></td></tr>
+<tr><td>Use case name</td><td><p>Manually Prepare Generated Batch</p></td></tr>
+<tr><td>Primary actor</td><td><p>FASSG Personnel</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Creates or safely edits an unsubmitted program batch using explicitly selected ordinary applicants, a finalized Fixed List roster, or both.</p></td></tr>
+<tr><td>Preconditions</td><td><p>FASSG is authenticated. The target program is open and unexpired. Candidates have documented SLE-FHE verification and no conflicting active sponsorship. Ordinary applications are Pending or Verified; a selected source list is Finalized and belongs to the same program.</p></td></tr>
+<tr><td>Trigger</td><td><p>FASSG opens Create Batch or a permitted draft-batch preparation action.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. FASSG selects the program and batch details.</p><p>2. FASSG manually checks ordinary applicants and/or deliberately selects a finalized Fixed List.</p><p>3. For a selected Fixed List, the server retrieves its complete stored roster; it does not trust client-supplied member names.</p><p>4. The system checks source membership, candidate identity, verification/endorsement prerequisites, existing batch assignments, duplicate membership, and capacity.</p><p>5. The system saves the exact selected members with source references in a Saved Generated Batch.</p><p>6. FASSG opens that draft for the separate member review and submission actions.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. The batch contains only ordinary applicants, only Fixed List candidates, or a combination.</p><p>2. The same student selected through both sources is represented once with the retained Fixed List source link; duplicate source identities or conflicting records require review.</p><p>3. FASSG may remove an individual member from an eligible unsubmitted draft without deleting the original source-list entry.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. Zero selection, invalid source/program association, missing prerequisite evidence, conflicting membership, or excessive capacity blocks preparation without silently dropping members.</p></td></tr>
+<tr><td>Postconditions</td><td><p>A Saved batch exists with unique membership and source provenance. Rank positions remain unset. Draft creation neither marks Pending members Verified nor grants approval or consumes slots.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. UC-24 and UC-14 are separate subsequent actions; they are not executed automatically during draft creation.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.37: Submit Batch to Sponsor</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-14</p></td></tr>
+<tr><td>Use case name</td><td><p>Submit Batch to Sponsor</p></td></tr>
+<tr><td>Primary actor</td><td><p>FASSG Personnel</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None; the assigned Sponsor reviews the result later through UC-15.</p></td></tr>
+<tr><td>Description</td><td><p>Submits the complete verified program roster to the assigned Sponsor and freezes its membership for review.</p></td></tr>
+<tr><td>Preconditions</td><td><p>FASSG is authenticated. A permitted batch exists, each member has completed required verification, and the roster satisfies eligibility, evidence, identity, and capacity rules.</p></td></tr>
+<tr><td>Trigger</td><td><p>FASSG selects Submit to Sponsor on the Generated Batch.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. FASSG reviews the complete roster and submits it.</p><p>2. The system locks the program, batch, and relevant records for consistency checks.</p><p>3. The system validates every member, applicable documents and qualifications, conflicts, and current capacity.</p><p>4. The system records or verifies the exact roster snapshot and its program/Sponsor association.</p><p>5. The system sets Submitted, advances the submission version, and records the submission audit event.</p><p>6. The submitted batch becomes available to the assigned Sponsor.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. A rejected batch may be resubmitted only after FASSG records receipt of the rejection, the original roster remains intact, and current checks pass.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. An unverified/ineligible member, missing evidence, over-capacity selection, stale state, or changed frozen roster blocks the entire submission.</p></td></tr>
+<tr><td>Postconditions</td><td><p>The exact roster is Submitted and protected against unauthorized membership changes. No Sponsor approval or slot consumption occurs at submission.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. Completed verification is a precondition; submission does not automatically perform FASSG&#x27;s human review. No automatic Sponsor email is claimed.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.38: Review Submitted Generated Batches</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-15</p></td></tr>
+<tr><td>Use case name</td><td><p>Review Submitted Generated Batches</p></td></tr>
+<tr><td>Primary actor</td><td><p>Sponsor</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Allows an assigned Sponsor to inspect a FASSG-submitted batch and its candidate evidence before a whole-batch decision.</p></td></tr>
+<tr><td>Preconditions</td><td><p>The Sponsor is authenticated, owns the assigned program context, and the batch has been submitted by FASSG.</p></td></tr>
+<tr><td>Trigger</td><td><p>The Sponsor opens a submitted batch in the Sponsor portal.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system retrieves batches belonging to the Sponsor&#x27;s programs.</p><p>2. The Sponsor selects a submitted batch.</p><p>3. The system displays its exact roster, program details, candidate information, and available supporting evidence.</p><p>4. The Sponsor reviews the roster and its current decision/evidence state.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. The Sponsor uses available applicant search/filter views restricted to the Sponsor&#x27;s submitted batches.</p><p>2. The Sponsor views previous decisions in the permitted history view.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. An unassigned program, Saved draft, or unauthorized record/document request is denied.</p></td></tr>
+<tr><td>Postconditions</td><td><p>The Sponsor has reviewed the submitted roster. Viewing does not change membership or approve beneficiaries.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. Evidence upload and the explicit whole-batch decision are UC-17 and UC-16.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.39: Approve or Reject Entire Submitted Batch</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-16</p></td></tr>
+<tr><td>Use case name</td><td><p>Approve or Reject Entire Submitted Batch</p></td></tr>
+<tr><td>Primary actor</td><td><p>Sponsor</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None; FASSG receives and records the decision through UC-25.</p></td></tr>
+<tr><td>Description</td><td><p>Records an explicit Sponsor decision on the entire unchanged submitted roster.</p></td></tr>
+<tr><td>Preconditions</td><td><p>The Sponsor is authenticated and assigned to the program. The current submission is actionable and its roster is intact. Approval additionally requires current uploaded confirmation evidence and all member/capacity checks to pass.</p></td></tr>
+<tr><td>Trigger</td><td><p>The Sponsor explicitly selects Approve Entire Batch or Reject Entire Batch.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The Sponsor reviews the current whole batch and chooses approval.</p><p>2. The system validates authorization, submission version, exact membership, and the current uploaded confirmation evidence.</p><p>3. Within the controlled transaction, the system checks all members&#x27; qualifications, documents, verification, active-sponsorship conflicts, and available capacity.</p><p>4. The system approves the complete batch, records the Sponsor and decision time, and updates the applicable individual beneficiary and active-sponsorship records.</p><p>5. The system records the audit evidence and sends the implemented application-approval notifications.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. For whole-batch rejection, the system records a separate rejection decision and marks the batch Rejected. Existing uploaded evidence and application qualification history are preserved. No individual replacement, re-ranking, or mass application rejection occurs.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. Stale submission/evidence, unauthorized access, an invalid member, conflicting active sponsorship, or insufficient capacity prevents approval without partial beneficiary updates.</p><p>2. Standalone individual Sponsor approval/rejection operations are blocked.</p></td></tr>
+<tr><td>Postconditions</td><td><p>The batch is Approved or Rejected with a recorded Sponsor decision. Approved batches await FASSG receipt and forwarding; Accounting access is not automatically granted.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. UC-17 supplies evidence before approval. UC-25 and UC-26 are separately initiated FASSG actions, not included Sponsor actions.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.40: Upload Sponsor Confirmation Evidence</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-17</p></td></tr>
+<tr><td>Use case name</td><td><p>Upload Sponsor Confirmation Evidence</p></td></tr>
+<tr><td>Primary actor</td><td><p>Sponsor</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Stores a Sponsor&#x27;s approval/confirmation document against the current submitted batch version without deciding the batch.</p></td></tr>
+<tr><td>Preconditions</td><td><p>The Sponsor is authenticated and authorized to act on the current submitted batch.</p></td></tr>
+<tr><td>Trigger</td><td><p>The Sponsor selects a confirmation file and submits the upload form.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The Sponsor selects a PDF, JPG/JPEG, or PNG confirmation file.</p><p>2. The system validates the format and 5120 KB per-file limit.</p><p>3. The system verifies the assigned program, submission version, and intact roster.</p><p>4. The system stores the file and creates a Pending Sponsor approval/evidence record linked to the batch, program, version, and uploader.</p><p>5. The system records the upload and prompts the Sponsor to make an explicit whole-batch decision.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. A later permitted upload creates another evidence record while preserving earlier uploaded records; approval must reference current evidence.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. Invalid file, unauthorized batch, changed submission, or failed persistence blocks the upload action.</p></td></tr>
+<tr><td>Postconditions</td><td><p>Confirmation evidence is stored with a Pending decision state. Uploading alone does not approve candidates, impersonate FASSG, or forward to Accounting.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. Valid stored evidence is a precondition of the approval branch of UC-16, not of its rejection branch.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.41: View Forwarded Approved Beneficiary Records</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-18</p></td></tr>
+<tr><td>Use case name</td><td><p>View Forwarded Approved Beneficiary Records</p></td></tr>
+<tr><td>Primary actor</td><td><p>Accounting Office Personnel</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Provides read-only access to beneficiaries that satisfy the complete verification, Sponsor decision, and FASSG forwarding requirements.</p></td></tr>
+<tr><td>Preconditions</td><td><p>Accounting is authenticated. Visible records require documented SLE-FHE verification, individual Approved/Ongoing status with required evidence, an intact approved batch, valid Sponsor confirmation, recorded FASSG receipt, and explicit FASSG forwarding.</p></td></tr>
+<tr><td>Trigger</td><td><p>Accounting opens the beneficiary reference list or an authorized beneficiary detail/document.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system applies the Accounting visibility and eligibility checks.</p><p>2. The system displays only eligible forwarded beneficiary records.</p><p>3. Accounting searches the list or filters by sponsorship program or academic program.</p><p>4. Accounting opens eligible details and available confirmation/reference documents.</p><p>5. At the reference-output extension point, Accounting may request UC-19.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. No eligible records or no matching filters produces an empty result.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. Unauthorized or ineligible direct record/document requests are denied.</p><p>2. Beneficiary editing or approval attempts are unavailable and prohibited.</p></td></tr>
+<tr><td>Postconditions</td><td><p>Accounting has viewed eligible beneficiary information without modifying beneficiary, verification, or sponsorship decisions. This use case does not perform payout processing or financial calculations.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>Extended by UC-19 at Produce a reference copy when the user requests printing or export.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.42: Print / Export Beneficiary References</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-19</p></td></tr>
+<tr><td>Use case name</td><td><p>Print / Export Beneficiary References</p></td></tr>
+<tr><td>Primary actor</td><td><p>Accounting Office Personnel</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Produces a CSV or browser-printed reference from eligible forwarded beneficiary information.</p></td></tr>
+<tr><td>Preconditions</td><td><p>Accounting is authenticated and the relevant beneficiary records satisfy UC-18&#x27;s eligibility restrictions.</p></td></tr>
+<tr><td>Trigger</td><td><p>Accounting selects Export CSV / Excel or Print Master List in the reference interface.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system obtains eligible beneficiary results using the current supported filters.</p><p>2. For export, the system formats the reference columns, sanitizes potentially unsafe CSV values, and streams a CSV download.</p><p>3. For printing, the browser uses the existing print layout for the displayed reference list.</p><p>4. The user saves the CSV or completes the browser print action.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. The user requests either printing or CSV export; CSV can be opened in spreadsheet software.</p><p>2. The browser may offer Save as PDF as a printing option; this is not an application-generated Accounting PDF.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. Ineligible records remain excluded. A failed request or download must not be reported as a successful export.</p></td></tr>
+<tr><td>Postconditions</td><td><p>A reference copy is produced without changing beneficiary records. The export action records its audit event. No native Excel workbook, billing subtotal, or payout is generated.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>Extends UC-18 when the user requests print or export.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.43: Generate Summary Reports</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-20</p></td></tr>
+<tr><td>Use case name</td><td><p>Generate Summary Reports</p></td></tr>
+<tr><td>Primary actor</td><td><p>FASSG Personnel</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Presents sponsorship statistics and permits the implemented PDF and CSV report exports.</p></td></tr>
+<tr><td>Preconditions</td><td><p>FASSG is authenticated and authorized to access the reporting module.</p></td></tr>
+<tr><td>Trigger</td><td><p>FASSG opens Reports and selects report filters or an export action.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system displays the available academic-year, semester, campus, and sponsorship-program filters.</p><p>2. FASSG selects the desired supported filters.</p><p>3. The system retrieves and aggregates the corresponding application, beneficiary, and program information.</p><p>4. The system displays implemented charts and tables, including slot utilization and demographic distributions.</p><p>5. If requested, the system generates the implemented PDF report or CSV summary.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. FASSG reviews municipality and other demographic breakdowns available in the report.</p><p>2. FASSG views results without downloading a file.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. No matching records produces empty or zero-valued results. A failed export must not be presented as completed.</p></td></tr>
+<tr><td>Postconditions</td><td><p>FASSG has viewed or exported descriptive reports. Reports do not rank, select, verify, or approve candidates.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. Accounting&#x27;s restricted reference export is UC-19, not participation in FASSG report generation.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.44: Manage User Accounts and Roles</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-21</p></td></tr>
+<tr><td>Use case name</td><td><p>Manage User Accounts and Roles</p></td></tr>
+<tr><td>Primary actor</td><td><p>System Administrator</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Creates and edits user accounts and assigns the system&#x27;s supported roles and account statuses.</p></td></tr>
+<tr><td>Preconditions</td><td><p>The Administrator is authenticated and authorized for user management.</p></td></tr>
+<tr><td>Trigger</td><td><p>The Administrator opens Manage Users and selects an account operation.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system displays searchable user records and role/status filters.</p><p>2. The Administrator creates an account or opens an existing account for editing.</p><p>3. The Administrator supplies the supported name, email, role, status, and applicable password information.</p><p>4. The system validates submitted values and uniqueness constraints.</p><p>5. The system saves the changes, maintains the related Sponsor profile when applicable, and records the administrative audit event.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. The Administrator deactivates or restores an account through the dedicated status actions.</p><p>2. An optional new password is entered and confirmed during account editing; a blank password field preserves the existing password.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. Invalid or duplicate values prevent the relevant save.</p><p>2. Dedicated status actions reject changing the current Administrator&#x27;s own account status.</p></td></tr>
+<tr><td>Postconditions</td><td><p>Account information, role, or status is updated with an audit event. This description does not claim a root-administrator self-demotion guard or an emailed administrator password-reset link.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.45: View Audit Logs and Manage Backups</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-22</p></td></tr>
+<tr><td>Use case name</td><td><p>View Audit Logs and Manage Backups</p></td></tr>
+<tr><td>Primary actor</td><td><p>System Administrator</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Provides recorded audit-log access and the existing authorized SQL backup, download, and restore operations.</p></td></tr>
+<tr><td>Preconditions</td><td><p>The Administrator is authenticated and authorized. Backup operations require usable storage and a supported database driver; restore requires an existing accessible completed backup.</p></td></tr>
+<tr><td>Trigger</td><td><p>The Administrator opens Audit Logs or Backups and selects an operation.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system displays stored audit entries with supported search, role, and date filters, or displays recorded backups.</p><p>2. The Administrator reviews the requested records.</p><p>3. If backup creation is explicitly selected, the system builds a SQL database dump and writes the backup file.</p><p>4. The system records completed backup metadata and the administrative audit event and returns the operation result.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. Viewing logs alone creates no backup.</p><p>2. The Administrator downloads an available completed backup.</p><p>3. The Administrator explicitly requests restore; the existing action checks backup availability and recognized SQL content, executes restoration, and reports its result. Restoration changes database state and is not part of ordinary log viewing.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. Unavailable backup files, unrecognized backup content, unsupported database drivers, or storage/database failures prevent completion and are reported through the existing error handling.</p></td></tr>
+<tr><td>Postconditions</td><td><p>The selected log or backup operation has completed or reported failure. Generated backups are SQL files; encryption, live intrusion monitoring, and guaranteed successful recovery are not claimed.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. Log viewing, backup creation, and restore are alternative authorized operations, not a mandatory sequence.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.46: Request SLE-FHE Verification</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-23</p></td></tr>
+<tr><td>Use case name</td><td><p>Request SLE-FHE Verification</p></td></tr>
+<tr><td>Primary actor</td><td><p>Student Applicant</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None; FASSG processes the stored request through UC-08.</p></td></tr>
+<tr><td>Description</td><td><p>Submits the student&#x27;s verification request and address information for a separate FASSG evidence review.</p></td></tr>
+<tr><td>Preconditions</td><td><p>The student is authenticated, has a complete usable profile, and has no existing verification record that this request would overwrite.</p></td></tr>
+<tr><td>Trigger</td><td><p>The student submits the SLE-FHE verification-request form.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system displays the student&#x27;s verification interface.</p><p>2. The student supplies and reviews the required request and address information.</p><p>3. The student submits the verification request.</p><p>4. The system validates the request and checks existing verification evidence.</p><p>5. The system preserves prior requests, supersedes prior pending requests when applicable, and creates the new pending request with its submission time.</p><p>6. The system confirms that the request awaits FASSG evidence review.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. The student submits corrected information after an earlier request was returned for correction.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. Invalid request information or an existing verification record blocks an unsupported submission or overwrite.</p></td></tr>
+<tr><td>Postconditions</td><td><p>A pending request is available to FASSG. Saving a profile or submitting this request does not automatically verify the student.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. UC-08 is a later FASSG action, not automatically included in submission.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.47: Verify Batch Member Qualifications and Documents</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-24</p></td></tr>
+<tr><td>Use case name</td><td><p>Verify Batch Member Qualifications and Documents</p></td></tr>
+<tr><td>Primary actor</td><td><p>FASSG Personnel</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None</p></td></tr>
+<tr><td>Description</td><td><p>Records explicit program-specific qualification verification for an individual member of an unsubmitted Generated Batch.</p></td></tr>
+<tr><td>Preconditions</td><td><p>FASSG is authenticated. The batch is Saved and never submitted, the member belongs to its exact program roster, and the processing record is Pending. Genuine SLE-FHE verification is already required.</p></td></tr>
+<tr><td>Trigger</td><td><p>FASSG opens a batch member&#x27;s review form and explicitly submits verification.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system displays the member&#x27;s identity, source, qualifications, and evidence within the batch review.</p><p>2. FASSG reviews actual grades, documents, and other applicable program requirements.</p><p>3. For a Fixed List processing record, FASSG supplies genuine missing qualification values and files through the supported review fields, without inventing evidence.</p><p>4. The system validates membership, all mandatory program conditions, documented verification, and active-sponsorship conflicts.</p><p>5. The system changes the processing/application record to Verified, records the verification time and audit evidence, and performs the implemented status notification.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. FASSG leaves the record Pending while evidence remains incomplete.</p><p>2. Where the existing review controls permit it, FASSG explicitly requests resubmission or rejects an ordinary application with the required reason; these are human decisions.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. Missing mandatory evidence, ineligible qualifications, a conflicting sponsorship, wrong membership, a non-Pending record, or a submitted roster blocks verification.</p></td></tr>
+<tr><td>Postconditions</td><td><p>The member has recorded eligibility verification only. The batch remains unsubmitted until UC-14, and Sponsor approval remains separate.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. UC-08 records institutional SLE-FHE verification; UC-24 records program-specific member verification.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.48: Record Receipt of Sponsor Decision</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-25</p></td></tr>
+<tr><td>Use case name</td><td><p>Record Receipt of Sponsor Decision</p></td></tr>
+<tr><td>Primary actor</td><td><p>FASSG Personnel</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None; the Sponsor&#x27;s prior decision is the input record.</p></td></tr>
+<tr><td>Description</td><td><p>Records FASSG&#x27;s explicit acknowledgement of the current Sponsor approval or rejection.</p></td></tr>
+<tr><td>Preconditions</td><td><p>FASSG is authenticated. An intact submitted roster has a matching current Sponsor decision, actor, timestamp, and any evidence required for that decision.</p></td></tr>
+<tr><td>Trigger</td><td><p>FASSG selects Record Receipt of Sponsor Decision on the batch.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. FASSG reviews the Sponsor decision and available confirmation evidence.</p><p>2. FASSG submits acknowledgement for the current decision and submission version.</p><p>3. The system checks the roster, batch status, matching decision, and required evidence.</p><p>4. The system records the FASSG officer and receipt time and writes the audit event.</p><p>5. The system confirms that receipt has been recorded.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. Both valid approval and rejection decisions may be acknowledged.</p><p>2. Repeating an already completed acknowledgement preserves its original officer and timestamp.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. A stale version, missing/mismatched decision, invalid evidence, or unauthorized actor prevents acknowledgement.</p></td></tr>
+<tr><td>Postconditions</td><td><p>FASSG receipt is recorded. No beneficiaries are forwarded by this action. Rejected batches remain rejected unless separately resubmitted under the allowed rules.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. UC-16 precedes receipt; UC-26 is a separate action for approved eligible batches.</p></td></tr>
+</tbody></table></section>
+<section class="case"><h2>Table 3.49: Forward Approved Beneficiaries to Accounting</h2><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+<tr><td>Use case ID</td><td><p>UC-26</p></td></tr>
+<tr><td>Use case name</td><td><p>Forward Approved Beneficiaries to Accounting</p></td></tr>
+<tr><td>Primary actor</td><td><p>FASSG Personnel</p></td></tr>
+<tr><td>Secondary actor</td><td><p>None; Accounting subsequently accesses eligible results through UC-18.</p></td></tr>
+<tr><td>Description</td><td><p>Records FASSG&#x27;s explicit forwarding of the approved, verified batch for Accounting&#x27;s read-only reference.</p></td></tr>
+<tr><td>Preconditions</td><td><p>FASSG is authenticated. The batch is Approved, the submitted roster is intact, current Sponsor confirmation is valid, FASSG has recorded receipt, members meet all current eligibility/evidence requirements, and program capacity is consistent.</p></td></tr>
+<tr><td>Trigger</td><td><p>FASSG selects Forward to Accounting on the approved batch.</p></td></tr>
+<tr><td>Main flow</td><td><p>1. The system checks the current batch, decision, confirmation evidence, submission version, and recorded receipt.</p><p>2. The system locks the relevant records and validates every member&#x27;s approval, verification, documents, active-sponsorship conflicts, and capacity consistency.</p><p>3. The system records the forwarding FASSG officer and timestamp and preserves established historical assignment information.</p><p>4. The system records the forwarding audit event and returns confirmation.</p><p>5. Eligible forwarded beneficiary records become available through Accounting&#x27;s restricted reference views.</p></td></tr>
+<tr><td>Alternative flows</td><td><p>1. Repeating a completed forwarding action preserves its original forwarding identity and time.</p></td></tr>
+<tr><td>Exception flows</td><td><p>1. Missing receipt/evidence, a rejected or unapproved batch, changed roster, invalid member, conflicting sponsorship, or capacity inconsistency blocks forwarding.</p></td></tr>
+<tr><td>Postconditions</td><td><p>Explicit FASSG forwarding is recorded. The Sponsor&#x27;s identity is never substituted for the forwarding officer. Accounting may access only records that continue to satisfy the eligibility checks.</p></td></tr>
+<tr><td>Includes / extends</td><td><p>None. Sponsor approval and FASSG receipt are preconditions, not actions automatically executed by forwarding.</p></td></tr>
+</tbody></table></section>
+</body></html>

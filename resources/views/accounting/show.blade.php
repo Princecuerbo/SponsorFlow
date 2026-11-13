@@ -19,8 +19,8 @@
                 <dl class="row mb-0">
                     <dt class="col-sm-4 text-secondary fw-normal py-2">Student ID</dt><dd class="col-sm-8 sf-mono py-2 mb-0">{{ $application->studentProfile->student_id_number }}</dd>
                     <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Academic Program &amp; Year</dt><dd class="col-sm-8 py-2 mb-0 border-top">{{ $application->studentProfile->display_course }} · Year {{ $application->studentProfile->year_level }}</dd>
-                    <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Submitted GWA / GPA</dt><dd class="col-sm-8 py-2 mb-0 border-top">{{ number_format($application->gpa_submitted, 2) }}</dd>
-                    <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Address &amp; Rurality</dt><dd class="col-sm-8 py-2 mb-0 border-top">{{ $application->address_submitted }} · {{ $application->is_rural_submitted ? 'Rural' : 'Urban' }}</dd>
+                    <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Submitted GWA / GPA</dt><dd class="col-sm-8 py-2 mb-0 border-top">{{ $application->gpa_submitted !== null ? number_format((float) $application->gpa_submitted, 2) : 'Not recorded' }}</dd>
+                    <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Address &amp; Rurality</dt><dd class="col-sm-8 py-2 mb-0 border-top">{{ $application->address_submitted }} · {{ $application->is_rural_submitted === null ? 'Not recorded' : ($application->is_rural_submitted ? 'Rural' : 'Urban') }}</dd>
                     <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Sponsor</dt><dd class="col-sm-8 py-2 mb-0 border-top">{{ $application->sponsorshipProgram->sponsor->company_organization_name }}</dd>
                     <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Billing Contact</dt><dd class="col-sm-8 py-2 mb-0 border-top">{{ $application->sponsorshipProgram->sponsor->contact_person ?: 'Not provided' }}</dd>
                 </dl>
@@ -34,7 +34,7 @@
                     <dt class="col-6 text-secondary fw-normal py-2 border-top">Coverage Term</dt><dd class="col-6 text-end py-2 mb-0 border-top">Not recorded</dd>
                     <dt class="col-6 text-secondary fw-normal py-2 border-top">Approved by Sponsor</dt><dd class="col-6 text-end py-2 mb-0 border-top">{{ $application->approved_at?->format('M d, Y, h:i A') ?? '—' }}</dd>
                 </dl>
-                @if ($application->sponsor_approval_path)
+                @if ($approval?->approval_document_path)
                     <div class="border-top mt-3 pt-3"><div class="small text-secondary mb-2">Sponsor confirmation document</div><a href="{{ route('accounting.documents.view', $application->id) }}" target="_blank" rel="noopener" class="btn btn-outline-secondary w-100"><i class="bi bi-file-earmark-check me-1"></i>View Confirmation File</a></div>
                 @endif
             </div></div>

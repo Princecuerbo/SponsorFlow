@@ -1,0 +1,226 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2800" height="2240" viewBox="0 0 2800 2240" role="img" aria-labelledby="title desc">
+<title id="title">SponsorFlow UX Sitemap</title>
+<desc id="desc">Public and designated login pages lead to five role-specific navigation groups. Rectangles are pages or grouped menus; smaller lines describe actions within pages. No database or workflow changes are made.</desc>
+<rect width="100%" height="100%" fill="white"/>
+<text x="60" y="35" font-family="Arial, sans-serif" font-size="44" font-weight="700" text-anchor="start" dominant-baseline="text-before-edge" fill="#203449">SPONSORFLOW — UX SITEMAP</text>
+<text x="60" y="94" font-family="Arial, sans-serif" font-size="25" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">Public entry pages, role-specific navigation, and key screens</text>
+<rect x="1190" y="145" width="420" height="53" rx="9" fill="#fff4e5" stroke="#aa5711" stroke-width="1.5"/>
+<text x="1400.0" y="157" font-family="Arial, sans-serif" font-size="27" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#aa5711">SponsorFlow Web Portal</text>
+<polyline points="1400,198 1400,238 300,238 300,270" fill="none" stroke="#a2afbd" stroke-width="2"/>
+<polyline points="1400,238 1400,270" fill="none" stroke="#a2afbd" stroke-width="2"/>
+<polyline points="1400,238 2500,238 2500,270" fill="none" stroke="#a2afbd" stroke-width="2"/>
+<rect x="60" y="270" width="480" height="53" rx="9" fill="#fff4e5" stroke="#aa5711" stroke-width="1.5"/>
+<text x="300.0" y="282" font-family="Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#aa5711">Public Home / Landing Page</text>
+<rect x="1160" y="270" width="480" height="83" rx="9" fill="#fff4e5" stroke="#aa5711" stroke-width="1.5"/>
+<text x="1400.0" y="282" font-family="Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#aa5711">Staff / Sponsor Login</text>
+<text x="1400.0" y="316" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">FASSG / Sponsor / Accounting</text>
+<rect x="2260" y="270" width="480" height="53" rx="9" fill="#fff4e5" stroke="#aa5711" stroke-width="1.5"/>
+<text x="2500.0" y="282" font-family="Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#aa5711">Administrator Login</text>
+<polyline points="300,323 300,348 177,348 177,370" fill="none" stroke="#a2afbd" stroke-width="2"/>
+<polyline points="300,348 427,348 427,370" fill="none" stroke="#a2afbd" stroke-width="2"/>
+<rect x="60" y="370" width="235" height="82" rx="9" fill="#fff4e5" stroke="#aa5711" stroke-width="1.5"/>
+<text x="177.5" y="382" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#aa5711">Student</text>
+<text x="177.5" y="411" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#aa5711">Registration</text>
+<rect x="310" y="370" width="235" height="82" rx="9" fill="#fff4e5" stroke="#aa5711" stroke-width="1.5"/>
+<text x="427.5" y="382" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#aa5711">Student Login</text>
+<text x="427.5" y="411" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#aa5711">and consent dialog</text>
+<text x="300" y="468" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Registration returns to Student Login.</text>
+<polyline points="427,452 427,505 300,505 300,550" fill="none" stroke="#a2afbd" stroke-width="2"/>
+<polyline points="1400,353 1400,505 850,505 850,550" fill="none" stroke="#a2afbd" stroke-width="2"/>
+<polyline points="1400,505 1400,550" fill="none" stroke="#a2afbd" stroke-width="2"/>
+<polyline points="1400,505 1950,505 1950,550" fill="none" stroke="#a2afbd" stroke-width="2"/>
+<polyline points="2500,323 2500,550" fill="none" stroke="#a2afbd" stroke-width="2"/>
+<text x="1400" y="465" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Successful login grants only the assigned role’s navigation.</text>
+<rect x="50" y="550" width="500" height="83" rx="9" fill="#245fae" stroke="#245fae" stroke-width="1.5"/>
+<text x="300" y="565" font-family="Arial, sans-serif" font-size="26" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="white">STUDENT APPLICANT</text>
+<text x="300" y="603" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="white">Login opens SLE-FHE Verification</text>
+<rect x="92" y="669" width="458" height="53" rx="9" fill="#eef5ff" stroke="#245fae" stroke-width="1.5"/>
+<text x="321.0" y="681" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#245fae">Home / Dashboard</text>
+<rect x="92" y="739" width="458" height="108" rx="9" fill="#eef5ff" stroke="#245fae" stroke-width="1.5"/>
+<text x="321.0" y="751" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#245fae">SLE-FHE Verification</text>
+<text x="321.0" y="785" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Profile / address and request status</text>
+<text x="321.0" y="810" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Request verification</text>
+<rect x="92" y="864" width="458" height="83" rx="9" fill="#eef5ff" stroke="#245fae" stroke-width="1.5"/>
+<text x="321.0" y="876" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#245fae">Sponsorship Opportunities</text>
+<text x="321.0" y="910" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Search / filter programs</text>
+<rect x="117" y="960" width="433" height="83" rx="9" fill="white" stroke="#245fae" stroke-width="1.5"/>
+<text x="333.5" y="972" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#245fae">Application Form</text>
+<text x="333.5" y="1006" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Required documents / submit</text>
+<polyline points="104,947 104,1001.5" fill="none" stroke="#245fae" stroke-width="1.3"/>
+<polyline points="104,1001.5 117,1001.5" fill="none" stroke="#245fae" stroke-width="1.3"/>
+<rect x="92" y="1064" width="458" height="53" rx="9" fill="#eef5ff" stroke="#245fae" stroke-width="1.5"/>
+<text x="321.0" y="1076" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#245fae">My Applications</text>
+<rect x="117" y="1130" width="433" height="83" rx="9" fill="white" stroke="#245fae" stroke-width="1.5"/>
+<text x="333.5" y="1142" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#245fae">Application Details</text>
+<text x="333.5" y="1176" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Status / documents / resubmission</text>
+<polyline points="104,1117 104,1171.5" fill="none" stroke="#245fae" stroke-width="1.3"/>
+<polyline points="104,1171.5 117,1171.5" fill="none" stroke="#245fae" stroke-width="1.3"/>
+<rect x="92" y="1234" width="458" height="83" rx="9" fill="#eef5ff" stroke="#245fae" stroke-width="1.5"/>
+<text x="321.0" y="1246" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#245fae">Notifications</text>
+<text x="321.0" y="1280" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Read / mark as read</text>
+<rect x="92" y="1334" width="458" height="83" rx="9" fill="#eef5ff" stroke="#245fae" stroke-width="1.5"/>
+<text x="321.0" y="1346" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#245fae">My Profile</text>
+<text x="321.0" y="1380" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Personal details / change password</text>
+<polyline points="300,633 300,650 68,650 68,1375.5" fill="none" stroke="#245fae" stroke-width="1.4"/>
+<polyline points="68,695.5 92,695.5" fill="none" stroke="#245fae" stroke-width="1.4"/>
+<polyline points="68,793.0 92,793.0" fill="none" stroke="#245fae" stroke-width="1.4"/>
+<polyline points="68,905.5 92,905.5" fill="none" stroke="#245fae" stroke-width="1.4"/>
+<polyline points="68,1090.5 92,1090.5" fill="none" stroke="#245fae" stroke-width="1.4"/>
+<polyline points="68,1275.5 92,1275.5" fill="none" stroke="#245fae" stroke-width="1.4"/>
+<polyline points="68,1375.5 92,1375.5" fill="none" stroke="#245fae" stroke-width="1.4"/>
+<rect x="600" y="550" width="500" height="83" rx="9" fill="#18734b" stroke="#18734b" stroke-width="1.5"/>
+<text x="850" y="565" font-family="Arial, sans-serif" font-size="26" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="white">FASSG PERSONNEL</text>
+<text x="850" y="603" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="white">Dashboard and authorized menus</text>
+<rect x="642" y="669" width="458" height="53" rx="9" fill="#eff9f3" stroke="#18734b" stroke-width="1.5"/>
+<text x="871.0" y="681" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#18734b">Dashboard</text>
+<rect x="642" y="739" width="458" height="53" rx="9" fill="#eff9f3" stroke="#18734b" stroke-width="1.5"/>
+<text x="871.0" y="751" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#18734b">Programs</text>
+<rect x="667" y="805" width="433" height="83" rx="9" fill="white" stroke="#18734b" stroke-width="1.5"/>
+<text x="883.5" y="817" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#18734b">Create / Edit Program</text>
+<text x="883.5" y="851" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Criteria / capacity / requirements</text>
+<polyline points="654,792 654,846.5" fill="none" stroke="#18734b" stroke-width="1.3"/>
+<polyline points="654,846.5 667,846.5" fill="none" stroke="#18734b" stroke-width="1.3"/>
+<rect x="642" y="909" width="458" height="83" rx="9" fill="#eff9f3" stroke="#18734b" stroke-width="1.5"/>
+<text x="871.0" y="921" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#18734b">SLE-FHE Verification</text>
+<text x="871.0" y="955" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Student details / decision dialogs</text>
+<rect x="642" y="1009" width="458" height="53" rx="9" fill="#eff9f3" stroke="#18734b" stroke-width="1.5"/>
+<text x="871.0" y="1021" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#18734b">Verified Students</text>
+<rect x="642" y="1079" width="458" height="83" rx="9" fill="#eff9f3" stroke="#18734b" stroke-width="1.5"/>
+<text x="871.0" y="1091" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#18734b">Application Queue</text>
+<text x="871.0" y="1125" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Manual selection / Create Batch dialog</text>
+<rect x="667" y="1175" width="433" height="53" rx="9" fill="white" stroke="#18734b" stroke-width="1.5"/>
+<text x="883.5" y="1187" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#18734b">Applicant Details</text>
+<polyline points="654,1162 654,1201.5" fill="none" stroke="#18734b" stroke-width="1.3"/>
+<polyline points="654,1201.5 667,1201.5" fill="none" stroke="#18734b" stroke-width="1.3"/>
+<rect x="642" y="1249" width="458" height="83" rx="9" fill="#eff9f3" stroke="#18734b" stroke-width="1.5"/>
+<text x="871.0" y="1261" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#18734b">Fixed Lists</text>
+<text x="871.0" y="1295" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">New Fixed List dialog</text>
+<rect x="667" y="1345" width="433" height="108" rx="9" fill="white" stroke="#18734b" stroke-width="1.5"/>
+<text x="883.5" y="1357" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#18734b">List Details / Edit Draft</text>
+<text x="883.5" y="1391" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Encode / import / endorse / finalize</text>
+<text x="883.5" y="1416" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Create Batch shortcut</text>
+<polyline points="654,1332 654,1399.0" fill="none" stroke="#18734b" stroke-width="1.3"/>
+<polyline points="654,1399.0 667,1399.0" fill="none" stroke="#18734b" stroke-width="1.3"/>
+<rect x="642" y="1474" width="458" height="53" rx="9" fill="#eff9f3" stroke="#18734b" stroke-width="1.5"/>
+<text x="871.0" y="1486" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#18734b">Generated Batches</text>
+<rect x="667" y="1540" width="433" height="108" rx="9" fill="white" stroke="#18734b" stroke-width="1.5"/>
+<text x="883.5" y="1552" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#18734b">Batch Details</text>
+<text x="883.5" y="1586" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Submit / record Sponsor decision receipt</text>
+<text x="883.5" y="1611" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Explicitly forward approved batch</text>
+<rect x="692" y="1661" width="408" height="83" rx="9" fill="white" stroke="#18734b" stroke-width="1.5"/>
+<text x="896.0" y="1673" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#18734b">Batch Member Review</text>
+<text x="896.0" y="1707" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Qualifications / documents / verify</text>
+<polyline points="679,1648 679,1702.5" fill="none" stroke="#18734b" stroke-width="1.3"/>
+<polyline points="679,1702.5 692,1702.5" fill="none" stroke="#18734b" stroke-width="1.3"/>
+<polyline points="654,1527 654,1594.0" fill="none" stroke="#18734b" stroke-width="1.3"/>
+<polyline points="654,1594.0 667,1594.0" fill="none" stroke="#18734b" stroke-width="1.3"/>
+<rect x="642" y="1769" width="458" height="83" rx="9" fill="#eff9f3" stroke="#18734b" stroke-width="1.5"/>
+<text x="871.0" y="1781" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#18734b">Reports</text>
+<text x="871.0" y="1815" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Filters / PDF and CSV exports</text>
+<polyline points="850,633 850,650 618,650 618,1810.5" fill="none" stroke="#18734b" stroke-width="1.4"/>
+<polyline points="618,695.5 642,695.5" fill="none" stroke="#18734b" stroke-width="1.4"/>
+<polyline points="618,765.5 642,765.5" fill="none" stroke="#18734b" stroke-width="1.4"/>
+<polyline points="618,950.5 642,950.5" fill="none" stroke="#18734b" stroke-width="1.4"/>
+<polyline points="618,1035.5 642,1035.5" fill="none" stroke="#18734b" stroke-width="1.4"/>
+<polyline points="618,1120.5 642,1120.5" fill="none" stroke="#18734b" stroke-width="1.4"/>
+<polyline points="618,1290.5 642,1290.5" fill="none" stroke="#18734b" stroke-width="1.4"/>
+<polyline points="618,1500.5 642,1500.5" fill="none" stroke="#18734b" stroke-width="1.4"/>
+<polyline points="618,1810.5 642,1810.5" fill="none" stroke="#18734b" stroke-width="1.4"/>
+<rect x="1150" y="550" width="500" height="83" rx="9" fill="#7545a0" stroke="#7545a0" stroke-width="1.5"/>
+<text x="1400" y="565" font-family="Arial, sans-serif" font-size="26" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="white">SPONSOR</text>
+<text x="1400" y="603" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="white">Dashboard and authorized menus</text>
+<rect x="1192" y="669" width="458" height="53" rx="9" fill="#f6f0fc" stroke="#7545a0" stroke-width="1.5"/>
+<text x="1421.0" y="681" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#7545a0">Dashboard</text>
+<rect x="1192" y="739" width="458" height="83" rx="9" fill="#f6f0fc" stroke="#7545a0" stroke-width="1.5"/>
+<text x="1421.0" y="751" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#7545a0">Approvals Queue</text>
+<text x="1421.0" y="785" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Assigned-program filter</text>
+<rect x="1217" y="835" width="433" height="108" rx="9" fill="white" stroke="#7545a0" stroke-width="1.5"/>
+<text x="1433.5" y="847" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#7545a0">Submitted Batch Details</text>
+<text x="1433.5" y="881" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Exact roster / confirmation upload</text>
+<text x="1433.5" y="906" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Approve or reject the whole batch</text>
+<polyline points="1204,822 1204,889.0" fill="none" stroke="#7545a0" stroke-width="1.3"/>
+<polyline points="1204,889.0 1217,889.0" fill="none" stroke="#7545a0" stroke-width="1.3"/>
+<rect x="1192" y="964" width="458" height="83" rx="9" fill="#f6f0fc" stroke="#7545a0" stroke-width="1.5"/>
+<text x="1421.0" y="976" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#7545a0">Approval History</text>
+<text x="1421.0" y="1010" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Batch decisions / historical evidence</text>
+<rect x="1217" y="1060" width="433" height="83" rx="9" fill="white" stroke="#7545a0" stroke-width="1.5"/>
+<text x="1433.5" y="1072" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#7545a0">Confirmation Document</text>
+<text x="1433.5" y="1106" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">View / download original file</text>
+<polyline points="1204,1047 1204,1101.5" fill="none" stroke="#7545a0" stroke-width="1.3"/>
+<polyline points="1204,1101.5 1217,1101.5" fill="none" stroke="#7545a0" stroke-width="1.3"/>
+<polyline points="1400,633 1400,650 1168,650 1168,1005.5" fill="none" stroke="#7545a0" stroke-width="1.4"/>
+<polyline points="1168,695.5 1192,695.5" fill="none" stroke="#7545a0" stroke-width="1.4"/>
+<polyline points="1168,780.5 1192,780.5" fill="none" stroke="#7545a0" stroke-width="1.4"/>
+<polyline points="1168,1005.5 1192,1005.5" fill="none" stroke="#7545a0" stroke-width="1.4"/>
+<rect x="1700" y="550" width="500" height="83" rx="9" fill="#087d85" stroke="#087d85" stroke-width="1.5"/>
+<text x="1950" y="565" font-family="Arial, sans-serif" font-size="26" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="white">ACCOUNTING OFFICE</text>
+<text x="1950" y="603" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="white">Read-only beneficiary reference</text>
+<rect x="1742" y="669" width="458" height="53" rx="9" fill="#edf9fa" stroke="#087d85" stroke-width="1.5"/>
+<text x="1971.0" y="681" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#087d85">Dashboard</text>
+<rect x="1742" y="739" width="458" height="83" rx="9" fill="#edf9fa" stroke="#087d85" stroke-width="1.5"/>
+<text x="1971.0" y="751" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#087d85">Confirmed Beneficiaries</text>
+<text x="1971.0" y="785" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Eligible records / filters / Print / CSV</text>
+<rect x="1767" y="835" width="433" height="53" rx="9" fill="white" stroke="#087d85" stroke-width="1.5"/>
+<text x="1983.5" y="847" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#087d85">Beneficiary Details</text>
+<rect x="1767" y="905" width="433" height="53" rx="9" fill="white" stroke="#087d85" stroke-width="1.5"/>
+<text x="1983.5" y="917" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#087d85">Approved Batch Reference</text>
+<rect x="1767" y="975" width="433" height="83" rx="9" fill="white" stroke="#087d85" stroke-width="1.5"/>
+<text x="1983.5" y="987" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#087d85">Confirmation Documents</text>
+<text x="1983.5" y="1021" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Authorized document viewing</text>
+<polyline points="1754,822 1754,1016.5" fill="none" stroke="#087d85" stroke-width="1.3"/>
+<polyline points="1754,861.5 1767,861.5" fill="none" stroke="#087d85" stroke-width="1.3"/>
+<polyline points="1754,931.5 1767,931.5" fill="none" stroke="#087d85" stroke-width="1.3"/>
+<polyline points="1754,1016.5 1767,1016.5" fill="none" stroke="#087d85" stroke-width="1.3"/>
+<polyline points="1950,633 1950,650 1718,650 1718,780.5" fill="none" stroke="#087d85" stroke-width="1.4"/>
+<polyline points="1718,695.5 1742,695.5" fill="none" stroke="#087d85" stroke-width="1.4"/>
+<polyline points="1718,780.5 1742,780.5" fill="none" stroke="#087d85" stroke-width="1.4"/>
+<rect x="2250" y="550" width="500" height="83" rx="9" fill="#ad4844" stroke="#ad4844" stroke-width="1.5"/>
+<text x="2500" y="565" font-family="Arial, sans-serif" font-size="26" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="white">SYSTEM ADMINISTRATOR</text>
+<text x="2500" y="603" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="white">Dashboard and authorized menus</text>
+<rect x="2292" y="669" width="458" height="53" rx="9" fill="#fff2f0" stroke="#ad4844" stroke-width="1.5"/>
+<text x="2521.0" y="681" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#ad4844">Dashboard</text>
+<rect x="2292" y="739" width="458" height="83" rx="9" fill="#fff2f0" stroke="#ad4844" stroke-width="1.5"/>
+<text x="2521.0" y="751" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#ad4844">User Accounts</text>
+<text x="2521.0" y="785" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Add / edit dialogs / roles / status</text>
+<rect x="2292" y="839" width="458" height="83" rx="9" fill="#fff2f0" stroke="#ad4844" stroke-width="1.5"/>
+<text x="2521.0" y="851" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#ad4844">Audit Logs</text>
+<text x="2521.0" y="885" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Search / filter recorded activity</text>
+<rect x="2292" y="939" width="458" height="83" rx="9" fill="#fff2f0" stroke="#ad4844" stroke-width="1.5"/>
+<text x="2521.0" y="951" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#ad4844">Security Settings</text>
+<text x="2521.0" y="985" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Maintenance / security controls</text>
+<rect x="2292" y="1039" width="458" height="83" rx="9" fill="#fff2f0" stroke="#ad4844" stroke-width="1.5"/>
+<text x="2521.0" y="1051" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#ad4844">Backups</text>
+<text x="2521.0" y="1085" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" dominant-baseline="text-before-edge" fill="#536476">Create / download / authorized restore</text>
+<polyline points="2500,633 2500,650 2268,650 2268,1080.5" fill="none" stroke="#ad4844" stroke-width="1.4"/>
+<polyline points="2268,695.5 2292,695.5" fill="none" stroke="#ad4844" stroke-width="1.4"/>
+<polyline points="2268,780.5 2292,780.5" fill="none" stroke="#ad4844" stroke-width="1.4"/>
+<polyline points="2268,880.5 2292,880.5" fill="none" stroke="#ad4844" stroke-width="1.4"/>
+<polyline points="2268,980.5 2292,980.5" fill="none" stroke="#ad4844" stroke-width="1.4"/>
+<polyline points="2268,1080.5 2292,1080.5" fill="none" stroke="#ad4844" stroke-width="1.4"/>
+<rect x="50" y="1420" width="500" height="135" rx="8" fill="#f7f9fb" stroke="#d6dee6" stroke-width="1.5"/>
+<text x="68" y="1436" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">STUDENT ACCESS</text>
+<text x="68" y="1468" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">SLE-FHE verification is required</text>
+<text x="68" y="1493" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">before authenticated program browsing</text>
+<text x="68" y="1518" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">and application submission.</text>
+<rect x="1150" y="1420" width="500" height="135" rx="8" fill="#f7f9fb" stroke="#d6dee6" stroke-width="1.5"/>
+<text x="1168" y="1436" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">SPONSOR DECISIONS</text>
+<text x="1168" y="1468" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">Decisions apply to the exact submitted</text>
+<text x="1168" y="1493" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">Generated Batch. Confirmation upload</text>
+<text x="1168" y="1518" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">does not forward records to Accounting.</text>
+<rect x="1700" y="1195" width="500" height="135" rx="8" fill="#f7f9fb" stroke="#d6dee6" stroke-width="1.5"/>
+<text x="1718" y="1211" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">ACCOUNTING VISIBILITY</text>
+<text x="1718" y="1243" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">SLE-FHE verified + individually</text>
+<text x="1718" y="1268" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">Approved/Ongoing + Sponsor confirmed</text>
+<text x="1718" y="1293" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">+ FASSG receipt and explicit forwarding.</text>
+<rect x="2250" y="1325" width="500" height="135" rx="8" fill="#f7f9fb" stroke="#d6dee6" stroke-width="1.5"/>
+<text x="2268" y="1341" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">ADMINISTRATION</text>
+<text x="2268" y="1373" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">Administrative pages do not replace</text>
+<text x="2268" y="1398" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">FASSG verification or Sponsor decisions.</text>
+<text x="2268" y="1423" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">Access remains role-restricted.</text>
+<rect x="50" y="1992" width="2700" height="59" rx="9" fill="#fff4e5" stroke="#aa5711" stroke-width="1.5"/>
+<text x="1400" y="2010" font-family="Arial, sans-serif" font-size="25" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#aa5711">SHARED ACTION  ·  Sign Out is available to every authenticated role.</text>
+<text x="60" y="2078" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">Legend: Orange = shared entry pages/actions. Other colors identify the five role-specific navigation areas.</text>
+<text x="60" y="2112" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">Solid lines show page hierarchy. Smaller text describes forms, dialogs, or actions within that page—not additional screens.</text>
+<text x="60" y="2146" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="start" dominant-baseline="text-before-edge" fill="#536476">FASSG shortcuts from Programs or a finalized Fixed List open the same Create Batch dialog in the Application Queue.</text>
+<text x="1400" y="2200" font-family="Arial, sans-serif" font-size="27" font-weight="700" text-anchor="middle" dominant-baseline="text-before-edge" fill="#203449">Figure 3.X. UX Sitemap of SponsorFlow</text>
+</svg>

@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "use_cases": 26,
+  "business_roles": 5,
+  "actor_symbols": 10,
+  "associations": 30,
+  "include_relationships": 1,
+  "extend_relationships": 3,
+  "tables": "3.24\u20133.49",
+  "diagram_pixels": [
+    4200,
+    5140
+  ],
+  "checks": [
+    "Every diagram label matches its description",
+    "Every referenced use case exists",
+    "Every implementation reference exists",
+    "Relationships match in diagram and data",
+    "Actor associations are undirected solid lines",
+    "Dependency arrowheads point to included/base use cases",
+    "Text width and canvas bounds checked",
+    "SVG and DOCX XML parsed",
+    "DOCX ZIP integrity passed",
+    "26 description tables plus one index table"
+  ],
+  "limits": [
+    "No runtime application tests",
+    "No database access",
+    "Desktop Word pagination not visually verified"
+  ],
+  "data_sha256": "f4a277aac08ef6912228a330b7f5a9172e319f0b43a7c8d510f1ddedd6976946"
+}

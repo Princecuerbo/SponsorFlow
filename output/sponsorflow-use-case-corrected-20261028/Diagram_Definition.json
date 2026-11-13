@@ -1,0 +1,1051 @@
+{
+  "actors": [
+    "Student Applicant",
+    "FASSG Personnel",
+    "Sponsor",
+    "Accounting Office Personnel",
+    "System Administrator"
+  ],
+  "use_cases": {
+    "UC-01": "Login / Authenticate",
+    "UC-02": "Register Student Account",
+    "UC-03": "View Available Sponsorship Programs",
+    "UC-23": "Request SLE-FHE Verification",
+    "UC-04": "Submit Sponsorship Application",
+    "UC-05": "Apply to an Open Program After Previous Sponsorship Expires",
+    "UC-06": "Track Application Status",
+    "UC-07": "Manage Sponsorship Programs",
+    "UC-08": "Verify SLE-FHE Eligibility",
+    "UC-09": "Encode / Import Sponsor-Provided Fixed List",
+    "UC-10": "Upload Required Documents",
+    "UC-11": "Configure Location and Grade Eligibility",
+    "UC-12": "Finalize Fixed List",
+    "UC-13": "Manually Prepare Generated Batch",
+    "UC-14": "Submit Generated Batch to Sponsor",
+    "UC-15": "Review Submitted Generated Batches",
+    "UC-16": "Approve or Reject Entire Submitted Batch",
+    "UC-17": "Upload Approval / Confirmation Evidence",
+    "UC-18": "View Forwarded Approved Beneficiary Records",
+    "UC-19": "Print / Export Beneficiary References",
+    "UC-20": "Generate Summary Reports",
+    "UC-21": "Manage User Accounts and Roles",
+    "UC-22": "Monitor Audit Logs and Manage Backups",
+    "UC-24": "Verify Generated Batch Member Qualifications and Documents",
+    "UC-25": "Record Receipt of Sponsor Decision",
+    "UC-26": "Forward Approved Beneficiaries to Accounting",
+    "UC-27": "Logout"
+  },
+  "representations": [
+    {
+      "key": "student:UC-01",
+      "id": "UC-01",
+      "cx": 820,
+      "cy": 240,
+      "rx": 330,
+      "ry": 58,
+      "labels": [
+        "Login / Authenticate"
+      ]
+    },
+    {
+      "key": "student:UC-02",
+      "id": "UC-02",
+      "cx": 820,
+      "cy": 390,
+      "rx": 330,
+      "ry": 58,
+      "labels": [
+        "Register Student Account"
+      ]
+    },
+    {
+      "key": "student:UC-03",
+      "id": "UC-03",
+      "cx": 820,
+      "cy": 540,
+      "rx": 330,
+      "ry": 68,
+      "labels": [
+        "View Available",
+        "Sponsorship Programs"
+      ]
+    },
+    {
+      "key": "student:UC-23",
+      "id": "UC-23",
+      "cx": 820,
+      "cy": 690,
+      "rx": 330,
+      "ry": 58,
+      "labels": [
+        "Request SLE-FHE Verification"
+      ]
+    },
+    {
+      "key": "student:UC-04",
+      "id": "UC-04",
+      "cx": 820,
+      "cy": 860,
+      "rx": 330,
+      "ry": 68,
+      "labels": [
+        "Submit Sponsorship",
+        "Application"
+      ]
+    },
+    {
+      "key": "student:UC-05",
+      "id": "UC-05",
+      "cx": 820,
+      "cy": 1100,
+      "rx": 330,
+      "ry": 68,
+      "labels": [
+        "Apply to an Open Program After",
+        "Previous Sponsorship Expires"
+      ]
+    },
+    {
+      "key": "student:UC-06",
+      "id": "UC-06",
+      "cx": 820,
+      "cy": 1270,
+      "rx": 330,
+      "ry": 58,
+      "labels": [
+        "Track Application Status"
+      ]
+    },
+    {
+      "key": "student:UC-27",
+      "id": "UC-27",
+      "cx": 820,
+      "cy": 1420,
+      "rx": 330,
+      "ry": 58,
+      "labels": [
+        "Logout"
+      ]
+    },
+    {
+      "key": "fassg:UC-01",
+      "id": "UC-01",
+      "cx": 820,
+      "cy": 1640,
+      "rx": 330,
+      "ry": 58,
+      "labels": [
+        "Login / Authenticate"
+      ]
+    },
+    {
+      "key": "fassg:UC-07",
+      "id": "UC-07",
+      "cx": 820,
+      "cy": 1790,
+      "rx": 330,
+      "ry": 58,
+      "labels": [
+        "Manage Sponsorship Programs"
+      ]
+    },
+    {
+      "key": "fassg:UC-09",
+      "id": "UC-09",
+      "cx": 820,
+      "cy": 1940,
+      "rx": 330,
+      "ry": 68,
+      "labels": [
+        "Encode / Import",
+        "Sponsor-Provided Fixed List"
+      ]
+    },
+    {
+      "key": "fassg:UC-12",
+      "id": "UC-12",
+      "cx": 820,
+      "cy": 2090,
+      "rx": 330,
+      "ry": 58,
+      "labels": [
+        "Finalize Fixed List"
+      ]
+    },
+    {
+      "key": "fassg:UC-08",
+      "id": "UC-08",
+      "cx": 820,
+      "cy": 2240,
+      "rx": 330,
+      "ry": 58,
+      "labels": [
+        "Verify SLE-FHE Eligibility"
+      ]
+    },
+    {
+      "key": "fassg:UC-24",
+      "id": "UC-24",
+      "cx": 820,
+      "cy": 2390,
+      "rx": 330,
+      "ry": 68,
+      "labels": [
+        "Verify Generated Batch Member",
+        "Qualifications and Documents"
+      ]
+    },
+    {
+      "key": "fassg:UC-13",
+      "id": "UC-13",
+      "cx": 820,
+      "cy": 2540,
+      "rx": 330,
+      "ry": 68,
+      "labels": [
+        "Manually Prepare",
+        "Generated Batch"
+      ]
+    },
+    {
+      "key": "fassg:UC-14",
+      "id": "UC-14",
+      "cx": 820,
+      "cy": 2690,
+      "rx": 330,
+      "ry": 68,
+      "labels": [
+        "Submit Generated",
+        "Batch to Sponsor"
+      ]
+    },
+    {
+      "key": "fassg:UC-25",
+      "id": "UC-25",
+      "cx": 820,
+      "cy": 2840,
+      "rx": 330,
+      "ry": 68,
+      "labels": [
+        "Record Receipt of",
+        "Sponsor Decision"
+      ]
+    },
+    {
+      "key": "fassg:UC-26",
+      "id": "UC-26",
+      "cx": 820,
+      "cy": 2990,
+      "rx": 330,
+      "ry": 68,
+      "labels": [
+        "Forward Approved Beneficiaries",
+        "to Accounting"
+      ]
+    },
+    {
+      "key": "fassg:UC-20",
+      "id": "UC-20",
+      "cx": 820,
+      "cy": 3140,
+      "rx": 330,
+      "ry": 58,
+      "labels": [
+        "Generate Summary Reports"
+      ]
+    },
+    {
+      "key": "fassg:UC-27",
+      "id": "UC-27",
+      "cx": 820,
+      "cy": 3290,
+      "rx": 330,
+      "ry": 58,
+      "labels": [
+        "Logout"
+      ]
+    },
+    {
+      "key": "sponsor:UC-01",
+      "id": "UC-01",
+      "cx": 2250,
+      "cy": 680,
+      "rx": 350,
+      "ry": 58,
+      "labels": [
+        "Login / Authenticate"
+      ]
+    },
+    {
+      "key": "sponsor:UC-15",
+      "id": "UC-15",
+      "cx": 2250,
+      "cy": 860,
+      "rx": 350,
+      "ry": 68,
+      "labels": [
+        "Review Submitted",
+        "Generated Batches"
+      ]
+    },
+    {
+      "key": "sponsor:UC-17",
+      "id": "UC-17",
+      "cx": 2250,
+      "cy": 1040,
+      "rx": 350,
+      "ry": 68,
+      "labels": [
+        "Upload Approval /",
+        "Confirmation Evidence"
+      ]
+    },
+    {
+      "key": "sponsor:UC-16",
+      "id": "UC-16",
+      "cx": 2250,
+      "cy": 1220,
+      "rx": 350,
+      "ry": 68,
+      "labels": [
+        "Approve or Reject",
+        "Entire Submitted Batch"
+      ]
+    },
+    {
+      "key": "sponsor:UC-27",
+      "id": "UC-27",
+      "cx": 2250,
+      "cy": 1400,
+      "rx": 350,
+      "ry": 58,
+      "labels": [
+        "Logout"
+      ]
+    },
+    {
+      "key": "accounting:UC-01",
+      "id": "UC-01",
+      "cx": 2250,
+      "cy": 1780,
+      "rx": 350,
+      "ry": 58,
+      "labels": [
+        "Login / Authenticate"
+      ]
+    },
+    {
+      "key": "accounting:UC-18",
+      "id": "UC-18",
+      "cx": 2250,
+      "cy": 1970,
+      "rx": 350,
+      "ry": 68,
+      "labels": [
+        "View Forwarded Approved",
+        "Beneficiary Records"
+      ]
+    },
+    {
+      "key": "accounting:UC-19",
+      "id": "UC-19",
+      "cx": 2250,
+      "cy": 2250,
+      "rx": 350,
+      "ry": 68,
+      "labels": [
+        "Print / Export",
+        "Beneficiary References"
+      ]
+    },
+    {
+      "key": "accounting:UC-27",
+      "id": "UC-27",
+      "cx": 2250,
+      "cy": 2430,
+      "rx": 350,
+      "ry": 58,
+      "labels": [
+        "Logout"
+      ]
+    },
+    {
+      "key": "admin:UC-01",
+      "id": "UC-01",
+      "cx": 2250,
+      "cy": 2820,
+      "rx": 350,
+      "ry": 58,
+      "labels": [
+        "Login / Authenticate"
+      ]
+    },
+    {
+      "key": "admin:UC-21",
+      "id": "UC-21",
+      "cx": 2250,
+      "cy": 3000,
+      "rx": 350,
+      "ry": 68,
+      "labels": [
+        "Manage User Accounts",
+        "and Roles"
+      ]
+    },
+    {
+      "key": "admin:UC-22",
+      "id": "UC-22",
+      "cx": 2250,
+      "cy": 3180,
+      "rx": 350,
+      "ry": 68,
+      "labels": [
+        "Monitor Audit Logs",
+        "and Manage Backups"
+      ]
+    },
+    {
+      "key": "admin:UC-27",
+      "id": "UC-27",
+      "cx": 2250,
+      "cy": 3360,
+      "rx": 350,
+      "ry": 58,
+      "labels": [
+        "Logout"
+      ]
+    },
+    {
+      "key": "student:UC-10",
+      "id": "UC-10",
+      "cx": 1570,
+      "cy": 860,
+      "rx": 300,
+      "ry": 68,
+      "labels": [
+        "Upload Required",
+        "Documents"
+      ]
+    },
+    {
+      "key": "fassg:UC-11",
+      "id": "UC-11",
+      "cx": 1570,
+      "cy": 1790,
+      "rx": 300,
+      "ry": 68,
+      "labels": [
+        "Configure Location",
+        "and Grade Eligibility"
+      ]
+    }
+  ],
+  "associations": [
+    {
+      "actor": "Student Applicant",
+      "use_case": "UC-01",
+      "representation": "student:UC-01",
+      "points": [
+        [
+          315,
+          753
+        ],
+        [
+          490.0,
+          240.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Student Applicant",
+      "use_case": "UC-02",
+      "representation": "student:UC-02",
+      "points": [
+        [
+          315,
+          753
+        ],
+        [
+          490.0,
+          390.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Student Applicant",
+      "use_case": "UC-03",
+      "representation": "student:UC-03",
+      "points": [
+        [
+          315,
+          753
+        ],
+        [
+          490.0,
+          540.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Student Applicant",
+      "use_case": "UC-23",
+      "representation": "student:UC-23",
+      "points": [
+        [
+          315,
+          753
+        ],
+        [
+          490.0,
+          690.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Student Applicant",
+      "use_case": "UC-04",
+      "representation": "student:UC-04",
+      "points": [
+        [
+          315,
+          753
+        ],
+        [
+          490.0,
+          860.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Student Applicant",
+      "use_case": "UC-05",
+      "representation": "student:UC-05",
+      "points": [
+        [
+          315,
+          753
+        ],
+        [
+          490.0,
+          1100.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Student Applicant",
+      "use_case": "UC-06",
+      "representation": "student:UC-06",
+      "points": [
+        [
+          315,
+          753
+        ],
+        [
+          490.0,
+          1270.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Student Applicant",
+      "use_case": "UC-27",
+      "representation": "student:UC-27",
+      "points": [
+        [
+          315,
+          753
+        ],
+        [
+          490.0,
+          1420.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "FASSG Personnel",
+      "use_case": "UC-01",
+      "representation": "fassg:UC-01",
+      "points": [
+        [
+          315,
+          2448
+        ],
+        [
+          490.0,
+          1640.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "FASSG Personnel",
+      "use_case": "UC-07",
+      "representation": "fassg:UC-07",
+      "points": [
+        [
+          315,
+          2448
+        ],
+        [
+          490.0,
+          1790.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "FASSG Personnel",
+      "use_case": "UC-09",
+      "representation": "fassg:UC-09",
+      "points": [
+        [
+          315,
+          2448
+        ],
+        [
+          490.0,
+          1940.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "FASSG Personnel",
+      "use_case": "UC-12",
+      "representation": "fassg:UC-12",
+      "points": [
+        [
+          315,
+          2448
+        ],
+        [
+          490.0,
+          2090.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "FASSG Personnel",
+      "use_case": "UC-08",
+      "representation": "fassg:UC-08",
+      "points": [
+        [
+          315,
+          2448
+        ],
+        [
+          490.0,
+          2240.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "FASSG Personnel",
+      "use_case": "UC-24",
+      "representation": "fassg:UC-24",
+      "points": [
+        [
+          315,
+          2448
+        ],
+        [
+          490.0,
+          2390.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "FASSG Personnel",
+      "use_case": "UC-13",
+      "representation": "fassg:UC-13",
+      "points": [
+        [
+          315,
+          2448
+        ],
+        [
+          490.0,
+          2540.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "FASSG Personnel",
+      "use_case": "UC-14",
+      "representation": "fassg:UC-14",
+      "points": [
+        [
+          315,
+          2448
+        ],
+        [
+          490.0,
+          2690.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "FASSG Personnel",
+      "use_case": "UC-25",
+      "representation": "fassg:UC-25",
+      "points": [
+        [
+          315,
+          2448
+        ],
+        [
+          490.0,
+          2840.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "FASSG Personnel",
+      "use_case": "UC-26",
+      "representation": "fassg:UC-26",
+      "points": [
+        [
+          315,
+          2448
+        ],
+        [
+          490.0,
+          2990.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "FASSG Personnel",
+      "use_case": "UC-20",
+      "representation": "fassg:UC-20",
+      "points": [
+        [
+          315,
+          2448
+        ],
+        [
+          490.0,
+          3140.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "FASSG Personnel",
+      "use_case": "UC-27",
+      "representation": "fassg:UC-27",
+      "points": [
+        [
+          315,
+          2448
+        ],
+        [
+          490.0,
+          3290.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Sponsor",
+      "use_case": "UC-01",
+      "representation": "sponsor:UC-01",
+      "points": [
+        [
+          2720,
+          988
+        ],
+        [
+          2600.0,
+          680.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Sponsor",
+      "use_case": "UC-15",
+      "representation": "sponsor:UC-15",
+      "points": [
+        [
+          2720,
+          988
+        ],
+        [
+          2600.0,
+          860.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Sponsor",
+      "use_case": "UC-17",
+      "representation": "sponsor:UC-17",
+      "points": [
+        [
+          2720,
+          988
+        ],
+        [
+          2600.0,
+          1040.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Sponsor",
+      "use_case": "UC-16",
+      "representation": "sponsor:UC-16",
+      "points": [
+        [
+          2720,
+          988
+        ],
+        [
+          2600.0,
+          1220.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Sponsor",
+      "use_case": "UC-27",
+      "representation": "sponsor:UC-27",
+      "points": [
+        [
+          2720,
+          988
+        ],
+        [
+          2600.0,
+          1400.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Accounting Office Personnel",
+      "use_case": "UC-01",
+      "representation": "accounting:UC-01",
+      "points": [
+        [
+          2720,
+          2108
+        ],
+        [
+          2600.0,
+          1780.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Accounting Office Personnel",
+      "use_case": "UC-18",
+      "representation": "accounting:UC-18",
+      "points": [
+        [
+          2720,
+          2108
+        ],
+        [
+          2600.0,
+          1970.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Accounting Office Personnel",
+      "use_case": "UC-19",
+      "representation": "accounting:UC-19",
+      "points": [
+        [
+          2720,
+          2108
+        ],
+        [
+          2600.0,
+          2250.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "Accounting Office Personnel",
+      "use_case": "UC-27",
+      "representation": "accounting:UC-27",
+      "points": [
+        [
+          2720,
+          2108
+        ],
+        [
+          2600.0,
+          2430.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "System Administrator",
+      "use_case": "UC-01",
+      "representation": "admin:UC-01",
+      "points": [
+        [
+          2720,
+          3078
+        ],
+        [
+          2600.0,
+          2820.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "System Administrator",
+      "use_case": "UC-21",
+      "representation": "admin:UC-21",
+      "points": [
+        [
+          2720,
+          3078
+        ],
+        [
+          2600.0,
+          3000.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "System Administrator",
+      "use_case": "UC-22",
+      "representation": "admin:UC-22",
+      "points": [
+        [
+          2720,
+          3078
+        ],
+        [
+          2600.0,
+          3180.0
+        ]
+      ],
+      "arrowheads": 0
+    },
+    {
+      "actor": "System Administrator",
+      "use_case": "UC-27",
+      "representation": "admin:UC-27",
+      "points": [
+        [
+          2720,
+          3078
+        ],
+        [
+          2600.0,
+          3360.0
+        ]
+      ],
+      "arrowheads": 0
+    }
+  ],
+  "relationships": [
+    {
+      "from": "UC-10",
+      "to": "UC-04",
+      "type": "extend",
+      "source_representation": "student:UC-10",
+      "target_representation": "student:UC-04",
+      "points": [
+        [
+          1270.0,
+          860.0
+        ],
+        [
+          1150.0,
+          860.0
+        ]
+      ],
+      "arrowheads": 1,
+      "condition": "Documents are required or supplied"
+    },
+    {
+      "from": "UC-05",
+      "to": "UC-04",
+      "type": "include",
+      "source_representation": "student:UC-05",
+      "target_representation": "student:UC-04",
+      "points": [
+        [
+          819.9999999999999,
+          1032.0
+        ],
+        [
+          820.0,
+          928.0
+        ]
+      ],
+      "arrowheads": 1,
+      "condition": null
+    },
+    {
+      "from": "UC-11",
+      "to": "UC-07",
+      "type": "extend",
+      "source_representation": "fassg:UC-11",
+      "target_representation": "fassg:UC-07",
+      "points": [
+        [
+          1270.0,
+          1790.0
+        ],
+        [
+          1150.0,
+          1790.0
+        ]
+      ],
+      "arrowheads": 1,
+      "condition": "Criteria are configured or changed"
+    },
+    {
+      "from": "UC-19",
+      "to": "UC-18",
+      "type": "extend",
+      "source_representation": "accounting:UC-19",
+      "target_representation": "accounting:UC-18",
+      "points": [
+        [
+          2250.0,
+          2182.0
+        ],
+        [
+          2250.0,
+          2038.0
+        ]
+      ],
+      "arrowheads": 1,
+      "condition": "User selects Print or Export"
+    }
+  ]
+}

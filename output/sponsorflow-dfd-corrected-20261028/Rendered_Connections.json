@@ -1,0 +1,1396 @@
+[
+  {
+    "source": "1.0",
+    "target": "D1",
+    "data": "Account / profile records",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        367.0
+      ],
+      [
+        590,
+        367.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "D1",
+    "target": "1.0",
+    "data": "Account credentials and profiles",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        439.0
+      ],
+      [
+        1285,
+        439.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "Student",
+    "target": "1.0",
+    "data": "Registration / login credentials",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        288.0
+      ],
+      [
+        1715,
+        288.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "1.0",
+    "target": "Student",
+    "data": "Account-access result",
+    "arrowheads": 1,
+    "points": [
+      [
+        1715,
+        360.0
+      ],
+      [
+        2410,
+        360.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "System Administrator",
+    "target": "1.0",
+    "data": "User accounts and roles",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        446.0
+      ],
+      [
+        1715,
+        446.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "1.0",
+    "target": "System Administrator",
+    "data": "Account and role status",
+    "arrowheads": 1,
+    "points": [
+      [
+        1715,
+        518.0
+      ],
+      [
+        2410,
+        518.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "D1",
+    "target": "2.0",
+    "data": "Student identity and profile",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        664.0
+      ],
+      [
+        1285,
+        664.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D2",
+    "target": "2.0",
+    "data": "Registry reference record",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        750.0
+      ],
+      [
+        1285,
+        750.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D3",
+    "target": "2.0",
+    "data": "Existing requests and decisions",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        836.0
+      ],
+      [
+        1285,
+        836.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "2.0",
+    "target": "D3",
+    "data": "Verification request / decision / evidence",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        908.0
+      ],
+      [
+        590,
+        908.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "Student",
+    "target": "2.0",
+    "data": "Verification request / documents",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        671.0
+      ],
+      [
+        1715,
+        671.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "2.0",
+    "target": "Student",
+    "data": "Verification result",
+    "arrowheads": 1,
+    "points": [
+      [
+        1715,
+        743.0
+      ],
+      [
+        2410,
+        743.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "FASSG Office",
+    "target": "2.0",
+    "data": "Manual verification decision",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        829.0
+      ],
+      [
+        1715,
+        829.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "2.0",
+    "target": "FASSG Office",
+    "data": "Verification queue and evidence",
+    "arrowheads": 1,
+    "points": [
+      [
+        1715,
+        901.0
+      ],
+      [
+        2410,
+        901.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "D4",
+    "target": "3.0",
+    "data": "Academic program catalog",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        1090.0
+      ],
+      [
+        1285,
+        1090.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D5",
+    "target": "3.0",
+    "data": "Current programs / availability",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        1176.0
+      ],
+      [
+        1285,
+        1176.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "3.0",
+    "target": "D5",
+    "data": "Program details and requirements",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        1248.0
+      ],
+      [
+        590,
+        1248.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "FASSG Office",
+    "target": "3.0",
+    "data": "Program configuration / status instruction",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        1054.0
+      ],
+      [
+        1715,
+        1054.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "3.0",
+    "target": "FASSG Office",
+    "data": "Program status / slot information",
+    "arrowheads": 1,
+    "points": [
+      [
+        1715,
+        1126.0
+      ],
+      [
+        2410,
+        1126.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "Student",
+    "target": "3.0",
+    "data": "Available-program inquiry",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        1212.0
+      ],
+      [
+        1715,
+        1212.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "3.0",
+    "target": "Student",
+    "data": "Open program list",
+    "arrowheads": 1,
+    "points": [
+      [
+        1715,
+        1284.0
+      ],
+      [
+        2410,
+        1284.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "D1",
+    "target": "4.0",
+    "data": "Student profile",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        1430.0
+      ],
+      [
+        1285,
+        1430.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D3",
+    "target": "4.0",
+    "data": "Documented SLE-FHE verification",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        1516.0
+      ],
+      [
+        1285,
+        1516.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D5",
+    "target": "4.0",
+    "data": "Open programs, slots and criteria",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        1602.0
+      ],
+      [
+        1285,
+        1602.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D6",
+    "target": "4.0",
+    "data": "Existing application / documents",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        1688.0
+      ],
+      [
+        1285,
+        1688.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "4.0",
+    "target": "D6",
+    "data": "Application / document records",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        1760.0
+      ],
+      [
+        590,
+        1760.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "Student",
+    "target": "4.0",
+    "data": "Application form / documents",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        1480.0
+      ],
+      [
+        1715,
+        1480.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "4.0",
+    "target": "Student",
+    "data": "Application status",
+    "arrowheads": 1,
+    "points": [
+      [
+        1715,
+        1552.0
+      ],
+      [
+        2410,
+        1552.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "FASSG Office",
+    "target": "4.0",
+    "data": "Application review request",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        1638.0
+      ],
+      [
+        1715,
+        1638.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "4.0",
+    "target": "FASSG Office",
+    "data": "Applicant queue and evidence",
+    "arrowheads": 1,
+    "points": [
+      [
+        1715,
+        1710.0
+      ],
+      [
+        2410,
+        1710.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "D1",
+    "target": "5.0",
+    "data": "Student identity / active sponsorship",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        1906.0
+      ],
+      [
+        1285,
+        1906.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D2",
+    "target": "5.0",
+    "data": "Institutional registry reference",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        1992.0
+      ],
+      [
+        1285,
+        1992.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D3",
+    "target": "5.0",
+    "data": "Documented verification decisions",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        2078.0
+      ],
+      [
+        1285,
+        2078.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D5",
+    "target": "5.0",
+    "data": "Program requirements and slots",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        2164.0
+      ],
+      [
+        1285,
+        2164.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D6",
+    "target": "5.0",
+    "data": "Pending / Verified candidates and evidence",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        2250.0
+      ],
+      [
+        1285,
+        2250.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "5.0",
+    "target": "D6",
+    "data": "Application verification status / evidence",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        2322.0
+      ],
+      [
+        590,
+        2322.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "D7",
+    "target": "5.0",
+    "data": "Finalized Fixed List / saved batch roster",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        2408.0
+      ],
+      [
+        1285,
+        2408.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "5.0",
+    "target": "D7",
+    "data": "Fixed-list records / selected batch roster",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        2480.0
+      ],
+      [
+        590,
+        2480.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "5.0",
+    "target": "D10",
+    "data": "Application verification notification",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        2566.0
+      ],
+      [
+        590,
+        2566.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "FASSG Office",
+    "target": "5.0",
+    "data": "Sponsor-proposed fixed-list data",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        2128.0
+      ],
+      [
+        1715,
+        2128.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "FASSG Office",
+    "target": "5.0",
+    "data": "Eligibility / document verification decisions",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        2200.0
+      ],
+      [
+        1715,
+        2200.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "FASSG Office",
+    "target": "5.0",
+    "data": "Manual roster selection / submission",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        2272.0
+      ],
+      [
+        1715,
+        2272.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "5.0",
+    "target": "FASSG Office",
+    "data": "Draft, roster and submission status",
+    "arrowheads": 1,
+    "points": [
+      [
+        1715,
+        2344.0
+      ],
+      [
+        2410,
+        2344.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "D1",
+    "target": "6.0",
+    "data": "Current active sponsorship",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        2712.0
+      ],
+      [
+        1285,
+        2712.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "6.0",
+    "target": "D1",
+    "data": "Active sponsorship status (approval only)",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        2784.0
+      ],
+      [
+        590,
+        2784.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "D3",
+    "target": "6.0",
+    "data": "Verified eligibility evidence",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        2870.0
+      ],
+      [
+        1285,
+        2870.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D5",
+    "target": "6.0",
+    "data": "Program criteria / slot capacity",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        2956.0
+      ],
+      [
+        1285,
+        2956.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "6.0",
+    "target": "D5",
+    "data": "Updated available slots / program status (approval only)",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        3028.0
+      ],
+      [
+        590,
+        3028.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "D6",
+    "target": "6.0",
+    "data": "Applicant and document evidence",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        3114.0
+      ],
+      [
+        1285,
+        3114.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "6.0",
+    "target": "D6",
+    "data": "Approved application records (approval only)",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        3186.0
+      ],
+      [
+        590,
+        3186.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "D7",
+    "target": "6.0",
+    "data": "Exact submitted batch roster",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        3272.0
+      ],
+      [
+        1285,
+        3272.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "6.0",
+    "target": "D7",
+    "data": "Batch approval / rejection status",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        3344.0
+      ],
+      [
+        590,
+        3344.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "D8",
+    "target": "6.0",
+    "data": "Prior decisions / confirmation evidence",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        3430.0
+      ],
+      [
+        1285,
+        3430.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "6.0",
+    "target": "D8",
+    "data": "Sponsor decision and evidence",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        3502.0
+      ],
+      [
+        590,
+        3502.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "6.0",
+    "target": "D10",
+    "data": "Sponsor-approval notifications",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        3588.0
+      ],
+      [
+        590,
+        3588.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "6.0",
+    "target": "D9",
+    "data": "Sponsor decision audit event",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        3674.0
+      ],
+      [
+        590,
+        3674.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "6.0",
+    "target": "Sponsor",
+    "data": "Exact submitted batch for review",
+    "arrowheads": 1,
+    "points": [
+      [
+        1715,
+        3121.0
+      ],
+      [
+        2410,
+        3121.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "Sponsor",
+    "target": "6.0",
+    "data": "Whole-batch decision / confirmation evidence",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        3193.0
+      ],
+      [
+        1715,
+        3193.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "6.0",
+    "target": "Sponsor",
+    "data": "Decision / confirmation status",
+    "arrowheads": 1,
+    "points": [
+      [
+        1715,
+        3265.0
+      ],
+      [
+        2410,
+        3265.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "D1",
+    "target": "7.0",
+    "data": "Student profiles / active sponsorship",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        3820.0
+      ],
+      [
+        1285,
+        3820.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D3",
+    "target": "7.0",
+    "data": "Verified SLE-FHE decisions",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        3906.0
+      ],
+      [
+        1285,
+        3906.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D5",
+    "target": "7.0",
+    "data": "Program criteria and status",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        3992.0
+      ],
+      [
+        1285,
+        3992.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D6",
+    "target": "7.0",
+    "data": "Individual Approved/Ongoing records",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        4078.0
+      ],
+      [
+        1285,
+        4078.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D7",
+    "target": "7.0",
+    "data": "Exact submitted batch membership",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        4164.0
+      ],
+      [
+        1285,
+        4164.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "7.0",
+    "target": "D7",
+    "data": "Batch forwarding attribution (when first forwarded)",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        4236.0
+      ],
+      [
+        590,
+        4236.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "D8",
+    "target": "7.0",
+    "data": "Sponsor confirmation / decision",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        4322.0
+      ],
+      [
+        1285,
+        4322.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "7.0",
+    "target": "D8",
+    "data": "FASSG receipt / forwarding records",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        4394.0
+      ],
+      [
+        590,
+        4394.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "D10",
+    "target": "7.0",
+    "data": "Stored notifications",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        4480.0
+      ],
+      [
+        1285,
+        4480.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "7.0",
+    "target": "D9",
+    "data": "Audit event",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        4566.0
+      ],
+      [
+        590,
+        4566.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "FASSG Office",
+    "target": "7.0",
+    "data": "Sponsor-decision acknowledgement",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        3963.0
+      ],
+      [
+        1715,
+        3963.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "FASSG Office",
+    "target": "7.0",
+    "data": "Explicit Accounting-forwarding instruction",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        4035.0
+      ],
+      [
+        1715,
+        4035.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "7.0",
+    "target": "FASSG Office",
+    "data": "Decisions, evidence and reports",
+    "arrowheads": 1,
+    "points": [
+      [
+        1715,
+        4107.0
+      ],
+      [
+        2410,
+        4107.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "Accounting Office",
+    "target": "7.0",
+    "data": "Read-only reference / CSV request",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        4193.0
+      ],
+      [
+        1715,
+        4193.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "7.0",
+    "target": "Accounting Office",
+    "data": "Eligible forwarded beneficiary list / CSV",
+    "arrowheads": 1,
+    "points": [
+      [
+        1715,
+        4265.0
+      ],
+      [
+        2410,
+        4265.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "Student",
+    "target": "7.0",
+    "data": "Status / notification inquiry",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        4351.0
+      ],
+      [
+        1715,
+        4351.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "7.0",
+    "target": "Student",
+    "data": "Status and stored notifications",
+    "arrowheads": 1,
+    "points": [
+      [
+        1715,
+        4423.0
+      ],
+      [
+        2410,
+        4423.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "D1",
+    "target": "8.0",
+    "data": "Current accounts and roles",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        4727.0
+      ],
+      [
+        1285,
+        4727.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "D9",
+    "target": "8.0",
+    "data": "Audit events and settings",
+    "arrowheads": 1,
+    "points": [
+      [
+        590,
+        4813.0
+      ],
+      [
+        1285,
+        4813.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "8.0",
+    "target": "D9",
+    "data": "Settings / backup metadata",
+    "arrowheads": 1,
+    "points": [
+      [
+        1285,
+        4885.0
+      ],
+      [
+        590,
+        4885.0
+      ]
+    ],
+    "direction": "out"
+  },
+  {
+    "source": "System Administrator",
+    "target": "8.0",
+    "data": "Settings changes",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        4734.0
+      ],
+      [
+        1715,
+        4734.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "System Administrator",
+    "target": "8.0",
+    "data": "Authorized backup / restore request",
+    "arrowheads": 1,
+    "points": [
+      [
+        2410,
+        4806.0
+      ],
+      [
+        1715,
+        4806.0
+      ]
+    ],
+    "direction": "in"
+  },
+  {
+    "source": "8.0",
+    "target": "System Administrator",
+    "data": "Audit logs and system status",
+    "arrowheads": 1,
+    "points": [
+      [
+        1715,
+        4878.0
+      ],
+      [
+        2410,
+        4878.0
+      ]
+    ],
+    "direction": "out"
+  }
+]

@@ -31,9 +31,7 @@ use App\Http\Controllers\Student\ProfileController;
 use App\Http\Controllers\Student\SleVerificationController;
 use App\Models\SponsorshipProgram;
 use App\Models\User;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 
@@ -186,8 +184,10 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
         Route::delete('/fixed-lists/{fixedList}', [FixedListController::class, 'destroy'])->name('fixed-lists.destroy');
         Route::get('/fixed-lists/{fixedList}', [FixedListController::class, 'show'])->name('fixed-lists.show');
         Route::post('/fixed-lists/{fixedList}/items', [FixedListController::class, 'storeItem'])->name('fixed-lists.items.store');
+        Route::delete('/fixed-lists/{fixedList}/items/{fixedListItem}', [FixedListController::class, 'removeItem'])->name('fixed-lists.items.destroy');
         Route::post('/fixed-lists/{fixedList}/import', [FixedListController::class, 'import'])->name('fixed-lists.import');
         Route::patch('/fixed-lists/{fixedList}/finalize', [FixedListController::class, 'finalize'])->name('fixed-lists.finalize');
+        Route::patch('/fixed-lists/{fixedList}/items/endorse-selected', [FixedListController::class, 'endorseSelected'])->name('fixed-lists.items.endorse-selected');
         Route::patch('/fixed-lists/{fixedList}/items/{fixedListItem}/verify', [FixedListController::class, 'verifyItem'])
             ->name('fixed-lists.items.verify');
         Route::patch('/fixed-lists/{fixedList}/items/{fixedListItem}/endorse', [FixedListController::class, 'endorseItem'])
@@ -195,7 +195,13 @@ Route::middleware(['auth', 'EnsureUserRole:fassg'])
 
         Route::get('/generated-batches', [GeneratedBatchController::class, 'index'])->name('generated-batches.index');
         Route::get('/generated-batches/{generatedBatch}', [GeneratedBatchController::class, 'show'])->name('generated-batches.show');
+        Route::delete('/generated-batches/{generatedBatch}/items/{batchCandidate}', [GeneratedBatchController::class, 'removeCandidate'])->name('generated-batches.items.destroy');
+        Route::get('/generated-batches/{generatedBatch}/applications/{application}', [GeneratedBatchController::class, 'reviewApplication'])->name('generated-batches.applications.show');
+        Route::patch('/generated-batches/{generatedBatch}/applications/{application}/verify', [GeneratedBatchController::class, 'verifyApplication'])->name('generated-batches.applications.verify');
         Route::patch('/generated-batches/{generatedBatch}/submit', [GeneratedBatchController::class, 'submit'])->name('generated-batches.submit');
+        Route::patch('/generated-batches/{generatedBatch}/record-sponsor-decision', [GeneratedBatchController::class, 'recordSponsorDecision'])->name('generated-batches.record-decision');
+        Route::patch('/generated-batches/{generatedBatch}/forward-to-accounting', [GeneratedBatchController::class, 'forwardToAccounting'])->name('generated-batches.forward-accounting');
+        Route::get('/generated-batches/{generatedBatch}/approvals/{sponsorApproval}/document', [GeneratedBatchController::class, 'viewApproval'])->name('generated-batches.approval-document');
         Route::delete('/generated-batches/{generatedBatch}', [GeneratedBatchController::class, 'destroy'])->name('generated-batches.destroy');
         Route::get('/batches', [BatchController::class, 'index'])->name('batches.index');
 
@@ -269,61 +275,3 @@ Route::middleware(['auth', 'EnsureUserRole:admin'])
         Route::get('/backups/{backup}/download', [BackupController::class, 'download'])->name('backups.download');
         Route::post('/backup', [BackupController::class, 'run'])->name('backup.run');
     });
-
-Route::middleware(['auth', 'EnsureUserRole:admin'])->group(function () {
-    Route::get('/run-seeders-secret-key-99', function () {
-        Artisan::call('migrate', ['--force' => true]);
-        $migrateOutput = Artisan::output();
-
-        Artisan::call('db:seed', ['--force' => true]);
-        $seedOutput = Artisan::output();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Database successfully migrated and seeded!',
-            'migrate_output' => $migrateOutput,
-            'seed_output' => $seedOutput,
-        ]);
-    });
-
-    Route::get('/sync-remote-database-99', function () {
-        Artisan::call('migrate', ['--force' => true]);
-        $migrateOutput = Artisan::output();
-
-        Artisan::call('db:seed', ['--force' => true]);
-        $seedOutput = Artisan::output();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Database successfully updated and seeded!',
-            'migrate_output' => $migrateOutput,
-            'seed_output' => $seedOutput,
-        ]);
-    });
-
-    Route::get('/force-sync-database-99', function () {
-        if (! Schema::hasTable('localaddress')) {
-            DB::statement('
-                CREATE TABLE IF NOT EXISTS localaddress (
-                    localaddressid BIGSERIAL PRIMARY KEY,
-                    province VARCHAR(255) NULL,
-                    city VARCHAR(255) NULL,
-                    latlong VARCHAR(255) NULL,
-                    latitude DECIMAL(10, 6) NULL,
-                    longitude DECIMAL(10, 6) NULL,
-                    created_at TIMESTAMP NULL,
-                    updated_at TIMESTAMP NULL
-                );
-            ');
-        }
-
-        Artisan::call('migrate', ['--force' => true]);
-        Artisan::call('db:seed', ['--force' => true]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'localaddress table forcibly created and database seeded!',
-            'output' => Artisan::output(),
-        ]);
-    });
-});

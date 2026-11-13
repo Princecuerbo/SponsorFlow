@@ -1,0 +1,58 @@
+{
+  "checks": [
+    {
+      "role": "STUDENTS",
+      "rating_items": 19,
+      "decision_support_items": 2,
+      "security_items": 0,
+      "timed_items_awaiting_approved_limits": 3,
+      "original_unchanged": true,
+      "package_xml_valid": true,
+      "letterhead_footer_media_styles_preserved": true
+    },
+    {
+      "role": "SPONSOR",
+      "rating_items": 16,
+      "decision_support_items": 3,
+      "security_items": 0,
+      "timed_items_awaiting_approved_limits": 4,
+      "original_unchanged": true,
+      "package_xml_valid": true,
+      "letterhead_footer_media_styles_preserved": true
+    },
+    {
+      "role": "FASSG",
+      "rating_items": 28,
+      "decision_support_items": 5,
+      "security_items": 2,
+      "timed_items_awaiting_approved_limits": 3,
+      "original_unchanged": true,
+      "package_xml_valid": true,
+      "letterhead_footer_media_styles_preserved": true
+    },
+    {
+      "role": "DICT",
+      "rating_items": 14,
+      "decision_support_items": 2,
+      "security_items": 2,
+      "timed_items_awaiting_approved_limits": 3,
+      "original_unchanged": true,
+      "package_xml_valid": true,
+      "letterhead_footer_media_styles_preserved": true
+    },
+    {
+      "role": "ACCOUNTING",
+      "rating_items": 17,
+      "decision_support_items": 3,
+      "security_items": 2,
+      "timed_items_awaiting_approved_limits": 2,
+      "original_unchanged": true,
+      "package_xml_valid": true,
+      "letterhead_footer_media_styles_preserved": true
+    }
+  ],
+  "total_items": 94,
+  "numeric_timing_limits": "NOT PROVIDED - drafts not ready for administration",
+  "word_visual_pagination": "NOT VERIFIED - no local document renderer used",
+  "application_endpoints_tests_database_operations": "NOT EXECUTED"
+}

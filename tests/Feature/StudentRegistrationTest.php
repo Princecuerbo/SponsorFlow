@@ -75,6 +75,8 @@ class StudentRegistrationTest extends TestCase
 
         SleFheVerification::create([
             'student_profile_id' => $profile->id,
+            'verified_at' => now(),
+            'verified_by' => User::factory()->create(['role' => \App\Enums\UserRole::Fassg])->id,
         ]);
 
         $this->assertSame(SleFheStatus::Verified->value, $profile->fresh()->sle_fhe_status, 'A verification overrides earlier request/rejection records');

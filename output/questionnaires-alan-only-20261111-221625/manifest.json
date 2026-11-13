@@ -1,0 +1,137 @@
+[
+  {
+    "role": "STUDENTS",
+    "original": "C:\\Users\\princ\\Blackcloudie\\IT4B FILES\\1ST SEM\\ITP 140 - CAPSTONE PROJECT & RESEARCH 2\\SPONSORFLOW LATEST DOCS CAPS2\\QUESTIONNAIRE AND VALIDATION\\SURVEY_QUESTIONNAIRE FOR STUDENTS.docx",
+    "backup": "C:\\xampp\\htdocs\\SponsorFlow\\output\\questionnaires-alan-only-20261111-221625\\originals\\SURVEY_QUESTIONNAIRE FOR STUDENTS.docx",
+    "revised": "C:\\xampp\\htdocs\\SponsorFlow\\output\\questionnaires-alan-only-20261111-221625\\revised\\SURVEY_QUESTIONNAIRE FOR STUDENTS.docx",
+    "original_sha256": "5c93d4f9a30cca0b8f02dd960940f3b15f1b68a30d7071b66d730391190bb9f3",
+    "revised_sha256": "e65c4bd2787036eea840458b20916c3953ce6c978fd0cd497247eb014dc0ef7c",
+    "added_items": [
+      "8. I used the displayed program criteria to decide which available sponsorship program to apply for.",
+      "9. I used the verification and application statuses to determine my next action."
+    ],
+    "counts_before": {
+      "FUNCTIONAL SUITABILITY": 7,
+      "PERFORMANCE EFFICIENCY": 4,
+      "USABILITY": 4,
+      "RELIABILITY": 3
+    },
+    "counts_after": {
+      "FUNCTIONAL SUITABILITY": 9,
+      "PERFORMANCE EFFICIENCY": 4,
+      "USABILITY": 4,
+      "RELIABILITY": 3
+    },
+    "package_parts_preserved": 26,
+    "existing_document_nodes_preserved": true
+  },
+  {
+    "role": "SPONSOR",
+    "original": "C:\\Users\\princ\\Blackcloudie\\IT4B FILES\\1ST SEM\\ITP 140 - CAPSTONE PROJECT & RESEARCH 2\\SPONSORFLOW LATEST DOCS CAPS2\\QUESTIONNAIRE AND VALIDATION\\SURVEY_QUESTIONNAIRE FOR SPONSOR.docx",
+    "backup": "C:\\xampp\\htdocs\\SponsorFlow\\output\\questionnaires-alan-only-20261111-221625\\originals\\SURVEY_QUESTIONNAIRE FOR SPONSOR.docx",
+    "revised": "C:\\xampp\\htdocs\\SponsorFlow\\output\\questionnaires-alan-only-20261111-221625\\revised\\SURVEY_QUESTIONNAIRE FOR SPONSOR.docx",
+    "original_sha256": "65ac278595bd747f41cd314609b3366ef4ba329579c4ed8684de64e47177f70a",
+    "revised_sha256": "629d3d3054917ceccb8fb7fcab0bfceb5e725d434f3bd19e8cb976dd53f77e80",
+    "added_items": [
+      "6. I used the displayed candidate-source and verification information when deciding on the submitted batch.",
+      "7. I used the roster's verification statuses to identify matters requiring clarification before making a whole-batch decision.",
+      "8. I referred to recorded decisions and confirmation evidence when reviewing the batch's decision history."
+    ],
+    "counts_before": {
+      "FUNCTIONAL SUITABILITY": 5,
+      "PERFORMANCE EFFICIENCY": 5,
+      "USABILITY": 2,
+      "RELIABILITY": 2
+    },
+    "counts_after": {
+      "FUNCTIONAL SUITABILITY": 8,
+      "PERFORMANCE EFFICIENCY": 5,
+      "USABILITY": 2,
+      "RELIABILITY": 2
+    },
+    "package_parts_preserved": 26,
+    "existing_document_nodes_preserved": true
+  },
+  {
+    "role": "FASSG",
+    "original": "C:\\Users\\princ\\Blackcloudie\\IT4B FILES\\1ST SEM\\ITP 140 - CAPSTONE PROJECT & RESEARCH 2\\SPONSORFLOW LATEST DOCS CAPS2\\QUESTIONNAIRE AND VALIDATION\\SURVEY_QUESTIONNAIRE FOR FASSG.docx",
+    "backup": "C:\\xampp\\htdocs\\SponsorFlow\\output\\questionnaires-alan-only-20261111-221625\\originals\\SURVEY_QUESTIONNAIRE FOR FASSG.docx",
+    "revised": "C:\\xampp\\htdocs\\SponsorFlow\\output\\questionnaires-alan-only-20261111-221625\\revised\\SURVEY_QUESTIONNAIRE FOR FASSG.docx",
+    "original_sha256": "88cc391f378a396464ebfe73b141499009f4d39bc965e6eca53f93a5486c0ecf",
+    "revised_sha256": "04efb6663a10b34e1c15a4589b338adf9e4e73f5c0e49c5f568f48fd641cd6ea",
+    "added_items": [
+      "13. I compared candidate qualifications with the selected program's requirements when assessing eligibility.",
+      "14. I used the batch-member review results to identify candidates requiring further verification.",
+      "15. I used the selected-candidate count and available slots when deciding the batch roster.",
+      "16. I used the filtered reports to identify programs or applications requiring follow-up.",
+      "17. I used the recorded Sponsor decision and handoff status to determine whether a batch was ready for forwarding to Accounting."
+    ],
+    "counts_before": {
+      "FUNCTIONAL SUITABILITY": 12,
+      "PERFORMANCE EFFICIENCY": 4,
+      "USABILITY": 3,
+      "RELIABILITY": 3
+    },
+    "counts_after": {
+      "FUNCTIONAL SUITABILITY": 17,
+      "PERFORMANCE EFFICIENCY": 4,
+      "USABILITY": 3,
+      "RELIABILITY": 3
+    },
+    "package_parts_preserved": 26,
+    "existing_document_nodes_preserved": true
+  },
+  {
+    "role": "DICT",
+    "original": "C:\\Users\\princ\\Blackcloudie\\IT4B FILES\\1ST SEM\\ITP 140 - CAPSTONE PROJECT & RESEARCH 2\\SPONSORFLOW LATEST DOCS CAPS2\\QUESTIONNAIRE AND VALIDATION\\SURVEY_QUESTIONNAIRE FOR DICT.docx",
+    "backup": "C:\\xampp\\htdocs\\SponsorFlow\\output\\questionnaires-alan-only-20261111-221625\\originals\\SURVEY_QUESTIONNAIRE FOR DICT.docx",
+    "revised": "C:\\xampp\\htdocs\\SponsorFlow\\output\\questionnaires-alan-only-20261111-221625\\revised\\SURVEY_QUESTIONNAIRE FOR DICT.docx",
+    "original_sha256": "33827df8d389f473feefe319942929e78b38a96322080c8c3a4b3370816ae85c",
+    "revised_sha256": "a8da851798433d7a9e71b9ffcfb39cb2d14f57ef59e578f390e661dbabf2a772",
+    "added_items": [
+      "4. I used the account's role and status when deciding whether its access needed to be changed.",
+      "5. I used the actor, action, and timestamp in the audit log to identify the administrative event requiring investigation."
+    ],
+    "counts_before": {
+      "FUNCTIONAL SUITABILITY": 3,
+      "PERFORMANCE EFFICIENCY": 3,
+      "USABILITY": 2,
+      "RELIABILITY": 2
+    },
+    "counts_after": {
+      "FUNCTIONAL SUITABILITY": 5,
+      "PERFORMANCE EFFICIENCY": 3,
+      "USABILITY": 2,
+      "RELIABILITY": 2
+    },
+    "package_parts_preserved": 26,
+    "existing_document_nodes_preserved": true
+  },
+  {
+    "role": "ACCOUNTING",
+    "original": "C:\\Users\\princ\\Blackcloudie\\IT4B FILES\\1ST SEM\\ITP 140 - CAPSTONE PROJECT & RESEARCH 2\\SPONSORFLOW LATEST DOCS CAPS2\\QUESTIONNAIRE AND VALIDATION\\SURVEY_QUESTIONNAIRE FOR ACCOUNTING.docx",
+    "backup": "C:\\xampp\\htdocs\\SponsorFlow\\output\\questionnaires-alan-only-20261111-221625\\originals\\SURVEY_QUESTIONNAIRE FOR ACCOUNTING.docx",
+    "revised": "C:\\xampp\\htdocs\\SponsorFlow\\output\\questionnaires-alan-only-20261111-221625\\revised\\SURVEY_QUESTIONNAIRE FOR ACCOUNTING.docx",
+    "original_sha256": "b7d3b75621b22ea00b68f912607b883d7064b037df588c0f2d3c108abd5ea653",
+    "revised_sha256": "70ebf62205567cba9e91e531a56b009151f1261fbe51ed545e904bba82037808",
+    "added_items": [
+      "6. I used the Sponsor-confirmation and FASSG-forwarding details to determine whether a beneficiary record could be used for the assigned reference task.",
+      "7. I used the search criteria and filters to identify beneficiary records relevant to the requested reference.",
+      "8. I used the displayed student and program identifiers to compare the exported list with the selected beneficiary records."
+    ],
+    "counts_before": {
+      "FUNCTIONAL SUITABILITY": 5,
+      "PERFORMANCE EFFICIENCY": 3,
+      "USABILITY": 2,
+      "RELIABILITY": 3
+    },
+    "counts_after": {
+      "FUNCTIONAL SUITABILITY": 8,
+      "PERFORMANCE EFFICIENCY": 3,
+      "USABILITY": 2,
+      "RELIABILITY": 3
+    },
+    "package_parts_preserved": 26,
+    "existing_document_nodes_preserved": true
+  }
+]

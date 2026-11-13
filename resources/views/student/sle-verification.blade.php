@@ -38,6 +38,15 @@
             </div>
         @endif
 
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+            </div>
+        @endif
+        @if (!$isVerified && $profile?->sleFheVerification)
+            <div class="alert alert-warning">An existing verification record needs FASSG evidence review. It is preserved and cannot be replaced through this form.</div>
+        @endif
+
         {{-- Main Banner Notification --}}
         @if ($isVerified)
             <div class="alert border-0 border-start border-4 rounded-3 p-3 mb-4"

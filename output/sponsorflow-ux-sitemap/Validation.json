@@ -1,0 +1,53 @@
+{
+  "node_count": 47,
+  "mapped_routes": 41,
+  "roles": [
+    "STUDENT APPLICANT",
+    "FASSG PERSONNEL",
+    "SPONSOR",
+    "ACCOUNTING OFFICE",
+    "SYSTEM ADMINISTRATOR"
+  ],
+  "image_pixels": [
+    5600,
+    4480
+  ],
+  "source_hashes": {
+    "routes/web.php": "f6dbff25b9a63ca111b49a37e36cfeb945112d78152044c38c8efc60dbc17e51",
+    "app/Enums/UserRole.php": "2b0133e0a9b124dbc2e5169d88c5a2bdd184b3684bd6ff11d050d88e645fc9ac",
+    "resources/views/layouts/app.blade.php": "46f0afc772f0bb6653a78e8247422595f7a9dba071906a1b4d420fc9a8d85fb0",
+    "resources/views/partials/_navbar.blade.php": "af879c5075bb329b8bb73c95af0fbd1e00515bc95949fb58260b2f54197b6a33",
+    "resources/views/welcome.blade.php": "5545a411c9b4517602774a321f2d9edad518445dfc25aebb04294d5b0bb841d9",
+    "app/Http/Controllers/Auth/StudentLoginController.php": "f25dca0129218a933e9f766a9a753c7e14c2f8b85dddaebcbbf880eca9dce304",
+    "app/Http/Controllers/Auth/StaffLoginController.php": "a8204210781184aa9bbd4bd98bd2f4896adce5de5b483deed0c3d2390817fc40",
+    "app/Http/Controllers/Auth/AdminLoginController.php": "3636140eb3aa776629b0cf707583dff48c68467d62d70e5f69ac81c547208b38",
+    "app/Http/Controllers/Auth/PortalLoginController.php": "497af3d37179422ed7cf65ccf9734064e880131caefba5bac8c711c0e26e0a11",
+    "resources/views/student/sle-verification.blade.php": "ac4f5f6617cc49cdd5c45b863f99d9ef45001f2650acab792a19d94ab14b55c6",
+    "resources/views/student/profile.blade.php": "7d45332a8a0cad131b3cbddbb92bd8cc4b522cb3dac094a088199690ca80106f",
+    "resources/views/fassg/programs/index.blade.php": "249451cff42a93b3eb7803f2d31bad5a044672334e2e34253251598d2eab7b3d",
+    "resources/views/fassg/applications/index.blade.php": "91a45e6144f3ac241277e86e5447f281384d9ed3a28119845a26844c6893fb4b",
+    "resources/views/fassg/fixed_lists/index.blade.php": "f84037bee2d6ccf64be2ac92bb34101fde1a9ddc693edf0c354e4cb38868ec3d",
+    "resources/views/fassg/fixed_lists/show.blade.php": "0089c1af179c30b14fd37616ec27cf52d994f5b9e4d8d91c2e0f0cf0199f6031",
+    "resources/views/fassg/generated_batches/index.blade.php": "6fd725e1987f9b1cefaf7fe2331517f8b571e3e96d509a1eaa447c2529962b29",
+    "resources/views/fassg/generated_batches/show.blade.php": "661b2f0da2bdbe4885a1b92118dacf2a2e653328c495ea73b109d5e4574cb576",
+    "resources/views/sponsor/approvals/index.blade.php": "274b145991fe2c7646d1f69bd2902e7980235c2436320b26bc5442a138e8b2a9",
+    "resources/views/sponsor/approvals/history.blade.php": "e623b49a0432d0ad61b8ebd3b5c08762d50e40cf1cddd0ec7df02cd4f3ab8656",
+    "resources/views/sponsor/lists/show.blade.php": "ec422e428af3ccd5031e10e5e03f0c57ab87fa7264e136158c7727f2818d2978",
+    "resources/views/accounting/index.blade.php": "c6e19dfc94720631f45c229c0c2937b387939cb17effd28c079f0b9eca98891a",
+    "resources/views/accounting/show.blade.php": "8e851ca131a07a68c1f6e8c45dc5fb74a5aa207ec0017a088d1cb3b23ee953e1",
+    "resources/views/accounting/beneficiaries/show.blade.php": "a06185121e09502fd794c805e6a36e9568d0f1d7ca2e5836fa392b375da7c8c0",
+    "resources/views/admin/users/index.blade.php": "3f185c2093506450f788ec59458aace8f995887cfe10f7164447eb319f977438",
+    "resources/views/admin/settings/index.blade.php": "269cb0a883c4599dbe5ecc5ac204d28690f4aa47b15a57ce71eb93a89ff036e5",
+    "resources/views/admin/backups/index.blade.php": "c9f1ece7a98926aefa9cb0d06dd97b2f2272b347ab0e78ae2230aca40809b2b7"
+  },
+  "checks": {
+    "unique_nodes": true,
+    "valid_connection_targets": true,
+    "routes_found_in_source": true,
+    "svg_xml_valid": true,
+    "text_fits": true,
+    "laravel_bootstrapped": false,
+    "database_accessed": false,
+    "runtime_browser_tested": false
+  }
+}

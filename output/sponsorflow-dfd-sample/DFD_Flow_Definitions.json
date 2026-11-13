@@ -1,0 +1,477 @@
+{
+  "stores": {
+    "D1": "Users and Student Profiles",
+    "D2": "Institutional SLE-FHE Registry",
+    "D3": "Verification Requests and Decisions",
+    "D4": "Academic Program Catalog",
+    "D5": "Sponsorship Programs and Eligibility",
+    "D6": "Applications and Supporting Files",
+    "D7": "Fixed Lists and Generated Batches",
+    "D8": "Sponsor Decisions and Handoff",
+    "D9": "Audit Logs, Settings and Backups",
+    "D10": "Notifications"
+  },
+  "processes": [
+    {
+      "id": "1.0",
+      "name": "Manage Accounts and Authentication",
+      "external_flows": [
+        {
+          "entity": "Student",
+          "direction": "in",
+          "data": "Registration / login credentials"
+        },
+        {
+          "entity": "Student",
+          "direction": "out",
+          "data": "Account-access result"
+        },
+        {
+          "entity": "System Administrator",
+          "direction": "in",
+          "data": "User accounts and roles"
+        },
+        {
+          "entity": "System Administrator",
+          "direction": "out",
+          "data": "Account and role status"
+        }
+      ],
+      "store_flows": [
+        {
+          "store": "D1",
+          "direction": "out",
+          "data": "Account / profile records"
+        },
+        {
+          "store": "D1",
+          "direction": "in",
+          "data": "Account credentials and profiles"
+        }
+      ]
+    },
+    {
+      "id": "2.0",
+      "name": "Verify SLE-FHE Student Information",
+      "external_flows": [
+        {
+          "entity": "Student",
+          "direction": "in",
+          "data": "Verification request / documents"
+        },
+        {
+          "entity": "Student",
+          "direction": "out",
+          "data": "Verification result"
+        },
+        {
+          "entity": "FASSG Office",
+          "direction": "in",
+          "data": "Manual verification decision"
+        },
+        {
+          "entity": "FASSG Office",
+          "direction": "out",
+          "data": "Verification queue and evidence"
+        }
+      ],
+      "store_flows": [
+        {
+          "store": "D1",
+          "direction": "in",
+          "data": "Student identity and profile"
+        },
+        {
+          "store": "D2",
+          "direction": "in",
+          "data": "Registry reference record"
+        },
+        {
+          "store": "D3",
+          "direction": "in",
+          "data": "Existing requests and decisions"
+        },
+        {
+          "store": "D3",
+          "direction": "out",
+          "data": "Verification request / decision / evidence"
+        }
+      ]
+    },
+    {
+      "id": "3.0",
+      "name": "Manage Sponsorship Programs",
+      "external_flows": [
+        {
+          "entity": "FASSG Office",
+          "direction": "in",
+          "data": "Program configuration / status instruction"
+        },
+        {
+          "entity": "FASSG Office",
+          "direction": "out",
+          "data": "Program status / slot information"
+        },
+        {
+          "entity": "Student",
+          "direction": "in",
+          "data": "Available-program inquiry"
+        },
+        {
+          "entity": "Student",
+          "direction": "out",
+          "data": "Open program list"
+        }
+      ],
+      "store_flows": [
+        {
+          "store": "D4",
+          "direction": "in",
+          "data": "Academic program catalog"
+        },
+        {
+          "store": "D5",
+          "direction": "in",
+          "data": "Current programs / availability"
+        },
+        {
+          "store": "D5",
+          "direction": "out",
+          "data": "Program details and requirements"
+        }
+      ]
+    },
+    {
+      "id": "4.0",
+      "name": "Process Applications and Documents",
+      "external_flows": [
+        {
+          "entity": "Student",
+          "direction": "in",
+          "data": "Application form / documents"
+        },
+        {
+          "entity": "Student",
+          "direction": "out",
+          "data": "Application status"
+        },
+        {
+          "entity": "FASSG Office",
+          "direction": "in",
+          "data": "Application review request"
+        },
+        {
+          "entity": "FASSG Office",
+          "direction": "out",
+          "data": "Applicant queue and evidence"
+        }
+      ],
+      "store_flows": [
+        {
+          "store": "D1",
+          "direction": "in",
+          "data": "Student profile"
+        },
+        {
+          "store": "D3",
+          "direction": "in",
+          "data": "Documented SLE-FHE verification"
+        },
+        {
+          "store": "D5",
+          "direction": "in",
+          "data": "Open programs, slots and criteria"
+        },
+        {
+          "store": "D6",
+          "direction": "in",
+          "data": "Existing application / documents"
+        },
+        {
+          "store": "D6",
+          "direction": "out",
+          "data": "Application / document records"
+        }
+      ]
+    },
+    {
+      "id": "5.0",
+      "name": "Manage Fixed Lists and Prepare Batches",
+      "external_flows": [
+        {
+          "entity": "FASSG Office",
+          "direction": "in",
+          "data": "Sponsor-proposed fixed-list data"
+        },
+        {
+          "entity": "FASSG Office",
+          "direction": "in",
+          "data": "Eligibility / document verification decisions"
+        },
+        {
+          "entity": "FASSG Office",
+          "direction": "in",
+          "data": "Manual roster selection / submission"
+        },
+        {
+          "entity": "FASSG Office",
+          "direction": "out",
+          "data": "Draft, roster and submission status"
+        }
+      ],
+      "store_flows": [
+        {
+          "store": "D1",
+          "direction": "in",
+          "data": "Student identity / active sponsorship"
+        },
+        {
+          "store": "D2",
+          "direction": "in",
+          "data": "Institutional registry reference"
+        },
+        {
+          "store": "D3",
+          "direction": "in",
+          "data": "Documented verification decisions"
+        },
+        {
+          "store": "D5",
+          "direction": "in",
+          "data": "Program requirements and slots"
+        },
+        {
+          "store": "D6",
+          "direction": "in",
+          "data": "Pending / Verified candidates and evidence"
+        },
+        {
+          "store": "D7",
+          "direction": "in",
+          "data": "Finalized list / saved batch roster"
+        },
+        {
+          "store": "D7",
+          "direction": "out",
+          "data": "Fixed-list records / selected batch roster"
+        },
+        {
+          "store": "D6",
+          "direction": "out",
+          "data": "Application verification status / evidence"
+        },
+        {
+          "store": "D10",
+          "direction": "out",
+          "data": "Application verification notification"
+        }
+      ]
+    },
+    {
+      "id": "6.0",
+      "name": "Process Sponsor Whole-Batch Decision",
+      "external_flows": [
+        {
+          "entity": "Sponsor",
+          "direction": "out",
+          "data": "Exact submitted batch for review"
+        },
+        {
+          "entity": "Sponsor",
+          "direction": "in",
+          "data": "Whole-batch decision / confirmation evidence"
+        },
+        {
+          "entity": "Sponsor",
+          "direction": "out",
+          "data": "Decision / confirmation status"
+        }
+      ],
+      "store_flows": [
+        {
+          "store": "D1",
+          "direction": "in",
+          "data": "Current active sponsorship"
+        },
+        {
+          "store": "D3",
+          "direction": "in",
+          "data": "Verified eligibility evidence"
+        },
+        {
+          "store": "D5",
+          "direction": "in",
+          "data": "Program criteria / slot capacity"
+        },
+        {
+          "store": "D6",
+          "direction": "in",
+          "data": "Applicants and document evidence"
+        },
+        {
+          "store": "D7",
+          "direction": "in",
+          "data": "Exact submitted roster"
+        },
+        {
+          "store": "D8",
+          "direction": "in",
+          "data": "Prior decisions / confirmation evidence"
+        },
+        {
+          "store": "D7",
+          "direction": "out",
+          "data": "Whole-batch decision / status"
+        },
+        {
+          "store": "D6",
+          "direction": "out",
+          "data": "Approved application records"
+        },
+        {
+          "store": "D1",
+          "direction": "out",
+          "data": "Active sponsorship status"
+        },
+        {
+          "store": "D8",
+          "direction": "out",
+          "data": "Sponsor decision and evidence"
+        },
+        {
+          "store": "D10",
+          "direction": "out",
+          "data": "Sponsor-approval notifications"
+        }
+      ]
+    },
+    {
+      "id": "7.0",
+      "name": "Acknowledge Sponsor Decision, Forward Beneficiaries and Provide Reports",
+      "external_flows": [
+        {
+          "entity": "FASSG Office",
+          "direction": "in",
+          "data": "Sponsor-decision acknowledgement"
+        },
+        {
+          "entity": "FASSG Office",
+          "direction": "in",
+          "data": "Explicit Accounting-forwarding instruction"
+        },
+        {
+          "entity": "FASSG Office",
+          "direction": "out",
+          "data": "Decisions, evidence and reports"
+        },
+        {
+          "entity": "Accounting Office",
+          "direction": "in",
+          "data": "Read-only reference / CSV request"
+        },
+        {
+          "entity": "Accounting Office",
+          "direction": "out",
+          "data": "Eligible forwarded beneficiary list / CSV"
+        },
+        {
+          "entity": "Student",
+          "direction": "in",
+          "data": "Status / notification inquiry"
+        },
+        {
+          "entity": "Student",
+          "direction": "out",
+          "data": "Status and stored notifications"
+        }
+      ],
+      "store_flows": [
+        {
+          "store": "D1",
+          "direction": "in",
+          "data": "Student profiles / active sponsorship"
+        },
+        {
+          "store": "D3",
+          "direction": "in",
+          "data": "Verified SLE-FHE decisions"
+        },
+        {
+          "store": "D5",
+          "direction": "in",
+          "data": "Program criteria and status"
+        },
+        {
+          "store": "D6",
+          "direction": "in",
+          "data": "Individual Approved/Ongoing records"
+        },
+        {
+          "store": "D7",
+          "direction": "in",
+          "data": "Exact submitted batch membership"
+        },
+        {
+          "store": "D8",
+          "direction": "in",
+          "data": "Sponsor confirmation / decision"
+        },
+        {
+          "store": "D10",
+          "direction": "in",
+          "data": "Stored notifications"
+        },
+        {
+          "store": "D8",
+          "direction": "out",
+          "data": "FASSG receipt / forwarding records"
+        },
+        {
+          "store": "D9",
+          "direction": "out",
+          "data": "Audit event"
+        }
+      ]
+    },
+    {
+      "id": "8.0",
+      "name": "Manage Settings, Audit Logs and Backups",
+      "external_flows": [
+        {
+          "entity": "System Administrator",
+          "direction": "in",
+          "data": "Settings changes"
+        },
+        {
+          "entity": "System Administrator",
+          "direction": "in",
+          "data": "Authorized backup / restore request"
+        },
+        {
+          "entity": "System Administrator",
+          "direction": "out",
+          "data": "Audit logs and system status"
+        }
+      ],
+      "store_flows": [
+        {
+          "store": "D1",
+          "direction": "in",
+          "data": "Current accounts and roles"
+        },
+        {
+          "store": "D9",
+          "direction": "in",
+          "data": "Audit events and settings"
+        },
+        {
+          "store": "D9",
+          "direction": "out",
+          "data": "Settings / backup metadata"
+        }
+      ]
+    }
+  ],
+  "direction_definition": "in = toward process; out = away from process",
+  "source": "Reviewed SponsorFlow routes/controllers/models; no database access performed by this renderer."
+}

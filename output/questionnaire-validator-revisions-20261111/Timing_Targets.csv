@@ -1,0 +1,10 @@
+﻿Timing ID,Operation,Approved limit (seconds),Measurement boundary,Approved workload and file/database size,Environment and network,Approval authority/reference,Status
+T01,Page or roster loading,,Click to fully displayed requested page/roster,,,,PENDING_USER_SUPPLIED_ADVISER_LIMIT
+T02,Search or filtering,,Apply query/filter to fully displayed results,,,,PENDING_USER_SUPPLIED_ADVISER_LIMIT
+T03,Saving a batch or Sponsor decision,,Submit action to saved-result response,,,,PENDING_USER_SUPPLIED_ADVISER_LIMIT
+T04,Document upload,,Confirm selected file to stored-upload response,,,,PENDING_USER_SUPPLIED_ADVISER_LIMIT
+T05,Opening a confirmation document,,Open document to readable display,,,,PENDING_USER_SUPPLIED_ADVISER_LIMIT
+T06,Report summaries and charts,,Apply filters to completed report display,,,,PENDING_USER_SUPPLIED_ADVISER_LIMIT
+T07,CSV export,,Request export to completed CSV download,,,,PENDING_USER_SUPPLIED_ADVISER_LIMIT
+T08,Database backup,,Confirm backup to successful completion response,,,,PENDING_USER_SUPPLIED_ADVISER_LIMIT
+T09,Test database restoration,,Confirm isolated restoration to completion response,,,,PENDING_USER_SUPPLIED_ADVISER_LIMIT

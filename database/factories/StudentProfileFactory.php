@@ -35,6 +35,7 @@ class StudentProfileFactory extends Factory
                 'student_profile_id' => $profile->id,
                 'verified_address' => 'Purok 2, Brgy. San Isidro, Mati City, Davao Oriental',
                 'verified_at' => now(),
+                'verified_by' => User::factory()->create(['role' => UserRole::Fassg])->id,
             ]);
         });
     }

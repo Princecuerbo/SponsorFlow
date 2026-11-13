@@ -101,24 +101,40 @@ class SleVerificationController extends Controller
 
         $data = $request->validated();
 
-        $program = null;
-        if (filled($data['academic_program_id'] ?? null)) {
-            $program = AcademicProgram::query()->find($data['academic_program_id']);
-            $data['course'] = $program?->name;
-        }
+        // Never write client-supplied course text or clear a historical course
+        // during an unrelated profile update.
+        unset($data['course']);
 
-        $profile = StudentProfile::query()->updateOrCreate(
-            ['user_id' => $user->id],
-            $data,
-        );
+        $profile = DB::transaction(function () use ($user, $data): StudentProfile {
+            $existing = StudentProfile::query()->where('user_id', $user->id)->lockForUpdate()->first();
+            if ($existing !== null && $existing->student_id_number !== $data['student_id_number']
+                && ($existing->sleFheVerification()->exists()
+                    || $existing->applications()->whereHas('batchCandidates.generatedBatch', fn ($batch) => $batch->where('status', '!=', 'Saved'))->exists())) {
+                throw \Illuminate\Validation\ValidationException::withMessages(['student_id_number' => 'FASSG must review identity corrections for an existing verified or submitted record.']);
+            }
 
-        $sleFheVerified = $profile->syncSleFheFromFixedLists();
+            if (array_key_exists('academic_program_id', $data)) {
+                if ((string) $existing?->academic_program_id === (string) $data['academic_program_id']) {
+                    // Retaining the same ID must not rewrite its historical text.
+                    unset($data['academic_program_id']);
+                } else {
+                    $program = AcademicProgram::query()->where('is_active', true)
+                        ->where('is_undergraduate', true)->find($data['academic_program_id']);
+                    if ($program === null) {
+                        throw \Illuminate\Validation\ValidationException::withMessages([
+                            'academic_program_id' => 'Select an active undergraduate Academic Program from the official list.',
+                        ]);
+                    }
+                    $data['course'] = $program->name;
+                }
+            }
+
+            return StudentProfile::query()->updateOrCreate(['user_id' => $user->id], $data);
+        });
 
         $this->audit($request, 'student.verification.updated', 'student_profiles');
 
-        $message = $sleFheVerified
-            ? 'Student ID saved. SLE-FHE status is verified against a sponsor fixed list.'
-            : 'Student ID saved. SLE-FHE is not yet verified. FASSG must match your ID on a fixed list.';
+        $message = 'Student profile saved. Saving a profile does not verify SLE-FHE eligibility; verification is recorded separately by FASSG.';
 
         return redirect()
             ->route('student.sle-fhe')
@@ -128,25 +144,19 @@ class SleVerificationController extends Controller
     public function submit(SleFheRequestSubmissionRequest $request): RedirectResponse
     {
         $profile = $this->studentProfile($request);
-
-        if ($profile->sleFheVerification()->exists()) {
-            return redirect()
-                ->route('student.sle-fhe')
-                ->with('error', 'Your SLE-FHE status is already verified and your residential address is locked.');
-        }
-
-        SleFheRequest::query()->updateOrCreate(
-            ['student_profile_id' => $profile->id],
-            array_merge($request->validated(), [
-                'status' => 'pending',
-                'submitted_at' => now(),
-            ]),
-        );
-
+        DB::transaction(function () use ($profile, $request): void {
+            $profile = StudentProfile::query()->lockForUpdate()->findOrFail($profile->id);
+            if ($profile->sleFheVerification()->exists()) {
+                throw \Illuminate\Validation\ValidationException::withMessages(['verification' => 'Existing verification evidence is preserved. Ask FASSG to review any correction.']);
+            }
+            // Preserve prior request facts; only the queue disposition changes.
+            $profile->sleFheRequests()->where('status', 'pending')->update(['status' => 'superseded']);
+            $profile->sleFheRequests()->create([
+                ...$request->validated(), 'status' => 'pending', 'submitted_at' => now(),
+            ]);
+        });
         $this->audit($request, 'student.sle-fhe.request.submitted', 'sle_fhe_requests');
 
-        return redirect()
-            ->route('student.sle-fhe')
-            ->with('status', 'Your verification request has been submitted. FASSG will review your residential address.');
+        return redirect()->route('student.sle-fhe')->with('status', 'Your verification request has been submitted for FASSG evidence review.');
     }
 }

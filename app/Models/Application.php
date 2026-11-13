@@ -90,6 +90,12 @@ class Application extends Model
         return $this->belongsTo(GeneratedBatch::class, 'batch_id');
     }
 
+    public function accountingCandidate(): ?BatchCandidate
+    {
+        return $this->batchCandidates()->accountingVisible()->get()
+            ->first(fn (BatchCandidate $item) => $item->isAccountingEligible());
+    }
+
     public function getStatusAttribute($value): ?ApplicationStatus
     {
         if ($this->sponsorshipProgram?->status === ProgramStatus::Expired) {

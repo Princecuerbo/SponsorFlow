@@ -238,6 +238,109 @@ class SponsorshipProgram extends Model
         return array_values(array_unique($required));
     }
 
+    public function requiresBeneficiaryRelationshipEvidence(): bool
+    {
+        return $this->category === ProgramCategory::EmployeeBased || $this->requires_relative_verification;
+    }
+
+    /** Explicit program requirements for beneficiary processing, without intake defaults. */
+    public function beneficiaryRequiredDocumentTypes(): array
+    {
+        $required = [];
+        foreach ((array) $this->required_documents as $label) {
+            foreach (DocumentType::typesForLabel((string) $label) as $type) {
+                $required[] = DocumentType::canonicalValue($type);
+            }
+        }
+        if ($this->requiresBeneficiaryRelationshipEvidence()) {
+            $required[] = DocumentType::EmployeeProofOfKinship->value;
+        }
+
+        return array_values(array_unique($required));
+    }
+
+    public function beneficiaryQualificationRequirements(): array
+    {
+        $documents = $this->beneficiaryRequiredDocumentTypes();
+        $location = strtolower((string) $this->address_requirement);
+
+        return [
+            'gpa_submitted' => $this->min_gpa !== null || in_array(DocumentType::CertificateOfGrades->value, $documents, true),
+            'address_submitted' => filled($location) || filled($this->target_province) || filled($this->target_municipality)
+                || in_array(DocumentType::ProofOfResidence->value, $documents, true),
+            'is_rural_submitted' => str_contains($location, 'rural') || str_contains($location, 'urban'),
+        ];
+    }
+
+    /** Reusable for submission/approval/forwarding; a full program can still be forwarded. */
+    public function beneficiaryEligibilityErrors(Application $application): array
+    {
+        $errors = [];
+        $profile = $application->studentProfile;
+        if ($profile === null || (int) $application->sponsorship_program_id !== (int) $this->id) {
+            return ['The beneficiary must belong to this program and a valid student profile.'];
+        }
+        if (! $profile->hasDocumentedSleFheVerification()) {
+            $errors[] = 'Documented FASSG SLE-FHE verification is required.';
+        }
+        if ($this->status === ProgramStatus::Expired || ($this->end_date !== null && $this->end_date->toDateString() < now()->toDateString())) {
+            $errors[] = 'The sponsorship program has expired.';
+        }
+        foreach ($this->beneficiaryQualificationRequirements() as $field => $mandatory) {
+            if ($mandatory && ($application->{$field} === null || $application->{$field} === '')) {
+                $errors[] = "Record and verify the required {$field}.";
+            }
+        }
+        if ($application->gpa_submitted !== null && ((float) $application->gpa_submitted <= 0
+            || (float) $application->gpa_submitted > 5
+            || ($this->min_gpa !== null && (float) $application->gpa_submitted > (float) $this->min_gpa))) {
+            $errors[] = 'Recorded GWA does not satisfy the program requirement.';
+        }
+        if (! $this->courseIsEligibleFor($profile)) {
+            $errors[] = 'The student academic program is not eligible.';
+        }
+        if (! empty($this->eligible_year_levels) && ($profile->year_level === null
+            || ! in_array((string) $profile->year_level, array_map('strval', $this->eligible_year_levels), true))) {
+            $errors[] = 'The student year level is not eligible.';
+        }
+        if (! empty($this->eligible_campuses) && ! in_array($profile->campus, (array) $this->eligible_campuses, true)) {
+            $errors[] = 'The student campus is not eligible.';
+        }
+        $location = strtolower((string) $this->address_requirement);
+        if ((str_contains($location, 'rural') && $application->is_rural_submitted !== true)
+            || (str_contains($location, 'urban') && $application->is_rural_submitted !== false)) {
+            $errors[] = 'Verified rurality does not satisfy the program requirement.';
+        }
+        if (str_contains($location, 'davao oriental')
+            && ! str_contains(strtolower((string) $application->address_submitted), 'davao oriental')) {
+            $errors[] = 'Verified address does not satisfy the program requirement.';
+        }
+        // Use the recorded verified address, never an unverified request fallback.
+        $verifiedAddress = strtolower((string) $profile->sleFheVerification?->verified_address);
+        foreach (['target_province', 'target_municipality'] as $field) {
+            if (filled($this->{$field}) && ! str_contains($verifiedAddress, strtolower(trim($this->{$field})))) {
+                $errors[] = 'Documented residential location does not satisfy the program requirement.';
+            }
+        }
+        foreach ((array) $this->required_documents as $label) {
+            if (DocumentType::typesForLabel((string) $label) === []) {
+                $errors[] = 'A configured document requirement is unrecognized and needs FASSG review.';
+            }
+        }
+        $documentTypes = $application->documents->filter(fn ($document) =>
+            \Illuminate\Support\Facades\Storage::disk('local')->exists($document->file_path))
+            ->map(fn ($document) => DocumentType::canonicalValue($document->document_type))->all();
+        if (array_diff($this->beneficiaryRequiredDocumentTypes(), $documentTypes) !== []) {
+            $errors[] = 'Required supporting documents are missing.';
+        }
+        if ($this->requiresBeneficiaryRelationshipEvidence() && (blank($application->employee_name)
+            || blank($application->employee_id_number) || blank($application->employee_relationship))) {
+            $errors[] = 'Verified employee relationship details are required.';
+        }
+
+        return $errors;
+    }
+
     public function isOpen(): bool
     {
         return $this->status === ProgramStatus::Open;

@@ -10,7 +10,7 @@
         class="btn btn-outline-secondary fw-semibold d-inline-flex align-items-center gap-2 no-print">
         <i class="bi bi-printer"></i> Print Master List
     </button>
-    <a href="{{ route('accounting.beneficiaries.export') }}"
+    <a href="{{ route('accounting.beneficiaries.export', request()->only(['q', 'sponsorship_program_id', 'academic_program_id'])) }}"
         class="btn btn-sf-navy fw-semibold px-3 d-inline-flex align-items-center gap-2 no-print">
         <i class="bi bi-file-earmark-spreadsheet me-1"></i> Export CSV / Excel
     </a>
@@ -144,7 +144,7 @@
                             </td>
                             <td>{{ $beneficiary['gwa'] !== null ? number_format((float) $beneficiary['gwa'], 2) : '—' }}
                             </td>
-                            <td>{{ $beneficiary['address'] ?: 'Fixed-list record' }}
+                            <td>{{ $beneficiary['address'] ?: 'Not recorded' }}
                                 @if ($beneficiary['rurality'])
                                     <div><span
                                             class="badge {{ $beneficiary['rurality'] === 'Rural' ? 'bg-info-subtle text-info-emphasis' : 'bg-secondary-subtle text-secondary-emphasis' }}">{{ $beneficiary['rurality'] }}</span>
