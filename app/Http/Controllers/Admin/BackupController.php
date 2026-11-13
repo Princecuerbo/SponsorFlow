@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\DatabaseBackup;
+use App\Support\BackupFiles;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -30,33 +32,21 @@ class BackupController extends Controller
     {
         try {
             $dumpContent = $this->buildDatabaseDump();
-            $filename = 'backup-'.now()->format('Y-m-d-H-i-s').'.sql';
-            $backupDir = storage_path('app/backups');
+            $file = $this->files()->write($dumpContent);
+            DB::transaction(function () use ($request, $file): void {
+                $backup = DatabaseBackup::query()->create($file + [
+                    'created_by_user_id' => $request->user()->id,
+                    'status' => 'completed',
+                    'created_at' => now(),
+                ]);
+                AuditLog::record('admin.backup.created', 'database_backups', $request->user(), $request->ip(), $backup->file_name);
+            });
 
-            if (! is_dir($backupDir)) {
-                mkdir($backupDir, 0755, true);
-            }
-
-            $absolutePath = $backupDir.DIRECTORY_SEPARATOR.$filename;
-            file_put_contents($absolutePath, $dumpContent);
-
-            $relativePath = 'backups/'.$filename;
-            $backup = DatabaseBackup::query()->create([
-                'file_name' => $filename,
-                'file_path' => $relativePath,
-                'file_size' => filesize($absolutePath),
-                'created_by_user_id' => $request->user()->id,
-                'status' => 'completed',
-                'created_at' => now(),
-            ]);
-
-            AuditLog::record('admin.backup.created', 'database_backups', $request->user(), $request->ip(), $backup->file_name);
-
-            return back()->with('success', 'Database backup snapshot successfully created: '.$filename);
+            return back()->with('success', 'Database table snapshot created and file contents verified: '.$file['file_name']);
         } catch (\Throwable $exception) {
             report($exception);
 
-            return back()->with('error', 'Backup failed: '.$exception->getMessage());
+            return back()->with('error', 'The backup could not be completed. Check the server log and backup storage before retrying.');
         }
     }
 
@@ -77,10 +67,11 @@ class BackupController extends Controller
 
     public function downloadBackup(Request $request, DatabaseBackup $backup): BinaryFileResponse
     {
-        abort_if($backup->status !== 'completed' || ! Storage::disk('local')->exists($backup->file_path), 404);
+        $path = $this->files()->resolve($backup->file_path);
+        abort_if($backup->status !== 'completed' || $path === null, 404);
         AuditLog::record('admin.backup.downloaded', 'database_backups', $request->user(), $request->ip(), $backup->file_name);
 
-        return response()->download(Storage::disk('local')->path($backup->file_path), $backup->file_name);
+        return response()->download($path, basename($path));
     }
 
     public function download(Request $request, DatabaseBackup $backup): BinaryFileResponse
@@ -90,83 +81,59 @@ class BackupController extends Controller
 
     public function restore(Request $request, DatabaseBackup $backup): RedirectResponse
     {
-        abort_unless($backup->status === 'completed' && Storage::disk('local')->exists($backup->file_path), 404);
+        // SQL DDL implicitly commits in MariaDB; an HTTP transaction cannot safely roll it back.
+        // Keep this route fail-closed for old links and crafted requests.
+        throw ValidationException::withMessages([
+            'backup' => 'Web restore is disabled. Restore requires a separately verified maintenance procedure and recovery backup.',
+        ]);
+    }
 
-        try {
-            $sql = Storage::disk('local')->get($backup->file_path);
-            $header = trim(substr($sql, 0, 256));
-
-            if ($header === '' || ! preg_match('/(CREATE TABLE|INSERT INTO|DROP TABLE|SET FOREIGN_KEY_CHECKS)/i', $header)) {
-                throw new \RuntimeException('Backup snapshot header is invalid or not a recognized SQL dump.');
-            }
-
-            $driver = DB::getDriverName();
-            if (! in_array($driver, ['mysql', 'sqlite'], true)) {
-                throw new \RuntimeException('Database restore is supported only for MySQL or SQLite drivers.');
-            }
-
-            DB::transaction(function () use ($sql, $driver): void {
-                if ($driver === 'mysql') {
-                    DB::statement('SET FOREIGN_KEY_CHECKS=0');
-                }
-
-                if ($driver === 'sqlite') {
-                    DB::statement('PRAGMA foreign_keys = OFF');
-                }
-
-                try {
-                    DB::unprepared($sql);
-                } finally {
-                    if ($driver === 'mysql') {
-                        DB::statement('SET FOREIGN_KEY_CHECKS=1');
-                    }
-
-                    if ($driver === 'sqlite') {
-                        DB::statement('PRAGMA foreign_keys = ON');
-                    }
-                }
-            });
-
-            AuditLog::record('admin.backup.restored', 'database_backups', $request->user(), $request->ip(), $backup->file_name, $request->userAgent(), $request->user()?->role?->value);
-
-            return back()->with('success', "Database restored from {$backup->file_name}.");
-        } catch (\Throwable $exception) {
-            report($exception);
-
-            return back()->with('error', 'Restore failed: '.$exception->getMessage());
-        }
+    private function files(): BackupFiles
+    {
+        return new BackupFiles(Storage::disk('local'), storage_path('app/backups'));
     }
 
     private function buildDatabaseDump(): string
     {
-        $driver = DB::getDriverName();
-
+        $connection = DB::connection();
+        $driver = $connection->getDriverName();
+        if (! in_array($driver, ['mysql', 'sqlite'], true)) {
+            throw new \RuntimeException('Database backup is supported only for MySQL or SQLite drivers.');
+        }
         if ($driver === 'mysql') {
-            return $this->buildMysqlDump();
+            if ($connection->transactionLevel() !== 0) {
+                throw new \RuntimeException('A database snapshot requires its own read-only transaction.');
+            }
+            $connection->statement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+            $connection->statement('SET TRANSACTION READ ONLY');
         }
-
-        if ($driver === 'sqlite') {
-            return $this->buildSqliteDump();
+        $connection->beginTransaction();
+        try {
+            return $driver === 'mysql' ? $this->buildMysqlDump() : $this->buildSqliteDump();
+        } finally {
+            $connection->rollBack();
         }
-
-        throw new \RuntimeException('Database backup is supported only for MySQL or SQLite drivers.');
     }
 
     private function buildMysqlDump(): string
     {
-        $dbName = config('database.connections.mysql.database');
-        $tables = DB::select('SHOW TABLES');
-        $tableKey = 'Tables_in_'.$dbName;
+        $tables = DB::select('SELECT TABLE_NAME AS name, TABLE_TYPE AS kind, ENGINE AS engine FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() ORDER BY TABLE_NAME');
+        foreach ($tables as $table) {
+            if ($table->kind !== 'BASE TABLE' || $table->engine !== 'InnoDB') {
+                throw new \RuntimeException('Use the controlled backup procedure for views or non-InnoDB tables.');
+            }
+        }
 
         $dumpContent = "-- SponsorFlow System Backup\n";
         $dumpContent .= '-- Date: '.now()->toDateTimeString()."\n\n";
         $dumpContent .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
 
         foreach ($tables as $table) {
-            $tableName = $table->$tableKey;
-            $createTable = DB::select("SHOW CREATE TABLE `{$tableName}`")[0]->{'Create Table'};
+            $tableName = $table->name;
+            $identifier = str_replace('`', '``', $tableName);
+            $createTable = DB::select("SHOW CREATE TABLE `{$identifier}`")[0]->{'Create Table'};
 
-            $dumpContent .= "DROP TABLE IF EXISTS `{$tableName}`;\n";
+            $dumpContent .= "DROP TABLE IF EXISTS `{$identifier}`;\n";
             $dumpContent .= $createTable.";\n\n";
 
             $rows = DB::table($tableName)->get();
@@ -176,7 +143,8 @@ class BackupController extends Controller
                 }, (array) $row);
 
                 if (! empty($values)) {
-                    $dumpContent .= "INSERT INTO `{$tableName}` VALUES (".implode(', ', $values).");\n";
+                    $columns = implode(', ', array_map(fn ($column) => '`'.str_replace('`', '``', $column).'`', array_keys((array) $row)));
+                    $dumpContent .= "INSERT INTO `{$identifier}` ({$columns}) VALUES (".implode(', ', $values).");\n";
                 }
             }
 
@@ -197,12 +165,13 @@ class BackupController extends Controller
 
         foreach ($tables as $table) {
             $tableName = $table->name;
+            $identifier = str_replace('`', '``', $tableName);
             $tableSql = DB::table('sqlite_master')
                 ->where('type', 'table')
                 ->where('name', $tableName)
                 ->value('sql');
 
-            $dumpContent .= "DROP TABLE IF EXISTS `{$tableName}`;\n";
+            $dumpContent .= "DROP TABLE IF EXISTS `{$identifier}`;\n";
             if (! empty($tableSql)) {
                 $dumpContent .= $tableSql.";\n\n";
             }
@@ -214,7 +183,8 @@ class BackupController extends Controller
                 }, (array) $row);
 
                 if (! empty($values)) {
-                    $dumpContent .= "INSERT INTO `{$tableName}` VALUES (".implode(', ', $values).");\n";
+                    $columns = implode(', ', array_map(fn ($column) => '`'.str_replace('`', '``', $column).'`', array_keys((array) $row)));
+                    $dumpContent .= "INSERT INTO `{$identifier}` ({$columns}) VALUES (".implode(', ', $values).");\n";
                 }
             }
 

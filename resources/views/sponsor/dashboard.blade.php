@@ -22,11 +22,11 @@
                 color="slate" />
         </div>
         <div class="col-md-4">
-            <x-metric-card title="Lists pending review" value="{{ $listsPendingReview }}" icon="bi-hourglass-split"
+            <x-metric-card title="Batches pending review" value="{{ $listsPendingReview }}" icon="bi-hourglass-split"
                 color="amber" />
         </div>
         <div class="col-md-4">
-            <x-metric-card title="Uploaded approvals" value="{{ $uploadedApprovals }}" icon="bi-file-earmark-check"
+            <x-metric-card title="Approved batches" value="{{ $uploadedApprovals }}" icon="bi-file-earmark-check"
                 color="emerald" />
         </div>
     </div>
@@ -36,8 +36,7 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h3 class="h6 sf-heading mb-3 fw-bold">Sponsor workflow</h3>
-                    <p class="small text-secondary mb-0">Each step keeps beneficiary decisions traceable and ready for
-                        billing reference.</p>
+                    <p class="small text-secondary mb-0">Review FASSG-submitted batches and record an explicit whole-batch decision.</p>
                 </div>
                 <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-3 py-2">
                     <i class="bi bi-shield-check me-1"></i>Human-reviewed
@@ -48,8 +47,8 @@
                     <div class="d-flex gap-3">
                         <span class="badge rounded-circle badge-step-navy p-2 align-self-start">1</span>
                         <div>
-                            <h3 class="h6 fw-bold">Receive verified list</h3>
-                            <p class="small text-secondary mb-0">FASSG checks SLE-FHE status and eligibility criteria.</p>
+                            <h3 class="h6 fw-bold">Receive a submitted batch</h3>
+                            <p class="small text-secondary mb-0">FASSG verifies SLE-FHE eligibility, program qualifications, and required documents before submission.</p>
                         </div>
                     </div>
                 </div>
@@ -57,8 +56,8 @@
                     <div class="d-flex gap-3">
                         <span class="badge rounded-circle badge-step-navy p-2 align-self-start">2</span>
                         <div>
-                            <h3 class="h6 fw-bold">Review applicants and lists</h3>
-                            <p class="small text-secondary mb-0">Inspect forwarded students and fixed-list details.</p>
+                            <h3 class="h6 fw-bold">Review the exact roster</h3>
+                            <p class="small text-secondary mb-0">Review all submitted members: ordinary applicants, Fixed List candidates, or both.</p>
                         </div>
                     </div>
                 </div>
@@ -66,8 +65,8 @@
                     <div class="d-flex gap-3">
                         <span class="badge rounded-circle badge-step-navy p-2 align-self-start">3</span>
                         <div>
-                            <h3 class="h6 fw-bold">Upload signed approval</h3>
-                            <p class="small text-secondary mb-0">Submit the signed PDF, JPG, or PNG approval document.</p>
+                            <h3 class="h6 fw-bold">Approve or reject the whole batch</h3>
+                            <p class="small text-secondary mb-0">Approval requires uploaded confirmation evidence and an explicit decision. Uploading alone does not approve the batch.</p>
                         </div>
                     </div>
                 </div>
@@ -75,9 +74,8 @@
                     <div class="d-flex gap-3">
                         <span class="badge rounded-circle bg-success p-2 align-self-start">4</span>
                         <div>
-                            <h3 class="h6 fw-bold">Forward to Accounting</h3>
-                            <p class="small text-secondary mb-0">Confirmed beneficiaries become available for tuition
-                                reference.</p>
+                            <h3 class="h6 fw-bold">Return decision to FASSG</h3>
+                            <p class="small text-secondary mb-0">FASSG records your decision, then separately forwards eligible approved beneficiaries to Accounting for read-only reference.</p>
                         </div>
                     </div>
                 </div>

@@ -569,7 +569,7 @@ class SponsorAccountingReportsTest extends TestCase
         $this->confirmAndForward($batch);
         $this->actingAs(User::factory()->create(['role' => UserRole::Accounting]))
             ->get(route('accounting.dashboard'))->assertOk()->assertViewHas('totalApproved', 2)
-            ->assertSee('Sponsor Allocation Summary');
+            ->assertSee('Beneficiaries by Sponsor');
     }
 
     public function test_legacy_individual_approval_is_retained_but_not_implicitly_certified_for_accounting(): void

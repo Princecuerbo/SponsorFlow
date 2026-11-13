@@ -1,7 +1,7 @@
-@if (session('success'))
+@if (session('success') || session('status'))
     <div class="alert alert-success border-0 shadow-sm d-flex align-items-start gap-2 rounded-3" role="alert">
         <i class="bi bi-check-circle-fill mt-1"></i>
-        <div>{{ session('success') }}</div>
+        <div>{{ session('success') ?: session('status') }}</div>
         <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif

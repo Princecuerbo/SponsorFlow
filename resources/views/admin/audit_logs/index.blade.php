@@ -8,16 +8,18 @@
     <div class="card sf-card border-0 shadow-sm rounded-3 overflow-hidden mb-4">
             <div class="card-header bg-white border-bottom p-3">
                 <form id="auditLogFilterForm" method="GET" action="{{ route('admin.audit-logs.index') }}"
-                    class="row g-2 align-items-center">
-                    <div class="col-md-4">
-                        <input class="form-control" type="text" name="q" value="{{ request('q') }}"
+                    class="row g-2 align-items-end">
+                    <div class="col-md-3">
+                        <label for="auditSearch" class="form-label small">Action or module</label>
+                        <input id="auditSearch" class="form-control" type="text" name="q" value="{{ request('q') }}"
                             placeholder="Search action or module"
                             oninput="clearTimeout(window.searchTimer); window.searchTimer = setTimeout(() => this.form.submit(), 600)">
                     </div>
 
                     {{-- Role Filter Select --}}
                     <div class="col-md-3">
-                        <select name="role" class="form-select bg-white" onchange="this.form.submit()">
+                        <label for="auditRole" class="form-label small">Role</label>
+                        <select id="auditRole" name="role" class="form-select bg-white" onchange="this.form.submit()">
                             <option value="">All roles</option>
                             @foreach ($roles as $key => $label)
                                 <option value="{{ $key }}" @selected(request('role') === $key)>{{ $label }}</option>
@@ -26,11 +28,13 @@
                     </div>
 
                     <div class="col-md-2">
-                        <input class="form-control" type="date" name="from" value="{{ request('from') }}"
+                        <label for="auditFrom" class="form-label small">From date</label>
+                        <input id="auditFrom" class="form-control" type="date" name="from" value="{{ request('from') }}"
                             onchange="this.form.submit()">
                     </div>
                     <div class="col-md-2">
-                        <input class="form-control" type="date" name="to" value="{{ request('to') }}"
+                        <label for="auditTo" class="form-label small">To date</label>
+                        <input id="auditTo" class="form-control" type="date" name="to" value="{{ request('to') }}"
                             onchange="this.form.submit()">
                     </div>
                     <div class="col-md-2 text-end">
@@ -100,18 +104,10 @@
                     <span class="fw-semibold text-dark">{{ $logs->total() }}</span> results
                 </div>
             </div>
-        </div>
     </div>
 @endsection
 
-<script>
-    function setRoleFilter(value, labelText) {
-        document.getElementById('roleInput').value = value;
-        document.getElementById('selectedRoleLabel').innerText = labelText;
-        document.getElementById('auditLogFilterForm').submit();
-    }
-</script>
-
+@push('styles')
 <style>
     /* Pagination Brand Overrides */
     .pagination {
@@ -153,3 +149,5 @@
         color: #0F2942 !important;
     }
 </style>
+
+@endpush

@@ -7,8 +7,10 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Session\TokenMismatchException;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -128,7 +130,9 @@ return Application::configure(basePath: dirname(__DIR__))
                 return;
             }
 
-            if ($e instanceof AuthenticationException) {
+            // Preserve Laravel's authentication redirects, field validation errors,
+            // and explicitly supplied responses instead of turning them into HTTP 500s.
+            if ($e instanceof AuthenticationException || $e instanceof ValidationException || $e instanceof HttpResponseException) {
                 return;
             }
 

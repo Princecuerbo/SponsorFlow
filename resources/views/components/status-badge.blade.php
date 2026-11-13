@@ -15,6 +15,8 @@
         'Pending SLE-FHE Verification' => ['bg-indigo-50 text-indigo-700 border border-indigo-200', 'bi-people'],
         'Application Batch' => ['bg-indigo-50 text-indigo-700 border border-indigo-200', 'bi-collection'],
         'Fixed List'     => ['bg-indigo-50 text-indigo-700 border border-indigo-200', 'bi-list-ul'],
+        'Fixed-list beneficiary' => ['bg-indigo-50 text-indigo-700 border border-indigo-200', 'bi-list-ul'],
+        'Ordinary applicant' => ['bg-indigo-50 text-indigo-700 border border-indigo-200', 'bi-person'],
         // Cyan — FASSG-verified, awaiting next step
         'Verified'   => ['bg-cyan-50 text-cyan-700 border border-cyan-200', 'bi-patch-check-fill'],
         // Emerald — final positive resolution
@@ -26,12 +28,13 @@
         'Eligible'   => ['bg-emerald-50 text-emerald-700 border border-emerald-200', 'bi-check-circle-fill'],
         'Open'       => ['bg-emerald-50 text-emerald-700 border border-emerald-200', 'bi-check-circle-fill'],
         'Confirmed'  => ['bg-emerald-50 text-emerald-700 border border-emerald-200', 'bi-check-circle-fill'],
-        // Red — rejection / closure
+        // Amber — closed to applications
+        'Closed'     => ['bg-amber-50 text-amber-800 border border-amber-300', 'bi-lock-fill'],
+        // Red — rejection / expiry / inactive
         'Rejected'   => ['bg-red-50 text-red-700 border border-red-200', 'bi-x-circle-fill'],
         'Declined'   => ['bg-red-50 text-red-700 border border-red-200', 'bi-x-circle-fill'],
         'Ineligible' => ['bg-red-50 text-red-700 border border-red-200', 'bi-x-circle-fill'],
-        'Expired'    => ['bg-red-50 text-red-700 border border-red-200', 'bi-x-circle-fill'],
-        'Closed'     => ['bg-red-50 text-red-700 border border-red-200', 'bi-x-circle-fill'],
+        'Expired'    => ['bg-red-50 text-red-700 border border-red-200', 'bi-clock-history'],
         'Inactive'   => ['bg-red-50 text-red-700 border border-red-200', 'bi-x-circle-fill'],
         'inactive'   => ['bg-red-50 text-red-700 border border-red-200', 'bi-x-circle-fill'],
         'suspended'  => ['bg-red-50 text-red-700 border border-red-200', 'bi-x-circle-fill'],

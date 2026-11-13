@@ -118,7 +118,7 @@
                     <li class="nav-item">
                         <a class="nav-link sf-topnav-link {{ request()->routeIs('accounting.beneficiaries*') ? 'active' : '' }}"
                             href="{{ route('accounting.beneficiaries.index') }}">
-                            <i class="bi bi-cash-stack"></i> Confirmed Beneficiaries
+                            <i class="bi bi-cash-stack"></i> Forwarded Approved Beneficiaries
                         </a>
                     </li>
                 @endif
@@ -343,7 +343,7 @@
                         <li class="mt-1">
                             <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('accounting.beneficiaries*') ? 'sf-mobile-active' : '' }}"
                                 href="{{ route('accounting.beneficiaries.index') }}" style="font-size: 0.925rem;">
-                                <i class="bi bi-cash-stack fs-5 text-secondary"></i> Confirmed Beneficiaries
+                                <i class="bi bi-cash-stack fs-5 text-secondary"></i> Forwarded Approved Beneficiaries
                             </a>
                         </li>
                     @endif

@@ -5,10 +5,13 @@ namespace Tests\Feature;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Models\AuditLog;
+use App\Models\DatabaseBackup;
 use App\Models\Sponsor;
 use App\Models\SystemSetting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class AdminControlTest extends TestCase
@@ -145,6 +148,7 @@ class AdminControlTest extends TestCase
 
     public function test_admin_backup_store_route_creates_snapshot(): void
     {
+        Storage::fake('local');
         $admin = User::factory()->create(['role' => UserRole::Admin]);
 
         $this->actingAs($admin)
@@ -152,10 +156,16 @@ class AdminControlTest extends TestCase
             ->post(route('admin.backups.store'))
             ->assertRedirect(route('admin.dashboard'))
             ->assertSessionHas('success');
+
+        $backup = DatabaseBackup::query()->latest('id')->firstOrFail();
+        Storage::disk('local')->assertExists($backup->file_path);
+        $this->assertSame(strlen(Storage::disk('local')->get($backup->file_path)), $backup->file_size);
+        $this->get(route('admin.backups.download', $backup))->assertDownload($backup->file_name);
     }
 
     public function test_backup_run_route_creates_snapshot_without_shell_dependency(): void
     {
+        Storage::fake('local');
         $admin = User::factory()->create(['role' => UserRole::Admin]);
 
         $this->actingAs($admin)
@@ -163,6 +173,102 @@ class AdminControlTest extends TestCase
             ->post(route('admin.backup.run'))
             ->assertRedirect(route('admin.dashboard'))
             ->assertSessionHas('success');
+    }
+
+    public function test_admin_cannot_demote_or_deactivate_self_via_update_or_status_routes(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+        $original = $admin->getRawOriginal();
+        $base = ['name' => 'Must not be saved', 'email' => $admin->email, 'role' => 'admin'];
+
+        foreach ([['role' => 'student'], ['is_active' => false]] as $change) {
+            $this->actingAs($admin)->put(route('admin.users.update', $admin), array_replace($base, $change))
+                ->assertSessionHasErrors('account');
+            $this->assertSame($original, $admin->fresh()->getRawOriginal());
+        }
+        $this->post(route('admin.users.toggle', $admin))->assertSessionHasErrors('account');
+        $this->assertSame(UserStatus::Active, $admin->fresh()->status);
+        $this->assertSame(0, AuditLog::where('action', 'admin.user.updated')->count());
+    }
+
+    public function test_editing_a_sponsor_login_preserves_existing_organization_contacts(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+        $account = User::factory()->create(['role' => UserRole::Sponsor]);
+        $profile = Sponsor::create(['user_id' => $account->id, 'company_organization_name' => 'Recorded Organization',
+            'contact_person' => 'Recorded Contact', 'contact_email' => 'contact@example.test']);
+        $original = $profile->getRawOriginal();
+
+        $this->actingAs($admin)->put(route('admin.users.update', $account), [
+            'name' => 'New Login Name', 'email' => 'new-login@example.test', 'role' => 'sponsor',
+            'password' => 'new-password123', 'password_confirmation' => 'new-password123',
+        ])->assertSessionHasNoErrors();
+
+        $this->assertSame($original, $profile->fresh()->getRawOriginal());
+        $details = AuditLog::where('action', 'admin.user.updated')->latest('id')->value('details');
+        $this->assertStringNotContainsString('new-password123', $details);
+        $this->assertStringNotContainsString($account->fresh()->password, $details);
+        $this->assertTrue(json_decode($details, true)['password_changed']);
+    }
+
+    public function test_settings_reject_invalid_or_unknown_values_without_partial_updates(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+        foreach (['maintenance_mode' => 'false', 'max_login_attempts' => '5'] as $key => $value) {
+            SystemSetting::create(['setting_key' => $key, 'setting_value' => $value]);
+        }
+        $this->actingAs($admin)->post(route('admin.settings.update'), ['settings' => [
+            'maintenance_mode' => 'true', 'max_login_attempts' => 'invalid', 'unknown' => 'injected',
+        ]])->assertSessionHasErrors();
+        $this->assertSame('false', SystemSetting::get('maintenance_mode'));
+        $this->assertSame('5', SystemSetting::get('max_login_attempts'));
+        $this->assertSame(0, AuditLog::where('action', 'admin.settings.updated')->count());
+    }
+
+    public function test_supported_settings_save_and_audit_together(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+        SystemSetting::create(['setting_key' => 'max_login_attempts', 'setting_value' => '5']);
+        $this->actingAs($admin)->post(route('admin.settings.update'), ['settings' => ['max_login_attempts' => '7']])
+            ->assertSessionHasNoErrors()->assertSessionHas('status');
+        $this->assertSame('7', SystemSetting::get('max_login_attempts'));
+        $this->assertSame(1, AuditLog::where('action', 'admin.settings.updated')->count());
+    }
+
+    public function test_single_login_creates_one_audit_record(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+        $before = AuditLog::where('action', 'admin.user.login')->count();
+        Auth::guard('web')->login($admin);
+        $this->assertSame($before + 1, AuditLog::where('action', 'admin.user.login')->count());
+    }
+
+    public function test_restore_is_blocked_and_does_not_execute_snapshot_sql(): void
+    {
+        Storage::fake('local');
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+        Storage::disk('local')->put('backups/fixture.sql', 'DELETE FROM users;');
+        $backup = DatabaseBackup::create(['file_name' => 'fixture.sql', 'file_path' => 'backups/fixture.sql',
+            'file_size' => 18, 'created_by_user_id' => $admin->id, 'status' => 'completed', 'created_at' => now()]);
+        $before = User::count();
+        $this->actingAs($admin)->post(route('admin.backups.restore', $backup))->assertSessionHasErrors('backup');
+        $this->assertSame($before, User::count());
+        Storage::disk('local')->assertExists('backups/fixture.sql');
+    }
+
+    public function test_non_admin_cannot_access_admin_operations(): void
+    {
+        $student = User::factory()->create(['role' => UserRole::Student]);
+        $this->actingAs($student)->get(route('admin.users.index'))->assertForbidden();
+        $this->post(route('admin.settings.update'), ['settings' => ['maintenance_mode' => 'true']])->assertForbidden();
+        $this->post(route('admin.backups.store'))->assertForbidden();
+    }
+
+    public function test_invalid_audit_dates_return_validation_errors(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+        $this->actingAs($admin)->get(route('admin.audit-logs.index', ['from' => 'invalid']))->assertSessionHasErrors('from');
+        $this->get(route('admin.audit-logs.index', ['from' => '2026-11-13', 'to' => '2026-11-01']))->assertSessionHasErrors('to');
     }
 
     public function test_user_model_exposes_is_active_contractor_and_settings_lookup(): void

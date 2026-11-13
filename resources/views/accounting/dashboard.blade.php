@@ -3,7 +3,7 @@
 @section('title', 'Accounting Dashboard')
 @section('eyebrow', 'Accounting Office · Dashboard')
 @section('page-title', 'Accounting Dashboard')
-@section('subtitle', 'Read-only financial reference overview for sponsor-confirmed beneficiaries.')
+@section('subtitle', 'Read-only reference for SLE-FHE-verified, Sponsor-approved beneficiaries explicitly forwarded by FASSG.')
 
 @section('header-actions')
     <a href="{{ route('accounting.beneficiaries.index') }}" class="btn btn-sf-navy"><i class="bi bi-table me-1"></i>View Full
@@ -13,16 +13,16 @@
 @section('content')
     <div class="alert border-0 border-start border-4 border-primary rounded-3 p-3 mb-4"
         style="background-color: rgba(15, 41, 66, 0.05); color: #0F2942; border-color: #0F2942 !important;">
-        <i class="bi bi-lock-fill me-2"></i> Accounting personnel can view and export references only. No approval, editing,
+        <i class="bi bi-lock-fill me-2"></i> Accounting personnel can view, print, and export references only. No approval, editing,
         or deletion actions are available.
     </div>
     <div class="row g-3 mb-4">
         <div class="col-sm-6 col-xl-3">
-            <x-metric-card title="Approved beneficiaries" value="{{ number_format($totalApproved) }}" icon="bi-person-check"
+            <x-metric-card title="Forwarded approved beneficiaries" value="{{ number_format($totalApproved) }}" icon="bi-person-check"
                 color="emerald" />
         </div>
         <div class="col-sm-6 col-xl-3">
-            <x-metric-card title="Active sponsors represented" value="{{ number_format($activeSponsors) }}"
+            <x-metric-card title="Sponsors represented" value="{{ number_format($activeSponsors) }}"
                 icon="bi-buildings" color="slate" />
         </div>
         <div class="col-sm-6 col-xl-3">
@@ -30,15 +30,17 @@
                 icon="bi-diagram-3" color="sky" />
         </div>
         <div class="col-sm-6 col-xl-3">
-            <x-metric-card title="Approvals in the last 30 days" value="{{ number_format($recentApprovalCount) }}"
+            <x-metric-card title="Beneficiaries approved in the last 30 days" value="{{ number_format($recentApprovalCount) }}"
                 icon="bi-clock-history" color="amber" />
         </div>
     </div>
+    <p class="small text-secondary mb-4">Counts include only eligible beneficiaries explicitly forwarded by FASSG.
+        The 30-day count uses the Sponsor approval date.</p>
     <div class="row g-4">
         <div class="col-lg-7">
             <div class="card sf-card h-100">
                 <div class="card-body p-4">
-                    <h3 class="h6 sf-heading mb-3">Sponsor Allocation Summary</h3>
+                    <h3 class="h6 sf-heading mb-3">Beneficiaries by Sponsor</h3>
                     <div class="table-responsive">
                         <table class="table sf-table table-hover align-middle mb-0">
                             <thead class="table-light text-muted small text-uppercase">
@@ -57,7 +59,7 @@
                                 </tr>@empty<tr>
                                         <td colspan="3" class="text-center py-4">
                                             <i class="bi bi-folder-x display-6 text-muted opacity-50 mb-2 d-block"></i>
-                                            <span class="text-muted">No sponsor allocations yet.</span>
+                                            <span class="text-muted">No eligible, FASSG-forwarded beneficiaries to summarize.</span>
                                         </td>
                                     </tr>
                                 @endforelse
@@ -74,19 +76,10 @@
                     @forelse ($programBreakdown as $breakdown)
                         <div class="d-flex justify-content-between py-2 border-bottom">
                             <span>{{ $breakdown['category'] }}</span><strong>{{ $breakdown['beneficiaries'] }}</strong>
-                    </div>@empty<div class="text-secondary small">No approved program data yet.</div>
+                    </div>@empty<div class="text-secondary small">No program categories with eligible, FASSG-forwarded beneficiaries.</div>
                     @endforelse
                 </div>
             </div>
         </div>
-    </div>
-    <div class="d-flex align-items-center justify-content-between gap-3 mt-4 mb-3">
-        <div>
-            <h3 class="h6 sf-heading mb-3">Beneficiary Master List</h3>
-            <p class="small text-secondary mb-0">Detailed per-beneficiary records live on the master list page.</p>
-        </div>
-        <a href="{{ route('accounting.beneficiaries.index') }}" class="btn btn-sf-navy">
-            <i class="bi bi-table me-1"></i>View Full Master List
-        </a>
     </div>
 @endsection

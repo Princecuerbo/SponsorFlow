@@ -112,10 +112,6 @@
                                     <x-status-badge :status="$program->effective_status" />
                                 </td>
                                 <td class="text-end pe-4">
-                                    <a href="{{ route('fassg.applications.index', ['program_id' => $program->id, 'prepare_batch' => 1]) }}"
-                                        class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-list-check me-1"></i>Prepare Generated Batch
-                                    </a>
                                     @if ($statusLower === 'open')
                                         <form method="POST" action="{{ route('fassg.programs.toggle-status', $program) }}"
                                             class="d-inline">

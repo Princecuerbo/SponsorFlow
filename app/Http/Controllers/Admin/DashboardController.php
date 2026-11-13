@@ -22,7 +22,7 @@ class DashboardController extends Controller
                 'totalUsers' => User::query()->count(),
                 'activeUsers' => User::query()->where('status', 'active')->count(),
                 'todayLogs' => AuditLog::query()->where('created_at', '>=', $today)->count(),
-                'lastBackup' => DatabaseBackup::query()->latest('created_at')->first(),
+                'lastBackup' => DatabaseBackup::query()->where('status', 'completed')->latest('created_at')->first(),
             ],
             'roleCounts' => collect(UserRole::cases())->mapWithKeys(
                 fn (UserRole $role): array => [$role->value => User::query()->where('role', $role)->where('status', 'active')->count()],

@@ -14,7 +14,7 @@
                         @if($setting->setting_key === 'maintenance_mode')
                             {{-- Maintenance Mode Toggle Switch --}}
                             @php
-                                $isMaintenanceOn = in_array(strtolower((string) $setting->setting_value), ['true', '1', 'yes', 'on'], true);
+                                $isMaintenanceOn = in_array(strtolower((string) old('settings.maintenance_mode', $setting->setting_value)), ['true', '1', 'yes', 'on'], true);
                             @endphp
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold d-block" style="font-size: 0.85rem; color: #475569;">
@@ -38,13 +38,18 @@
                                 <small class="text-muted d-block mt-1">{{ $setting->description ?? 'Toggle to enable or disable system maintenance mode across student and staff portals.' }}</small>
                             </div>
                         @else
-                            {{-- Standard text input for other settings --}}
+                            {{-- Only supported numeric settings are returned by the controller. --}}
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold" for="setting_{{ $setting->id }}" style="font-size: 0.85rem; color: #475569;">
                                     {{ str($setting->setting_key)->headline() }}
                                 </label>
-                                <input class="form-control" id="setting_{{ $setting->id }}" name="settings[{{ $setting->setting_key }}]" value="{{ $setting->setting_value }}" style="border-radius: 8px; background-color: #f8fafc;">
-                                <div class="form-text">{{ $setting->description }}</div>
+                                <input class="form-control" type="number" required step="1"
+                                    min="{{ $limits[$setting->setting_key][0] }}" max="{{ $limits[$setting->setting_key][1] }}"
+                                    id="setting_{{ $setting->id }}" name="settings[{{ $setting->setting_key }}]"
+                                    value="{{ old('settings.'.$setting->setting_key, $setting->setting_value) }}"
+                                    aria-describedby="setting_help_{{ $setting->id }}" style="border-radius: 8px; background-color: #f8fafc;">
+                                <div class="form-text" id="setting_help_{{ $setting->id }}">{{ $setting->description }}
+                                    Enter a whole number from {{ $limits[$setting->setting_key][0] }} to {{ $limits[$setting->setting_key][1] }}.</div>
                             </div>
                         @endif
                     @empty

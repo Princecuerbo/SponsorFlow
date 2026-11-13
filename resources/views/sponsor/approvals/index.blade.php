@@ -3,7 +3,7 @@
 @section('title', 'Approvals Queue')
 @section('eyebrow', 'Sponsor Portal · Approvals')
 @section('page-title', 'Approvals Queue')
-@section('subtitle', 'Review submitted beneficiary batches from FASSG for program endorsement.')
+@section('subtitle', 'Review FASSG-submitted Generated Batches and approve or reject each entire batch.')
 
 @section('header-actions')
     <span class="badge bg-primary-subtle text-primary-emphasis px-3 py-2">{{ $generatedBatches->count() }}
@@ -77,14 +77,13 @@
     {{-- Tab Content Container --}}
     <div class="tab-content" id="approvalQueueTabContent">
 
-        {{-- Pane 1: Generated Batches (from FASSG Application Queue) --}}
+        {{-- Submitted Generated Batches from either candidate source --}}
         <div class="tab-pane fade show active" id="generated-batches-pane" role="tabpanel"
             aria-labelledby="generated-batches-tab" tabindex="0">
             <div class="d-flex align-items-center justify-content-between mb-3">
                 <div>
                     <h3 class="h6 sf-heading mb-3 fw-bold">Generated Batches</h3>
-                    <p class="small text-secondary mb-0">Batch lists generated from the FASSG Application Queue, each
-                        linked to verified applications.</p>
+                    <p class="small text-secondary mb-0">FASSG prepares and verifies each batch from ordinary applicants, finalized Fixed List candidates, or both.</p>
                 </div>
                 <i class="bi bi-people fs-3" style="color: #0F2942;"></i>
             </div>
@@ -95,9 +94,9 @@
                         <thead>
                             <tr>
                                 <th class="ps-4">Batch / Program</th>
-                                <th>Beneficiaries</th>
+                                <th>Batch Members</th>
                                 <th>Status</th>
-                                <th>Signed Document</th>
+                                <th>Confirmation Evidence</th>
                                 <th class="text-end pe-4">Action</th>
                             </tr>
                         </thead>
@@ -127,7 +126,7 @@
                                         <div class="d-inline-flex flex-nowrap gap-2 align-items-center justify-content-end">
                                             <a href="{{ route('sponsor.lists.show', $list) }}"
                                                 class="btn btn-sm btn-sf-navy">
-                                                <i class="bi bi-check2-circle me-1"></i>Review &amp; Confirm
+                                                <i class="bi bi-check2-circle me-1"></i>Review Batch
                                             </a>
                                         </div>
                                     </td>
@@ -135,7 +134,7 @@
                             @empty
                                 <tr>
                                     <td colspan="5" class="text-center text-secondary py-5">No generated batches awaiting
-                                        approval.</td>
+                                        a Sponsor decision.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -144,9 +143,9 @@
                 <div class="card-footer bg-white border-top px-4 py-3 d-flex flex-wrap align-items-center justify-content-between gap-2 no-print">
                     <span class="small text-secondary">
                         <i class="bi bi-people me-1"></i><strong>{{ $generatedBatches->count() }}</strong>
-                        generated batch{{ $generatedBatches->count() === 1 ? '' : 'es' }} awaiting approval
+                        generated batch{{ $generatedBatches->count() === 1 ? '' : 'es' }} awaiting a Sponsor decision
                     </span>
-                    <span class="small text-secondary">Upload the signed approval document to confirm each list.</span>
+                    <span class="small text-secondary">Approval requires confirmation evidence and an explicit whole-batch decision.</span>
                 </div>
             </div>
         </div>

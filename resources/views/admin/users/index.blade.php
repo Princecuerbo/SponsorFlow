@@ -51,6 +51,9 @@
 @endpush
 
 @section('content')
+    @php
+        $failedForm = $errors->any() ? old('_account_form') : null;
+    @endphp
     <div class="card sf-card mb-4">
         <div class="card-body p-3">
             <form method="GET" action="{{ route('admin.users.index') }}" class="row g-2">
@@ -148,39 +151,53 @@
 
     {{-- Edit Modals --}}
     @foreach ($users as $account)
-        <div class="modal fade" id="editUser{{ $account->id }}" tabindex="-1" aria-hidden="true">
+        @php
+            $isFailedEdit = $failedForm === 'editUser'.$account->id;
+        @endphp
+        <div class="modal fade" id="editUser{{ $account->id }}" tabindex="-1" aria-hidden="true"
+            aria-labelledby="editUserTitle{{ $account->id }}" @if($isFailedEdit) data-reopen-modal @endif>
             <div class="modal-dialog">
                 <div class="modal-content" style="border-radius: 14px;">
                     <form method="POST" action="{{ route('admin.users.update', $account) }}">
                         @csrf @method('PUT')
+                        <input type="hidden" name="_account_form" value="editUser{{ $account->id }}">
                         <div class="modal-header" style="border-bottom: 1px solid #e2e8f0;">
-                            <h2 class="modal-title h5 fw-bold">Edit user account</h2>
-                            <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                            <h2 id="editUserTitle{{ $account->id }}" class="modal-title h5 fw-bold">Edit user account</h2>
+                            <button class="btn-close" data-bs-dismiss="modal" type="button" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+                            @if($isFailedEdit)
+                                <div class="alert alert-danger" role="alert"><ul class="mb-0">
+                                    @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
+                                </ul></div>
+                            @endif
                             <div class="mb-3">
                                 <label class="form-label fw-semibold" for="editName{{ $account->id }}"
                                     style="font-size: 0.85rem; color: #475569;">Name / Organization Name</label>
                                 <input class="form-control" id="editName{{ $account->id }}" name="name"
-                                    value="{{ $account->name }}" required
+                                    value="{{ $isFailedEdit ? old('name', $account->name) : $account->name }}" maxlength="150" required
                                     style="border-radius: 8px; background-color: #f8fafc;">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-semibold" for="editEmail{{ $account->id }}"
                                     style="font-size: 0.85rem; color: #475569;">Email</label>
                                 <input class="form-control" id="editEmail{{ $account->id }}" type="email"
-                                    name="email" value="{{ $account->email }}" required
+                                    name="email" value="{{ $isFailedEdit ? old('email', $account->email) : $account->email }}" maxlength="191" required
                                     style="border-radius: 8px; background-color: #f8fafc;">
                             </div>
                             <label class="form-label fw-semibold" for="editRole{{ $account->id }}"
                                 style="font-size: 0.85rem; color: #475569;">Role</label>
-                            <select class="form-select" id="editRole{{ $account->id }}" name="role" required
+                            <select class="form-select" id="editRole{{ $account->id }}" name="role" required @disabled($account->id === $user->id)
                                 style="border-radius: 8px; background-color: #f8fafc;">
                                 @foreach (\App\Enums\UserRole::cases() as $role)
-                                    <option value="{{ $role->value }}" @selected($account->role === $role)>{{ $role->label() }}
+                                    <option value="{{ $role->value }}" @selected(($isFailedEdit ? old('role', $account->role->value) : $account->role->value) === $role->value)>{{ $role->label() }}
                                     </option>
                                 @endforeach
                             </select>
+                            @if($account->id === $user->id)
+                                <input type="hidden" name="role" value="{{ $account->role->value }}">
+                                <small class="text-muted">You cannot change your own role or account status.</small>
+                            @endif
                             <div class="mb-3 mt-3">
                                 <label class="form-label fw-bold small" for="editPassword{{ $account->id }}"
                                     style="color: #475569;">New Password (Optional)</label>
@@ -212,49 +229,58 @@
     @endforeach
 
     {{-- Add Modal --}}
-    <div class="modal fade" id="addUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-hidden="true" aria-labelledby="addUserTitle" @if($failedForm === 'addUserModal') data-reopen-modal @endif>
         <div class="modal-dialog">
             <div class="modal-content" style="border-radius: 14px;">
                 <form method="POST" action="{{ route('admin.users.store') }}">
                     @csrf
+                    <input type="hidden" name="_account_form" value="addUserModal">
                     <div class="modal-header border-bottom pb-3">
                         <div>
-                            <h5 class="modal-title fw-bold text-dark"><i class="bi bi-person-plus-fill me-2"
+                            <h5 id="addUserTitle" class="modal-title fw-bold text-dark"><i class="bi bi-person-plus-fill me-2"
                                     style="color: #0F2942;"></i>Add User Account</h5>
                             <p class="text-muted small mb-0">Create a new institutional or student account credential.</p>
                         </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        @if($failedForm === 'addUserModal')
+                            <div class="alert alert-danger" role="alert"><ul class="mb-0">
+                                @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
+                            </ul></div>
+                        @endif
                         <div class="mb-3">
                             <label class="form-label fw-semibold text-secondary small" for="adminName">Name / Organization
                                 Name</label>
-                            <input class="form-control" id="adminName" name="name" placeholder="e.g. Maria Santos"
+                            <input class="form-control" id="adminName" name="name" placeholder="e.g. Maria Santos" maxlength="150" value="{{ $failedForm === 'addUserModal' ? old('name') : '' }}"
                                 required style="border-radius: 8px; background-color: #f8fafc;">
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold text-secondary small" for="adminEmail">Email</label>
                             <input class="form-control" id="adminEmail" type="email" name="email"
-                                placeholder="student@sponsorflow.test" required
+                                placeholder="student@sponsorflow.test" maxlength="191" value="{{ $failedForm === 'addUserModal' ? old('email') : '' }}" required
                                 style="border-radius: 8px; background-color: #f8fafc;">
                         </div>
                         <div class="mb-3">
-                            @php($availableRoles = \App\Enums\UserRole::cases())
+                            @php
+                                $availableRoles = \App\Enums\UserRole::cases();
+                                $selectedRole = \App\Enums\UserRole::tryFrom((string) ($failedForm === 'addUserModal' ? old('role') : 'student')) ?? \App\Enums\UserRole::Student;
+                            @endphp
                             <label class="form-label fw-semibold text-secondary small" for="roleInput">Role</label>
                             <input type="hidden" name="role" id="roleInput"
-                                value="{{ $availableRoles[0]->value ?? '' }}" required>
+                                value="{{ $selectedRole->value }}" required>
                             <div class="dropdown" id="adminRoleDropdown">
                                 <button type="button" id="adminRoleDropdownButton"
                                     class="btn btn-light border w-100 text-start d-flex align-items-center justify-content-between"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span>{{ $availableRoles[0]->label() ?? 'Select role' }}</span>
+                                    <span>{{ $selectedRole->label() }}</span>
                                     <i class="bi bi-chevron-down text-muted"></i>
                                 </button>
                                 <ul class="dropdown-menu w-100">
                                     @foreach ($availableRoles as $role)
                                         <li>
                                             <button type="button"
-                                                class="dropdown-item role-option {{ $loop->first ? 'active' : '' }}"
+                                                class="dropdown-item role-option {{ $selectedRole === $role ? 'active' : '' }}"
                                                 data-role-value="{{ $role->value }}"
                                                 data-role-label="{{ $role->label() }}">
                                                 {{ $role->label() }}
@@ -348,10 +374,9 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('action') === 'create') {
-                const addUserModal = new bootstrap.Modal(document.getElementById('addUserModal'));
-                if (addUserModal) addUserModal.show();
-            }
+            const failedModal = document.querySelector('.modal[data-reopen-modal]');
+            const modal = failedModal || (urlParams.get('action') === 'create' ? document.getElementById('addUserModal') : null);
+            if (modal) bootstrap.Modal.getOrCreateInstance(modal).show();
         });
     </script>
 @endsection

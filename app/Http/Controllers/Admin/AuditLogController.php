@@ -6,12 +6,21 @@ use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AuditLogController extends Controller
 {
     public function index(Request $request): View
     {
+        $request->validate([
+            'q' => ['nullable', 'string', 'max:150'],
+            'search' => ['nullable', 'string', 'max:150'],
+            'role' => ['nullable', Rule::enum(UserRole::class)],
+            'from' => ['nullable', 'date_format:Y-m-d'],
+            'to' => ['nullable', 'date_format:Y-m-d', ...($request->filled('from') ? ['after_or_equal:from'] : [])],
+        ]);
+
         $logs = AuditLog::query()->with('user')
             ->when($request->filled('q'), function ($query) use ($request): void {
                 $search = $request->string('q')->toString();

@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Beneficiary Reference')
-@section('eyebrow', 'Accounting Office · Tuition Adjustment Reference')
-@section('page-title', 'Approved Beneficiaries')
-@section('subtitle', 'Read-only sponsor-confirmed and approved SLE-FHE beneficiary records.')
+@section('title', 'Forwarded Approved Beneficiaries')
+@section('eyebrow', 'Accounting Office · Beneficiary Reference')
+@section('page-title', 'Forwarded Approved Beneficiaries')
+@section('subtitle', 'Read-only reference for SLE-FHE-verified, individually Approved/Ongoing beneficiaries with Sponsor confirmation and explicit FASSG forwarding.')
 
 @section('header-actions')
     <button type="button" onclick="window.print()"
@@ -12,11 +12,11 @@
     </button>
     <a href="{{ route('accounting.beneficiaries.export', request()->only(['q', 'sponsorship_program_id', 'academic_program_id'])) }}"
         class="btn btn-sf-navy fw-semibold px-3 d-inline-flex align-items-center gap-2 no-print">
-        <i class="bi bi-file-earmark-spreadsheet me-1"></i> Export CSV / Excel
+        <i class="bi bi-file-earmark-spreadsheet me-1"></i> Export CSV
     </a>
     <div class="sf-stat-card px-3 py-2 ms-2">
         <div class="h4 mb-0 sf-heading fw-bold">{{ number_format($totalApproved) }}</div>
-        <div class="small text-secondary">Approved records</div>
+        <div class="small text-secondary">Matching forwarded records</div>
     </div>
 @endsection
 
@@ -60,8 +60,8 @@
 @section('content')
     <div class="sf-readonly-banner d-flex align-items-center gap-3 mb-4 no-print">
         <i class="bi bi-lock fs-5"></i>
-        <div class="small fw-semibold">Accounting access is strictly read-only. Approval, editing, and deletion are handled
-            by FASSG and sponsors.</div>
+        <div class="small fw-semibold">Accounting can only view, print, and export eligible forwarded records.
+            Sponsors decide on submitted batches. FASSG records Sponsor decisions and explicitly forwards eligible approved beneficiaries.</div>
     </div>
 
     <div class="card sf-card mb-4 no-print">
@@ -140,7 +140,7 @@
                                     {{ $beneficiary['category'] }}</div>
                             </td>
                             <td>{{ $beneficiary['sponsor'] }}<div class="small text-secondary">
-                                    {{ $beneficiary['billing_contact'] ?: 'Billing contact unavailable' }}</div>
+                                    {{ $beneficiary['billing_contact'] ?: 'Sponsor contact not recorded' }}</div>
                             </td>
                             <td>{{ $beneficiary['gwa'] !== null ? number_format((float) $beneficiary['gwa'], 2) : '—' }}
                             </td>
@@ -169,7 +169,7 @@
                     @empty
                         <tr>
                             <td colspan="11" class="text-center text-secondary py-5"><i
-                                    class="bi bi-inbox fs-2 d-block mb-2"></i>No approved beneficiaries found.</td>
+                                    class="bi bi-inbox fs-2 d-block mb-2"></i>No eligible, FASSG-forwarded beneficiaries match the current filters.</td>
                         </tr>
                     @endforelse
                 </tbody>

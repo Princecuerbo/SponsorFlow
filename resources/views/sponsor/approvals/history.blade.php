@@ -3,7 +3,7 @@
 @section('title', 'Approval History')
 @section('eyebrow', 'Sponsor Portal · Records')
 @section('page-title', 'Approval History')
-@section('subtitle', 'Previously finalized applications and beneficiary lists.')
+@section('subtitle', 'Recorded Sponsor decisions, confirmation evidence, and retained historical approvals.')
 
 @section('header-actions')
     <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-2">
@@ -17,6 +17,7 @@
             <div>
                 <h3 class="h6 sf-heading mb-3 fw-bold">Sponsor Batch Decisions</h3>
                 <p class="small text-secondary mb-0">Whole-batch approvals and rejections, with original confirmation documents retained.</p>
+                <p class="small text-secondary mt-2 mb-0">Sponsor confirmation alone does not grant Accounting access. FASSG must record receipt and separately forward eligible approved beneficiaries.</p>
             </div>
             <i class="bi bi-people fs-3" style="color: #0F2942;"></i>
         </div>
@@ -28,8 +29,8 @@
                         <tr>
                             <th class="ps-4">Batch</th>
                             <th>Program</th>
-                            <th>Status</th>
-                            <th>Decision recorded</th>
+                            <th>Sponsor Decision</th>
+                            <th>Decision Date</th>
                             <th class="text-end pe-4">Document</th>
                         </tr>
                     </thead>
@@ -42,7 +43,15 @@
                                     <div class="small text-secondary">{{ $approvalBatch?->items?->count() ?? 0 }} roster member(s)</div>
                                 </td>
                                 <td>{{ $approval->sponsorshipProgram->program_name }}</td>
-                                <td><x-status-badge :status="$approval->confirmation_status" /></td>
+                                <td>
+                                    @if ($approval->confirmation_status === \App\Enums\ConfirmationStatus::Confirmed)
+                                        <span class="badge px-2 py-1 fw-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                            <i class="bi bi-check-circle-fill me-1" aria-hidden="true"></i>Sponsor Confirmed
+                                        </span>
+                                    @else
+                                        <x-status-badge :status="$approval->confirmation_status" />
+                                    @endif
+                                </td>
                                 <td>{{ $approval->decided_at?->format('M d, Y, h:i A') ?? '—' }}</td>
                                 <td class="text-end pe-4">
                                     <div class="d-inline-flex flex-nowrap gap-2 align-items-center justify-content-end">
@@ -69,9 +78,9 @@
             <div class="card-footer bg-white border-top px-4 py-3 d-flex flex-wrap align-items-center justify-content-between gap-2 no-print">
                 <span class="small text-secondary">
                     <i class="bi bi-archive me-1"></i><strong>{{ $approvals->count() }}</strong>
-                    finalized record{{ $approvals->count() === 1 ? '' : 's' }}
+                    decision record{{ $approvals->count() === 1 ? '' : 's' }}
                 </span>
-                <span class="small text-secondary">Download the signed approval document for each confirmed batch.</span>
+                <span class="small text-secondary">View the original confirmation document where available.</span>
             </div>
         </div>
     </section>

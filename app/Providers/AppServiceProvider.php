@@ -2,13 +2,10 @@
 
 namespace App\Providers;
 
-use App\Listeners\LogSuccessfulLogin;
 use App\Models\SponsorshipProgram;
 use App\Models\SystemSetting;
 use App\Observers\SponsorshipProgramObserver;
-use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -50,8 +47,7 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        // Register login audit listener
-        Event::listen(Login::class, LogSuccessfulLogin::class);
+        // Login auditing is registered once by Laravel's app/Listeners discovery.
 
         // Register model observers
         SponsorshipProgram::observe(SponsorshipProgramObserver::class);

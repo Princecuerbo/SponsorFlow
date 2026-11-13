@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Sponsor;
 use App\Models\User;
+use App\Support\AdminAccountProtection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -60,7 +61,7 @@ class UserController extends Controller
 
             $this->ensureSponsorProfile($account);
 
-            AuditLog::record('admin.user.created', 'users', $request->user(), $request->ip(), null, $request->userAgent(), $request->user()?->role?->value);
+            $this->recordAccountChange($request, $account, 'created');
         });
 
         return back()->with('status', 'User account created.');
@@ -68,13 +69,7 @@ class UserController extends Controller
 
     public function toggleStatus(Request $request, User $user): RedirectResponse
     {
-        abort_if($request->user()->is($user), 422, 'You cannot deactivate your own account.');
-
-        $nextStatus = $user->isActive() ? UserStatus::Inactive : UserStatus::Active;
-        $user->update(['status' => $nextStatus, 'is_active' => $nextStatus === UserStatus::Active]);
-        AuditLog::record('admin.user.status_changed', 'users', $request->user(), $request->ip(), null, $request->userAgent(), $request->user()?->role?->value);
-
-        return back()->with('status', "{$user->name}'s account is now {$nextStatus->value}.");
+        return $this->setStatus($request, $user);
     }
 
     public function update(Request $request, User $user): RedirectResponse
@@ -87,20 +82,26 @@ class UserController extends Controller
             'is_active' => ['sometimes', 'boolean'],
         ]);
 
-        if ($request->has('is_active')) {
-            $validated['status'] = $request->boolean('is_active') ? UserStatus::Active : UserStatus::Inactive;
-            $validated['is_active'] = $request->boolean('is_active');
-        }
-
         if (filled($validated['password'] ?? null)) {
             $validated['password'] = Hash::make($validated['password']);
         } else {
             unset($validated['password']);
         }
 
-        $user->update($validated);
-        $this->ensureSponsorProfile($user);
-        AuditLog::record('admin.user.updated', 'users', $request->user(), $request->ip(), null, $request->userAgent(), $request->user()?->role?->value);
+        DB::transaction(function () use ($request, $user, $validated): void {
+            [$account, $activeAdmins] = $this->lockAccounts($request, $user);
+            $status = array_key_exists('is_active', $validated)
+                ? ($validated['is_active'] ? UserStatus::Active : UserStatus::Inactive)
+                : $account->status;
+            AdminAccountProtection::validate($request->user(), $account, UserRole::from($validated['role']), $status, $activeAdmins);
+            $before = $account->only(['name', 'email', 'role', 'status']);
+            $changes = $validated;
+            unset($changes['is_active']);
+            $changes['status'] = $status;
+            $account->update($changes);
+            $this->ensureSponsorProfile($account);
+            $this->recordAccountChange($request, $account, 'updated', $before, isset($changes['password']));
+        }, 3);
 
         return back()->with('status', 'User account updated.');
     }
@@ -115,13 +116,40 @@ class UserController extends Controller
         return $this->setStatus($request, $user, UserStatus::Active);
     }
 
-    private function setStatus(Request $request, User $user, UserStatus $status): RedirectResponse
+    private function setStatus(Request $request, User $user, ?UserStatus $status = null): RedirectResponse
     {
-        abort_if($request->user()->is($user), 422, 'You cannot change your own account status.');
-        $user->update(['status' => $status, 'is_active' => $status === UserStatus::Active]);
-        AuditLog::record('admin.user.'.($status === UserStatus::Active ? 'restored' : 'deactivated'), 'users', $request->user(), $request->ip(), null, $request->userAgent(), $request->user()?->role?->value);
+        $nextStatus = DB::transaction(function () use ($request, $user, $status): UserStatus {
+            [$account, $activeAdmins] = $this->lockAccounts($request, $user);
+            $nextStatus = $status ?? ($account->isActive() ? UserStatus::Inactive : UserStatus::Active);
+            AdminAccountProtection::validate($request->user(), $account, $account->role, $nextStatus, $activeAdmins);
+            $before = $account->only(['name', 'email', 'role', 'status']);
+            $account->update(['status' => $nextStatus]);
+            $this->recordAccountChange($request, $account, $nextStatus === UserStatus::Active ? 'restored' : 'deactivated', $before);
 
-        return back()->with('status', "{$user->name}'s account is now {$status->value}.");
+            return $nextStatus;
+        }, 3);
+
+        return back()->with('status', "{$user->name}'s account is now {$nextStatus->value}.");
+    }
+
+    private function lockAccounts(Request $request, User $target): array
+    {
+        // Always lock administrators first, in the same order, to serialize demotions/deactivations.
+        $admins = User::query()->where('role', UserRole::Admin)->orderBy('id')->lockForUpdate()->get();
+        $actor = $admins->firstWhere('id', $request->user()->id);
+        abort_unless($actor?->isActive(), 403);
+
+        return [User::query()->lockForUpdate()->findOrFail($target->id), $admins->filter(fn (User $admin) => $admin->isActive())->count()];
+    }
+
+    private function recordAccountChange(Request $request, User $account, string $action, array $before = [], bool $passwordChanged = false): void
+    {
+        AuditLog::record('admin.user.'.$action, 'users', $request->user(), $request->ip(), json_encode([
+            'user_id' => $account->id,
+            'before' => $before,
+            'after' => $account->only(['name', 'email', 'role', 'status']),
+            'password_changed' => $passwordChanged,
+        ], JSON_THROW_ON_ERROR), $request->userAgent(), $request->user()?->role?->value);
     }
 
     private function ensureSponsorProfile(User $user): void
@@ -130,7 +158,7 @@ class UserController extends Controller
             return;
         }
 
-        Sponsor::query()->updateOrCreate(
+        Sponsor::query()->firstOrCreate(
             ['user_id' => $user->id],
             [
                 'company_organization_name' => $user->name,

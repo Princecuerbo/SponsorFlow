@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('title', 'Beneficiary Batch Reference')
-@section('eyebrow', 'Accounting Office · Tuition Adjustment Reference')
+@section('eyebrow', 'Accounting Office · Forwarded Batch Reference')
 @section('page-title', $fixedList->batch_name)
-@section('subtitle', ($fixedList->sponsorshipProgram?->program_name ?? 'Unspecified Program') . ' · ' . $fixedList->items->count() . ' ' . Str::plural('beneficiary', $fixedList->items->count()) . ' · Confirmed ' . ($approval?->decided_at?->format('M d, Y, h:i A') ?? '—'))
+@section('subtitle', ($fixedList->sponsorshipProgram?->program_name ?? 'Unspecified Program') . ' · ' . $fixedList->items->count() . ' eligible ' . Str::plural('beneficiary', $fixedList->items->count()) . ' · Forwarded by FASSG ' . ($approval?->accounting_forwarded_at?->format('M d, Y, h:i A') ?? '—'))
 
 @section('header-actions')
     <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -14,6 +14,9 @@
         <span class="badge bg-primary-subtle text-primary-emphasis fw-semibold">
             Sponsor Confirmed
         </span>
+        @if ($approval?->accounting_forwarded_at)
+            <span class="badge bg-success-subtle text-success-emphasis fw-semibold">FASSG Forwarded</span>
+        @endif
     </div>
 @endsection
 
@@ -49,15 +52,15 @@
     <div class="alert border-0 border-start border-4 rounded-3 p-3 mb-4 no-print d-flex align-items-center gap-2"
             style="background-color: rgba(15, 37, 55, 0.05); color: var(--sf-navy); border-color: var(--sf-navy) !important;">
             <i class="bi bi-lock-fill fs-5"></i>
-            <span class="small fw-semibold">Accounting access is strictly read-only. Approval, editing, and deletion are
-                handled by FASSG and sponsors.</span>
+            <span class="small fw-semibold">Accounting can only view, print, and export eligible forwarded records.
+                Sponsors decide on submitted batches. FASSG records Sponsor decisions and explicitly forwards eligible approved beneficiaries.</span>
         </div>
 
         <div class="row g-4">
             <div class="col-lg-7">
                 <div class="card sf-card border-0 shadow-sm rounded-3">
                     <div class="card-body p-4">
-                        <h3 class="h6 sf-heading mb-3">Approved Batch Details</h3>
+                        <h3 class="h6 sf-heading mb-3">Forwarded Batch Details</h3>
                         <dl class="row mb-0">
                             <dt class="col-sm-4 text-secondary fw-normal py-2">Batch Name</dt>
                             <dd class="col-sm-8 fw-semibold text-dark py-2 mb-0">{{ $fixedList->batch_name }}</dd>
@@ -72,21 +75,26 @@
                             <dd class="col-sm-8 py-2 mb-0 border-top">
                                 {{ $fixedList->sponsorshipProgram?->sponsor?->company_organization_name ?? '—' }}
                             </dd>
-                            <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Billing Contact</dt>
+                            <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Sponsor Contact</dt>
                             <dd class="col-sm-8 py-2 mb-0 border-top">
                                 {{ $fixedList->sponsorshipProgram?->sponsor?->contact_person ?: 'Not provided' }}
                             </dd>
-                            <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Total Names</dt>
+                            <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Eligible Beneficiaries</dt>
                             <dd class="col-sm-8 py-2 mb-0 border-top">{{ $fixedList->items->count() }}</dd>
-                            @if ($approval->accounting_forwarded_at)
-                                <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Forwarded by FASSG</dt>
-                                <dd class="col-sm-8 py-2 mb-0 border-top">
-                                    {{ $approval->accounting_forwarded_at->format('M d, Y, h:i A') }}</dd>
-                            @endif
                             @if ($approval?->decided_at)
                                 <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Sponsor Confirmed</dt>
                                 <dd class="col-sm-8 py-2 mb-0 border-top">
                                     {{ $approval->decided_at->format('M d, Y, h:i A') }}</dd>
+                            @endif
+                            @if ($approval?->fassg_recorded_at)
+                                <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">FASSG Receipt Recorded</dt>
+                                <dd class="col-sm-8 py-2 mb-0 border-top">
+                                    {{ $approval->fassg_recorded_at->format('M d, Y, h:i A') }}</dd>
+                            @endif
+                            @if ($approval?->accounting_forwarded_at)
+                                <dt class="col-sm-4 text-secondary fw-normal py-2 border-top">Forwarded to Accounting</dt>
+                                <dd class="col-sm-8 py-2 mb-0 border-top">
+                                    {{ $approval->accounting_forwarded_at->format('M d, Y, h:i A') }}</dd>
                             @endif
                         </dl>
                     </div>
@@ -96,20 +104,19 @@
             <div class="col-lg-5">
                 <div class="card sf-card border-0 shadow-sm rounded-3 h-100">
                     <div class="card-body p-4">
-                        <h3 class="h6 sf-heading mb-3">Signed Approval Document</h3>
+                        <h3 class="h6 sf-heading mb-3">Sponsor Confirmation Document</h3>
                         @if ($approval?->approval_document_path)
                             <a href="{{ route('accounting.fixed-lists.document', $fixedList) }}" target="_blank"
                                 rel="noopener" class="btn btn-sf-navy w-100 fw-semibold">
-                                <i class="bi bi-file-earmark-check me-1"></i>View Signed Approval
+                                <i class="bi bi-file-earmark-check me-1"></i>View Confirmation File
                             </a>
                             <div class="small text-secondary mt-3 d-flex align-items-center gap-2">
-                                <i class="bi bi-file-earmark-pdf"></i>
-                                Sponsor-signed beneficiary list
+                                <i class="bi bi-file-earmark-check"></i>
+                                Original Sponsor confirmation evidence
                                 {{ $approval->decided_at?->format('M d, Y, h:i A') ? '· decision '.$approval->decided_at->format('M d, Y, h:i A') : '' }}
                             </div>
                         @else
-                            <div class="text-secondary small">No signed approval document has been uploaded for this
-                                batch.</div>
+                            <div class="text-secondary small">No Sponsor confirmation document is available for this batch.</div>
                         @endif
                         @if ($approval?->uploadedBySponsor)
                             <div class="border-top mt-3 pt-3 small text-secondary">
@@ -125,8 +132,8 @@
         <div class="card sf-card border-0 shadow-sm rounded-3 mt-4">
             <div class="card-header bg-white border-bottom p-3 d-flex align-items-center justify-content-between">
                 <div>
-                    <h3 class="h6 sf-heading mb-3">Beneficiary Roster</h3>
-                    <div class="small text-secondary">{{ $fixedList->items->count() }} record(s) in this batch</div>
+                    <h3 class="h6 sf-heading mb-3">Eligible Beneficiary Roster</h3>
+                    <div class="small text-secondary">{{ $fixedList->items->count() }} eligible record(s) shown from this batch</div>
                 </div>
                 <button type="button" onclick="window.print()" class="btn btn-outline-secondary btn-sm fw-semibold no-print">
                     <i class="bi bi-printer me-1"></i>Print
@@ -143,7 +150,7 @@
                             <th>Campus</th>
                             <th>Source</th>
                             <th>Rurality</th>
-                            <th>Status</th>
+                            <th>SLE-FHE Verification</th>
                         </tr>
                     </thead>
                     <tbody class="border-top-0">
@@ -169,11 +176,7 @@
                                 </td>
                                 <td>{{ $item->campus ?: 'N/A' }}</td>
                                 <td>
-                                    @if ($item->is_fixed_list)
-                                        <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle fw-semibold">Fixed List</span>
-                                    @else
-                                        <span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle fw-semibold">Ordinary applicant</span>
-                                    @endif
+                                    <x-status-badge :status="$item->is_fixed_list ? 'Fixed-list beneficiary' : 'Ordinary applicant'" />
                                 </td>
                                 <td>
                                     @php
@@ -189,13 +192,13 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <x-status-badge :status="$item->is_sle_fhe_verified ? 'SLE-FHE' : 'Pending'" />
+                                    <x-status-badge :status="$item->is_sle_fhe_verified ? 'Verified' : 'Pending'" />
                                 </td>
                             </tr>
                         @empty
                             <tr>
                                 <td colspan="8" class="text-center text-secondary py-5">
-                                    <div class="fw-semibold text-dark">No beneficiary records in this batch.</div>
+                                    <div class="fw-semibold text-dark">No eligible, FASSG-forwarded beneficiary records to display.</div>
                                 </td>
                             </tr>
                         @endforelse
@@ -203,5 +206,4 @@
                 </table>
             </div>
         </div>
-    </div>
 @endsection

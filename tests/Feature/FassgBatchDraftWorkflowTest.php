@@ -249,8 +249,8 @@ class FassgBatchDraftWorkflowTest extends TestCase
         $this->get(route('fassg.fixed-lists.show', $finalized))->assertOk()
             ->assertSee('Create Batch from This List')->assertSee(e($sourceUrl), false);
         $this->get(route('fassg.fixed-lists.show', $draft))->assertOk()->assertDontSee('Create Batch from This List');
-        $this->get(route('fassg.programs.index'))->assertOk()->assertSee('Prepare Generated Batch')
-            ->assertSee(e(route('fassg.applications.index', ['program_id' => $program->id, 'prepare_batch' => 1])), false);
+        $this->get(route('fassg.programs.index'))->assertOk()->assertDontSee('Prepare Generated Batch')
+            ->assertDontSee(e(route('fassg.applications.index', ['program_id' => $program->id, 'prepare_batch' => 1])), false);
         $before = $ordinary->getRawOriginal();
         foreach ([$sourceUrl, route('fassg.applications.index', ['program_id' => $program->id, 'prepare_batch' => 1])] as $url) {
             $response = $this->get($url)->assertOk()->assertViewHas('openBatchModal', true)
