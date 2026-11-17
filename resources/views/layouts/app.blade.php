@@ -1,3 +1,7 @@
+@php
+    $studentDesktopLayout = auth()->user()?->isStudent() ?? false;
+    $staffDesktopLayout = (auth()->user()?->isFassg() || auth()->user()?->isSponsor() || auth()->user()?->isAccounting() || auth()->user()?->isAdmin()) ?? false;
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 
@@ -115,13 +119,14 @@
         }
 
         .sf-stat-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.15rem;
+            font-size: 1.2rem;
+            flex-shrink: 0;
         }
 
         .sf-eyebrow {
@@ -367,10 +372,22 @@
         .pointer-events-none { pointer-events: none !important; }
     </style>
 
+    @if ($studentDesktopLayout)
+        @include('partials.student.desktop-styles')
+    @elseif ($staffDesktopLayout)
+        @include('partials.staff.desktop-styles')
+    @endif
     @stack('styles')
 </head>
 
-<body>
+<body @class([
+    'sf-student-portal' => $studentDesktopLayout,
+    'sf-staff-portal' => $staffDesktopLayout,
+    'sf-fassg-portal' => auth()->user()?->isFassg(),
+    'sf-sponsor-portal' => auth()->user()?->isSponsor(),
+    'sf-accounting-portal' => auth()->user()?->isAccounting(),
+    'sf-admin-portal' => auth()->user()?->isAdmin(),
+])>
 
     @auth
         @php
@@ -427,10 +444,22 @@
     @endauth
 
     @auth
-        @include('partials._navbar')
+        @if ($studentDesktopLayout)
+            @include('partials.student.desktop-navigation')
+            <div class="sf-student-mobile-navigation sticky-top">
+                @include('partials._navbar')
+            </div>
+        @elseif ($staffDesktopLayout)
+            @include('partials.staff.desktop-navigation')
+            <div class="sf-staff-mobile-navigation sticky-top">
+                @include('partials._navbar')
+            </div>
+        @else
+            @include('partials._navbar')
+        @endif
     @endauth
 
-    <main class="sf-content">
+    <main class="sf-content" @if ($studentDesktopLayout || $staffDesktopLayout) id="main-content" tabindex="-1" @endif>
         @include('partials._flash')
         @hasSection('page-title')
             <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">

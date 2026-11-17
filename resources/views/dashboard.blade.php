@@ -37,45 +37,45 @@
     <div>
 
         <!-- Top Metric Cards Grid -->
-        <div class="row g-3 mb-4">
+        <div class="row g-4 mb-4">
             <!-- Total Applications -->
             <div class="col-12 col-md-4">
-                <x-metric-card title="Total Applications" value="{{ $totalApplications ?? 0 }}" icon="bi-journal-text"
+                <x-metric-card title="Total Applications" value="{{ $totalApplications ?? 0 }}" icon="bi-file-earmark-text"
                     color="slate" />
             </div>
 
             <!-- Active Sponsorships -->
             <div class="col-12 col-md-4">
-                <x-metric-card title="Active Sponsorships" value="{{ $activeSponsorships ?? 0 }}" icon="bi-award"
+                <x-metric-card title="Active Sponsorships" value="{{ $activeSponsorships ?? 0 }}" icon="bi-mortarboard"
                     color="emerald" />
             </div>
 
             <!-- SLE-FHE Verification -->
             <div class="col-12 col-md-4">
-                <div class="card border-0 shadow-sm rounded-3 p-3 bg-white h-100">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-3 d-flex align-items-center justify-content-center me-3"
-                                style="background-color: {{ $isVerified ? '#ecfeff' : '#FFF8E7' }}; color: {{ $isVerified ? '#0e7490' : '#0f172a' }}; {{ $isVerified ? '' : 'border: 1px solid #FDE68A;' }} width: 48px; height: 48px; flex-shrink: 0;">
-                                @if ($isVerified)
-                                    <i class="bi bi-patch-check fs-5"></i>
-                                @else
-                                    <x-sf-hourglass class="fs-5" />
-                                @endif
-                            </div>
-                            <div>
-                                <div class="text-secondary fw-semibold text-uppercase extra-small mb-1"
-                                    style="font-size: 0.72rem; letter-spacing: 0.05em;">SLE-FHE Verification</div>
-                                @if ($isVerified)
-                                    <x-status-badge :status="'Verified'" />
-                                @else
-                                    <span class="badge rounded-pill d-inline-flex align-items-center gap-1 fw-semibold bg-cream border text-slate-900"
-                                        style="font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.75rem; border-color: #FCD34D;">
-                                        <x-sf-hourglass filled style="width: 0.85em; height: 0.85em;" />
-                                        Pending Review
-                                    </span>
-                                @endif
-                            </div>
+                <div class="sf-stat-card card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-start justify-content-between gap-3 mb-2">
+                            <span class="sf-eyebrow d-block">SLE-FHE Verification</span>
+                            @if ($isVerified)
+                                <span class="sf-stat-icon" style="background-color: #EEF3F7; color: #173B57;">
+                                    <i class="bi bi-patch-check"></i>
+                                </span>
+                            @else
+                                <span class="sf-stat-icon" style="background-color: #FFF7E6; color: #B88219; border: 1px solid #F6DDA1;">
+                                    <i class="bi bi-clock"></i>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="d-flex align-items-center" style="min-height: 2.25rem;">
+                            @if ($isVerified)
+                                <x-status-badge :status="'Verified'" />
+                            @else
+                                <span class="badge rounded-pill d-inline-flex align-items-center gap-1 fw-semibold"
+                                    style="font-size: 0.75rem; padding: 0.2rem 0.65rem; background-color: #FFF8EA; color: #986515; border: 1px solid #F6DDA1;">
+                                    <span style="width: 7px; height: 7px; border-radius: 50%; background-color: #D4A332; display: inline-block;"></span>
+                                    Pending Review
+                                </span>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -93,39 +93,46 @@
         @endif
 
         <!-- My Applications Table Section -->
-        <div class="card border-0 shadow-sm rounded-3 bg-white mb-4">
-            <div class="card-header bg-white border-0 pt-3 px-4 pb-0">
-                <h3 class="h6 sf-heading mb-0">My Applications</h3>
+        <div class="card border-0 shadow-sm rounded-4 bg-white mb-4" style="border: 1px solid var(--sf-border-color, #E1E8EC) !important;">
+            <div class="card-header bg-white border-bottom px-4 py-3">
+                <h3 class="h6 sf-heading mb-0 fw-bold" style="color: #0F2942;">My Applications</h3>
+                <p class="text-secondary small mb-0 mt-0.5" style="font-size: 0.775rem;">Status and history of your submitted sponsorship applications</p>
             </div>
-            <div class="card-body px-4 pt-2 pb-4">
+            <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table sf-table table-hover align-middle mb-0">
-                        <thead class="text-secondary extra-small text-uppercase border-bottom" style="font-size: 0.72rem;">
+                        <thead class="text-secondary extra-small text-uppercase border-bottom" style="font-size: 0.72rem; background-color: #F8FAFC;">
                             <tr>
-                                <th class="ps-4 py-2 fw-bold border-0 text-secondary" style="width: 40%;">PROGRAM</th>
-                                <th class="py-2 fw-bold border-0 text-secondary text-nowrap" style="width: 25%;">SUBMITTED</th>
-                                <th class="py-2 fw-bold border-0 text-secondary text-nowrap" style="width: 20%;">STATUS</th>
-                                <th class="py-2 fw-bold border-0 text-secondary text-end pe-4" style="width: 15%;">VIEW</th>
+                                <th class="ps-4 py-3 fw-bold border-0 text-secondary" style="width: 40%;">PROGRAM</th>
+                                <th class="py-3 fw-bold border-0 text-secondary text-nowrap" style="width: 25%;">SUBMITTED</th>
+                                <th class="py-3 fw-bold border-0 text-secondary text-nowrap" style="width: 20%;">STATUS</th>
+                                <th class="py-3 fw-bold border-0 text-secondary text-end pe-4" style="width: 15%;">VIEW</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($applications as $app)
                                 <tr>
-                                    <td class="ps-4 fw-semibold text-dark">
+                                    <td class="ps-4 py-3 fw-semibold text-dark">
                                         {{ $app->sponsorshipProgram?->program_name ?? 'Unknown Program' }}</td>
-                                    <td class="text-secondary small text-nowrap">{{ $app->submitted_at?->format('M d, Y, h:i A') ?? '—' }}</td>
-                                    <td class="text-nowrap">
+                                    <td class="text-secondary small text-nowrap py-3">{{ $app->submitted_at?->format('M d, Y, h:i A') ?? '—' }}</td>
+                                    <td class="text-nowrap py-3">
                                         <x-status-badge :status="$app->status" />
                                     </td>
-                                    <td class="text-end pe-4">
+                                    <td class="text-end pe-4 py-3">
                                         <a href="{{ route('student.applications.show', $app) }}"
-                                            class="btn btn-light btn-sm rounded-2 border px-2 py-1 small">View</a>
+                                            class="btn btn-light btn-sm rounded-2 border px-2.5 py-1 small fw-semibold"
+                                            style="font-size: 0.8rem; background-color: #F8FAFC; border-color: #E2E8F0; color: #0F2942;">View</a>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center py-4 text-muted small">No applications submitted
-                                        yet.</td>
+                                    <td colspan="4" class="text-center py-5 text-muted small">
+                                        <div class="py-2">
+                                            <i class="bi bi-folder2-open display-6 text-secondary opacity-50 d-block mb-2"></i>
+                                            <span class="text-secondary fw-semibold">No applications submitted yet.</span>
+                                            <p class="text-secondary small mb-0 mt-1 opacity-75">Apply for open sponsorship programs to track your progress here.</p>
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -136,13 +143,20 @@
 
         {{-- Application Status Timeline --}}
         @if ($activeApplication)
-            <div class="card border-0 shadow-sm rounded-3 bg-white mb-4">
-                <div class="card-header bg-white border-0 pt-3 px-4 pb-2">
-                    <h3 class="h6 sf-heading mb-0">
-                        <i class="bi bi-clock-history me-2 text-primary"></i>Application Status Timeline
-                    </h6>
+            <div class="card border-0 shadow-sm rounded-4 bg-white mb-4" style="border: 1px solid var(--sf-border-color, #E1E8EC) !important;">
+                <div class="card-header bg-white border-bottom px-4 py-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="rounded-3 d-inline-flex align-items-center justify-content-center flex-shrink-0"
+                            style="width: 40px; height: 40px; background-color: #E8F0F6; color: #0F2942;">
+                            <i class="bi bi-clock-history fs-5" aria-hidden="true"></i>
+                        </span>
+                        <div>
+                            <h3 class="h6 sf-heading mb-0 fw-bold" style="color: #0F2942;">Application Status Timeline</h3>
+                            <p class="text-secondary small mb-0 mt-0.5" style="font-size: 0.775rem;">Current progress of your active sponsorship application</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body px-4 py-3">
+                <div class="card-body px-4 py-4">
                     <div class="d-flex justify-content-between position-relative my-2">
                         <div class="position-absolute top-50 start-0 end-0 translate-middle-y bg-light" style="height: 2px;"></div>
                         @foreach ([
@@ -175,23 +189,33 @@
         <!-- FASSG Announcements & Policy Section -->
         <div class="row">
             <div class="col-lg-6">
-                <div class="card border-0 shadow-sm rounded-3 bg-white">
-                    <div class="card-header bg-white border-bottom pt-3 px-4 pb-2">
-                        <h3 class="h6 sf-heading mb-0 d-flex align-items-center gap-2">
-                            <i class="bi bi-info-circle text-primary"></i> FASSG Announcements &amp; Policy
-                        </h3>
+                <div class="card border-0 shadow-sm rounded-4 bg-white" style="border: 1px solid var(--sf-border-color, #E1E8EC) !important;">
+                    <div class="card-header bg-white border-bottom px-4 py-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="rounded-3 d-inline-flex align-items-center justify-content-center flex-shrink-0"
+                                style="width: 40px; height: 40px; background-color: #E8F0F6; color: #0F2942;">
+                                <i class="bi bi-info-circle fs-5" aria-hidden="true"></i>
+                            </span>
+                            <div>
+                                <h3 class="h6 sf-heading mb-0 fw-bold" style="color: #0F2942;">FASSG Announcements &amp; Policy</h3>
+                                <p class="text-secondary small mb-0 mt-0.5" style="font-size: 0.775rem;">Official guidelines and eligibility policies</p>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body p-4">
-                        <div class="text-uppercase fw-bold text-secondary mb-1"
-                            style="font-size: 0.7rem; letter-spacing: 0.05em;">ELIGIBILITY &amp; POLICY NOTICE</div>
-                        <p class="text-secondary small mb-3" style="font-size: 0.825rem; line-height: 1.5;">
+                        <div class="text-uppercase fw-bold text-secondary mb-2"
+                            style="font-size: 0.68rem; letter-spacing: 0.05em; color: #64748B;">ELIGIBILITY &amp; POLICY NOTICE</div>
+                        <p class="text-secondary small mb-3" style="font-size: 0.85rem; line-height: 1.55; color: #475569;">
                             Verified SLE-FHE students are eligible to apply for open group, individual, and
                             employee-based sponsorships managed by FASSG.
                         </p>
-                        <div class="p-3 rounded-2 border bg-light small" style="font-size: 0.8rem; color: #475569;">
-                            <i class="bi bi-exclamation-circle text-warning me-1"></i>
-                            <strong>Note:</strong> Multiple active sponsorships are automatically restricted. If
-                            your previous sponsorship has expired, you may apply for newly opened programs.
+                        <div class="p-3 rounded-3 border small d-flex align-items-start gap-2.5"
+                            style="font-size: 0.825rem; background-color: #FFFDF5; border-color: #F6DDA1 !important; color: #78350F; line-height: 1.5;">
+                            <i class="bi bi-exclamation-circle-fill flex-shrink-0 mt-0.5" style="color: #D97706; font-size: 0.95rem;"></i>
+                            <div>
+                                <strong>Note:</strong> Multiple active sponsorships are automatically restricted. If
+                                your previous sponsorship has expired, you may apply for newly opened programs.
+                            </div>
                         </div>
                     </div>
                 </div>
