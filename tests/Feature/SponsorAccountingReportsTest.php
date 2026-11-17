@@ -578,7 +578,7 @@ class SponsorAccountingReportsTest extends TestCase
         $app = Application::factory()->create(['status' => ApplicationStatus::Approved,
             'approved_at' => now()->subMonth(), 'sponsor_approval_path' => 'legacy.pdf']);
         Storage::disk('local')->put('legacy.pdf', 'original legacy evidence');
-        $before = $app->getRawOriginal();
+        $before = $app->fresh()->getRawOriginal();
         $this->actingAs(User::factory()->create(['role' => UserRole::Accounting]))
             ->get(route('accounting.documents.view', $app))->assertNotFound();
         $this->get(route('accounting.beneficiaries.show', $app))->assertNotFound();

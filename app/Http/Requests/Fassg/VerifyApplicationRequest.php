@@ -43,7 +43,7 @@ class VerifyApplicationRequest extends FormRequest
         $documents = $application->sponsorshipProgram->beneficiaryRequiredDocumentTypes();
         $rules = ['confirm_eligibility' => ['required', 'accepted']];
         foreach (['gpa_submitted' => 'confirm_gwa', 'address_submitted' => 'confirm_address'] as $field => $confirmation) {
-            $rules[$confirmation] = $requirements[$field] ? ['required', 'accepted'] : ['nullable', 'accepted'];
+            $rules[$confirmation] = $requirements[$field] ? ['required', 'accepted'] : ['sometimes', 'accepted'];
         }
         if (in_array(DocumentType::CertificateOfRegistration->value, $documents, true)) {
             $rules['confirm_cor'] = ['required', 'accepted'];

@@ -89,12 +89,6 @@
         $isEditable = in_array($list->status, [\App\Enums\FixedListStatus::Draft, \App\Enums\FixedListStatus::Rejected, \App\Enums\FixedListStatus::Saved], true);
         $canEditStudents = $isEditable && $user?->isFassg();
     @endphp
-    @if (session('status'))
-        <div class="alert alert-success alert-dismissible fade show" role="status">
-            <i class="bi bi-check-circle me-1" aria-hidden="true"></i>{{ session('status') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Dismiss success message"></button>
-        </div>
-    @endif
     <div class="alert alert-info small">
         Endorsement records FASSG list preparation, not Sponsor approval or a criteria exception.
         Program-required GWA and documents must still be explicitly verified in Generated Batch review before Sponsor submission.
@@ -275,10 +269,10 @@
                                     <select id="fixed-list-course" name="course"
                                         class="form-select form-select-sm @error('course') is-invalid @enderror"
                                         required aria-describedby="fixed-list-course-error" aria-invalid="{{ $errors->has('course') ? 'true' : 'false' }}">
-                                        <option value="">Select Academic Program</option>
+                                        <option value="" disabled @selected(old('course') === null || old('course') === '')>Select Academic Program</option>
                                         @foreach ($academicPrograms as $academicProgram)
                                             <option value="{{ $academicProgram->name }}" @selected(old('course') === $academicProgram->name)>
-                                                {{ $academicProgram->code }} &mdash; {{ $academicProgram->name }}
+                                                {{ $academicProgram->code }} — {{ $academicProgram->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -491,8 +485,8 @@
                 // Keep the native select usable if the existing CDN asset is unavailable.
                 if (!select || select.tomselect || typeof TomSelect === 'undefined') return;
                 const dropdown = new TomSelect(select, {
-                    placeholder: 'Search or select Academic Program...',
-                    allowEmptyOption: true,
+                    placeholder: 'Select Academic Program',
+                    allowEmptyOption: false,
                     create: false,
                     sortField: { field: 'text', direction: 'asc' },
                 });

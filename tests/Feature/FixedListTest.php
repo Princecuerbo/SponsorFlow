@@ -818,7 +818,7 @@ class FixedListTest extends TestCase
     {
         $this->actingAsFassg();
         $fixed = $this->makeFixedCandidate(SponsorshipProgram::factory()->create());
-        $before = $fixed->getRawOriginal();
+        $before = $fixed->fresh()->getRawOriginal();
         foreach (['fassg.fixed-lists.items.endorse', 'fassg.fixed-lists.items.verify'] as $route) {
             $this->patch(route($route, [$fixed->fixedList, $fixed]))->assertForbidden();
             $this->assertSame($before, $fixed->fresh()->getRawOriginal());

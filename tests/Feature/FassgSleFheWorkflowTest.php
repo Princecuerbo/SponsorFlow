@@ -160,7 +160,14 @@ class FassgSleFheWorkflowTest extends TestCase
             ->post(route('fassg.sle-fhe.reject', $profile), ['reason' => 'Student not in the official SLE-FHE masterlist'])
             ->assertSessionHas('status', 'Student verification was returned for correction. Original request evidence was preserved.');
 
-        $this->assertDatabaseMissing('sle_fhe_requests', ['student_profile_id' => $profile->id]);
+        $this->assertDatabaseHas('sle_fhe_requests', [
+            'student_profile_id' => $profile->id,
+            'status' => 'rejected',
+        ]);
+        $this->assertDatabaseMissing('sle_fhe_requests', [
+            'student_profile_id' => $profile->id,
+            'status' => 'pending',
+        ]);
         $this->assertDatabaseHas('sle_fhe_rejections', [
             'student_profile_id' => $profile->id,
             'rejection_reason' => 'Student not in the official SLE-FHE masterlist',
@@ -316,7 +323,7 @@ class FassgSleFheWorkflowTest extends TestCase
 
         // The rejection textarea is pre-filled with the guidance reason.
         $this->assertStringContainsString(
-            'value="Student ID not found in official SLE-FHE Master Registry"',
+            '>Student ID not found in official SLE-FHE Master Registry</textarea>',
             $content
         );
 
@@ -349,7 +356,13 @@ class FassgSleFheWorkflowTest extends TestCase
         $unmatchedRequest = $this->createPendingRequest($unmatched);
 
         $this->actingAs($fassg)
-            ->post(route('fassg.sle-fhe.verify', $unmatched), ['override_registry_mismatch' => '1']);
+            ->post(route('fassg.sle-fhe.verify', $unmatched), [
+                'verification_request_id' => $unmatchedRequest->id,
+                'confirm_identity' => 1,
+                'override_registry_mismatch' => '1',
+                'override_reason' => 'Official certification on file from college dean.',
+                'evidence_reference' => 'DEAN-CERT-2025-01',
+            ])->assertSessionHasNoErrors();
 
         $this->assertDatabaseHas('audit_logs', [
             'action' => 'fassg.student.sle_fhe_verified_registry_override',
@@ -435,9 +448,9 @@ class FassgSleFheWorkflowTest extends TestCase
     public function test_existing_verification_and_original_request_evidence_cannot_be_overwritten(): void
     {
         $profile = StudentProfile::factory()->verified()->create();
-        $existing = $profile->sleFheVerification->getRawOriginal();
+        $existing = $profile->fresh()->sleFheVerification->getRawOriginal();
         $request = $this->createPendingRequest($profile, ['barangay' => 'Different barangay']);
-        $requestBefore = $request->getRawOriginal();
+        $requestBefore = $request->fresh()->getRawOriginal();
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
         SleFheRegistry::create(['student_id' => $profile->student_id_number]);
         $this->actingAs($fassg)->post(route('fassg.sle-fhe.verify', $profile), [
@@ -469,7 +482,7 @@ class FassgSleFheWorkflowTest extends TestCase
     {
         $profile = StudentProfile::factory()->create();
         $verification = SleFheVerification::create(['student_profile_id' => $profile->id, 'verified_at' => now()]);
-        $before = $verification->getRawOriginal();
+        $before = $verification->fresh()->getRawOriginal();
         $this->assertFalse($profile->hasDocumentedSleFheVerification());
         $this->assertFalse($profile->syncSleFheFromFixedLists());
         $this->assertSame($before, $verification->fresh()->getRawOriginal());

@@ -30,21 +30,6 @@
 @endpush
 
 @section('content')
-    {{-- Flash Messages --}}
-    @if (session('status'))
-        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-            <i class="bi bi-check-circle me-2"></i>{{ session('status') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-
-    @if ($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-            <i class="bi bi-exclamation-triangle me-2"></i>{{ $errors->first() }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-
     {{-- Filter Bar --}}
     <div class="card filter-card mb-4 rounded-3">
         <div class="card-body p-3">
@@ -385,9 +370,7 @@
                                             <div class="modal-body px-4 py-3">
                                                 <label for="reason-{{ $pendingRequest->id }}" class="form-label fw-semibold">Rejection Reason</label>
                                                 <textarea name="reason" id="reason-{{ $pendingRequest->id }}" class="form-control" rows="3"
-                                                    required placeholder="e.g. Student ID does not match the SLE-FHE masterlist"
-                                                    @if (! $registryMatch) value="{{ $noMatchReason }}" @endif
-                                                ></textarea>
+                                                    required placeholder="e.g. Student ID does not match the SLE-FHE masterlist">@if (! $registryMatch){{ $noMatchReason }}@endif</textarea>
                                                 @unless ($registryMatch)
                                                     <div class="form-text">
                                                         Pre-filled because <strong>{{ $profile->student_id_number ?: 'this student ID' }}</strong>

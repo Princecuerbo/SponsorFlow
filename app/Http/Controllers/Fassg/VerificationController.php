@@ -42,7 +42,9 @@ class VerificationController extends Controller
         $category = $request->string('category')->trim()->toString();
         $statusFilter = $request->string('status')->trim()->toString();
 
-        $pendingSleFheCount = StudentProfile::whereDoesntHave('sleFheVerification')->count();
+        $pendingSleFheCount = StudentProfile::whereDoesntHave('sleFheVerification')
+            ->whereHas('sleFheRequests', fn($q) => $q->where('status', 'pending'))
+            ->count();
 
         $pendingAppCount = Application::where('status', 'Pending')
             ->whereHas('studentProfile', fn($q) => $q->whereHas('sleFheVerification'))
@@ -59,6 +61,7 @@ class VerificationController extends Controller
             ? StudentProfile::query()
             ->with(['user', 'applications.documents'])
             ->whereDoesntHave('sleFheVerification')
+            ->whereHas('sleFheRequests', fn($q) => $q->where('status', 'pending'))
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($query) use ($search): void {
                     $query->where('student_id_number', 'like', "%{$search}%")

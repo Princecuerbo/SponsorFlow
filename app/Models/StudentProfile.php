@@ -61,7 +61,9 @@ class StudentProfile extends Model
             $this->extension_name,
         ]);
 
-        return trim(implode(' ', $parts));
+        $name = trim(implode(' ', $parts));
+
+        return $name !== '' ? $name : (string) ($this->user?->name ?? '');
     }
 
     public function getFullAddressAttribute(): string

@@ -82,11 +82,6 @@ class StoreFixedListItemRequest extends FormRequest
                 if ($courseMismatch) {
                     $validator->errors()->add('course', "Academic Program cannot be reconciled with the {$source}. Review the source record before encoding; it will not be overwritten.");
                 }
-
-                if (filled($record->year_level)
-                    && trim((string) $record->year_level) !== (string) $this->integer('year_level')) {
-                    $validator->errors()->add('year_level', "Year Level does not match the {$source}. Review the source record before encoding; it will not be overwritten.");
-                }
             }
         }];
     }

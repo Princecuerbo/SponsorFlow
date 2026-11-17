@@ -134,7 +134,7 @@ class StoreFixedListItemRequestTest extends TestCase
         $this->assertFalse($registry->is_verified);
     }
 
-    public function test_program_and_year_conflicts_in_either_source_block_encoding(): void
+    public function test_program_conflicts_in_either_source_block_encoding_while_year_level_is_permitted_to_differ(): void
     {
         foreach ([StudentProfile::class, SleFheRegistry::class] as $type) {
             $record = new $type;
@@ -146,7 +146,7 @@ class StoreFixedListItemRequestTest extends TestCase
 
             $this->assertTrue($validator->fails());
             $this->assertTrue($validator->errors()->has('course'));
-            $this->assertTrue($validator->errors()->has('year_level'));
+            $this->assertFalse($validator->errors()->has('year_level'));
             $this->assertSame($before, $record->getAttributes());
         }
     }
@@ -163,7 +163,7 @@ class StoreFixedListItemRequestTest extends TestCase
         $validator = $this->validator($this->request([], null, $registry));
         $this->assertTrue($validator->fails());
         $this->assertTrue($validator->errors()->has('course'));
-        $this->assertTrue($validator->errors()->has('year_level'));
+        $this->assertFalse($validator->errors()->has('year_level'));
     }
 
     public function test_masterlist_catalog_names_and_codes_match_the_registered_program(): void

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\UserRole;
 use App\Models\AcademicProgram;
+use App\Models\SleFheRegistry;
 use App\Models\StudentProfile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -23,9 +24,26 @@ class FassgVerificationQueueTest extends TestCase
             'academic_program_id' => $it->program_id,
             'student_id_number' => '2026-00011',
         ]);
+        $itProfile->sleFheRequests()->create([
+            'province' => 'Davao Oriental',
+            'municipality_city' => 'City of Mati',
+            'barangay' => 'Central',
+            'street_purok' => 'Purok 1',
+            'status' => 'pending',
+            'submitted_at' => now(),
+        ]);
+
         $csProfile = StudentProfile::factory()->create([
             'academic_program_id' => $cs->program_id,
             'student_id_number' => '2026-00022',
+        ]);
+        $csProfile->sleFheRequests()->create([
+            'province' => 'Davao Oriental',
+            'municipality_city' => 'City of Mati',
+            'barangay' => 'Central',
+            'street_purok' => 'Purok 2',
+            'status' => 'pending',
+            'submitted_at' => now(),
         ]);
 
         $this->actingAs($fassg)
@@ -39,6 +57,14 @@ class FassgVerificationQueueTest extends TestCase
     {
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
         $profile = StudentProfile::factory()->create();
+        $profile->sleFheRequests()->create([
+            'province' => 'Davao Oriental',
+            'municipality_city' => 'City of Mati',
+            'barangay' => 'Central',
+            'street_purok' => 'Purok 1',
+            'status' => 'pending',
+            'submitted_at' => now(),
+        ]);
 
         $this->actingAs($fassg)
             ->get(route('fassg.verification.index'))
@@ -51,9 +77,24 @@ class FassgVerificationQueueTest extends TestCase
     {
         $fassg = User::factory()->create(['role' => UserRole::Fassg]);
         $profile = StudentProfile::factory()->create();
+        $request = $profile->sleFheRequests()->create([
+            'province' => 'Davao Oriental',
+            'municipality_city' => 'City of Mati',
+            'barangay' => 'Central',
+            'street_purok' => 'Purok 1',
+            'status' => 'pending',
+            'submitted_at' => now(),
+        ]);
+        SleFheRegistry::create([
+            'student_id' => $profile->student_id_number,
+            'is_verified' => true,
+        ]);
 
         $this->actingAs($fassg)
-            ->post(route('fassg.verification.students.verify', $profile))
+            ->post(route('fassg.verification.students.verify', $profile), [
+                'verification_request_id' => $request->id,
+                'confirm_identity' => 1,
+            ])
             ->assertSessionHas('success', 'Student SLE-FHE status verified successfully.');
 
         $this->assertTrue($profile->fresh()->sleFheVerification()->exists());

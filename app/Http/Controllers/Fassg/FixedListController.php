@@ -148,6 +148,25 @@ class FixedListController extends Controller
                     $query->orWhereJsonContains('submitted_roster->members', ['fixed_list_item_id' => (int) $id]);
                 }
             })->exists();
+
+            if (! $referenced) {
+                // Scope fallback scan to this list's program and only load necessary snapshot columns
+                $referenced = GeneratedBatch::withTrashed()
+                    ->where('sponsorship_program_id', $list->sponsorship_program_id)
+                    ->whereNotNull('submitted_roster')
+                    ->select(['id', 'sponsorship_program_id', 'submitted_roster'])
+                    ->cursor()
+                    ->contains(function ($batch) use ($itemIds) {
+                        $members = $batch->submitted_roster['members'] ?? [];
+                        foreach ($members as $member) {
+                            if (in_array((int) ($member['fixed_list_item_id'] ?? 0), $itemIds, true)) {
+                                return true;
+                            }
+                        }
+
+                        return false;
+                    });
+            }
         }
         if ($referenced) {
             throw ValidationException::withMessages(['fixed_list' => 'This list or student is referenced by a Generated Batch or historical approval/forwarding evidence. Removal and archiving are blocked.']);

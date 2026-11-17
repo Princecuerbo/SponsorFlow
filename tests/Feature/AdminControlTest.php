@@ -178,7 +178,7 @@ class AdminControlTest extends TestCase
     public function test_admin_cannot_demote_or_deactivate_self_via_update_or_status_routes(): void
     {
         $admin = User::factory()->create(['role' => UserRole::Admin]);
-        $original = $admin->getRawOriginal();
+        $original = $admin->fresh()->getRawOriginal();
         $base = ['name' => 'Must not be saved', 'email' => $admin->email, 'role' => 'admin'];
 
         foreach ([['role' => 'student'], ['is_active' => false]] as $change) {
@@ -197,7 +197,7 @@ class AdminControlTest extends TestCase
         $account = User::factory()->create(['role' => UserRole::Sponsor]);
         $profile = Sponsor::create(['user_id' => $account->id, 'company_organization_name' => 'Recorded Organization',
             'contact_person' => 'Recorded Contact', 'contact_email' => 'contact@example.test']);
-        $original = $profile->getRawOriginal();
+        $original = $profile->fresh()->getRawOriginal();
 
         $this->actingAs($admin)->put(route('admin.users.update', $account), [
             'name' => 'New Login Name', 'email' => 'new-login@example.test', 'role' => 'sponsor',
@@ -215,7 +215,7 @@ class AdminControlTest extends TestCase
     {
         $admin = User::factory()->create(['role' => UserRole::Admin]);
         foreach (['maintenance_mode' => 'false', 'max_login_attempts' => '5'] as $key => $value) {
-            SystemSetting::create(['setting_key' => $key, 'setting_value' => $value]);
+            SystemSetting::updateOrCreate(['setting_key' => $key], ['setting_value' => $value]);
         }
         $this->actingAs($admin)->post(route('admin.settings.update'), ['settings' => [
             'maintenance_mode' => 'true', 'max_login_attempts' => 'invalid', 'unknown' => 'injected',
@@ -228,7 +228,7 @@ class AdminControlTest extends TestCase
     public function test_supported_settings_save_and_audit_together(): void
     {
         $admin = User::factory()->create(['role' => UserRole::Admin]);
-        SystemSetting::create(['setting_key' => 'max_login_attempts', 'setting_value' => '5']);
+        SystemSetting::updateOrCreate(['setting_key' => 'max_login_attempts'], ['setting_value' => '5']);
         $this->actingAs($admin)->post(route('admin.settings.update'), ['settings' => ['max_login_attempts' => '7']])
             ->assertSessionHasNoErrors()->assertSessionHas('status');
         $this->assertSame('7', SystemSetting::get('max_login_attempts'));

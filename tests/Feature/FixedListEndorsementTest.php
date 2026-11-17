@@ -83,7 +83,7 @@ class FixedListEndorsementTest extends TestCase
     public function test_invalid_candidates_are_rejected_by_both_actions_without_partial_bulk_updates(): void
     {
         $this->actingAs(User::factory()->create(['role' => UserRole::Fassg]));
-        foreach (['missing profile', 'no verification', 'stale flag', 'ineligible', 'wrong course', 'wrong campus', 'missing year', 'active sponsorship'] as $case) {
+        foreach (['missing profile', 'no verification', 'stale flag', 'ineligible', 'wrong course', 'wrong campus', 'wrong year', 'active sponsorship'] as $case) {
             $list = FixedList::factory()->create(['status' => FixedListStatus::Draft]);
             $valid = $this->candidate($list);
             $invalid = $this->candidate($list, $case !== 'no verification');
@@ -96,8 +96,8 @@ class FixedListEndorsementTest extends TestCase
                 $valid->studentProfile->update(['campus' => 'Main']);
                 $list->sponsorshipProgram->update(['eligible_campuses' => ['Main']]);
             }
-            if ($case === 'missing year') {
-                $invalid->studentProfile->update(['year_level' => null]);
+            if ($case === 'wrong year') {
+                $invalid->studentProfile->update(['year_level' => 1]);
                 $list->sponsorshipProgram->update(['eligible_year_levels' => [3]]);
             }
             if ($case === 'active sponsorship') {
@@ -120,7 +120,7 @@ class FixedListEndorsementTest extends TestCase
         $list = FixedList::factory()->create(['status' => FixedListStatus::Draft]);
         $item = $this->candidate($list);
         $foreign = $this->candidate(FixedList::factory()->create(['status' => FixedListStatus::Draft]));
-        $before = $item->getRawOriginal();
+        $before = $item->fresh()->getRawOriginal();
         foreach ([[], [$item->id, $foreign->id], [$item->id, 999999999]] as $ids) {
             $this->patch(route('fassg.fixed-lists.items.endorse-selected', $list), ['selected_items' => $ids])
                 ->assertSessionHasErrors('selected_items');
@@ -135,7 +135,7 @@ class FixedListEndorsementTest extends TestCase
         $this->actingAs(User::factory()->create(['role' => UserRole::Fassg]));
         $list = FixedList::factory()->create(['status' => FixedListStatus::Draft]);
         $item = $this->candidate($list);
-        $before = $item->getRawOriginal();
+        $before = $item->fresh()->getRawOriginal();
         foreach (['outside_criteria', 'is_outside_criteria', 'override_criteria', 'exception_reason'] as $field) {
             $payload = [$field => $field === 'exception_reason' ? 'A claimed exception is not authorization.' : 1];
             $this->patch(route('fassg.fixed-lists.items.endorse', [$list, $item]), $payload)->assertSessionHasErrors($field);

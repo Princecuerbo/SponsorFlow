@@ -22,27 +22,6 @@
 
     <div class="container-fluid px-3 px-md-4 py-4 mb-5" style="background-color: #f8fafc; min-height: calc(100vh - 70px);">
 
-        @if (session('status'))
-            <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4" role="alert"
-                style="font-size: 0.875rem;">
-                <i class="bi bi-check-circle me-1"></i> {{ session('status') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4" role="alert"
-                style="font-size: 0.875rem;">
-                <i class="bi bi-exclamation-triangle me-1"></i> {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
-            </div>
-        @endif
         @if (!$isVerified && $profile?->sleFheVerification)
             <div class="alert alert-warning">An existing verification record needs FASSG evidence review. It is preserved and cannot be replaced through this form.</div>
         @endif
