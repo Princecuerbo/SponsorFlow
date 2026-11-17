@@ -99,6 +99,21 @@ return [
             'sslmode' => env('DB_SSLMODE', 'prefer'),
         ],
 
+        'pgsql_render' => [
+            'driver' => 'pgsql',
+            'url' => env('RENDER_DB_URL'),
+            'host' => env('RENDER_DB_HOST'),
+            'port' => env('RENDER_DB_PORT', '5432'),
+            'database' => env('RENDER_DB_DATABASE', 'sponsorflow_db_jh27'),
+            'username' => env('RENDER_DB_USERNAME'),
+            'password' => env('RENDER_DB_PASSWORD'),
+            'charset' => env('RENDER_DB_CHARSET', 'utf8'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => env('RENDER_DB_SEARCH_PATH', 'public'),
+            'sslmode' => env('RENDER_DB_SSLMODE', 'require'),
+        ],
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DB_URL'),

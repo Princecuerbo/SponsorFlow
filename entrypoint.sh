@@ -19,6 +19,19 @@ php artisan migrate --force
 echo "Seeding lookup data..."
 php artisan db:seed --force
 
+# Import institutional registry only when explicitly enabled.
+if [ "${SPONSORFLOW_SEED_REGISTRY_ON_DEPLOY:-false}" = "true" ]; then
+    REGISTRY_CSV="/etc/secrets/sle_fhe_registries_cleaned.csv"
+
+    if [ ! -s "$REGISTRY_CSV" ]; then
+        echo "ERROR: SLE-FHE registry Secret File is missing or empty." >&2
+        exit 1
+    fi
+
+    echo "Running gated institutional SLE-FHE registry seeder..."
+    php artisan db:seed --class=SleFheInstitutionalRegistrySeeder --force
+fi
+
 # Cache application state for production.
 # view:cache is intentionally skipped: pre-compiling vendor Blade views (e.g.
 # Laravel's exception renderer) fails with "Unable to locate a class or view for
