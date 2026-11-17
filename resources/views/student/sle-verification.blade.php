@@ -355,9 +355,8 @@
                                 <div class="d-flex align-items-start gap-2">
                                     <i class="bi bi-check-circle-fill text-primary mt-1"></i>
                                     <div>
-                                        <div class="small fw-semibold text-dark">Masterlist Verification</div>
-                                        <p class="small text-secondary mb-0">Automatically checks your Student ID against
-                                            institutional records.</p>
+                                        <div class="small fw-semibold text-dark">FASSG Institutional Review</div>
+                                        <p class="small text-secondary mb-0">FASSG reviews your submitted details against institutional records and evidence.</p>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-start gap-2">

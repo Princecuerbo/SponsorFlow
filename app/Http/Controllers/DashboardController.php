@@ -47,8 +47,6 @@ class DashboardController extends Controller
                         ApplicationStatus::Pending,
                         ApplicationStatus::Verified,
                         ApplicationStatus::ResubmissionRequested,
-                        'FASSG Verified',
-                        'Sponsor Reviewed',
                     ])
                     ->count()
                 : 0;

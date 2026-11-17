@@ -150,7 +150,6 @@ class SponsorshipProgram extends Model
         return $this->applications()
             ->where('student_profile_id', $studentProfileId)
             ->whereIn('status', [
-                'submitted',
                 ApplicationStatus::Pending,
                 ApplicationStatus::Verified,
                 ApplicationStatus::Approved,

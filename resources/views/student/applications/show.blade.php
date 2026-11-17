@@ -7,7 +7,7 @@
 @section('content')
 
     @php
-        $steps = ['Pending', 'FASSG Verified', 'Sponsor Reviewed', 'Final Approval'];
+        $steps = ['Submitted', 'FASSG Verified', 'Sponsor Approved', 'Ongoing'];
 
         $statusValue =
             $application->status instanceof \BackedEnum ? $application->status->value : (string) $application->status;
@@ -16,15 +16,10 @@
         $terminal = in_array($statusValue, ['Rejected', 'Expired'], true);
         $resubmissionRequested = $statusValue === 'Resubmission Requested';
 
-        $isStep1Complete = in_array(
-            $statusValue,
-            ['Pending', 'Verified', 'FASSG Verified', 'Sponsor Reviewed', 'Approved', 'Confirmed', 'Ongoing'],
-            true,
-        );
-        $isStep2Complete = $application->verified_at !== null;
-        $isStep3Complete = in_array($statusValue, ['Sponsor Reviewed', 'Approved', 'Confirmed'], true);
-        $isStep4Complete = in_array($statusValue, ['Approved', 'Confirmed', 'Final Approval'], true)
-            && $application->approved_at !== null;
+        $isStep1Complete = true;
+        $isStep2Complete = $application->verified_at !== null || in_array($statusValue, ['Verified', 'Approved', 'Ongoing'], true);
+        $isStep3Complete = $application->approved_at !== null || in_array($statusValue, ['Approved', 'Ongoing'], true);
+        $isStep4Complete = $statusValue === 'Ongoing';
 
         $completedSteps = [$isStep1Complete, $isStep2Complete, $isStep3Complete, $isStep4Complete];
     @endphp
@@ -120,7 +115,7 @@
 
                         <dt class="col-sm-4 small text-secondary fw-normal py-2 border-top">Rurality Confirmed</dt>
                         <dd class="col-sm-8 py-2 mb-0 border-top">
-                            {{ $application->is_rural_submitted ?? $application->is_rural ? 'Yes — Rural' : 'No — Urban' }}
+                            {{ $application->is_rural_submitted === null ? 'Not recorded' : ($application->is_rural_submitted ? 'Yes — Rural' : 'No — Urban') }}
                         </dd>
                     </dl>
                 </div>

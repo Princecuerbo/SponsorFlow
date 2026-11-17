@@ -25,9 +25,7 @@
 
     $deadline = $program->application_deadline;
     $isApplicationClosed = $program->isApplicationClosed();
-    $hasActiveGrant = $profile ? $profile->applications()
-        ->whereIn('status', [\App\Enums\ApplicationStatus::Approved, \App\Enums\ApplicationStatus::Ongoing])
-        ->exists() : false;
+    $hasActiveGrant = $hasActiveSponsorship ?? ($profile ? $profile->hasActiveSponsorship() : false);
 @endphp
 
 <div class="col-12 col-md-6 col-lg-4">

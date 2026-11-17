@@ -52,8 +52,16 @@
                     <div class="d-flex flex-wrap justify-content-center gap-2">
                         <span class="badge rounded-pill text-bg-primary">Batch
                             {{ $studentProfile?->created_at?->format('Y') ?? '2024' }}</span>
-                        <span
-                            class="badge rounded-pill {{ ($studentProfile?->sle_fhe_status ?? null) === 'Verified' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' : 'bg-secondary' }}">{{ ($studentProfile?->sle_fhe_status ?? null) === 'Verified' ? 'SLE-FHE Verified' : 'Main Campus' }}</span>
+                        @php
+                            $sleStatus = $studentProfile?->sle_fhe_status ?? 'Unverified';
+                            $sleBadgeClass = match($sleStatus) {
+                                'Verified' => 'bg-cyan-50 text-cyan-700 border border-cyan-200',
+                                'Pending Review' => 'bg-warning-subtle text-warning-emphasis border border-warning-subtle',
+                                'Rejected' => 'bg-danger-subtle text-danger border border-danger-subtle',
+                                default => 'bg-secondary-subtle text-secondary border border-secondary-subtle',
+                            };
+                        @endphp
+                        <span class="badge rounded-pill {{ $sleBadgeClass }}">SLE-FHE: {{ $sleStatus }}</span>
                     </div>
                     <hr class="my-4">
                     <div class="d-flex justify-content-between small text-muted">
@@ -143,8 +151,8 @@
                             <div class="fw-semibold text-dark">{{ $academicYear }}, First Semester</div>
                         </div>
                         <div class="col-md-6">
-                            <div class="small text-muted mb-1">STATUS</div>
-                            <span class="badge bg-success">ENROLLED</span>
+                            <div class="small text-muted mb-1">ACCOUNT STATUS</div>
+                            <span class="badge {{ ($user->status?->value ?? ($user->status ?? 'Active')) === 'Active' ? 'bg-success' : 'bg-secondary' }}">{{ strtoupper($user->status?->value ?? ($user->status ?? 'Active')) }}</span>
                         </div>
                         <div class="col-md-6">
                             <div class="small text-muted mb-1">DATE REGISTERED</div>

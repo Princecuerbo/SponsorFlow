@@ -4,12 +4,27 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class AcademicProgramSeeder extends Seeder
 {
     public function run(): void
     {
-        $programs = [
+        DB::transaction(function (): void {
+            $existing = DB::table('academic_programs')->lockForUpdate()->get()->map(fn ($row) => (array) $row)->all();
+            // Validate the complete set before inserting. Never rewrite reviewed
+            // codes, names, flags, IDs or their student/program associations.
+            foreach (self::missingPrograms($existing) as $program) {
+                DB::table('academic_programs')->insert([
+                    ...$program, 'created_at' => now(), 'updated_at' => now(),
+                ]);
+            }
+        });
+    }
+
+    public static function definitions(): array
+    {
+        return [
             // College of Education
             ['code' => 'BEEd', 'name' => 'Bachelor of Elementary Education', 'short_name' => 'Elem Ed', 'is_board_program' => true, 'is_undergraduate' => true, 'is_active' => true],
             ['code' => 'BSEd-Eng', 'name' => 'Bachelor of Secondary Education major in English', 'short_name' => 'Sec Ed-Eng', 'is_board_program' => true, 'is_undergraduate' => true, 'is_active' => true],
@@ -55,13 +70,50 @@ class AcademicProgramSeeder extends Seeder
             ['code' => 'MED-EM', 'name' => 'Master of Education major in Educational Management', 'short_name' => 'MEd-EM', 'is_board_program' => false, 'is_undergraduate' => false, 'is_active' => true],
             ['code' => 'MPA', 'name' => 'Master in Public Administration', 'short_name' => 'MPA', 'is_board_program' => false, 'is_undergraduate' => false, 'is_active' => true],
             ['code' => 'MBA', 'name' => 'Master of Business Administration', 'short_name' => 'MBA', 'is_board_program' => false, 'is_undergraduate' => false, 'is_active' => true],
-        ];
 
-        foreach ($programs as $program) {
-            DB::table('academic_programs')->updateOrInsert(
-                ['code' => $program['code']],
-                array_merge($program, ['created_at' => now(), 'updated_at' => now()])
-            );
+            // Previously reviewed additions; append without reordering legacy definitions.
+            // No accreditation is asserted: unspecified board flags use the schema default.
+            ['code' => 'BSAM', 'name' => 'Bachelor of Science in Agribusiness Management', 'short_name' => 'BSAM', 'is_undergraduate' => true, 'is_active' => true],
+            ['code' => 'BSES', 'name' => 'Bachelor of Science in Environmental Science', 'short_name' => 'BSES', 'is_undergraduate' => true, 'is_active' => true],
+            ['code' => 'BSHM', 'name' => 'Bachelor of Science in Hospitality Management', 'short_name' => 'BSHM', 'is_undergraduate' => true, 'is_active' => true],
+            ['code' => 'BSDC', 'name' => 'Bachelor of Science in Development Communication', 'short_name' => 'BSDC', 'is_undergraduate' => true, 'is_active' => true],
+            ['code' => 'BSM', 'name' => 'Bachelor of Science in Mathematics', 'short_name' => 'BSM', 'is_undergraduate' => true, 'is_active' => true],
+            // Portal title confirmed by the user. This is NOT the legacy BSITech degree.
+            ['code' => 'BITM', 'name' => 'Bachelor in Industrial Technology Management', 'short_name' => 'BITM', 'is_undergraduate' => true, 'is_active' => true],
+        ];
+    }
+
+    /** Database-free preflight. Preserve an existing full-name match under its reviewed code. */
+    public static function missingPrograms(array $existing): array
+    {
+        $normalize = static fn (string $value): string => mb_strtolower(preg_replace('/\s+/u', ' ', trim($value)));
+        $codes = [];
+        $names = [];
+        foreach ($existing as $program) {
+            $code = $normalize($program['code']);
+            $name = $normalize($program['name']);
+            if (isset($codes[$code]) || isset($names[$name])) {
+                throw new RuntimeException('Duplicate academic program code or name requires review before catalog seeding.');
+            }
+            $codes[$code] = $name;
+            $names[$name] = true;
         }
+
+        $missing = [];
+        foreach (self::definitions() as $program) {
+            $code = $normalize($program['code']);
+            $name = $normalize($program['name']);
+            if (isset($codes[$code]) && $codes[$code] !== $name) {
+                throw new RuntimeException("Academic program code {$program['code']} already belongs to a different degree; no records were changed.");
+            }
+            if (isset($names[$name])) {
+                continue;
+            }
+            $missing[] = $program;
+            $codes[$code] = $name;
+            $names[$name] = true;
+        }
+
+        return $missing;
     }
 }

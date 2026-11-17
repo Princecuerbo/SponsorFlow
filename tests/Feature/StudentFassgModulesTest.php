@@ -777,7 +777,7 @@ class StudentFassgModulesTest extends TestCase
         $profile = StudentProfile::factory()->create([
             'student_id_number' => '2024-00222',
         ]);
-        $list = FixedList::factory()->create();
+        $list = FixedList::factory()->create(['status' => FixedListStatus::Draft]);
         $item = FixedListItem::factory()->create([
             'fixed_list_id' => $list->id,
             'student_id_number' => $profile->student_id_number,

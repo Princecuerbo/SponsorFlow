@@ -118,7 +118,7 @@
             @csrf
             <input type="hidden" name="sponsorship_program_id" value="{{ $program->id }}">
             <input type="hidden" name="address_submitted" value="{{ $profile->full_address }}">
-            <input type="hidden" name="is_rural_submitted" value="{{ $programRequiresRural || ! $hasAddressRequirement ? 1 : 0 }}">
+            <input type="hidden" name="is_rural_submitted" value="{{ $programRequiresRural ? 1 : 0 }}">
 
             <div class="col-lg-8">
 
@@ -170,7 +170,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <label class="form-label small text-secondary">SLE-FHE Status</label>
-                                <div class="pt-2"><x-status-badge status="Verified" /></div>
+                                <div class="pt-2"><x-status-badge :status="$profile->sle_fhe_status" /></div>
                             </div>
                         </div>
                     </div>

@@ -21,6 +21,7 @@
 /vendor
 /SLE-FHE DATA.xlsx
 /storage/app/SLE-FHE DATA.xlsx
+/storage/app/private/registry-recovery/
 Homestead.json
 Homestead.yaml
 Thumbs.db
