@@ -138,7 +138,7 @@
             [
                 'label' => 'Backups',
                 'route' => 'admin.backups.index',
-                'icon' => 'database-check',
+                'icon' => 'database',
                 'active' => request()->routeIs('admin.backups.*', 'admin.backup.*'),
             ],
         ];

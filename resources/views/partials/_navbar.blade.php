@@ -128,13 +128,13 @@
                     <li class="nav-item">
                         <a class="nav-link sf-topnav-link {{ request()->routeIs('sponsor.dashboard') ? 'active' : '' }}"
                             href="{{ route('sponsor.dashboard') }}">
-                            <i class="bi bi-speedometer2"></i> Dashboard
+                            <i class="bi bi-grid"></i> Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link sf-topnav-link {{ request()->routeIs('sponsor.approvals.index') ? 'active' : '' }}"
                             href="{{ route('sponsor.approvals.index') }}">
-                            <i class="bi bi-inboxes"></i> Approvals Queue
+                            <i class="bi bi-clipboard-check"></i> Approvals Queue
                         </a>
                     </li>
                     <li class="nav-item">
@@ -150,7 +150,7 @@
                     <li class="nav-item">
                         <a class="nav-link sf-topnav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
                             href="{{ route('admin.dashboard') }}">
-                            <i class="bi bi-house-door"></i> Dashboard
+                            <i class="bi bi-grid"></i> Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
@@ -162,7 +162,7 @@
                     <li class="nav-item">
                         <a class="nav-link sf-topnav-link {{ request()->routeIs('admin.audit-logs.*') ? 'active' : '' }}"
                             href="{{ route('admin.audit-logs.index') }}">
-                            <i class="bi bi-list-check"></i> Audit Logs
+                            <i class="bi bi-journal-text"></i> Audit Logs
                         </a>
                     </li>
                     <li class="nav-item">
@@ -174,7 +174,7 @@
                     <li class="nav-item">
                         <a class="nav-link sf-topnav-link {{ request()->routeIs('admin.backups.*') ? 'active' : '' }}"
                             href="{{ route('admin.backups.index') }}">
-                            <i class="bi bi-database-check"></i> Backups
+                            <i class="bi bi-database"></i> Backups
                         </a>
                     </li>
                 @endif
@@ -353,13 +353,13 @@
                         <li>
                             <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 fw-semibold {{ request()->routeIs('sponsor.dashboard') ? 'sf-mobile-active' : '' }}"
                                 href="{{ route('sponsor.dashboard') }}" style="font-size: 0.925rem;">
-                                <i class="bi bi-speedometer2 fs-5 text-secondary"></i> Dashboard
+                                <i class="bi bi-grid fs-5 text-secondary"></i> Dashboard
                             </a>
                         </li>
                         <li class="mt-1">
                             <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('sponsor.approvals.index') ? 'sf-mobile-active' : '' }}"
                                 href="{{ route('sponsor.approvals.index') }}" style="font-size: 0.925rem;">
-                                <i class="bi bi-inboxes fs-5 text-secondary"></i> Approvals Queue
+                                <i class="bi bi-clipboard-check fs-5 text-secondary"></i> Approvals Queue
                             </a>
                         </li>
                         <li class="mt-1">
@@ -375,7 +375,7 @@
                         <li>
                             <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 fw-semibold {{ request()->routeIs('admin.dashboard') ? 'sf-mobile-active' : '' }}"
                                 href="{{ route('admin.dashboard') }}" style="font-size: 0.925rem;">
-                                <i class="bi bi-house-door fs-5 text-secondary"></i> Dashboard
+                                <i class="bi bi-grid fs-5 text-secondary"></i> Dashboard
                             </a>
                         </li>
                         <li class="mt-1">
@@ -387,7 +387,7 @@
                         <li class="mt-1">
                             <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('admin.audit-logs.*') ? 'sf-mobile-active' : '' }}"
                                 href="{{ route('admin.audit-logs.index') }}" style="font-size: 0.925rem;">
-                                <i class="bi bi-list-check fs-5 text-secondary"></i> Audit Logs
+                                <i class="bi bi-journal-text fs-5 text-secondary"></i> Audit Logs
                             </a>
                         </li>
                         <li class="mt-1">
@@ -399,7 +399,7 @@
                         <li class="mt-1">
                             <a class="dropdown-item rounded-3 py-2.5 px-3 d-flex align-items-center gap-3 text-secondary {{ request()->routeIs('admin.backups.*') ? 'sf-mobile-active' : '' }}"
                                 href="{{ route('admin.backups.index') }}" style="font-size: 0.925rem;">
-                                <i class="bi bi-database-check fs-5 text-secondary"></i> Backups
+                                <i class="bi bi-database fs-5 text-secondary"></i> Backups
                             </a>
                         </li>
                     @endif

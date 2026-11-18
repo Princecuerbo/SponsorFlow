@@ -249,6 +249,56 @@
             background: var(--sf-navy-deep);
         }
 
+        /* Desktop Standard Reset Filters */
+        @media (min-width: 992px) {
+            .sf-btn-reset-filters {
+                height: 38px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 7px !important;
+                font-size: 13px !important;
+                font-weight: 600 !important;
+                padding: 0 16px !important;
+                border-radius: 8px !important;
+                background-color: #FFFFFF !important;
+                border: 1px solid #D5E0E8 !important;
+                color: #173B57 !important;
+                text-decoration: none !important;
+                white-space: nowrap !important;
+                transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+            }
+
+            .sf-btn-reset-filters i {
+                font-size: 14px !important;
+                line-height: 1 !important;
+                color: #173B57 !important;
+                transition: color 0.15s ease !important;
+            }
+
+            .sf-btn-reset-filters:hover {
+                background-color: #EEF3F7 !important;
+                color: #0F2942 !important;
+                border-color: #AFC3D3 !important;
+            }
+
+            .sf-btn-reset-filters:hover i {
+                color: #0F2942 !important;
+            }
+
+            .sf-btn-reset-filters:focus-visible {
+                outline: none !important;
+                border-color: #173B57 !important;
+                box-shadow: 0 0 0 3px rgba(23, 59, 87, 0.2) !important;
+            }
+
+            .sf-btn-reset-filters:active {
+                background-color: #E2EAF0 !important;
+                border-color: #9DB4C6 !important;
+                color: #0F2942 !important;
+            }
+        }
+
         .sf-readonly-banner {
             background: #eef4ff;
             border: 1px solid #c7d9f7;

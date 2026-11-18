@@ -281,7 +281,7 @@ class FassgSleFheWorkflowTest extends TestCase
 
         // All three footer actions are present, and confirmation is enabled on a match.
         $this->assertStringContainsString('>Cancel</button>', $content);
-        $this->assertStringContainsString('Reject Application', $content);
+        $this->assertStringContainsString('Reject Verification Request', $content);
         $this->assertStringContainsString('Confirm Verification', $content);
         $this->assertMatchesRegularExpression('/data-confirm-verify\s*>/', $content);
     }
@@ -329,7 +329,7 @@ class FassgSleFheWorkflowTest extends TestCase
 
         // All three footer actions remain available.
         $this->assertStringContainsString('>Cancel</button>', $content);
-        $this->assertStringContainsString('Reject Application', $content);
+        $this->assertStringContainsString('Reject Verification Request', $content);
         $this->assertStringContainsString('Confirm Verification', $content);
 
         // Rendering the queue must not verify or reject anything.

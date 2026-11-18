@@ -148,8 +148,9 @@
                 {{-- Reset --}}
                 <div class="col-md-2">
                     <a href="{{ route('fassg.verification.index') }}"
-                        class="btn btn-outline-secondary btn-sm w-100 d-flex align-items-center justify-content-center gap-1">
-                        <i class="bi bi-arrow-counterclockwise"></i> Reset Filters
+                        class="sf-btn-reset-filters w-100">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        <span>Reset Filters</span>
                     </a>
                 </div>
             </form>

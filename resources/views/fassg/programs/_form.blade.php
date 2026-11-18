@@ -1,163 +1,214 @@
-<form method="POST" action="{{ $action }}" class="row g-3">
+<form method="POST" action="{{ $action }}" class="card sf-card sfp-card-form">
     @csrf
     @if ($method !== 'POST')
         @method($method)
     @endif
 
-    <div class="col-md-6"><label class="form-label" for="sponsor_id">Sponsor</label><select class="form-select"
-            id="sponsor_id" name="sponsor_id" required>
-            @foreach ($sponsors as $sponsor)
-                <option value="{{ $sponsor->id }}" @selected(old('sponsor_id', $program->sponsor_id) == $sponsor->id)>
-                    {{ $sponsor->company_organization_name ?: $sponsor->user?->name }}
-                </option>
-            @endforeach
-        </select></div>
-    <div class="col-md-6"><label class="form-label" for="program_name">Program name</label><input class="form-control"
-            id="program_name" name="program_name" value="{{ old('program_name', $program->program_name) }}" required>
-    </div>
-    <div class="col-md-6"><label class="form-label" for="category">Category</label><select class="form-select"
-            id="category" name="category" required>
-            @foreach (\App\Enums\ProgramCategory::cases() as $category)
-                <option value="{{ $category->value }}" @selected(old('category', $program->category?->value) === $category->value)>
-                    {{ $category->value }}
-                </option>
-            @endforeach
-        </select>
-        @error('category')
-            <div class="invalid-feedback d-block">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="col-12" id="employeeRelativeBlock" style="display: none;">
-        <div class="form-check py-1">
-            <input class="form-check-input" type="checkbox" name="requires_relative_verification" value="1"
-                id="requires_relative_verification"
-                @checked((bool) old('requires_relative_verification', (bool) ($program->requires_relative_verification ?? false)))>
-            <label class="form-check-label" for="requires_relative_verification">
-                Requires Institutional Relative Employee Verification
-            </label>
-            <small class="d-block text-muted">Students must be verified as institutional relative employees of the
-                sponsoring organization.</small>
-        </div>
-    </div>
-    <div class="col-12" id="individualAdvisoryBlock" style="display: none;">
-        <div class="alert alert-warning py-2 px-3 mb-0 small">
-            <i class="bi bi-info-circle me-1"></i>
-            For Individual programs, eligibility filtering rules are advisory — the sponsor directly matches applicants
-            for final selection.
-        </div>
-    </div>
-    <div class="col-md-6"><label class="form-label" for="total_slots">Total slots</label><input
-            class="form-control @error('total_slots') is-invalid @enderror" id="total_slots" type="number" min="0"
-            name="total_slots" value="{{ old('total_slots', $program->total_slots ?? 1) }}" required>
-        <small class="text-muted">Adjusting total slots updates available slots automatically and never reduces already
-            approved grants.</small>
-        @error('total_slots')
-            <div class="invalid-feedback d-block">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="col-md-6"><label class="form-label" for="available_slots">Available slots</label><input
-            class="form-control @error('available_slots') is-invalid @enderror" id="available_slots" type="number"
-            min="0" name="available_slots"
-            value="{{ old('available_slots', $program->available_slots ?? 1) }}" readonly required>
-        <small class="text-muted">
-            Calculated automatically: Total Slots (<span
-                id="helpTotalSlots">{{ (int) ($program->total_slots ?? 1) }}</span>) − Approved Applications (<span
-                id="helpApprovedCount">{{ $approvedCount ?? 0 }}</span>) = <span
-                id="helpAvailableSlots">{{ (int) ($program->available_slots ?? 1) }}</span>
-        </small>
-        @error('available_slots')
-            <div class="invalid-feedback d-block">{{ $message }}</div>
-        @enderror
-    </div>
-    @if ($method !== 'POST')
-        <div class="col-md-6"><label class="form-label fw-bold" for="status">Program Status</label><select
-                class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
-                @foreach (\App\Enums\ProgramStatus::cases() as $status)
-                    <option value="{{ $status->value }}" @selected(old('status', $program->status?->value ?? 'Open') === $status->value)>
-                        {{ match ($status->value) {'Open' => 'Open (Accepting Applications)','Closed' => 'Closed (In Review / Processing)','Expired' => 'Expired (Term Ended / Completed)'} }}
-                    </option>
-                @endforeach
-            </select>
-            @error('status')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-    @endif
-    <div class="col-md-6"><label class="form-label fw-bold" for="end_date">End Date (Optional)</label><input
-            class="form-control @error('end_date') is-invalid @enderror" id="end_date" type="date" name="end_date"
-            value="{{ old('end_date', $program->end_date?->format('Y-m-d')) }}"><small class="text-muted">Programs past
-            this date automatically transition to Expired on page refresh.</small>
-        @error('end_date')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="col-md-6"><label class="form-label fw-bold" for="application_deadline">Application Deadline
-            (Optional)</label><input
-            class="form-control @error('application_deadline') is-invalid @enderror" id="application_deadline"
-            type="date" name="application_deadline"
-            value="{{ old('application_deadline', $program->application_deadline?->format('Y-m-d') ?? '') }}"><small
-            class="text-muted">Students cannot submit new applications past this date. The program remains active for
-            FASSG/Sponsor
-            review.</small>
-        @error('application_deadline')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="col-md-6"><label class="form-label fw-semibold" for="min_gpa">Minimum GPA</label><input
-            class="form-control" id="min_gpa" type="number" step="0.01" min="1" max="5"
-            name="min_gpa" value="{{ old('min_gpa', $program->min_gpa ?? '') }}"></div>
-    <div class="col-md-6"><label class="form-label fw-semibold" for="target_province">Target
-            Province</label>
-        @php
-            $selectedProvince = (string) old('target_province', $program->target_province ?? '');
-        @endphp
-        <select class="form-select @error('target_province') is-invalid @enderror" id="target_province"
-            name="target_province">
-            <option value="" @selected($selectedProvince === '')>All / No Preference</option>
-            @foreach ($provinces as $province)
-                <option value="{{ $province }}" @selected($selectedProvince === $province)>{{ $province }}</option>
-            @endforeach
-            @if ($selectedProvince !== '' && ! $provinces->contains($selectedProvince))
-                <option value="{{ $selectedProvince }}" selected>{{ $selectedProvince }}</option>
+    <div class="card-body sfp-form-body">
+        {{-- Section 1: Program Details --}}
+        <div class="sfp-section-title">Program Details</div>
+        <p class="sfp-section-desc">These fields define core program parameters, capacity, and schedule across the portal.</p>
+
+        <div class="row g-3 g-xl-4">
+            <div class="col-md-6">
+                <label class="form-label" for="program_name">Program Name <span class="text-danger">*</span></label>
+                <input class="form-control @error('program_name') is-invalid @enderror" id="program_name"
+                    name="program_name" value="{{ old('program_name', $program->program_name) }}"
+                    placeholder="e.g. Tertiary Educational Assistance Program" required>
+                @error('program_name')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label" for="category">Category <span class="text-danger">*</span></label>
+                <select class="form-select @error('category') is-invalid @enderror" id="category" name="category" required>
+                    <option value="">Select category…</option>
+                    @foreach (\App\Enums\ProgramCategory::cases() as $category)
+                        <option value="{{ $category->value }}" @selected(old('category', $program->category?->value ?? $program->category) === $category->value)>
+                            {{ $category->value }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('category')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="col-12" id="employeeRelativeBlock" style="display: none;">
+                <div class="form-check py-1">
+                    <input class="form-check-input" type="checkbox" name="requires_relative_verification" value="1"
+                        id="requires_relative_verification"
+                        @checked((bool) old('requires_relative_verification', (bool) ($program->requires_relative_verification ?? false)))>
+                    <label class="form-check-label fw-semibold" for="requires_relative_verification">
+                        Requires Institutional Relative Employee Verification
+                    </label>
+                    <small class="text-muted d-block mt-1">Students must be verified as institutional relative employees of the sponsoring organization.</small>
+                </div>
+            </div>
+
+            <div class="col-12" id="individualAdvisoryBlock" style="display: none;">
+                <div class="sfp-alert-advisory">
+                    <i class="bi bi-info-circle me-1"></i>
+                    <strong>Advisory:</strong> For Individual programs, eligibility filtering rules are advisory — the sponsor directly matches applicants for final selection.
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label" for="sponsor_id">Sponsor <span class="text-danger">*</span></label>
+                <select class="form-select @error('sponsor_id') is-invalid @enderror" id="sponsor_id" name="sponsor_id" required>
+                    <option value="">Select sponsor…</option>
+                    @foreach ($sponsors as $sponsor)
+                        <option value="{{ $sponsor->id }}" @selected(old('sponsor_id', $program->sponsor_id) == $sponsor->id)>
+                            {{ $sponsor->company_organization_name ?: $sponsor->user?->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('sponsor_id')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            @if ($method !== 'POST')
+                <div class="col-md-6">
+                    <label class="form-label" for="status">Program Status <span class="text-danger">*</span></label>
+                    <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
+                        @foreach (\App\Enums\ProgramStatus::cases() as $status)
+                            <option value="{{ $status->value }}" @selected(old('status', $program->status?->value ?? $program->status ?? 'Open') === $status->value)>
+                                {{ match ($status->value) {
+                                    'Open' => 'Open (Accepting Applications)',
+                                    'Closed' => 'Closed (In Review / Processing)',
+                                    'Expired' => 'Expired (Term Ended / Completed)',
+                                } }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('status')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
             @endif
-        </select>
-        <small class="text-muted">Restrict applicants to a province. Leave as "All / No Preference" to accept every
-            location.</small>
-        @error('target_province')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="col-md-6"><label class="form-label fw-semibold" for="target_municipality">Target Municipality /
-            City</label>
-        @php
-            $selectedMunicipality = (string) old('target_municipality', $program->target_municipality ?? '');
-            $knownMunicipality = $selectedMunicipality !== ''
-                && ($municipalitiesGrouped[$selectedProvince] ?? collect())->contains($selectedMunicipality);
-        @endphp
-        <select class="form-select @error('target_municipality') is-invalid @enderror" id="target_municipality"
-            name="target_municipality">
-            <option value="" @selected($selectedMunicipality === '')>All / No Preference</option>
-            @foreach ($municipalitiesGrouped as $groupProvince => $municipalities)
-                @foreach ($municipalities as $municipality)
-                    <option value="{{ $municipality }}" data-province="{{ $groupProvince }}"
-                        @selected($selectedMunicipality === $municipality && $groupProvince === $selectedProvince)>
-                        {{ $municipality }}
-                    </option>
-                @endforeach
-            @endforeach
-            @if ($selectedMunicipality !== '' && ! $knownMunicipality)
-                <option value="{{ $selectedMunicipality }}" selected>{{ $selectedMunicipality }}</option>
-            @endif
-        </select>
-        <small class="text-muted">Options are filtered to the selected province.</small>
-        @error('target_municipality')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="col-12">
-        <div class="mb-4 mt-2">
-            <label class="form-label fw-bold">Eligible Year Levels</label>
-            <p class="text-muted small mb-2">Leave all unchecked to allow all year levels.</p>
+
+            <div class="col-md-6">
+                <label class="form-label" for="total_slots">Total Slots <span class="text-danger">*</span></label>
+                <input class="form-control @error('total_slots') is-invalid @enderror" id="total_slots" type="number"
+                    min="1" name="total_slots" value="{{ old('total_slots', $program->total_slots ?? 1) }}" required>
+                <small class="text-muted">Adjusting total slots updates available slots automatically and never reduces already approved grants.</small>
+                @error('total_slots')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label" for="available_slots">Available Slots <span class="text-danger">*</span></label>
+                <input class="form-control @error('available_slots') is-invalid @enderror" id="available_slots"
+                    type="number" min="0" name="available_slots"
+                    value="{{ old('available_slots', $program->available_slots ?? 1) }}" readonly required>
+                <small class="text-muted">
+                    Calculated automatically: Total Slots (<span id="helpTotalSlots">{{ (int) ($program->total_slots ?? 1) }}</span>) − Approved Applications (<span id="helpApprovedCount">{{ $approvedCount ?? 0 }}</span>) = <span id="helpAvailableSlots">{{ (int) ($program->available_slots ?? 1) }}</span>
+                </small>
+                @error('available_slots')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label" for="end_date">End Date (Optional)</label>
+                <input class="form-control @error('end_date') is-invalid @enderror" id="end_date" type="date"
+                    name="end_date" value="{{ old('end_date', $program->end_date?->format('Y-m-d')) }}">
+                <small class="text-muted">Programs past this date automatically transition to Expired on page refresh.</small>
+                @error('end_date')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label" for="application_deadline">Application Deadline (Optional)</label>
+                <input class="form-control @error('application_deadline') is-invalid @enderror" id="application_deadline"
+                    type="date" name="application_deadline"
+                    value="{{ old('application_deadline', $program->application_deadline?->format('Y-m-d') ?? '') }}">
+                <small class="text-muted">Students cannot submit new applications past this date. The program remains active for FASSG/Sponsor review.</small>
+                @error('application_deadline')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <hr class="sfp-divider">
+
+        {{-- Section 2: Eligibility Filtering Criteria --}}
+        <div class="sfp-section-title">Eligibility Filtering Criteria</div>
+        <p class="sfp-section-desc">Used only to filter and shortlist applicants — not to auto-decide. FASSG and the sponsor make the final call.</p>
+
+        <div class="row g-3 g-xl-4">
+            <div class="col-md-4">
+                <label class="form-label" for="min_gpa">Minimum GPA</label>
+                <input class="form-control @error('min_gpa') is-invalid @enderror" id="min_gpa" type="number"
+                    step="0.01" min="1" max="5" name="min_gpa"
+                    placeholder="e.g. 2.00"
+                    value="{{ old('min_gpa', $program->min_gpa ?? '') }}">
+                <small class="text-muted">Leave blank if no GPA cutoff is required.</small>
+                @error('min_gpa')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label" for="target_province">Target Province</label>
+                @php
+                    $selectedProvince = (string) old('target_province', $program->target_province ?? '');
+                @endphp
+                <select class="form-select @error('target_province') is-invalid @enderror" id="target_province"
+                    name="target_province">
+                    <option value="" @selected($selectedProvince === '')>All / No Preference</option>
+                    @foreach ($provinces as $province)
+                        <option value="{{ $province }}" @selected($selectedProvince === $province)>{{ $province }}</option>
+                    @endforeach
+                    @if ($selectedProvince !== '' && !$provinces->contains($selectedProvince))
+                        <option value="{{ $selectedProvince }}" selected>{{ $selectedProvince }}</option>
+                    @endif
+                </select>
+                <small class="text-muted">Restrict applicants to a province, or accept all.</small>
+                @error('target_province')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label" for="target_municipality">Target Municipality / City</label>
+                @php
+                    $selectedMunicipality = (string) old('target_municipality', $program->target_municipality ?? '');
+                    $knownMunicipality = $selectedMunicipality !== ''
+                        && ($municipalitiesGrouped[$selectedProvince] ?? collect())->contains($selectedMunicipality);
+                @endphp
+                <select class="form-select @error('target_municipality') is-invalid @enderror" id="target_municipality"
+                    name="target_municipality">
+                    <option value="" @selected($selectedMunicipality === '')>All / No Preference</option>
+                    @foreach ($municipalitiesGrouped as $groupProvince => $municipalities)
+                        @foreach ($municipalities as $municipality)
+                            <option value="{{ $municipality }}" data-province="{{ $groupProvince }}"
+                                @selected($selectedMunicipality === $municipality && $groupProvince === $selectedProvince)>
+                                {{ $municipality }}
+                            </option>
+                        @endforeach
+                    @endforeach
+                    @if ($selectedMunicipality !== '' && !$knownMunicipality)
+                        <option value="{{ $selectedMunicipality }}" selected>{{ $selectedMunicipality }}</option>
+                    @endif
+                </select>
+                <small class="text-muted">Options filter automatically based on province.</small>
+                @error('target_municipality')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <hr class="sfp-divider">
+
+        {{-- Section 3: Eligible Year Levels --}}
+        <div class="sfp-checkbox-group">
+            <div class="sfp-checkbox-group-title">Eligible Year Levels</div>
+            <div class="sfp-checkbox-group-desc">Leave all unchecked to allow students from all year levels.</div>
             @php
                 $selectedYearLevels = is_array(old('eligible_year_levels'))
                     ? old('eligible_year_levels')
@@ -165,16 +216,15 @@
                         ? array_map('strval', (array) ($program->eligible_year_levels ?? []))
                         : []);
             @endphp
-            <div class="d-flex flex-wrap gap-3">
+            <div class="d-flex flex-wrap gap-4">
                 @foreach ([1, 2, 3, 4, 5] as $yr)
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox"
                             name="eligible_year_levels[]"
                             value="{{ $yr }}"
                             id="yr_form_{{ $yr }}"
-                            {{ in_array((string) $yr, $selectedYearLevels) ? 'checked' : '' }}
-                            style="cursor: pointer;">
-                        <label class="form-check-label small" for="yr_form_{{ $yr }}">Year {{ $yr }}</label>
+                            {{ in_array((string) $yr, $selectedYearLevels) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="yr_form_{{ $yr }}">Year {{ $yr }}</label>
                     </div>
                 @endforeach
             </div>
@@ -182,11 +232,13 @@
                 <div class="text-danger small mt-1">{{ $message }}</div>
             @enderror
         </div>
-    </div>
-    <div class="col-12">
-        <div class="mb-4 mt-2">
-            <label class="form-label fw-bold">Eligible Campuses</label>
-            <p class="text-muted small mb-2">Leave all unchecked to allow students from all campuses.</p>
+
+        <hr class="sfp-divider">
+
+        {{-- Section 4: Eligible Campuses --}}
+        <div class="sfp-checkbox-group">
+            <div class="sfp-checkbox-group-title">Eligible Campuses</div>
+            <div class="sfp-checkbox-group-desc">Leave all unchecked to allow students from all campuses.</div>
             @php
                 $campusOptions = [
                     'Main Campus (City of Mati)',
@@ -202,18 +254,19 @@
                         ? (array) ($program->eligible_campuses ?? [])
                         : []);
             @endphp
-            <div class="d-flex flex-wrap gap-3">
+            <div class="row g-2">
                 @foreach ($campusOptions as $campus)
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox"
-                            name="eligible_campuses[]"
-                            value="{{ $campus }}"
-                            id="campus_form_{{ $loop->index }}"
-                            {{ in_array($campus, $selectedCampuses) ? 'checked' : '' }}
-                            style="cursor: pointer;">
-                        <label class="form-check-label small" for="campus_form_{{ $loop->index }}">
-                            {{ $campus }}
-                        </label>
+                    <div class="col-md-4 col-sm-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                                name="eligible_campuses[]"
+                                value="{{ $campus }}"
+                                id="campus_form_{{ $loop->index }}"
+                                {{ in_array($campus, $selectedCampuses) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="campus_form_{{ $loop->index }}">
+                                {{ $campus }}
+                            </label>
+                        </div>
                     </div>
                 @endforeach
             </div>
@@ -221,12 +274,13 @@
                 <div class="text-danger small mt-1">{{ $message }}</div>
             @enderror
         </div>
-    </div>
-    <div class="col-12">
-        <div class="mb-4 mt-2">
-            <label class="form-label fw-bold">Required Documents Checklist</label>
-            <p class="text-muted small mb-2">Select the supporting documents applicants must submit for this program
-                (leave all unchecked if none are required).</p>
+
+        <hr class="sfp-divider">
+
+        {{-- Section 5: Required Documents Checklist --}}
+        <div class="sfp-checkbox-group">
+            <div class="sfp-checkbox-group-title">Required Documents Checklist</div>
+            <div class="sfp-checkbox-group-desc">Select the supporting documents applicants must submit for this program (leave all unchecked if none are required).</div>
             @php
                 $documentOptions = [
                     'Report Card / Certificate of Grades',
@@ -241,18 +295,19 @@
                         ? (array) ($program->required_documents ?? [])
                         : []);
             @endphp
-            <div class="d-flex flex-wrap gap-3">
+            <div class="row g-2">
                 @foreach ($documentOptions as $doc)
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox"
-                            name="required_documents[]"
-                            value="{{ $doc }}"
-                            id="doc_form_{{ $loop->index }}"
-                            {{ in_array($doc, $selectedDocuments) ? 'checked' : '' }}
-                            style="cursor: pointer;">
-                        <label class="form-check-label small" for="doc_form_{{ $loop->index }}">
-                            {{ $doc }}
-                        </label>
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                                name="required_documents[]"
+                                value="{{ $doc }}"
+                                id="doc_form_{{ $loop->index }}"
+                                {{ in_array($doc, $selectedDocuments) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="doc_form_{{ $loop->index }}">
+                                {{ $doc }}
+                            </label>
+                        </div>
                     </div>
                 @endforeach
             </div>
@@ -260,12 +315,13 @@
                 <div class="text-danger small mt-1">{{ $message }}</div>
             @enderror
         </div>
-    </div>
-    <div class="col-12">
-        <div class="mb-4 mt-2">
-            <label class="form-label fw-bold">Eligible Academic Programs</label>
-            <p class="text-muted small mb-2">Select the academic programs eligible for this sponsorship program (leave empty to
-                allow all academic programs).</p>
+
+        <hr class="sfp-divider">
+
+        {{-- Section 6: Eligible Academic Programs --}}
+        <div class="sfp-checkbox-group">
+            <div class="sfp-checkbox-group-title">Eligible Academic Programs</div>
+            <div class="sfp-checkbox-group-desc">Select the academic programs eligible for this sponsorship program (leave empty to allow all academic programs).</div>
 
             @php
                 $selectedProgramIds = is_array(old('academic_program_ids'))
@@ -275,33 +331,30 @@
                         : []);
             @endphp
 
-            <div class="d-flex gap-2 mb-2">
-                <button type="button" class="btn btn-sm btn-outline-secondary" data-select-all-courses>
-                    Select All
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <button type="button" class="btn btn-sm sfp-btn-bulk" data-select-all-courses>
+                    <i class="bi bi-check-all me-1"></i>Select All
                 </button>
-                <button type="button" class="btn btn-sm btn-outline-secondary" data-clear-all-courses>
-                    Clear All
+                <button type="button" class="btn btn-sm sfp-btn-bulk" data-clear-all-courses>
+                    <i class="bi bi-x me-1"></i>Clear All
                 </button>
             </div>
 
-            <div class="card p-3 border rounded-3" style="max-height: 250px; overflow-y: auto;">
+            <div class="sfp-academic-box">
                 <div class="row g-2">
                     @forelse ($academicPrograms as $academicProg)
                         <div class="col-md-6">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="academic_program_ids[]"
                                     value="{{ $academicProg->program_id }}" id="prog_{{ $academicProg->program_id }}"
-                                    {{ in_array($academicProg->program_id, $selectedProgramIds) ? 'checked' : '' }}
-                                    style="cursor: pointer;">
-                                <label class="form-check-label small" for="prog_{{ $academicProg->program_id }}">
+                                    {{ in_array($academicProg->program_id, $selectedProgramIds) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="prog_{{ $academicProg->program_id }}">
                                     <strong>{{ $academicProg->code }}</strong> — {{ $academicProg->name }}
                                 </label>
                             </div>
                         </div>
                     @empty
-                        <div class="col-12 text-muted small">No active academic programs are available. Please add
-                            academic
-                            programs first.</div>
+                        <div class="col-12 text-muted small py-2">No active academic programs are available. Please add academic programs first.</div>
                     @endforelse
                 </div>
             </div>
@@ -310,14 +363,15 @@
             @enderror
         </div>
     </div>
-    <div class="col-12">
-        <div class="d-flex align-items-center gap-2 mt-4">
-            <button type="submit" class="btn fw-bold text-white px-4"
-                style="background-color: #0F2942 !important; border-color: #0F2942 !important;">
-                <i class="bi bi-check-lg me-1"></i> Save program
-            </button>
-            <a href="{{ route('fassg.programs.index') }}" class="btn btn-outline-danger"><i class="bi bi-x-lg me-1"></i> Cancel</a>
-        </div>
+
+    {{-- Form Footer --}}
+    <div class="sfp-form-footer">
+        <a href="{{ route('fassg.programs.index') }}" class="btn btn-outline-danger">
+            <i class="bi bi-x-lg me-1"></i> Cancel
+        </a>
+        <button type="submit" class="btn btn-sf-navy">
+            <i class="bi bi-check-lg me-1"></i> {{ $submitLabel ?? 'Save program' }}
+        </button>
     </div>
 </form>
 
@@ -339,6 +393,7 @@
                 syncCategoryGuidance();
             }
 
+            const isCreateForm = {{ $method === 'POST' ? 'true' : 'false' }};
             const totalSlotsInput = document.getElementById('total_slots');
             const availableSlotsInput = document.getElementById('available_slots');
             const approvedCountEl = document.getElementById('helpApprovedCount');
@@ -348,7 +403,10 @@
 
             const syncAvailableSlots = () => {
                 const total = parseInt(totalSlotsInput.value, 10) || 0;
-                const available = Math.max(0, total - approvedCount);
+                let available = total;
+                if (!isCreateForm) {
+                    available = Math.max(0, total - approvedCount);
+                }
                 if (availableSlotsInput) availableSlotsInput.value = available;
                 if (helpTotalSlotsEl) helpTotalSlotsEl.textContent = total;
                 if (helpAvailableSlotsEl) helpAvailableSlotsEl.textContent = available;

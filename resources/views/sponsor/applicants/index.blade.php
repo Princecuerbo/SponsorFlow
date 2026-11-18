@@ -39,7 +39,10 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <a href="{{ route('sponsor.applicants.index') }}" class="btn btn-outline-secondary w-100">Reset Filters</a>
+                    <a href="{{ route('sponsor.applicants.index') }}" class="sf-btn-reset-filters sponsor-btn-reset w-100">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        <span>Reset Filters</span>
+                    </a>
                 </div>
             </form>
         </div>

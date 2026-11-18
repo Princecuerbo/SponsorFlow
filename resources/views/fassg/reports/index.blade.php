@@ -109,8 +109,9 @@
                 {{-- Reset --}}
                 <div class="col-md-3">
                     <a href="{{ route('fassg.reports.index') }}"
-                        class="btn btn-outline-secondary btn-sm w-100">
-                        Reset Filters
+                        class="sf-btn-reset-filters w-100">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        <span>Reset Filters</span>
                     </a>
                 </div>
             </form>

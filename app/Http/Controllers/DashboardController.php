@@ -118,6 +118,7 @@ class DashboardController extends Controller
 
             $pendingVerificationCount = StudentProfile::query()
                 ->whereDoesntHave('sleFheVerification')
+                ->whereHas('sleFheRequests', fn ($q) => $q->where('status', 'pending'))
                 ->count();
 
             $recentPrograms = SponsorshipProgram::query()
@@ -127,7 +128,8 @@ class DashboardController extends Controller
                 ->get();
 
             $activeProgramsCount = SponsorshipProgram::query()
-                ->whereIn('status', [ProgramStatus::Open->value, ProgramStatus::Closed->value])
+                ->where('status', ProgramStatus::Open->value)
+                ->where('available_slots', '>', 0)
                 ->count();
 
             $confirmedBeneficiaries = BatchCandidate::query()
