@@ -1,0 +1,2815 @@
+{
+  "capturedAt": "2026-11-20",
+  "notes": [
+    "Success and reuse-error screenshots are DOM simulations of the current server-rendered markup; no password was reset and no real credential was used.",
+    "Generic identity and reset policy error states were produced by real form submissions in an isolated local session.",
+    "Assistance screenshots used a process-level feature-flag override; no environment file was changed."
+  ],
+  "results": [
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 262.3,
+          "left": 1235,
+          "width": 410,
+          "height": 555.5
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": true,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "policy-error",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 242.5,
+          "left": 1235,
+          "width": 410,
+          "height": 595.1
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 1,
+        "confirmationNeutral": true,
+        "passwordInvalid": true,
+        "fieldErrorSpacing": [
+          "6px"
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "1600x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 172.3,
+          "left": 995,
+          "width": 410,
+          "height": 555.5
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1600,
+          "height": 900
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": true,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "policy-error",
+      "viewport": "1600x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 152.5,
+          "left": 995,
+          "width": 410,
+          "height": 595.1
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1600,
+          "height": 900
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 1,
+        "confirmationNeutral": true,
+        "passwordInvalid": true,
+        "fieldErrorSpacing": [
+          "6px"
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "1440x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 172.3,
+          "left": 875,
+          "width": 410,
+          "height": 555.5
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": true,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "policy-error",
+      "viewport": "1440x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 152.5,
+          "left": 875,
+          "width": 410,
+          "height": 595.1
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 1,
+        "confirmationNeutral": true,
+        "passwordInvalid": true,
+        "fieldErrorSpacing": [
+          "6px"
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "1366x768",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 106.3,
+          "left": 819.5,
+          "width": 410,
+          "height": 555.5
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1366,
+          "height": 768
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": true,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "policy-error",
+      "viewport": "1366x768",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 86.5,
+          "left": 819.5,
+          "width": 410,
+          "height": 595.1
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1366,
+          "height": 768
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 1,
+        "confirmationNeutral": true,
+        "passwordInvalid": true,
+        "fieldErrorSpacing": [
+          "6px"
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "768x1024",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 201.2,
+          "left": 179,
+          "width": 410,
+          "height": 621.5
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 768,
+          "height": 1024
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": true,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "policy-error",
+      "viewport": "768x1024",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 181.4,
+          "left": 179,
+          "width": 410,
+          "height": 661.1
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 768,
+          "height": 1024
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 1,
+        "confirmationNeutral": true,
+        "passwordInvalid": true,
+        "fieldErrorSpacing": [
+          "6px"
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "430x932",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 156,
+          "left": 24,
+          "width": 382,
+          "height": 620
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 430,
+          "height": 932
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": true,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "policy-error",
+      "viewport": "430x932",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 136.2,
+          "left": 24,
+          "width": 382,
+          "height": 659.6
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 430,
+          "height": 932
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 1,
+        "confirmationNeutral": true,
+        "passwordInvalid": true,
+        "fieldErrorSpacing": [
+          "6px"
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 112.1,
+          "left": 24,
+          "width": 342,
+          "height": 619.8
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 390,
+          "height": 844
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": true,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "policy-error",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 92.3,
+          "left": 24,
+          "width": 342,
+          "height": 659.4
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 390,
+          "height": 844
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 1,
+        "confirmationNeutral": true,
+        "passwordInvalid": true,
+        "fieldErrorSpacing": [
+          "6px"
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "360x800",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 73.3,
+          "left": 24,
+          "width": 312,
+          "height": 653.3
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 360,
+          "height": 800
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": true,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "policy-error",
+      "viewport": "360x800",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 53.5,
+          "left": 24,
+          "width": 312,
+          "height": 692.9
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 360,
+          "height": 800
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 1,
+        "confirmationNeutral": true,
+        "passwordInvalid": true,
+        "fieldErrorSpacing": [
+          "6px"
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "reset",
+      "state": "reuse-error-simulated",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 250.9,
+          "left": 1235,
+          "width": 410,
+          "height": 578.3
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 1,
+        "confirmationNeutral": true,
+        "passwordInvalid": true,
+        "fieldErrorSpacing": [
+          "6px"
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {
+        "reuseCount": 1
+      }
+    },
+    {
+      "page": "reset",
+      "state": "reuse-error-simulated",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 92.3,
+          "left": 24,
+          "width": 342,
+          "height": 659.4
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 390,
+          "height": 844
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 1,
+        "confirmationNeutral": true,
+        "passwordInvalid": true,
+        "fieldErrorSpacing": [
+          "6px"
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {
+        "reuseCount": 1
+      }
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 280.6,
+          "left": 1235,
+          "width": 410,
+          "height": 518.8
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "forgot",
+      "state": "identity-error",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 240.8,
+          "left": 1235,
+          "width": 410,
+          "height": 598.5
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": {
+          "top": 380.6,
+          "left": 1235,
+          "width": 410,
+          "height": 63.7,
+          "text": "We couldn't verify the information provided. Please check your details or contact the authorized university office.",
+          "role": "alert",
+          "scrollWidth": 408,
+          "clientWidth": 408
+        },
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "1600x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 190.6,
+          "left": 995,
+          "width": 410,
+          "height": 518.8
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1600,
+          "height": 900
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "forgot",
+      "state": "identity-error",
+      "viewport": "1600x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 150.8,
+          "left": 995,
+          "width": 410,
+          "height": 598.5
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1600,
+          "height": 900
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": {
+          "top": 290.6,
+          "left": 995,
+          "width": 410,
+          "height": 63.7,
+          "text": "We couldn't verify the information provided. Please check your details or contact the authorized university office.",
+          "role": "alert",
+          "scrollWidth": 408,
+          "clientWidth": 408
+        },
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "1440x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 190.6,
+          "left": 875,
+          "width": 410,
+          "height": 518.8
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "forgot",
+      "state": "identity-error",
+      "viewport": "1440x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 150.8,
+          "left": 875,
+          "width": 410,
+          "height": 598.5
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": {
+          "top": 290.6,
+          "left": 875,
+          "width": 410,
+          "height": 63.7,
+          "text": "We couldn't verify the information provided. Please check your details or contact the authorized university office.",
+          "role": "alert",
+          "scrollWidth": 408,
+          "clientWidth": 408
+        },
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "1366x768",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 124.6,
+          "left": 819.5,
+          "width": 410,
+          "height": 518.8
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1366,
+          "height": 768
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "forgot",
+      "state": "identity-error",
+      "viewport": "1366x768",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 84.8,
+          "left": 819.5,
+          "width": 410,
+          "height": 598.5
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1366,
+          "height": 768
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": {
+          "top": 224.6,
+          "left": 819.5,
+          "width": 410,
+          "height": 63.7,
+          "text": "We couldn't verify the information provided. Please check your details or contact the authorized university office.",
+          "role": "alert",
+          "scrollWidth": 408,
+          "clientWidth": 408
+        },
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "768x1024",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 219.6,
+          "left": 179,
+          "width": 410,
+          "height": 584.8
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 768,
+          "height": 1024
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "forgot",
+      "state": "identity-error",
+      "viewport": "768x1024",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 179.8,
+          "left": 179,
+          "width": 410,
+          "height": 664.5
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 768,
+          "height": 1024
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": {
+          "top": 385.7,
+          "left": 179,
+          "width": 410,
+          "height": 63.7,
+          "text": "We couldn't verify the information provided. Please check your details or contact the authorized university office.",
+          "role": "alert",
+          "scrollWidth": 408,
+          "clientWidth": 408
+        },
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "430x932",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 174.3,
+          "left": 24,
+          "width": 382,
+          "height": 583.3
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 430,
+          "height": 932
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "forgot",
+      "state": "identity-error",
+      "viewport": "430x932",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 125.1,
+          "left": 24,
+          "width": 382,
+          "height": 681.8
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 430,
+          "height": 932
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": {
+          "top": 329.5,
+          "left": 24,
+          "width": 382,
+          "height": 82.5,
+          "text": "We couldn't verify the information provided. Please check your details or contact the authorized university office.",
+          "role": "alert",
+          "scrollWidth": 380,
+          "clientWidth": 380
+        },
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 130.4,
+          "left": 24,
+          "width": 342,
+          "height": 583.1
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 390,
+          "height": 844
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "forgot",
+      "state": "identity-error",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 81.2,
+          "left": 24,
+          "width": 342,
+          "height": 681.6
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 390,
+          "height": 844
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": {
+          "top": 285.4,
+          "left": 24,
+          "width": 342,
+          "height": 82.5,
+          "text": "We couldn't verify the information provided. Please check your details or contact the authorized university office.",
+          "role": "alert",
+          "scrollWidth": 340,
+          "clientWidth": 340
+        },
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "360x800",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 85.5,
+          "left": 24,
+          "width": 312,
+          "height": 629
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 360,
+          "height": 800
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "forgot",
+      "state": "identity-error",
+      "viewport": "360x800",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 36.2,
+          "left": 24,
+          "width": 312,
+          "height": 727.6
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 360,
+          "height": 800
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": {
+          "top": 269.1,
+          "left": 24,
+          "width": 312,
+          "height": 82.5,
+          "text": "We couldn't verify the information provided. Please check your details or contact the authorized university office.",
+          "role": "alert",
+          "scrollWidth": 310,
+          "clientWidth": 310
+        },
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 234,
+          "left": 1235,
+          "width": 410,
+          "height": 612
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "success-simulated",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 198.2,
+          "left": 1235,
+          "width": 410,
+          "height": 683.6
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": {
+          "top": 243.5,
+          "left": 1235,
+          "width": 410,
+          "height": 55.7,
+          "text": "Your password has been updated successfully. You can now sign in using your new password.",
+          "role": "status",
+          "live": "polite",
+          "atomic": "true",
+          "autoDismiss": "6000",
+          "dismissLabel": "Dismiss success message",
+          "dismissIcon": "bi bi-x-lg",
+          "scrollWidth": 408,
+          "clientWidth": 408,
+          "transition": "0.18s, 0.18s"
+        },
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "1600x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 144,
+          "left": 995,
+          "width": 410,
+          "height": 612
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1600,
+          "height": 900
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "success-simulated",
+      "viewport": "1600x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 108.2,
+          "left": 995,
+          "width": 410,
+          "height": 683.6
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1600,
+          "height": 900
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": {
+          "top": 153.5,
+          "left": 995,
+          "width": 410,
+          "height": 55.7,
+          "text": "Your password has been updated successfully. You can now sign in using your new password.",
+          "role": "status",
+          "live": "polite",
+          "atomic": "true",
+          "autoDismiss": "6000",
+          "dismissLabel": "Dismiss success message",
+          "dismissIcon": "bi bi-x-lg",
+          "scrollWidth": 408,
+          "clientWidth": 408,
+          "transition": "0.18s, 0.18s"
+        },
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "1440x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 144,
+          "left": 875,
+          "width": 410,
+          "height": 612
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "success-simulated",
+      "viewport": "1440x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 108.2,
+          "left": 875,
+          "width": 410,
+          "height": 683.6
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": {
+          "top": 153.5,
+          "left": 875,
+          "width": 410,
+          "height": 55.7,
+          "text": "Your password has been updated successfully. You can now sign in using your new password.",
+          "role": "status",
+          "live": "polite",
+          "atomic": "true",
+          "autoDismiss": "6000",
+          "dismissLabel": "Dismiss success message",
+          "dismissIcon": "bi bi-x-lg",
+          "scrollWidth": 408,
+          "clientWidth": 408,
+          "transition": "0.18s, 0.18s"
+        },
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "1366x768",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 78,
+          "left": 819.5,
+          "width": 410,
+          "height": 612
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1366,
+          "height": 768
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "success-simulated",
+      "viewport": "1366x768",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 48,
+          "left": 808.3,
+          "width": 410,
+          "height": 683.6
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1351,
+          "height": 779.6
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": {
+          "top": 93.4,
+          "left": 808.3,
+          "width": 410,
+          "height": 55.7,
+          "text": "Your password has been updated successfully. You can now sign in using your new password.",
+          "role": "status",
+          "live": "polite",
+          "atomic": "true",
+          "autoDismiss": "6000",
+          "dismissLabel": "Dismiss success message",
+          "dismissIcon": "bi bi-x-lg",
+          "scrollWidth": 408,
+          "clientWidth": 408,
+          "transition": "0.18s, 0.18s"
+        },
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "768x1024",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 173,
+          "left": 179,
+          "width": 410,
+          "height": 678
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 768,
+          "height": 1024
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "success-simulated",
+      "viewport": "768x1024",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 137.2,
+          "left": 179,
+          "width": 410,
+          "height": 749.7
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 768,
+          "height": 1024
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": {
+          "top": 248.6,
+          "left": 179,
+          "width": 410,
+          "height": 55.7,
+          "text": "Your password has been updated successfully. You can now sign in using your new password.",
+          "role": "status",
+          "live": "polite",
+          "atomic": "true",
+          "autoDismiss": "6000",
+          "dismissLabel": "Dismiss success message",
+          "dismissIcon": "bi bi-x-lg",
+          "scrollWidth": 408,
+          "clientWidth": 408,
+          "transition": "0.18s, 0.18s"
+        },
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "430x932",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 127.8,
+          "left": 24,
+          "width": 382,
+          "height": 676.5
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 430,
+          "height": 932
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "success-simulated",
+      "viewport": "430x932",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 91.9,
+          "left": 24,
+          "width": 382,
+          "height": 748.2
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 430,
+          "height": 932
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": {
+          "top": 201.8,
+          "left": 24,
+          "width": 382,
+          "height": 55.7,
+          "text": "Your password has been updated successfully. You can now sign in using your new password.",
+          "role": "status",
+          "live": "polite",
+          "atomic": "true",
+          "autoDismiss": "6000",
+          "dismissLabel": "Dismiss success message",
+          "dismissIcon": "bi bi-x-lg",
+          "scrollWidth": 380,
+          "clientWidth": 380,
+          "transition": "0.18s, 0.18s"
+        },
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 83.8,
+          "left": 24,
+          "width": 342,
+          "height": 676.3
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 390,
+          "height": 844
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "success-simulated",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 38.6,
+          "left": 24,
+          "width": 342,
+          "height": 766.8
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 390,
+          "height": 844
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": {
+          "top": 148.3,
+          "left": 24,
+          "width": 342,
+          "height": 74.5,
+          "text": "Your password has been updated successfully. You can now sign in using your new password.",
+          "role": "status",
+          "live": "polite",
+          "atomic": "true",
+          "autoDismiss": "6000",
+          "dismissLabel": "Dismiss success message",
+          "dismissIcon": "bi bi-x-lg",
+          "scrollWidth": 340,
+          "clientWidth": 340,
+          "transition": "0.18s, 0.18s"
+        },
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "360x800",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 53.3,
+          "left": 24,
+          "width": 312,
+          "height": 693.4
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 360,
+          "height": 800
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "success-simulated",
+      "viewport": "360x800",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 24,
+          "left": 24,
+          "width": 312,
+          "height": 784
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 360,
+          "height": 832
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": {
+          "top": 133.6,
+          "left": 24,
+          "width": 312,
+          "height": 74.5,
+          "text": "Your password has been updated successfully. You can now sign in using your new password.",
+          "role": "status",
+          "live": "polite",
+          "atomic": "true",
+          "autoDismiss": "6000",
+          "dismissLabel": "Dismiss success message",
+          "dismissIcon": "bi bi-x-lg",
+          "scrollWidth": 310,
+          "clientWidth": 310,
+          "transition": "0.18s, 0.18s"
+        },
+        "loginError": {
+          "visible": false,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "failed-after-success",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 207.8,
+          "left": 1235,
+          "width": 410,
+          "height": 664.3
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": {
+          "visible": true,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "failed-after-success",
+      "viewport": "1366x768",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 51.8,
+          "left": 819.5,
+          "width": 410,
+          "height": 664.3
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1366,
+          "height": 768
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": {
+          "visible": true,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "failed-after-success",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 57.7,
+          "left": 24,
+          "width": 342,
+          "height": 728.7
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 390,
+          "height": 844
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": {
+          "visible": true,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "failed-after-success",
+      "viewport": "360x800",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 27.1,
+          "left": 24,
+          "width": 312,
+          "height": 745.8
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 360,
+          "height": 800
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": {
+          "visible": true,
+          "text": "These credentials do not match our records."
+        },
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": false,
+        "fieldErrorSpacing": [],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42,
+        "iconOffsets": [
+          0,
+          0
+        ]
+      },
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "manual-dismiss",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {},
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "auto-dismiss-6s",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {},
+      "extra": {}
+    },
+    {
+      "page": "login",
+      "state": "reduced-motion-auto-dismiss",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {},
+      "extra": {
+        "transition": "0s"
+      }
+    },
+    {
+      "page": "login",
+      "state": "refresh-no-reappearance",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {},
+      "extra": {}
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 334.1,
+          "left": 1235,
+          "width": 410,
+          "height": 411.7
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42,
+        "iconOffsets": []
+      },
+      "extra": {}
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "1600x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 244.1,
+          "left": 995,
+          "width": 410,
+          "height": 411.7
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1600,
+          "height": 900
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42,
+        "iconOffsets": []
+      },
+      "extra": {}
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "1440x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 244.1,
+          "left": 875,
+          "width": 410,
+          "height": 411.7
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1440,
+          "height": 900
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42,
+        "iconOffsets": []
+      },
+      "extra": {}
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "1366x768",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 178.1,
+          "left": 819.5,
+          "width": 410,
+          "height": 411.7
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 1366,
+          "height": 768
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42,
+        "iconOffsets": []
+      },
+      "extra": {}
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "768x1024",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 273.1,
+          "left": 179,
+          "width": 410,
+          "height": 477.8
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 768,
+          "height": 1024
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42,
+        "iconOffsets": []
+      },
+      "extra": {}
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "430x932",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 227.9,
+          "left": 24,
+          "width": 382,
+          "height": 476.3
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 430,
+          "height": 932
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42,
+        "iconOffsets": []
+      },
+      "extra": {}
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 184,
+          "left": 24,
+          "width": 342,
+          "height": 476.1
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 390,
+          "height": 844
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42,
+        "iconOffsets": []
+      },
+      "extra": {}
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "360x800",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 129.2,
+          "left": 24,
+          "width": 312,
+          "height": 541.5
+        },
+        "authWrap": {
+          "top": 0,
+          "left": 0,
+          "width": 360,
+          "height": 800
+        },
+        "globalBannerCount": 0,
+        "dangerAlert": null,
+        "success": null,
+        "loginError": null,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "confirmationNeutral": null,
+        "passwordInvalid": null,
+        "fieldErrorSpacing": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42,
+        "iconOffsets": []
+      },
+      "extra": {}
+    }
+  ],
+  "allPass": true
+}

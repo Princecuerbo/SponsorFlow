@@ -1,0 +1,12 @@
+{
+  "capturedAt": "2026-11-20",
+  "viewport": "390x844",
+  "results": {
+    "forgotInputGroupFocus": "rgba(15, 41, 66, 0.12) 0px 0px 0px 3px",
+    "successDismissFocus": "rgba(21, 128, 61, 0.25) 0px 0px 0px 3px",
+    "loginSubmitFocus": "rgba(15, 41, 66, 0.25) 0px 0px 0px 3px",
+    "submitFocusVisible": true,
+    "activeElement": "sign-in-btn"
+  },
+  "allPass": true
+}

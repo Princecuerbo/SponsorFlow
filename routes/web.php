@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\StaffLoginController;
 use App\Http\Controllers\Auth\StudentLoginController;
+use App\Http\Controllers\Auth\StudentPasswordRecoveryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\Fassg\ApplicantVerificationController;
@@ -58,6 +59,16 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [StudentLoginController::class, 'login'])->name('login.store');
     Route::post('/login/verify', [StudentLoginController::class, 'verify'])->name('login.verify');
     Route::post('/login/complete', [StudentLoginController::class, 'complete'])->name('login.complete');
+
+    Route::get('/student/forgot-password', [StudentPasswordRecoveryController::class, 'showRequestForm'])
+        ->name('student.password.request');
+    Route::post('/student/forgot-password', [StudentPasswordRecoveryController::class, 'verify'])
+        ->name('student.password.verify');
+    Route::get('/student/reset-password', [StudentPasswordRecoveryController::class, 'showResetForm'])
+        ->name('student.password.reset');
+    Route::post('/student/reset-password', [StudentPasswordRecoveryController::class, 'reset'])
+        ->name('student.password.reset.store');
+
     Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
     Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
 

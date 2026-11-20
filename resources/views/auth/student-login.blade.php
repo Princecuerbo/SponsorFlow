@@ -91,6 +91,66 @@
             border-radius: 6px;
         }
 
+        /* Compact post-reset success notice. */
+        .sl-login-status {
+            background-color: #ECFDF3 !important;
+            color: #166534 !important;
+            border: 1px solid #BBF7D0 !important;
+            border-radius: 8px !important;
+            padding: 0.5rem 0.625rem !important;
+            font-size: 0.8125rem !important;
+            line-height: 1.45 !important;
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        .sl-login-status > i {
+            color: #15803D !important;
+            font-size: 0.95rem;
+        }
+
+        .sl-login-status.is-dismissing {
+            opacity: 0;
+            transform: translateY(-2px);
+        }
+
+        .sl-status-dismiss {
+            background: transparent !important;
+            border: 0 !important;
+            color: #166534 !important;
+            padding: 0 !important;
+            margin-left: auto !important;
+            width: 20px !important;
+            min-width: 20px !important;
+            height: 20px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 6px !important;
+            cursor: pointer;
+            transition: color 180ms ease, background-color 180ms ease;
+        }
+
+        .sl-status-dismiss:hover {
+            color: #14532D !important;
+            background-color: rgba(21, 128, 61, 0.1) !important;
+        }
+
+        .sl-status-dismiss:focus-visible {
+            outline: none !important;
+            box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.25) !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .sl-login-status,
+            .sl-status-dismiss {
+                transition: none !important;
+            }
+
+            .sl-login-status.is-dismissing {
+                transform: none !important;
+            }
+        }
+
         /* Primary Sign In Button */
         .sl-auth-submit-btn {
             background-color: #0F2942 !important;
@@ -655,9 +715,15 @@
                     @endif
 
                     @if (session('status'))
-                        <div class="alert alert-success p-2 small mb-3 border-0 shadow-sm"
-                            style="background-color: #d1e7dd; color: #0f5132;">
-                            <i class="bi bi-check-circle-fill me-1" aria-hidden="true"></i> {{ session('status') }}
+                        <div id="student-login-status" class="alert p-2 small mb-3 d-flex align-items-start gap-2 sl-login-status"
+                            data-student-login-status data-auto-dismiss="6000"
+                            role="status" aria-live="polite" aria-atomic="true">
+                            <i class="bi bi-check-circle flex-shrink-0 mt-1" aria-hidden="true"></i>
+                            <span>{{ session('status') }}</span>
+                            <button type="button" class="sl-status-dismiss" data-dismiss-student-login-status
+                                aria-label="Dismiss success message" title="Dismiss success message">
+                                <i class="bi bi-x-lg" aria-hidden="true"></i>
+                            </button>
                         </div>
                     @endif
 
@@ -702,7 +768,7 @@
                                 <label class="form-check-label small text-secondary" for="remember"
                                     style="font-size: 0.8rem;">Remember Me</label>
                             </div>
-                            <a href="#" class="small text-decoration-none fw-semibold"
+                            <a href="{{ route('student.password.request') }}" class="small text-decoration-none fw-semibold"
                                 style="color: #0F2537; font-size: 0.8rem;">Forgot Password?</a>
                         </div>
 
@@ -885,9 +951,54 @@
         }
         window.togglePasswordVisibility = togglePasswordVisibility;
 
+        // Scoped lifecycle for the post-reset success notice only.
+        (function () {
+            const alert = document.getElementById('student-login-status');
+            if (!alert) return;
+
+            let timer = null;
+            let dismissed = false;
+
+            const finalizeDismissal = () => {
+                if (alert.parentNode) alert.parentNode.removeChild(alert);
+            };
+
+            const dismiss = () => {
+                if (dismissed) return;
+                dismissed = true;
+
+                if (timer !== null) {
+                    window.clearTimeout(timer);
+                    timer = null;
+                }
+
+                alert.setAttribute('aria-hidden', 'true');
+                alert.classList.add('is-dismissing');
+
+                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    finalizeDismissal();
+                    return;
+                }
+
+                alert.addEventListener('transitionend', finalizeDismissal, { once: true });
+                window.setTimeout(finalizeDismissal, 250);
+            };
+
+            const dismissButton = alert.querySelector('[data-dismiss-student-login-status]');
+            if (dismissButton) dismissButton.addEventListener('click', dismiss);
+
+            document.addEventListener('student-login-attempt', dismiss);
+
+            const delay = Number(alert.dataset.autoDismiss);
+            if (Number.isFinite(delay) && delay > 0) {
+                timer = window.setTimeout(dismiss, delay);
+            }
+        })();
+
         // Initial Login Attempt (Verifies credentials via AJAX)
         async function attemptLogin(event) {
             event.preventDefault();
+            document.dispatchEvent(new CustomEvent('student-login-attempt'));
             const form = document.getElementById('student-login-form');
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;

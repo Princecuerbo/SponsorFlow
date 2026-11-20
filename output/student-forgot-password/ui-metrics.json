@@ -1,0 +1,537 @@
+{
+  "results": [
+    {
+      "page": "forgot-password",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 1235,
+          "right": 1645,
+          "top": 445.7,
+          "bottom": 489.7
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 1235,
+          "right": 1645,
+          "top": 598.8,
+          "bottom": 642.8
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 1235,
+          "right": 1645,
+          "top": 658.8,
+          "bottom": 700.8
+        },
+        "iconVisible": null
+      }
+    },
+    {
+      "page": "forgot-password",
+      "viewport": "1600x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 995,
+          "right": 1405,
+          "top": 355.7,
+          "bottom": 399.7
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 995,
+          "right": 1405,
+          "top": 508.8,
+          "bottom": 552.8
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 995,
+          "right": 1405,
+          "top": 568.8,
+          "bottom": 610.8
+        },
+        "iconVisible": null
+      }
+    },
+    {
+      "page": "forgot-password",
+      "viewport": "1440x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 875,
+          "right": 1285,
+          "top": 355.7,
+          "bottom": 399.7
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 875,
+          "right": 1285,
+          "top": 508.8,
+          "bottom": 552.8
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 875,
+          "right": 1285,
+          "top": 568.8,
+          "bottom": 610.8
+        },
+        "iconVisible": null
+      }
+    },
+    {
+      "page": "forgot-password",
+      "viewport": "1366x768",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 819.5,
+          "right": 1229.5,
+          "top": 289.7,
+          "bottom": 333.7
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 819.5,
+          "right": 1229.5,
+          "top": 442.8,
+          "bottom": 486.8
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 819.5,
+          "right": 1229.5,
+          "top": 502.8,
+          "bottom": 544.8
+        },
+        "iconVisible": null
+      }
+    },
+    {
+      "page": "forgot-password",
+      "viewport": "768x1024",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 179,
+          "right": 589,
+          "top": 450.7,
+          "bottom": 494.7
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 179,
+          "right": 589,
+          "top": 603.9,
+          "bottom": 647.9
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 179,
+          "right": 589,
+          "top": 663.9,
+          "bottom": 705.9
+        },
+        "iconVisible": null
+      }
+    },
+    {
+      "page": "forgot-password",
+      "viewport": "430x932",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 24,
+          "right": 406,
+          "top": 403.9,
+          "bottom": 447.9
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 24,
+          "right": 406,
+          "top": 557.1,
+          "bottom": 601.1
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 24,
+          "right": 406,
+          "top": 617.1,
+          "bottom": 659.1
+        },
+        "iconVisible": null
+      }
+    },
+    {
+      "page": "forgot-password",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 24,
+          "right": 366,
+          "top": 359.8,
+          "bottom": 403.8
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 24,
+          "right": 366,
+          "top": 513,
+          "bottom": 557
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 24,
+          "right": 366,
+          "top": 573,
+          "bottom": 615
+        },
+        "iconVisible": null
+      }
+    },
+    {
+      "page": "forgot-password",
+      "viewport": "360x800",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 24,
+          "right": 336,
+          "top": 329.1,
+          "bottom": 373.1
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 24,
+          "right": 336,
+          "top": 482.3,
+          "bottom": 526.3
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 24,
+          "right": 336,
+          "top": 542.3,
+          "bottom": 584.3
+        },
+        "iconVisible": null
+      }
+    },
+    {
+      "page": "reset-password",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 1235,
+          "right": 1645,
+          "top": 427.3,
+          "bottom": 471.3
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 1235,
+          "right": 1645,
+          "top": 617.2,
+          "bottom": 661.2
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 1235,
+          "right": 1645,
+          "top": 677.2,
+          "bottom": 719.2
+        },
+        "iconVisible": true
+      }
+    },
+    {
+      "page": "reset-password",
+      "viewport": "1600x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 995,
+          "right": 1405,
+          "top": 337.3,
+          "bottom": 381.3
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 995,
+          "right": 1405,
+          "top": 527.2,
+          "bottom": 571.2
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 995,
+          "right": 1405,
+          "top": 587.2,
+          "bottom": 629.2
+        },
+        "iconVisible": true
+      }
+    },
+    {
+      "page": "reset-password",
+      "viewport": "1440x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 875,
+          "right": 1285,
+          "top": 337.3,
+          "bottom": 381.3
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 875,
+          "right": 1285,
+          "top": 527.2,
+          "bottom": 571.2
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 875,
+          "right": 1285,
+          "top": 587.2,
+          "bottom": 629.2
+        },
+        "iconVisible": true
+      }
+    },
+    {
+      "page": "reset-password",
+      "viewport": "1366x768",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 819.5,
+          "right": 1229.5,
+          "top": 271.3,
+          "bottom": 315.3
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 819.5,
+          "right": 1229.5,
+          "top": 461.2,
+          "bottom": 505.2
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 819.5,
+          "right": 1229.5,
+          "top": 521.2,
+          "bottom": 563.2
+        },
+        "iconVisible": true
+      }
+    },
+    {
+      "page": "reset-password",
+      "viewport": "768x1024",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 179,
+          "right": 589,
+          "top": 432.3,
+          "bottom": 476.3
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 179,
+          "right": 589,
+          "top": 622.2,
+          "bottom": 666.2
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 179,
+          "right": 589,
+          "top": 682.2,
+          "bottom": 724.2
+        },
+        "iconVisible": true
+      }
+    },
+    {
+      "page": "reset-password",
+      "viewport": "430x932",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 24,
+          "right": 406,
+          "top": 385.6,
+          "bottom": 429.6
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 24,
+          "right": 406,
+          "top": 575.5,
+          "bottom": 619.5
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 24,
+          "right": 406,
+          "top": 635.5,
+          "bottom": 677.5
+        },
+        "iconVisible": true
+      }
+    },
+    {
+      "page": "reset-password",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 24,
+          "right": 366,
+          "top": 341.5,
+          "bottom": 385.5
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 24,
+          "right": 366,
+          "top": 531.4,
+          "bottom": 575.4
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 24,
+          "right": 366,
+          "top": 591.4,
+          "bottom": 633.4
+        },
+        "iconVisible": true
+      }
+    },
+    {
+      "page": "reset-password",
+      "viewport": "360x800",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "input": {
+          "height": 44,
+          "radius": "8px",
+          "left": 24,
+          "right": 336,
+          "top": 302.6,
+          "bottom": 346.6
+        },
+        "primary": {
+          "height": 44,
+          "radius": "8px",
+          "left": 24,
+          "right": 336,
+          "top": 508.9,
+          "bottom": 552.9
+        },
+        "secondary": {
+          "height": 42,
+          "radius": "8px",
+          "left": 24,
+          "right": 336,
+          "top": 568.9,
+          "bottom": 610.9
+        },
+        "iconVisible": true
+      }
+    },
+    {
+      "page": "toggle",
+      "ok": true
+    }
+  ],
+  "allPass": true
+}

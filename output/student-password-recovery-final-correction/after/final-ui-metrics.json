@@ -1,0 +1,1646 @@
+{
+  "capturedAt": "2026-11-20",
+  "notes": [
+    "Success alert screenshots are DOM simulations only; no password was reset.",
+    "Reset authorization was obtained through local verification; only a deliberately invalid password was submitted.",
+    "Assistance screenshots used a process-level recovery flag override; no environment file was changed."
+  ],
+  "results": [
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 262.3,
+          "left": 1235,
+          "width": 410,
+          "height": 555.5
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          },
+          {
+            "id": "password_confirmation",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": "password",
+            "pressed": "false"
+          },
+          {
+            "label": "Show password",
+            "controls": "password_confirmation",
+            "pressed": "false"
+          }
+        ],
+        "policyVisible": true,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "1600x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 172.3,
+          "left": 995,
+          "width": 410,
+          "height": 555.5
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          },
+          {
+            "id": "password_confirmation",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": "password",
+            "pressed": "false"
+          },
+          {
+            "label": "Show password",
+            "controls": "password_confirmation",
+            "pressed": "false"
+          }
+        ],
+        "policyVisible": true,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "1440x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 172.3,
+          "left": 875,
+          "width": 410,
+          "height": 555.5
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          },
+          {
+            "id": "password_confirmation",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": "password",
+            "pressed": "false"
+          },
+          {
+            "label": "Show password",
+            "controls": "password_confirmation",
+            "pressed": "false"
+          }
+        ],
+        "policyVisible": true,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "1366x768",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 106.3,
+          "left": 819.5,
+          "width": 410,
+          "height": 555.5
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          },
+          {
+            "id": "password_confirmation",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": "password",
+            "pressed": "false"
+          },
+          {
+            "label": "Show password",
+            "controls": "password_confirmation",
+            "pressed": "false"
+          }
+        ],
+        "policyVisible": true,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "768x1024",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 201.2,
+          "left": 179,
+          "width": 410,
+          "height": 621.5
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          },
+          {
+            "id": "password_confirmation",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": "password",
+            "pressed": "false"
+          },
+          {
+            "label": "Show password",
+            "controls": "password_confirmation",
+            "pressed": "false"
+          }
+        ],
+        "policyVisible": true,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "430x932",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 156,
+          "left": 24,
+          "width": 382,
+          "height": 620
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          },
+          {
+            "id": "password_confirmation",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": "password",
+            "pressed": "false"
+          },
+          {
+            "label": "Show password",
+            "controls": "password_confirmation",
+            "pressed": "false"
+          }
+        ],
+        "policyVisible": true,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 112.1,
+          "left": 24,
+          "width": 342,
+          "height": 619.8
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          },
+          {
+            "id": "password_confirmation",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": "password",
+            "pressed": "false"
+          },
+          {
+            "label": "Show password",
+            "controls": "password_confirmation",
+            "pressed": "false"
+          }
+        ],
+        "policyVisible": true,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "reset",
+      "state": "clean",
+      "viewport": "360x800",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 73.3,
+          "left": 24,
+          "width": 312,
+          "height": 653.3
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          },
+          {
+            "id": "password_confirmation",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": "password",
+            "pressed": "false"
+          },
+          {
+            "label": "Show password",
+            "controls": "password_confirmation",
+            "pressed": "false"
+          }
+        ],
+        "policyVisible": true,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "reset",
+      "state": "policy-error",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 371.6,
+          "left": 1223.8,
+          "width": 410,
+          "height": 593.1
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 1,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          },
+          {
+            "id": "password_confirmation",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": "password",
+            "pressed": "false"
+          },
+          {
+            "label": "Show password",
+            "controls": "password_confirmation",
+            "pressed": "false"
+          }
+        ],
+        "policyVisible": true,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "reset",
+      "state": "policy-error",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 239.8,
+          "left": 24,
+          "width": 342,
+          "height": 657.4
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 1,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          },
+          {
+            "id": "password_confirmation",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": "password",
+            "pressed": "false"
+          },
+          {
+            "label": "Show password",
+            "controls": "password_confirmation",
+            "pressed": "false"
+          }
+        ],
+        "policyVisible": true,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "reset",
+      "state": "eye-toggle",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "passwordType": "text",
+        "confirmationType": "password",
+        "firstPressed": "true",
+        "secondPressed": "false",
+        "firstIcon": "bi bi-eye-slash"
+      }
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 280.6,
+          "left": 1235,
+          "width": 410,
+          "height": 518.8
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "1600x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 190.6,
+          "left": 995,
+          "width": 410,
+          "height": 518.8
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "1440x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 190.6,
+          "left": 875,
+          "width": 410,
+          "height": 518.8
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "1366x768",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 124.6,
+          "left": 819.5,
+          "width": 410,
+          "height": 518.8
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "768x1024",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 219.6,
+          "left": 179,
+          "width": 410,
+          "height": 584.8
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "430x932",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 174.3,
+          "left": 24,
+          "width": 382,
+          "height": 583.3
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 130.4,
+          "left": 24,
+          "width": 342,
+          "height": 583.1
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "forgot",
+      "state": "clean",
+      "viewport": "360x800",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 85.5,
+          "left": 24,
+          "width": 312,
+          "height": 629
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 234,
+          "left": 1235,
+          "width": 410,
+          "height": 612
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": null,
+            "pressed": null
+          }
+        ],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "1600x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 144,
+          "left": 995,
+          "width": 410,
+          "height": 612
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": null,
+            "pressed": null
+          }
+        ],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "1440x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 144,
+          "left": 875,
+          "width": 410,
+          "height": 612
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": null,
+            "pressed": null
+          }
+        ],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "1366x768",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 78,
+          "left": 819.5,
+          "width": 410,
+          "height": 612
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": null,
+            "pressed": null
+          }
+        ],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "768x1024",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 173,
+          "left": 179,
+          "width": 410,
+          "height": 678
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": null,
+            "pressed": null
+          }
+        ],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "430x932",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 127.8,
+          "left": 24,
+          "width": 382,
+          "height": 676.5
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": null,
+            "pressed": null
+          }
+        ],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 83.8,
+          "left": 24,
+          "width": 342,
+          "height": 676.3
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": null,
+            "pressed": null
+          }
+        ],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "login",
+      "state": "clean",
+      "viewport": "360x800",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 53.3,
+          "left": 24,
+          "width": 312,
+          "height": 693.4
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": null,
+            "pressed": null
+          }
+        ],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "forgot",
+      "state": "identity-error",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 240.8,
+          "left": 1235,
+          "width": 410,
+          "height": 598.5
+        },
+        "alert": {
+          "top": 380.6,
+          "left": 1235,
+          "width": 410,
+          "height": 63.7,
+          "text": "We couldn't verify the information provided. Please check your details or contact the authorized university office.",
+          "role": "alert",
+          "classes": "sl-auth-alert-danger d-flex align-items-start gap-2 mb-3"
+        },
+        "alertCount": 1,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "forgot",
+      "state": "identity-error",
+      "viewport": "1366x768",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 84.8,
+          "left": 819.5,
+          "width": 410,
+          "height": 598.5
+        },
+        "alert": {
+          "top": 224.6,
+          "left": 819.5,
+          "width": 410,
+          "height": 63.7,
+          "text": "We couldn't verify the information provided. Please check your details or contact the authorized university office.",
+          "role": "alert",
+          "classes": "sl-auth-alert-danger d-flex align-items-start gap-2 mb-3"
+        },
+        "alertCount": 1,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "forgot",
+      "state": "identity-error",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 81.2,
+          "left": 24,
+          "width": 342,
+          "height": 681.6
+        },
+        "alert": {
+          "top": 285.4,
+          "left": 24,
+          "width": 342,
+          "height": 82.5,
+          "text": "We couldn't verify the information provided. Please check your details or contact the authorized university office.",
+          "role": "alert",
+          "classes": "sl-auth-alert-danger d-flex align-items-start gap-2 mb-3"
+        },
+        "alertCount": 1,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "forgot",
+      "state": "identity-error",
+      "viewport": "360x800",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 36.2,
+          "left": 24,
+          "width": 312,
+          "height": 727.6
+        },
+        "alert": {
+          "top": 269.1,
+          "left": 24,
+          "width": 312,
+          "height": 82.5,
+          "text": "We couldn't verify the information provided. Please check your details or contact the authorized university office.",
+          "role": "alert",
+          "classes": "sl-auth-alert-danger d-flex align-items-start gap-2 mb-3"
+        },
+        "alertCount": 1,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "forgot",
+      "state": "field-error",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 211.4,
+          "left": 24,
+          "width": 342,
+          "height": 603.9
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 1,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "login",
+      "state": "success-simulated",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 198.6,
+          "left": 1235,
+          "width": 410,
+          "height": 682.7
+        },
+        "alert": {
+          "top": 338.5,
+          "left": 1235,
+          "width": 410,
+          "height": 54.8,
+          "text": "Your password has been updated successfully. You can now sign in using your new password.",
+          "role": "status",
+          "classes": "alert p-2 small mb-3 d-flex align-items-start gap-2 sl-login-status"
+        },
+        "alertCount": 1,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": null,
+            "pressed": null
+          }
+        ],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "login",
+      "state": "success-simulated",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 48.5,
+          "left": 24,
+          "width": 342,
+          "height": 747
+        },
+        "alert": {
+          "top": 252.7,
+          "left": 24,
+          "width": 342,
+          "height": 54.8,
+          "text": "Your password has been updated successfully. You can now sign in using your new password.",
+          "role": "status",
+          "classes": "alert p-2 small mb-3 d-flex align-items-start gap-2 sl-login-status"
+        },
+        "alertCount": 1,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [
+          {
+            "id": "password",
+            "masked": true
+          }
+        ],
+        "eyeButtons": [
+          {
+            "label": "Show password",
+            "controls": null,
+            "pressed": null
+          }
+        ],
+        "policyVisible": false,
+        "iconOffsets": [
+          0,
+          0
+        ],
+        "inputHeights": [
+          44,
+          44
+        ],
+        "primaryHeight": 44,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "1920x1080",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 334.1,
+          "left": 1235,
+          "width": 410,
+          "height": 411.7
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "1600x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 244.1,
+          "left": 995,
+          "width": 410,
+          "height": 411.7
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "1440x900",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 244.1,
+          "left": 875,
+          "width": 410,
+          "height": 411.7
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "1366x768",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 178.1,
+          "left": 819.5,
+          "width": 410,
+          "height": 411.7
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "768x1024",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 273.1,
+          "left": 179,
+          "width": 410,
+          "height": 477.8
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "430x932",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 227.9,
+          "left": 24,
+          "width": 382,
+          "height": 476.3
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "390x844",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 184,
+          "left": 24,
+          "width": 342,
+          "height": 476.1
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42
+      }
+    },
+    {
+      "page": "assistance",
+      "state": "clean",
+      "viewport": "360x800",
+      "ok": true,
+      "metrics": {
+        "overflowX": 0,
+        "form": {
+          "top": 129.2,
+          "left": 24,
+          "width": 312,
+          "height": 541.5
+        },
+        "alert": null,
+        "alertCount": 0,
+        "emailFieldErrorCount": 0,
+        "passwordFieldErrorCount": 0,
+        "passwordInputs": [],
+        "eyeButtons": [],
+        "policyVisible": false,
+        "iconOffsets": [],
+        "inputHeights": [],
+        "primaryHeight": null,
+        "secondaryHeight": 42
+      }
+    }
+  ],
+  "allPass": true
+}

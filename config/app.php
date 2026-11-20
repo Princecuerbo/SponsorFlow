@@ -138,4 +138,19 @@ return [
     'staff_login_path' => env('STAFF_LOGIN_PATH', 'dorsu-staff-gate'),
     'admin_login_path' => env('ADMIN_LOGIN_PATH', 'dorsu-sysadmin-gate'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Student Password Recovery Demonstration
+    |--------------------------------------------------------------------------
+    |
+    | The email + birthdate reset prototype uses a single-use, short-lived
+    | server-side authorization and must only be enabled in an isolated local
+    | or testing environment with dedicated demonstration accounts. It is
+    | disabled by default, including on the public Render deployment.
+    |
+    */
+
+    'student_password_recovery_enabled' => env('STUDENT_PASSWORD_RECOVERY_ENABLED', false),
+    'student_password_recovery_ttl' => (int) env('STUDENT_PASSWORD_RECOVERY_TTL', 10),
+
 ];

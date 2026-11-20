@@ -1,6 +1,21 @@
 @php
-    $isAuthRoute = request()->is('login*', 'register*', 'admin/login*', 'staff/login*')
-        || request()->routeIs('login', 'login.store', 'admin.login', 'admin.login.store', 'staff.login', 'staff.login.store', 'register');
+    $isAuthRoute = request()->is(
+        'login*',
+        'register*',
+        'admin/login*',
+        'staff/login*',
+        'student/forgot-password*',
+        'student/reset-password*'
+    ) || request()->routeIs(
+        'login',
+        'login.store',
+        'admin.login',
+        'admin.login.store',
+        'staff.login',
+        'staff.login.store',
+        'register',
+        'student.password.*'
+    );
 @endphp
 
 @if (! $isAuthRoute)
