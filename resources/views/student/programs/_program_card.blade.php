@@ -39,60 +39,61 @@
                 <x-status-badge :status="$program->status" />
             </div>
 
-            <h3 class="h6 sf-heading mb-1 text-break">{{ $program->program_name }}</h3>
-            <div class="small text-secondary mb-3 text-break">
-                <i class="bi bi-building me-1"></i>{{ $program->sponsor->company_organization_name }}
+            <h3 class="h6 sf-heading mb-1 text-break sf-program-title">{{ $program->program_name }}</h3>
+            <div class="small text-secondary mb-3 text-break d-flex align-items-center gap-1.5">
+                <i class="bi bi-building flex-shrink-0" aria-hidden="true"></i>
+                <span>{{ $program->sponsor->company_organization_name }}</span>
             </div>
 
             <ul class="list-unstyled small mb-3 flex-grow-1">
-                <li class="d-flex justify-content-between gap-3 py-1 border-bottom">
+                <li class="d-flex justify-content-between gap-3 py-1.5 border-bottom">
                     <span class="text-secondary">Available slots</span>
                     <span class="fw-semibold">{{ $program->available_slots }}</span>
                 </li>
                 @if ($program->min_gpa)
-                    <li class="d-flex justify-content-between gap-3 py-1 border-bottom">
+                    <li class="d-flex justify-content-between gap-3 py-1.5 border-bottom">
                         <span class="text-secondary">Minimum GPA</span>
                         <span class="fw-semibold">{{ number_format($program->min_gpa, 2) }}</span>
                     </li>
                 @endif
-                <li class="d-flex justify-content-between gap-3 py-1 border-bottom">
+                <li class="d-flex justify-content-between gap-3 py-1.5 border-bottom">
                     <span class="text-secondary">Academic program</span>
                     <span class="fw-semibold text-end text-break">
                         @if ($courseDisplayNames->isNotEmpty())
                             {{ $courseDisplayNames->implode(', ') }}
                         @else
-                            <span class="text-success fw-semibold">All Academic Programs</span>
+                            <span class="text-secondary fw-medium">All Academic Programs</span>
                         @endif
                     </span>
                 </li>
                 @php
                     $eligibleYearLevels = $program->eligible_year_levels ?? [];
                 @endphp
-                <li class="d-flex justify-content-between gap-3 py-1 border-bottom">
+                <li class="d-flex justify-content-between gap-3 py-1.5 border-bottom">
                     <span class="text-secondary">Target year level</span>
                     <span class="fw-semibold text-end text-break">
                         @if (!empty($eligibleYearLevels))
                             {{ implode(', ', array_map(fn($y) => "Year {$y}", (array) $eligibleYearLevels)) }}
                         @else
-                            <span class="text-success fw-semibold">All Year Levels</span>
+                            <span class="text-secondary fw-medium">All Year Levels</span>
                         @endif
                     </span>
                 </li>
                 @php
                     $eligibleCampuses = $program->eligible_campuses ?? [];
                 @endphp
-                <li class="d-flex justify-content-between gap-3 py-1 border-bottom">
+                <li class="d-flex justify-content-between gap-3 py-1.5 border-bottom">
                     <span class="text-secondary">Target campus</span>
                     <span class="fw-semibold text-end text-break">
                         @if (!empty($eligibleCampuses))
                             {{ implode(', ', (array) $eligibleCampuses) }}
                         @else
-                            <span class="text-success fw-medium">All Campuses Allowed</span>
+                            <span class="text-secondary fw-medium">All Campuses Allowed</span>
                         @endif
                     </span>
                 </li>
                 @if ($program->address_requirement || filled($program->target_province) || filled($program->target_municipality))
-                    <li class="d-flex justify-content-between gap-3 py-1">
+                    <li class="d-flex justify-content-between gap-3 py-1.5">
                         <span class="text-secondary">Address requirement</span>
                         <span class="fw-semibold text-end text-break">
                             {{ trim(implode(', ', array_filter([
@@ -104,8 +105,8 @@
                     </li>
                 @endif
                 @if ($deadline)
-                    <li class="d-flex justify-content-between gap-3 py-1 border-bottom">
-                        <span class="text-secondary">📅 Application Deadline</span>
+                    <li class="d-flex justify-content-between gap-3 py-1.5 border-bottom">
+                        <span class="text-secondary"><i class="bi bi-calendar-event me-1" aria-hidden="true"></i>Application Deadline</span>
                         <span class="fw-semibold text-end">{{ $deadline->format('M j, Y') }}</span>
                     </li>
                 @endif
@@ -113,41 +114,41 @@
 
             <div class="mt-auto pt-3">
                 @if ($profile && $program->hasActiveApplicationForStudent($profile->id))
-                    <button type="button" class="btn btn-secondary btn-sm w-100" disabled>
-                        <i class="bi bi-check2-circle me-1"></i>Already Applied
+                    <button type="button" class="btn btn-secondary sf-program-card-btn w-100" disabled>
+                        <i class="bi bi-check2-circle me-1" aria-hidden="true"></i>Already Applied
                     </button>
                 @elseif ($profile && $program->hasRejectedApplicationForStudent($profile->id))
-                    <button type="button" class="btn btn-outline-danger btn-sm w-100 fw-semibold" disabled
+                    <button type="button" class="btn btn-outline-danger sf-program-card-btn w-100 fw-semibold" disabled
                         title="You cannot re-apply to this sponsorship program as your previous application was rejected.">
-                        <i class="bi bi-x-circle me-1"></i>Rejected - Re-application Not Allowed
+                        <i class="bi bi-x-circle me-1" aria-hidden="true"></i>Rejected - Re-application Not Allowed
                     </button>
                 @elseif ($program->available_slots <= 0)
-                    <button type="button" class="btn btn-outline-secondary btn-sm w-100" disabled>
-                        <i class="bi bi-lock me-1"></i>No Slots Available
+                    <button type="button" class="btn btn-outline-secondary sf-program-card-btn w-100" disabled>
+                        <i class="bi bi-lock me-1" aria-hidden="true"></i>No Slots Available
                     </button>
                 @elseif ($hasActiveGrant)
-                    <button type="button" class="btn btn-outline-secondary btn-sm w-100" disabled
+                    <button type="button" class="btn btn-outline-secondary sf-program-card-btn w-100" disabled
                         title="You already have an active approved sponsorship.">
-                        <i class="bi bi-lock me-1"></i>Active Sponsorship Lock
+                        <i class="bi bi-lock me-1" aria-hidden="true"></i>Active Sponsorship Lock
                     </button>
                 @elseif (($profile?->sle_fhe_status ?? null) !== 'Verified')
-                    <button type="button" class="btn btn-outline-secondary btn-sm w-100" disabled
+                    <button type="button" class="btn btn-outline-secondary sf-program-card-btn w-100" disabled
                         title="Applications are unavailable for this program.">
-                        <i class="bi bi-lock me-1"></i>Applications Unavailable
+                        <i class="bi bi-lock me-1" aria-hidden="true"></i>Applications Unavailable
                     </button>
                 @elseif ($isApplicationClosed)
                     <div class="text-center py-2">
                         <span class="badge rounded-2 px-3 py-2 fw-semibold"
                             style="background-color: rgba(108, 117, 125, 0.12) !important; color: #6c757d !important;">
-                            <i class="bi bi-calendar-x me-1"></i>Applications Closed
+                            <i class="bi bi-calendar-x me-1" aria-hidden="true"></i>Applications Closed
                         </span>
                     </div>
                 @else
                     <a href="{{ route('student.applications.create', ['sponsorshipProgram' => $program->id]) }}"
-                        class="btn btn-sf-navy btn-sm w-100 fw-semibold apply-now-btn"
+                        class="btn btn-sf-navy sf-program-card-btn w-100 fw-semibold apply-now-btn"
                         data-check-url="{{ route('api.programs.check-eligibility', ['sponsorshipProgram' => $program->id]) }}"
                         data-apply-url="{{ route('student.applications.create', ['sponsorshipProgram' => $program->id]) }}">
-                        <i class="bi bi-pencil-square me-1"></i>Apply Now
+                        <i class="bi bi-pencil-square me-1" aria-hidden="true"></i>Apply Now
                     </a>
                 @endif
             </div>

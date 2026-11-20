@@ -1,0 +1,3861 @@
+{
+  "viewports": {
+    "1920x1080": {
+      "unverified-dashboard": {
+        "viewport": "1920x1080",
+        "clientWidth": 1920,
+        "scrollWidth": 1920,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 517,
+                "h": 159,
+                "top": 203,
+                "left": 288,
+                "right": 805
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 517,
+                "h": 159,
+                "top": 203,
+                "left": 829,
+                "right": 1347
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 517,
+                "h": 159,
+                "top": 203,
+                "left": 1371,
+                "right": 1888
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Submit a verification request to have your eligibility reviewed by FASSG."
+        }
+      },
+      "unverified-sle": {
+        "viewport": "1920x1080",
+        "clientWidth": 1920,
+        "scrollWidth": 1920,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 318,
+            "left": 1277,
+            "right": 1323
+          },
+          "support": "Submit a verification request to have your SLE-FHE eligibility reviewed by FASSG.",
+          "blockRect": {
+            "w": 603,
+            "h": 104,
+            "top": 301,
+            "left": 1260,
+            "right": 1863
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 1019,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "pending-dashboard": {
+        "viewport": "1920x1080",
+        "clientWidth": 1920,
+        "scrollWidth": 1920,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 517,
+                "h": 159,
+                "top": 203,
+                "left": 288,
+                "right": 805
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 517,
+                "h": 159,
+                "top": 203,
+                "left": 829,
+                "right": 1347
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Pending",
+              "rect": {
+                "w": 517,
+                "h": 159,
+                "top": 203,
+                "left": 1371,
+                "right": 1888
+              },
+              "icon": "bi bi-clock",
+              "iconColor": "rgb(161, 98, 7)",
+              "iconBg": "rgb(255, 247, 230)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Pending",
+          "statusSupport": "Your verification request is awaiting FASSG review."
+        }
+      },
+      "pending-sle": {
+        "viewport": "1920x1080",
+        "clientWidth": 1920,
+        "scrollWidth": 1920,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Pending",
+          "badgeStyle": {
+            "color": "rgb(161, 98, 7)",
+            "backgroundColor": "rgb(255, 247, 230)",
+            "borderColor": "rgb(245, 213, 139)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-clock fs-5",
+          "iconColor": "rgb(161, 98, 7)",
+          "iconBg": "rgb(255, 247, 230)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 318,
+            "left": 1277,
+            "right": 1323
+          },
+          "support": "Your SLE-FHE verification request is awaiting FASSG review.",
+          "blockRect": {
+            "w": 603,
+            "h": 104,
+            "top": 301,
+            "left": 1260,
+            "right": 1863
+          },
+          "lockNotice": "Your submitted address is under review and can no longer be edited.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 1019,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "button",
+            "rect": {
+              "w": 603,
+              "h": 42,
+              "top": 437,
+              "left": 1260,
+              "right": 1863
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "verified-dashboard": {
+        "viewport": "1920x1080",
+        "clientWidth": 1920,
+        "scrollWidth": 1920,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 517,
+                "h": 159,
+                "top": 203,
+                "left": 288,
+                "right": 805
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 517,
+                "h": 159,
+                "top": 203,
+                "left": 829,
+                "right": 1347
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Verified",
+              "rect": {
+                "w": 517,
+                "h": 159,
+                "top": 203,
+                "left": 1371,
+                "right": 1888
+              },
+              "icon": "bi bi-shield-check",
+              "iconColor": "rgb(4, 120, 87)",
+              "iconBg": "rgb(236, 253, 245)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Verified",
+          "statusSupport": "Your SLE-FHE eligibility has been verified by FASSG."
+        }
+      },
+      "verified-sle": {
+        "viewport": "1920x1080",
+        "clientWidth": 1905,
+        "scrollWidth": 1905,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Verified",
+          "badgeStyle": {
+            "color": "rgb(4, 120, 87)",
+            "backgroundColor": "rgb(236, 253, 245)",
+            "borderColor": "rgb(167, 243, 208)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield-check fs-5",
+          "iconColor": "rgb(4, 120, 87)",
+          "iconBg": "rgb(236, 253, 245)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 415,
+            "left": 1269,
+            "right": 1315
+          },
+          "support": "Your SLE-FHE eligibility has been verified by FASSG.",
+          "blockRect": {
+            "w": 596,
+            "h": 104,
+            "top": 398,
+            "left": 1252,
+            "right": 1848
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 1019,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "a",
+            "rect": {
+              "w": 596,
+              "h": 42,
+              "top": 534,
+              "left": 1252,
+              "right": 1848
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "SLE-FHE eligibility verified Your SLE-FHE eligibility has been verified by FASSG. Verification confirms eligibility only; it does not approve a sponsorship application or guarantee a grant."
+          ]
+        }
+      },
+      "rejected-dashboard": {
+        "viewport": "1920x1080",
+        "clientWidth": 1920,
+        "scrollWidth": 1920,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 517,
+                "h": 176,
+                "top": 203,
+                "left": 288,
+                "right": 805
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 517,
+                "h": 176,
+                "top": 203,
+                "left": 829,
+                "right": 1347
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 517,
+                "h": 176,
+                "top": 203,
+                "left": 1371,
+                "right": 1888
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Previous verification request not verified. Submit a new request for FASSG review."
+        }
+      },
+      "rejected-sle": {
+        "viewport": "1920x1080",
+        "clientWidth": 1920,
+        "scrollWidth": 1920,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 415,
+            "left": 1277,
+            "right": 1323
+          },
+          "support": "Previous verification request not verified. You may submit a new request for FASSG review.",
+          "blockRect": {
+            "w": 603,
+            "h": 122,
+            "top": 398,
+            "left": 1260,
+            "right": 1863
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 1019,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "Previous verification request not verified You may review your details and submit a new request. This outcome is recorded by FASSG and does not prevent a new review."
+          ]
+        }
+      }
+    },
+    "1600x900": {
+      "unverified-dashboard": {
+        "viewport": "1600x900",
+        "clientWidth": 1585,
+        "scrollWidth": 1585,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 406,
+                "h": 176,
+                "top": 203,
+                "left": 288,
+                "right": 694
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 406,
+                "h": 176,
+                "top": 203,
+                "left": 718,
+                "right": 1123
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 406,
+                "h": 176,
+                "top": 203,
+                "left": 1147,
+                "right": 1553
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Submit a verification request to have your eligibility reviewed by FASSG."
+        }
+      },
+      "unverified-sle": {
+        "viewport": "1600x900",
+        "clientWidth": 1585,
+        "scrollWidth": 1585,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 318,
+            "left": 1082,
+            "right": 1128
+          },
+          "support": "Submit a verification request to have your SLE-FHE eligibility reviewed by FASSG.",
+          "blockRect": {
+            "w": 463,
+            "h": 122,
+            "top": 301,
+            "left": 1065,
+            "right": 1528
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 839,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "pending-dashboard": {
+        "viewport": "1600x900",
+        "clientWidth": 1585,
+        "scrollWidth": 1585,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 406,
+                "h": 159,
+                "top": 203,
+                "left": 288,
+                "right": 694
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 406,
+                "h": 159,
+                "top": 203,
+                "left": 718,
+                "right": 1123
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Pending",
+              "rect": {
+                "w": 406,
+                "h": 159,
+                "top": 203,
+                "left": 1147,
+                "right": 1553
+              },
+              "icon": "bi bi-clock",
+              "iconColor": "rgb(161, 98, 7)",
+              "iconBg": "rgb(255, 247, 230)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Pending",
+          "statusSupport": "Your verification request is awaiting FASSG review."
+        }
+      },
+      "pending-sle": {
+        "viewport": "1600x900",
+        "clientWidth": 1585,
+        "scrollWidth": 1585,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Pending",
+          "badgeStyle": {
+            "color": "rgb(161, 98, 7)",
+            "backgroundColor": "rgb(255, 247, 230)",
+            "borderColor": "rgb(245, 213, 139)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-clock fs-5",
+          "iconColor": "rgb(161, 98, 7)",
+          "iconBg": "rgb(255, 247, 230)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 318,
+            "left": 1082,
+            "right": 1128
+          },
+          "support": "Your SLE-FHE verification request is awaiting FASSG review.",
+          "blockRect": {
+            "w": 463,
+            "h": 104,
+            "top": 301,
+            "left": 1065,
+            "right": 1528
+          },
+          "lockNotice": "Your submitted address is under review and can no longer be edited.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 839,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "button",
+            "rect": {
+              "w": 463,
+              "h": 42,
+              "top": 437,
+              "left": 1065,
+              "right": 1528
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "verified-dashboard": {
+        "viewport": "1600x900",
+        "clientWidth": 1585,
+        "scrollWidth": 1585,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 406,
+                "h": 159,
+                "top": 203,
+                "left": 288,
+                "right": 694
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 406,
+                "h": 159,
+                "top": 203,
+                "left": 718,
+                "right": 1123
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Verified",
+              "rect": {
+                "w": 406,
+                "h": 159,
+                "top": 203,
+                "left": 1147,
+                "right": 1553
+              },
+              "icon": "bi bi-shield-check",
+              "iconColor": "rgb(4, 120, 87)",
+              "iconBg": "rgb(236, 253, 245)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Verified",
+          "statusSupport": "Your SLE-FHE eligibility has been verified by FASSG."
+        }
+      },
+      "verified-sle": {
+        "viewport": "1600x900",
+        "clientWidth": 1585,
+        "scrollWidth": 1585,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Verified",
+          "badgeStyle": {
+            "color": "rgb(4, 120, 87)",
+            "backgroundColor": "rgb(236, 253, 245)",
+            "borderColor": "rgb(167, 243, 208)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield-check fs-5",
+          "iconColor": "rgb(4, 120, 87)",
+          "iconBg": "rgb(236, 253, 245)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 415,
+            "left": 1082,
+            "right": 1128
+          },
+          "support": "Your SLE-FHE eligibility has been verified by FASSG.",
+          "blockRect": {
+            "w": 463,
+            "h": 104,
+            "top": 398,
+            "left": 1065,
+            "right": 1528
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 839,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "a",
+            "rect": {
+              "w": 463,
+              "h": 42,
+              "top": 534,
+              "left": 1065,
+              "right": 1528
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "SLE-FHE eligibility verified Your SLE-FHE eligibility has been verified by FASSG. Verification confirms eligibility only; it does not approve a sponsorship application or guarantee a grant."
+          ]
+        }
+      },
+      "rejected-dashboard": {
+        "viewport": "1600x900",
+        "clientWidth": 1585,
+        "scrollWidth": 1585,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 406,
+                "h": 176,
+                "top": 203,
+                "left": 288,
+                "right": 694
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 406,
+                "h": 176,
+                "top": 203,
+                "left": 718,
+                "right": 1123
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 406,
+                "h": 176,
+                "top": 203,
+                "left": 1147,
+                "right": 1553
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Previous verification request not verified. Submit a new request for FASSG review."
+        }
+      },
+      "rejected-sle": {
+        "viewport": "1600x900",
+        "clientWidth": 1585,
+        "scrollWidth": 1585,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 415,
+            "left": 1082,
+            "right": 1128
+          },
+          "support": "Previous verification request not verified. You may submit a new request for FASSG review.",
+          "blockRect": {
+            "w": 463,
+            "h": 122,
+            "top": 398,
+            "left": 1065,
+            "right": 1528
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 839,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "Previous verification request not verified You may review your details and submit a new request. This outcome is recorded by FASSG and does not prevent a new review."
+          ]
+        }
+      }
+    },
+    "1440x900": {
+      "unverified-dashboard": {
+        "viewport": "1440x900",
+        "clientWidth": 1425,
+        "scrollWidth": 1425,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 352,
+                "h": 176,
+                "top": 203,
+                "left": 288,
+                "right": 640
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 352,
+                "h": 176,
+                "top": 203,
+                "left": 664,
+                "right": 1017
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 352,
+                "h": 176,
+                "top": 203,
+                "left": 1041,
+                "right": 1393
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Submit a verification request to have your eligibility reviewed by FASSG."
+        }
+      },
+      "unverified-sle": {
+        "viewport": "1440x900",
+        "clientWidth": 1425,
+        "scrollWidth": 1425,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 318,
+            "left": 989,
+            "right": 1035
+          },
+          "support": "Submit a verification request to have your SLE-FHE eligibility reviewed by FASSG.",
+          "blockRect": {
+            "w": 396,
+            "h": 122,
+            "top": 301,
+            "left": 972,
+            "right": 1368
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 839,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "pending-dashboard": {
+        "viewport": "1440x900",
+        "clientWidth": 1425,
+        "scrollWidth": 1425,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 352,
+                "h": 159,
+                "top": 203,
+                "left": 288,
+                "right": 640
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 352,
+                "h": 159,
+                "top": 203,
+                "left": 664,
+                "right": 1017
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Pending",
+              "rect": {
+                "w": 352,
+                "h": 159,
+                "top": 203,
+                "left": 1041,
+                "right": 1393
+              },
+              "icon": "bi bi-clock",
+              "iconColor": "rgb(161, 98, 7)",
+              "iconBg": "rgb(255, 247, 230)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Pending",
+          "statusSupport": "Your verification request is awaiting FASSG review."
+        }
+      },
+      "pending-sle": {
+        "viewport": "1440x900",
+        "clientWidth": 1425,
+        "scrollWidth": 1425,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Pending",
+          "badgeStyle": {
+            "color": "rgb(161, 98, 7)",
+            "backgroundColor": "rgb(255, 247, 230)",
+            "borderColor": "rgb(245, 213, 139)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-clock fs-5",
+          "iconColor": "rgb(161, 98, 7)",
+          "iconBg": "rgb(255, 247, 230)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 318,
+            "left": 989,
+            "right": 1035
+          },
+          "support": "Your SLE-FHE verification request is awaiting FASSG review.",
+          "blockRect": {
+            "w": 396,
+            "h": 122,
+            "top": 301,
+            "left": 972,
+            "right": 1368
+          },
+          "lockNotice": "Your submitted address is under review and can no longer be edited.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 839,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "button",
+            "rect": {
+              "w": 396,
+              "h": 42,
+              "top": 455,
+              "left": 972,
+              "right": 1368
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "verified-dashboard": {
+        "viewport": "1440x900",
+        "clientWidth": 1425,
+        "scrollWidth": 1425,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 352,
+                "h": 176,
+                "top": 203,
+                "left": 288,
+                "right": 640
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 352,
+                "h": 176,
+                "top": 203,
+                "left": 664,
+                "right": 1017
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Verified",
+              "rect": {
+                "w": 352,
+                "h": 176,
+                "top": 203,
+                "left": 1041,
+                "right": 1393
+              },
+              "icon": "bi bi-shield-check",
+              "iconColor": "rgb(4, 120, 87)",
+              "iconBg": "rgb(236, 253, 245)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Verified",
+          "statusSupport": "Your SLE-FHE eligibility has been verified by FASSG."
+        }
+      },
+      "verified-sle": {
+        "viewport": "1440x900",
+        "clientWidth": 1425,
+        "scrollWidth": 1425,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Verified",
+          "badgeStyle": {
+            "color": "rgb(4, 120, 87)",
+            "backgroundColor": "rgb(236, 253, 245)",
+            "borderColor": "rgb(167, 243, 208)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield-check fs-5",
+          "iconColor": "rgb(4, 120, 87)",
+          "iconBg": "rgb(236, 253, 245)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 415,
+            "left": 989,
+            "right": 1035
+          },
+          "support": "Your SLE-FHE eligibility has been verified by FASSG.",
+          "blockRect": {
+            "w": 396,
+            "h": 122,
+            "top": 398,
+            "left": 972,
+            "right": 1368
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 839,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "a",
+            "rect": {
+              "w": 396,
+              "h": 42,
+              "top": 553,
+              "left": 972,
+              "right": 1368
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "SLE-FHE eligibility verified Your SLE-FHE eligibility has been verified by FASSG. Verification confirms eligibility only; it does not approve a sponsorship application or guarantee a grant."
+          ]
+        }
+      },
+      "rejected-dashboard": {
+        "viewport": "1440x900",
+        "clientWidth": 1425,
+        "scrollWidth": 1425,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 352,
+                "h": 176,
+                "top": 203,
+                "left": 288,
+                "right": 640
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 352,
+                "h": 176,
+                "top": 203,
+                "left": 664,
+                "right": 1017
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 352,
+                "h": 176,
+                "top": 203,
+                "left": 1041,
+                "right": 1393
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Previous verification request not verified. Submit a new request for FASSG review."
+        }
+      },
+      "rejected-sle": {
+        "viewport": "1440x900",
+        "clientWidth": 1425,
+        "scrollWidth": 1425,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 415,
+            "left": 989,
+            "right": 1035
+          },
+          "support": "Previous verification request not verified. You may submit a new request for FASSG review.",
+          "blockRect": {
+            "w": 396,
+            "h": 122,
+            "top": 398,
+            "left": 972,
+            "right": 1368
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 839,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "Previous verification request not verified You may review your details and submit a new request. This outcome is recorded by FASSG and does not prevent a new review."
+          ]
+        }
+      }
+    },
+    "1366x768": {
+      "unverified-dashboard": {
+        "viewport": "1366x768",
+        "clientWidth": 1351,
+        "scrollWidth": 1351,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 176,
+                "top": 203,
+                "left": 288,
+                "right": 616
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 176,
+                "top": 203,
+                "left": 640,
+                "right": 967
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 328,
+                "h": 176,
+                "top": 203,
+                "left": 991,
+                "right": 1319
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Submit a verification request to have your eligibility reviewed by FASSG."
+        }
+      },
+      "unverified-sle": {
+        "viewport": "1366x768",
+        "clientWidth": 1351,
+        "scrollWidth": 1351,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 318,
+            "left": 945,
+            "right": 991
+          },
+          "support": "Submit a verification request to have your SLE-FHE eligibility reviewed by FASSG.",
+          "blockRect": {
+            "w": 366,
+            "h": 122,
+            "top": 301,
+            "left": 928,
+            "right": 1294
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 707,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "pending-dashboard": {
+        "viewport": "1366x768",
+        "clientWidth": 1351,
+        "scrollWidth": 1351,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 176,
+                "top": 203,
+                "left": 288,
+                "right": 616
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 176,
+                "top": 203,
+                "left": 640,
+                "right": 967
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Pending",
+              "rect": {
+                "w": 328,
+                "h": 176,
+                "top": 203,
+                "left": 991,
+                "right": 1319
+              },
+              "icon": "bi bi-clock",
+              "iconColor": "rgb(161, 98, 7)",
+              "iconBg": "rgb(255, 247, 230)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Pending",
+          "statusSupport": "Your verification request is awaiting FASSG review."
+        }
+      },
+      "pending-sle": {
+        "viewport": "1366x768",
+        "clientWidth": 1351,
+        "scrollWidth": 1351,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Pending",
+          "badgeStyle": {
+            "color": "rgb(161, 98, 7)",
+            "backgroundColor": "rgb(255, 247, 230)",
+            "borderColor": "rgb(245, 213, 139)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-clock fs-5",
+          "iconColor": "rgb(161, 98, 7)",
+          "iconBg": "rgb(255, 247, 230)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 318,
+            "left": 945,
+            "right": 991
+          },
+          "support": "Your SLE-FHE verification request is awaiting FASSG review.",
+          "blockRect": {
+            "w": 366,
+            "h": 122,
+            "top": 301,
+            "left": 928,
+            "right": 1294
+          },
+          "lockNotice": "Your submitted address is under review and can no longer be edited.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 707,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "button",
+            "rect": {
+              "w": 366,
+              "h": 42,
+              "top": 455,
+              "left": 928,
+              "right": 1294
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "verified-dashboard": {
+        "viewport": "1366x768",
+        "clientWidth": 1351,
+        "scrollWidth": 1351,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 176,
+                "top": 203,
+                "left": 288,
+                "right": 616
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 176,
+                "top": 203,
+                "left": 640,
+                "right": 967
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Verified",
+              "rect": {
+                "w": 328,
+                "h": 176,
+                "top": 203,
+                "left": 991,
+                "right": 1319
+              },
+              "icon": "bi bi-shield-check",
+              "iconColor": "rgb(4, 120, 87)",
+              "iconBg": "rgb(236, 253, 245)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Verified",
+          "statusSupport": "Your SLE-FHE eligibility has been verified by FASSG."
+        }
+      },
+      "verified-sle": {
+        "viewport": "1366x768",
+        "clientWidth": 1351,
+        "scrollWidth": 1351,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Verified",
+          "badgeStyle": {
+            "color": "rgb(4, 120, 87)",
+            "backgroundColor": "rgb(236, 253, 245)",
+            "borderColor": "rgb(167, 243, 208)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield-check fs-5",
+          "iconColor": "rgb(4, 120, 87)",
+          "iconBg": "rgb(236, 253, 245)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 415,
+            "left": 945,
+            "right": 991
+          },
+          "support": "Your SLE-FHE eligibility has been verified by FASSG.",
+          "blockRect": {
+            "w": 366,
+            "h": 122,
+            "top": 398,
+            "left": 928,
+            "right": 1294
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 707,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "a",
+            "rect": {
+              "w": 366,
+              "h": 42,
+              "top": 553,
+              "left": 928,
+              "right": 1294
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "SLE-FHE eligibility verified Your SLE-FHE eligibility has been verified by FASSG. Verification confirms eligibility only; it does not approve a sponsorship application or guarantee a grant."
+          ]
+        }
+      },
+      "rejected-dashboard": {
+        "viewport": "1366x768",
+        "clientWidth": 1351,
+        "scrollWidth": 1351,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 176,
+                "top": 203,
+                "left": 288,
+                "right": 616
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 176,
+                "top": 203,
+                "left": 640,
+                "right": 967
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 328,
+                "h": 176,
+                "top": 203,
+                "left": 991,
+                "right": 1319
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Previous verification request not verified. Submit a new request for FASSG review."
+        }
+      },
+      "rejected-sle": {
+        "viewport": "1366x768",
+        "clientWidth": 1351,
+        "scrollWidth": 1351,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 415,
+            "left": 945,
+            "right": 991
+          },
+          "support": "Previous verification request not verified. You may submit a new request for FASSG review.",
+          "blockRect": {
+            "w": 366,
+            "h": 141,
+            "top": 398,
+            "left": 928,
+            "right": 1294
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 231,
+              "h": 47,
+              "top": 707,
+              "left": 12,
+              "right": 243
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "Previous verification request not verified You may review your details and submit a new request. This outcome is recorded by FASSG and does not prevent a new review."
+          ]
+        }
+      }
+    },
+    "768x1024": {
+      "unverified-dashboard": {
+        "viewport": "768x1024",
+        "clientWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 229,
+                "h": 192,
+                "top": 184,
+                "left": 16,
+                "right": 245
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 229,
+                "h": 192,
+                "top": 184,
+                "left": 269,
+                "right": 499
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 229,
+                "h": 192,
+                "top": 184,
+                "left": 523,
+                "right": 752
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Submit a verification request to have your eligibility reviewed by FASSG."
+        }
+      },
+      "unverified-sle": {
+        "viewport": "768x1024",
+        "clientWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1033,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Submit a verification request to have your SLE-FHE eligibility reviewed by FASSG.",
+          "blockRect": {
+            "w": 686,
+            "h": 104,
+            "top": 1016,
+            "left": 41,
+            "right": 727
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "pending-dashboard": {
+        "viewport": "768x1024",
+        "clientWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 229,
+                "h": 174,
+                "top": 184,
+                "left": 16,
+                "right": 245
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 229,
+                "h": 174,
+                "top": 184,
+                "left": 269,
+                "right": 499
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Pending",
+              "rect": {
+                "w": 229,
+                "h": 174,
+                "top": 184,
+                "left": 523,
+                "right": 752
+              },
+              "icon": "bi bi-clock",
+              "iconColor": "rgb(161, 98, 7)",
+              "iconBg": "rgb(255, 247, 230)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Pending",
+          "statusSupport": "Your verification request is awaiting FASSG review."
+        }
+      },
+      "pending-sle": {
+        "viewport": "768x1024",
+        "clientWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Pending",
+          "badgeStyle": {
+            "color": "rgb(161, 98, 7)",
+            "backgroundColor": "rgb(255, 247, 230)",
+            "borderColor": "rgb(245, 213, 139)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-clock fs-5",
+          "iconColor": "rgb(161, 98, 7)",
+          "iconBg": "rgb(255, 247, 230)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1113,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Your SLE-FHE verification request is awaiting FASSG review.",
+          "blockRect": {
+            "w": 686,
+            "h": 104,
+            "top": 1096,
+            "left": 41,
+            "right": 727
+          },
+          "lockNotice": "Your submitted address is under review and can no longer be edited.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "button",
+            "rect": {
+              "w": 686,
+              "h": 42,
+              "top": 1232,
+              "left": 41,
+              "right": 727
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "verified-dashboard": {
+        "viewport": "768x1024",
+        "clientWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 229,
+                "h": 174,
+                "top": 184,
+                "left": 16,
+                "right": 245
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 229,
+                "h": 174,
+                "top": 184,
+                "left": 269,
+                "right": 499
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Verified",
+              "rect": {
+                "w": 229,
+                "h": 174,
+                "top": 184,
+                "left": 523,
+                "right": 752
+              },
+              "icon": "bi bi-shield-check",
+              "iconColor": "rgb(4, 120, 87)",
+              "iconBg": "rgb(236, 253, 245)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Verified",
+          "statusSupport": "Your SLE-FHE eligibility has been verified by FASSG."
+        }
+      },
+      "verified-sle": {
+        "viewport": "768x1024",
+        "clientWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Verified",
+          "badgeStyle": {
+            "color": "rgb(4, 120, 87)",
+            "backgroundColor": "rgb(236, 253, 245)",
+            "borderColor": "rgb(167, 243, 208)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield-check fs-5",
+          "iconColor": "rgb(4, 120, 87)",
+          "iconBg": "rgb(236, 253, 245)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1229,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Your SLE-FHE eligibility has been verified by FASSG.",
+          "blockRect": {
+            "w": 686,
+            "h": 104,
+            "top": 1212,
+            "left": 41,
+            "right": 727
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "a",
+            "rect": {
+              "w": 686,
+              "h": 42,
+              "top": 1348,
+              "left": 41,
+              "right": 727
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "SLE-FHE eligibility verified Your SLE-FHE eligibility has been verified by FASSG. Verification confirms eligibility only; it does not approve a sponsorship application or guarantee a grant."
+          ]
+        }
+      },
+      "rejected-dashboard": {
+        "viewport": "768x1024",
+        "clientWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 229,
+                "h": 192,
+                "top": 184,
+                "left": 16,
+                "right": 245
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 229,
+                "h": 192,
+                "top": 184,
+                "left": 269,
+                "right": 499
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 229,
+                "h": 192,
+                "top": 184,
+                "left": 523,
+                "right": 752
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Previous verification request not verified. Submit a new request for FASSG review."
+        }
+      },
+      "rejected-sle": {
+        "viewport": "768x1024",
+        "clientWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1149,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Previous verification request not verified. You may submit a new request for FASSG review.",
+          "blockRect": {
+            "w": 686,
+            "h": 104,
+            "top": 1132,
+            "left": 41,
+            "right": 727
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "Previous verification request not verified You may review your details and submit a new request. This outcome is recorded by FASSG and does not prevent a new review."
+          ]
+        }
+      }
+    },
+    "430x932": {
+      "unverified-dashboard": {
+        "viewport": "430x932",
+        "clientWidth": 430,
+        "scrollWidth": 430,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 398,
+                "h": 136,
+                "top": 204,
+                "left": 16,
+                "right": 414
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 398,
+                "h": 136,
+                "top": 363,
+                "left": 16,
+                "right": 414
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 398,
+                "h": 174,
+                "top": 523,
+                "left": 16,
+                "right": 414
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Submit a verification request to have your eligibility reviewed by FASSG."
+        }
+      },
+      "unverified-sle": {
+        "viewport": "430x932",
+        "clientWidth": 430,
+        "scrollWidth": 430,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1417,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Submit a verification request to have your SLE-FHE eligibility reviewed by FASSG.",
+          "blockRect": {
+            "w": 348,
+            "h": 122,
+            "top": 1400,
+            "left": 41,
+            "right": 389
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "pending-dashboard": {
+        "viewport": "430x932",
+        "clientWidth": 430,
+        "scrollWidth": 430,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 398,
+                "h": 136,
+                "top": 204,
+                "left": 16,
+                "right": 414
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 398,
+                "h": 136,
+                "top": 363,
+                "left": 16,
+                "right": 414
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Pending",
+              "rect": {
+                "w": 398,
+                "h": 157,
+                "top": 523,
+                "left": 16,
+                "right": 414
+              },
+              "icon": "bi bi-clock",
+              "iconColor": "rgb(161, 98, 7)",
+              "iconBg": "rgb(255, 247, 230)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Pending",
+          "statusSupport": "Your verification request is awaiting FASSG review."
+        }
+      },
+      "pending-sle": {
+        "viewport": "430x932",
+        "clientWidth": 430,
+        "scrollWidth": 430,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Pending",
+          "badgeStyle": {
+            "color": "rgb(161, 98, 7)",
+            "backgroundColor": "rgb(255, 247, 230)",
+            "borderColor": "rgb(245, 213, 139)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-clock fs-5",
+          "iconColor": "rgb(161, 98, 7)",
+          "iconBg": "rgb(255, 247, 230)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1534,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Your SLE-FHE verification request is awaiting FASSG review.",
+          "blockRect": {
+            "w": 348,
+            "h": 122,
+            "top": 1517,
+            "left": 41,
+            "right": 389
+          },
+          "lockNotice": "Your submitted address is under review and can no longer be edited.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "button",
+            "rect": {
+              "w": 348,
+              "h": 42,
+              "top": 1671,
+              "left": 41,
+              "right": 389
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "verified-dashboard": {
+        "viewport": "430x932",
+        "clientWidth": 430,
+        "scrollWidth": 430,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 398,
+                "h": 136,
+                "top": 204,
+                "left": 16,
+                "right": 414
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 398,
+                "h": 136,
+                "top": 363,
+                "left": 16,
+                "right": 414
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Verified",
+              "rect": {
+                "w": 398,
+                "h": 157,
+                "top": 523,
+                "left": 16,
+                "right": 414
+              },
+              "icon": "bi bi-shield-check",
+              "iconColor": "rgb(4, 120, 87)",
+              "iconBg": "rgb(236, 253, 245)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Verified",
+          "statusSupport": "Your SLE-FHE eligibility has been verified by FASSG."
+        }
+      },
+      "verified-sle": {
+        "viewport": "430x932",
+        "clientWidth": 430,
+        "scrollWidth": 430,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Verified",
+          "badgeStyle": {
+            "color": "rgb(4, 120, 87)",
+            "backgroundColor": "rgb(236, 253, 245)",
+            "borderColor": "rgb(167, 243, 208)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield-check fs-5",
+          "iconColor": "rgb(4, 120, 87)",
+          "iconBg": "rgb(236, 253, 245)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1668,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Your SLE-FHE eligibility has been verified by FASSG.",
+          "blockRect": {
+            "w": 348,
+            "h": 122,
+            "top": 1651,
+            "left": 41,
+            "right": 389
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "a",
+            "rect": {
+              "w": 348,
+              "h": 42,
+              "top": 1805,
+              "left": 41,
+              "right": 389
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "SLE-FHE eligibility verified Your SLE-FHE eligibility has been verified by FASSG. Verification confirms eligibility only; it does not approve a sponsorship application or guarantee a grant."
+          ]
+        }
+      },
+      "rejected-dashboard": {
+        "viewport": "430x932",
+        "clientWidth": 430,
+        "scrollWidth": 430,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 398,
+                "h": 136,
+                "top": 204,
+                "left": 16,
+                "right": 414
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 398,
+                "h": 136,
+                "top": 363,
+                "left": 16,
+                "right": 414
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 398,
+                "h": 174,
+                "top": 523,
+                "left": 16,
+                "right": 414
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Previous verification request not verified. Submit a new request for FASSG review."
+        }
+      },
+      "rejected-sle": {
+        "viewport": "430x932",
+        "clientWidth": 430,
+        "scrollWidth": 430,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1551,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Previous verification request not verified. You may submit a new request for FASSG review.",
+          "blockRect": {
+            "w": 348,
+            "h": 141,
+            "top": 1534,
+            "left": 41,
+            "right": 389
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "Previous verification request not verified You may review your details and submit a new request. This outcome is recorded by FASSG and does not prevent a new review."
+          ]
+        }
+      }
+    },
+    "390x844": {
+      "unverified-dashboard": {
+        "viewport": "390x844",
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 358,
+                "h": 136,
+                "top": 203,
+                "left": 16,
+                "right": 374
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 358,
+                "h": 136,
+                "top": 363,
+                "left": 16,
+                "right": 374
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 358,
+                "h": 174,
+                "top": 522,
+                "left": 16,
+                "right": 374
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Submit a verification request to have your eligibility reviewed by FASSG."
+        }
+      },
+      "unverified-sle": {
+        "viewport": "390x844",
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1437,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Submit a verification request to have your SLE-FHE eligibility reviewed by FASSG.",
+          "blockRect": {
+            "w": 308,
+            "h": 141,
+            "top": 1420,
+            "left": 41,
+            "right": 349
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "pending-dashboard": {
+        "viewport": "390x844",
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 358,
+                "h": 136,
+                "top": 203,
+                "left": 16,
+                "right": 374
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 358,
+                "h": 136,
+                "top": 363,
+                "left": 16,
+                "right": 374
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Pending",
+              "rect": {
+                "w": 358,
+                "h": 157,
+                "top": 522,
+                "left": 16,
+                "right": 374
+              },
+              "icon": "bi bi-clock",
+              "iconColor": "rgb(161, 98, 7)",
+              "iconBg": "rgb(255, 247, 230)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Pending",
+          "statusSupport": "Your verification request is awaiting FASSG review."
+        }
+      },
+      "pending-sle": {
+        "viewport": "390x844",
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Pending",
+          "badgeStyle": {
+            "color": "rgb(161, 98, 7)",
+            "backgroundColor": "rgb(255, 247, 230)",
+            "borderColor": "rgb(245, 213, 139)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-clock fs-5",
+          "iconColor": "rgb(161, 98, 7)",
+          "iconBg": "rgb(255, 247, 230)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1554,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Your SLE-FHE verification request is awaiting FASSG review.",
+          "blockRect": {
+            "w": 308,
+            "h": 122,
+            "top": 1537,
+            "left": 41,
+            "right": 349
+          },
+          "lockNotice": "Your submitted address is under review and can no longer be edited.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "button",
+            "rect": {
+              "w": 308,
+              "h": 42,
+              "top": 1691,
+              "left": 41,
+              "right": 349
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "verified-dashboard": {
+        "viewport": "390x844",
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 358,
+                "h": 136,
+                "top": 203,
+                "left": 16,
+                "right": 374
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 358,
+                "h": 136,
+                "top": 363,
+                "left": 16,
+                "right": 374
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Verified",
+              "rect": {
+                "w": 358,
+                "h": 157,
+                "top": 522,
+                "left": 16,
+                "right": 374
+              },
+              "icon": "bi bi-shield-check",
+              "iconColor": "rgb(4, 120, 87)",
+              "iconBg": "rgb(236, 253, 245)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Verified",
+          "statusSupport": "Your SLE-FHE eligibility has been verified by FASSG."
+        }
+      },
+      "verified-sle": {
+        "viewport": "390x844",
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Verified",
+          "badgeStyle": {
+            "color": "rgb(4, 120, 87)",
+            "backgroundColor": "rgb(236, 253, 245)",
+            "borderColor": "rgb(167, 243, 208)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield-check fs-5",
+          "iconColor": "rgb(4, 120, 87)",
+          "iconBg": "rgb(236, 253, 245)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1725,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Your SLE-FHE eligibility has been verified by FASSG.",
+          "blockRect": {
+            "w": 308,
+            "h": 122,
+            "top": 1708,
+            "left": 41,
+            "right": 349
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "a",
+            "rect": {
+              "w": 308,
+              "h": 42,
+              "top": 1862,
+              "left": 41,
+              "right": 349
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "SLE-FHE eligibility verified Your SLE-FHE eligibility has been verified by FASSG. Verification confirms eligibility only; it does not approve a sponsorship application or guarantee a grant."
+          ]
+        }
+      },
+      "rejected-dashboard": {
+        "viewport": "390x844",
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 358,
+                "h": 136,
+                "top": 203,
+                "left": 16,
+                "right": 374
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 358,
+                "h": 136,
+                "top": 363,
+                "left": 16,
+                "right": 374
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 358,
+                "h": 174,
+                "top": 522,
+                "left": 16,
+                "right": 374
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Previous verification request not verified. Submit a new request for FASSG review."
+        }
+      },
+      "rejected-sle": {
+        "viewport": "390x844",
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1571,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Previous verification request not verified. You may submit a new request for FASSG review.",
+          "blockRect": {
+            "w": 308,
+            "h": 141,
+            "top": 1554,
+            "left": 41,
+            "right": 349
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "Previous verification request not verified You may review your details and submit a new request. This outcome is recorded by FASSG and does not prevent a new review."
+          ]
+        }
+      }
+    },
+    "360x800": {
+      "unverified-dashboard": {
+        "viewport": "360x800",
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 136,
+                "top": 203,
+                "left": 16,
+                "right": 344
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 136,
+                "top": 362,
+                "left": 16,
+                "right": 344
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 328,
+                "h": 174,
+                "top": 522,
+                "left": 16,
+                "right": 344
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Submit a verification request to have your eligibility reviewed by FASSG."
+        }
+      },
+      "unverified-sle": {
+        "viewport": "360x800",
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1503,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Submit a verification request to have your SLE-FHE eligibility reviewed by FASSG.",
+          "blockRect": {
+            "w": 278,
+            "h": 157,
+            "top": 1486,
+            "left": 41,
+            "right": 319
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "pending-dashboard": {
+        "viewport": "360x800",
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 136,
+                "top": 203,
+                "left": 16,
+                "right": 344
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 136,
+                "top": 362,
+                "left": 16,
+                "right": 344
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Pending",
+              "rect": {
+                "w": 328,
+                "h": 174,
+                "top": 522,
+                "left": 16,
+                "right": 344
+              },
+              "icon": "bi bi-clock",
+              "iconColor": "rgb(161, 98, 7)",
+              "iconBg": "rgb(255, 247, 230)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Pending",
+          "statusSupport": "Your verification request is awaiting FASSG review."
+        }
+      },
+      "pending-sle": {
+        "viewport": "360x800",
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Pending",
+          "badgeStyle": {
+            "color": "rgb(161, 98, 7)",
+            "backgroundColor": "rgb(255, 247, 230)",
+            "borderColor": "rgb(245, 213, 139)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-clock fs-5",
+          "iconColor": "rgb(161, 98, 7)",
+          "iconBg": "rgb(255, 247, 230)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1620,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Your SLE-FHE verification request is awaiting FASSG review.",
+          "blockRect": {
+            "w": 278,
+            "h": 157,
+            "top": 1603,
+            "left": 41,
+            "right": 319
+          },
+          "lockNotice": "Your submitted address is under review and can no longer be edited.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "button",
+            "rect": {
+              "w": 278,
+              "h": 56,
+              "top": 1793,
+              "left": 41,
+              "right": 319
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": []
+        }
+      },
+      "verified-dashboard": {
+        "viewport": "360x800",
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 136,
+                "top": 203,
+                "left": 16,
+                "right": 344
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 136,
+                "top": 362,
+                "left": 16,
+                "right": 344
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Verified",
+              "rect": {
+                "w": 328,
+                "h": 174,
+                "top": 522,
+                "left": 16,
+                "right": 344
+              },
+              "icon": "bi bi-shield-check",
+              "iconColor": "rgb(4, 120, 87)",
+              "iconBg": "rgb(236, 253, 245)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Verified",
+          "statusSupport": "Your SLE-FHE eligibility has been verified by FASSG."
+        }
+      },
+      "verified-sle": {
+        "viewport": "360x800",
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Verified",
+          "badgeStyle": {
+            "color": "rgb(4, 120, 87)",
+            "backgroundColor": "rgb(236, 253, 245)",
+            "borderColor": "rgb(167, 243, 208)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield-check fs-5",
+          "iconColor": "rgb(4, 120, 87)",
+          "iconBg": "rgb(236, 253, 245)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1791,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Your SLE-FHE eligibility has been verified by FASSG.",
+          "blockRect": {
+            "w": 278,
+            "h": 139,
+            "top": 1774,
+            "left": 41,
+            "right": 319
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "disabledFields": 4,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": {
+            "text": "Browse Sponsorship Opportunities",
+            "tag": "a",
+            "rect": {
+              "w": 278,
+              "h": 56,
+              "top": 1945,
+              "left": 41,
+              "right": 319
+            }
+          },
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "SLE-FHE eligibility verified Your SLE-FHE eligibility has been verified by FASSG. Verification confirms eligibility only; it does not approve a sponsorship application or guarantee a grant."
+          ]
+        }
+      },
+      "rejected-dashboard": {
+        "viewport": "360x800",
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "Student Dashboard \u00b7 SponsorFlow | DORSU",
+        "dashboard": {
+          "metricCount": 3,
+          "metricCards": [
+            {
+              "title": "Total Applications",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 136,
+                "top": 203,
+                "left": 16,
+                "right": 344
+              },
+              "icon": "bi bi-file-earmark-text",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "Active Sponsorships",
+              "value": "0",
+              "rect": {
+                "w": 328,
+                "h": 136,
+                "top": 362,
+                "left": 16,
+                "right": 344
+              },
+              "icon": "bi bi-award",
+              "iconColor": "rgb(23, 59, 87)",
+              "iconBg": "rgb(238, 243, 247)"
+            },
+            {
+              "title": "SLE-FHE Verification",
+              "value": "Unverified",
+              "rect": {
+                "w": 328,
+                "h": 174,
+                "top": 522,
+                "left": 16,
+                "right": 344
+              },
+              "icon": "bi bi-shield",
+              "iconColor": "rgb(71, 85, 105)",
+              "iconBg": "rgb(241, 245, 249)"
+            }
+          ],
+          "statusAria": "SLE-FHE verification status: Unverified",
+          "statusSupport": "Previous verification request not verified. Submit a new request for FASSG review."
+        }
+      },
+      "rejected-sle": {
+        "viewport": "360x800",
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "title": "SLE-FHE Verification \u00b7 SponsorFlow | DORSU",
+        "sle": {
+          "statusLabel": "SLE-FHE Verification Status",
+          "badgeText": "Unverified",
+          "badgeStyle": {
+            "color": "rgb(71, 85, 105)",
+            "backgroundColor": "rgb(241, 245, 249)",
+            "borderColor": "rgb(203, 213, 225)",
+            "fontSize": "12px"
+          },
+          "icon": "bi bi-shield fs-5",
+          "iconColor": "rgb(71, 85, 105)",
+          "iconBg": "rgb(241, 245, 249)",
+          "iconBoxRect": {
+            "w": 46,
+            "h": 46,
+            "top": 1659,
+            "left": 58,
+            "right": 104
+          },
+          "support": "Previous verification request not verified. You may submit a new request for FASSG review.",
+          "blockRect": {
+            "w": 278,
+            "h": 176,
+            "top": 1642,
+            "left": 41,
+            "right": 319
+          },
+          "lockNotice": null,
+          "disabledFields": 0,
+          "primaryButton": {
+            "text": "Sign Out",
+            "disabled": false,
+            "rect": {
+              "w": 0,
+              "h": 0,
+              "top": 0,
+              "left": 0,
+              "right": 0
+            }
+          },
+          "eligibilityAction": null,
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-clipboard-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "alertTexts": [
+            "Previous verification request not verified You may review your details and submit a new request. This outcome is recorded by FASSG and does not prevent a new review."
+          ]
+        }
+      }
+    }
+  },
+  "consoleErrors": []
+}

@@ -1,0 +1,2204 @@
+{
+  "measurements": {
+    "1920x1080": {
+      "dashboard": {
+        "viewport": "1920x1080",
+        "clientWidth": 1905,
+        "scrollWidth": 1905,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "dashboard": {
+          "metricCount": 3,
+          "cardRects": [
+            {
+              "w": 512,
+              "h": 159,
+              "top": 203
+            },
+            {
+              "w": 512,
+              "h": 159,
+              "top": 203
+            },
+            {
+              "w": 512,
+              "h": 159,
+              "top": 203
+            }
+          ],
+          "values": [
+            "1",
+            "0",
+            "Verified"
+          ],
+          "valueFontSizes": [
+            "28px",
+            "28px",
+            "28px"
+          ],
+          "icons": [
+            "bi bi-file-earmark-text",
+            "bi bi-award",
+            "bi bi-shield-check"
+          ],
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px"
+          },
+          "rowHeights": [
+            62
+          ],
+          "actionButtons": [
+            {
+              "text": "View Details",
+              "w": 107,
+              "h": 29,
+              "right": 1848
+            }
+          ]
+        }
+      },
+      "sle-fhe": {
+        "viewport": "1920x1080",
+        "clientWidth": 1905,
+        "scrollWidth": 1905,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "sle": {
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-shield-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "disabledCount": 4,
+          "disabledStyle": {
+            "bg": "rgb(248, 250, 252)",
+            "border": "rgb(203, 213, 225)",
+            "color": "rgb(51, 65, 85)",
+            "cursor": "not-allowed"
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "statusBadges": [
+            "Verified"
+          ],
+          "campus": "Campus \u2014"
+        }
+      },
+      "applications": {
+        "viewport": "1920x1080",
+        "clientWidth": 1920,
+        "scrollWidth": 1920,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "applications": {
+          "cardStyle": {
+            "borderRadius": "14px",
+            "borderColor": "rgb(225, 232, 236)",
+            "boxShadow": "rgba(15, 41, 66, 0.04) 0px 1px 3px 0px, rgba(15, 41, 66, 0.02) 0px 2px 6px 0px"
+          },
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px",
+            "textTransform": "uppercase"
+          },
+          "headerHeight": {
+            "w": 1598,
+            "h": 45,
+            "top": 204,
+            "right": 1887
+          },
+          "rowHeights": [
+            59
+          ],
+          "badges": [
+            {
+              "text": "Pending\n         \u2014 Awaiting FASSG review",
+              "bg": "rgb(255, 248, 234)",
+              "color": "rgb(152, 101, 21)"
+            }
+          ],
+          "actions": [
+            {
+              "text": "View Details",
+              "w": 111,
+              "h": 29,
+              "right": 1863
+            }
+          ]
+        }
+      },
+      "detail": {
+        "viewport": "1920x1080",
+        "clientWidth": 1905,
+        "scrollWidth": 1905,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "detail": {
+          "steps": [
+            "Application Submitted",
+            "FASSG Application Review",
+            "Sponsor Batch Approval",
+            "Ongoing"
+          ],
+          "explainer": "SLE-FHE verification is a separate institutional eligibility record. FASSG reviews your documents, and the sponsor approves the whole batch. Submitting an application does not guarantee a grant.",
+          "docRows": [
+            {
+              "w": 999,
+              "h": 92
+            },
+            {
+              "w": 999,
+              "h": 92
+            },
+            {
+              "w": 999,
+              "h": 92
+            },
+            {
+              "w": 999,
+              "h": 92
+            },
+            {
+              "w": 999,
+              "h": 92
+            }
+          ],
+          "filenames": [
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 1,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 1,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "RESEARCH CHAPTER 1 .pdf",
+              "lines": 1,
+              "title": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "ariaLabel": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "truncatedVisually": false
+            }
+          ],
+          "viewLinks": [
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/31",
+              "w": 68,
+              "h": 31,
+              "right": 1295
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/32",
+              "w": 68,
+              "h": 31,
+              "right": 1295
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/33",
+              "w": 68,
+              "h": 31,
+              "right": 1295
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/35",
+              "w": 68,
+              "h": 31,
+              "right": 1295
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/34",
+              "w": 68,
+              "h": 31,
+              "right": 1295
+            }
+          ],
+          "summaryHeading": null,
+          "backButton": {
+            "w": 512,
+            "h": 35,
+            "right": 1873
+          },
+          "rurality": "Address Classification = Urban"
+        }
+      },
+      "applications-empty": {
+        "viewport": "1920x1080",
+        "clientWidth": 1920,
+        "scrollWidth": 1920,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "applicationsEmpty": {
+          "rect": {
+            "w": 1598,
+            "h": 339,
+            "top": 204,
+            "right": 1887
+          },
+          "heading": "No applications yet",
+          "link": "Browse Sponsorship Opportunities"
+        }
+      },
+      "sle-fhe-verified": {
+        "viewport": "1920x1080",
+        "clientWidth": 1905,
+        "scrollWidth": 1905,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "sle": {
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-shield-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "disabledCount": 4,
+          "disabledStyle": {
+            "bg": "rgb(248, 250, 252)",
+            "border": "rgb(203, 213, 225)",
+            "color": "rgb(51, 65, 85)",
+            "cursor": "not-allowed"
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "statusBadges": [
+            "Verified"
+          ],
+          "campus": "Campus \u2014"
+        }
+      }
+    },
+    "1600x900": {
+      "dashboard": {
+        "viewport": "1600x900",
+        "clientWidth": 1585,
+        "scrollWidth": 1585,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "dashboard": {
+          "metricCount": 3,
+          "cardRects": [
+            {
+              "w": 406,
+              "h": 159,
+              "top": 203
+            },
+            {
+              "w": 406,
+              "h": 159,
+              "top": 203
+            },
+            {
+              "w": 406,
+              "h": 159,
+              "top": 203
+            }
+          ],
+          "values": [
+            "1",
+            "0",
+            "Verified"
+          ],
+          "valueFontSizes": [
+            "28px",
+            "28px",
+            "28px"
+          ],
+          "icons": [
+            "bi bi-file-earmark-text",
+            "bi bi-award",
+            "bi bi-shield-check"
+          ],
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px"
+          },
+          "rowHeights": [
+            62
+          ],
+          "actionButtons": [
+            {
+              "text": "View Details",
+              "w": 107,
+              "h": 29,
+              "right": 1528
+            }
+          ]
+        }
+      },
+      "sle-fhe": {
+        "viewport": "1600x900",
+        "clientWidth": 1585,
+        "scrollWidth": 1585,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "sle": {
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-shield-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "disabledCount": 4,
+          "disabledStyle": {
+            "bg": "rgb(248, 250, 252)",
+            "border": "rgb(203, 213, 225)",
+            "color": "rgb(51, 65, 85)",
+            "cursor": "not-allowed"
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "statusBadges": [
+            "Verified"
+          ],
+          "campus": "Campus \u2014"
+        }
+      },
+      "applications": {
+        "viewport": "1600x900",
+        "clientWidth": 1600,
+        "scrollWidth": 1600,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "applications": {
+          "cardStyle": {
+            "borderRadius": "14px",
+            "borderColor": "rgb(225, 232, 236)",
+            "boxShadow": "rgba(15, 41, 66, 0.04) 0px 1px 3px 0px, rgba(15, 41, 66, 0.02) 0px 2px 6px 0px"
+          },
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px",
+            "textTransform": "uppercase"
+          },
+          "headerHeight": {
+            "w": 1278,
+            "h": 45,
+            "top": 204,
+            "right": 1567
+          },
+          "rowHeights": [
+            59
+          ],
+          "badges": [
+            {
+              "text": "Pending\n         \u2014 Awaiting FASSG review",
+              "bg": "rgb(255, 248, 234)",
+              "color": "rgb(152, 101, 21)"
+            }
+          ],
+          "actions": [
+            {
+              "text": "View Details",
+              "w": 111,
+              "h": 29,
+              "right": 1543
+            }
+          ]
+        }
+      },
+      "detail": {
+        "viewport": "1600x900",
+        "clientWidth": 1585,
+        "scrollWidth": 1585,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "detail": {
+          "steps": [
+            "Application Submitted",
+            "FASSG Application Review",
+            "Sponsor Batch Approval",
+            "Ongoing"
+          ],
+          "explainer": "SLE-FHE verification is a separate institutional eligibility record. FASSG reviews your documents, and the sponsor approves the whole batch. Submitting an application does not guarantee a grant.",
+          "docRows": [
+            {
+              "w": 785,
+              "h": 92
+            },
+            {
+              "w": 785,
+              "h": 92
+            },
+            {
+              "w": 785,
+              "h": 92
+            },
+            {
+              "w": 785,
+              "h": 92
+            },
+            {
+              "w": 785,
+              "h": 92
+            }
+          ],
+          "filenames": [
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 1,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": true
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": true
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 1,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "RESEARCH CHAPTER 1 .pdf",
+              "lines": 1,
+              "title": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "ariaLabel": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "truncatedVisually": false
+            }
+          ],
+          "viewLinks": [
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/31",
+              "w": 68,
+              "h": 31,
+              "right": 1081
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/32",
+              "w": 68,
+              "h": 31,
+              "right": 1081
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/33",
+              "w": 68,
+              "h": 31,
+              "right": 1081
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/35",
+              "w": 68,
+              "h": 31,
+              "right": 1081
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/34",
+              "w": 68,
+              "h": 31,
+              "right": 1081
+            }
+          ],
+          "summaryHeading": null,
+          "backButton": {
+            "w": 406,
+            "h": 35,
+            "right": 1553
+          },
+          "rurality": "Address Classification = Urban"
+        }
+      }
+    },
+    "1440x900": {
+      "dashboard": {
+        "viewport": "1440x900",
+        "clientWidth": 1425,
+        "scrollWidth": 1425,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "dashboard": {
+          "metricCount": 3,
+          "cardRects": [
+            {
+              "w": 352,
+              "h": 159,
+              "top": 203
+            },
+            {
+              "w": 352,
+              "h": 159,
+              "top": 203
+            },
+            {
+              "w": 352,
+              "h": 159,
+              "top": 203
+            }
+          ],
+          "values": [
+            "1",
+            "0",
+            "Verified"
+          ],
+          "valueFontSizes": [
+            "28px",
+            "28px",
+            "28px"
+          ],
+          "icons": [
+            "bi bi-file-earmark-text",
+            "bi bi-award",
+            "bi bi-shield-check"
+          ],
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px"
+          },
+          "rowHeights": [
+            62
+          ],
+          "actionButtons": [
+            {
+              "text": "View Details",
+              "w": 107,
+              "h": 29,
+              "right": 1368
+            }
+          ]
+        }
+      },
+      "sle-fhe": {
+        "viewport": "1440x900",
+        "clientWidth": 1425,
+        "scrollWidth": 1425,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "sle": {
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-shield-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "disabledCount": 4,
+          "disabledStyle": {
+            "bg": "rgb(248, 250, 252)",
+            "border": "rgb(203, 213, 225)",
+            "color": "rgb(51, 65, 85)",
+            "cursor": "not-allowed"
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "statusBadges": [
+            "Verified"
+          ],
+          "campus": "Campus \u2014"
+        }
+      },
+      "applications": {
+        "viewport": "1440x900",
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "applications": {
+          "cardStyle": {
+            "borderRadius": "14px",
+            "borderColor": "rgb(225, 232, 236)",
+            "boxShadow": "rgba(15, 41, 66, 0.04) 0px 1px 3px 0px, rgba(15, 41, 66, 0.02) 0px 2px 6px 0px"
+          },
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px",
+            "textTransform": "uppercase"
+          },
+          "headerHeight": {
+            "w": 1118,
+            "h": 45,
+            "top": 204,
+            "right": 1407
+          },
+          "rowHeights": [
+            59
+          ],
+          "badges": [
+            {
+              "text": "Pending\n         \u2014 Awaiting FASSG review",
+              "bg": "rgb(255, 248, 234)",
+              "color": "rgb(152, 101, 21)"
+            }
+          ],
+          "actions": [
+            {
+              "text": "View Details",
+              "w": 111,
+              "h": 29,
+              "right": 1383
+            }
+          ]
+        }
+      },
+      "detail": {
+        "viewport": "1440x900",
+        "clientWidth": 1425,
+        "scrollWidth": 1425,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "detail": {
+          "steps": [
+            "Application Submitted",
+            "FASSG Application Review",
+            "Sponsor Batch Approval",
+            "Ongoing"
+          ],
+          "explainer": "SLE-FHE verification is a separate institutional eligibility record. FASSG reviews your documents, and the sponsor approves the whole batch. Submitting an application does not guarantee a grant.",
+          "docRows": [
+            {
+              "w": 679,
+              "h": 92
+            },
+            {
+              "w": 679,
+              "h": 92
+            },
+            {
+              "w": 679,
+              "h": 92
+            },
+            {
+              "w": 679,
+              "h": 92
+            },
+            {
+              "w": 679,
+              "h": 92
+            }
+          ],
+          "filenames": [
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 1,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": true
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": true
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 1,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "RESEARCH CHAPTER 1 .pdf",
+              "lines": 1,
+              "title": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "ariaLabel": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "truncatedVisually": false
+            }
+          ],
+          "viewLinks": [
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/31",
+              "w": 68,
+              "h": 31,
+              "right": 975
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/32",
+              "w": 68,
+              "h": 31,
+              "right": 975
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/33",
+              "w": 68,
+              "h": 31,
+              "right": 975
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/35",
+              "w": 68,
+              "h": 31,
+              "right": 975
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/34",
+              "w": 68,
+              "h": 31,
+              "right": 975
+            }
+          ],
+          "summaryHeading": null,
+          "backButton": {
+            "w": 352,
+            "h": 35,
+            "right": 1393
+          },
+          "rurality": "Address Classification = Urban"
+        }
+      }
+    },
+    "1366x768": {
+      "dashboard": {
+        "viewport": "1366x768",
+        "clientWidth": 1351,
+        "scrollWidth": 1351,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "dashboard": {
+          "metricCount": 3,
+          "cardRects": [
+            {
+              "w": 328,
+              "h": 159,
+              "top": 203
+            },
+            {
+              "w": 328,
+              "h": 159,
+              "top": 203
+            },
+            {
+              "w": 328,
+              "h": 159,
+              "top": 203
+            }
+          ],
+          "values": [
+            "1",
+            "0",
+            "Verified"
+          ],
+          "valueFontSizes": [
+            "28px",
+            "28px",
+            "28px"
+          ],
+          "icons": [
+            "bi bi-file-earmark-text",
+            "bi bi-award",
+            "bi bi-shield-check"
+          ],
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px"
+          },
+          "rowHeights": [
+            62
+          ],
+          "actionButtons": [
+            {
+              "text": "View Details",
+              "w": 107,
+              "h": 29,
+              "right": 1294
+            }
+          ]
+        }
+      },
+      "sle-fhe": {
+        "viewport": "1366x768",
+        "clientWidth": 1351,
+        "scrollWidth": 1351,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "sle": {
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-shield-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "disabledCount": 4,
+          "disabledStyle": {
+            "bg": "rgb(248, 250, 252)",
+            "border": "rgb(203, 213, 225)",
+            "color": "rgb(51, 65, 85)",
+            "cursor": "not-allowed"
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "statusBadges": [
+            "Verified"
+          ],
+          "campus": "Campus \u2014"
+        }
+      },
+      "applications": {
+        "viewport": "1366x768",
+        "clientWidth": 1366,
+        "scrollWidth": 1366,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "applications": {
+          "cardStyle": {
+            "borderRadius": "14px",
+            "borderColor": "rgb(225, 232, 236)",
+            "boxShadow": "rgba(15, 41, 66, 0.04) 0px 1px 3px 0px, rgba(15, 41, 66, 0.02) 0px 2px 6px 0px"
+          },
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px",
+            "textTransform": "uppercase"
+          },
+          "headerHeight": {
+            "w": 1044,
+            "h": 45,
+            "top": 204,
+            "right": 1333
+          },
+          "rowHeights": [
+            59
+          ],
+          "badges": [
+            {
+              "text": "Pending\n         \u2014 Awaiting FASSG review",
+              "bg": "rgb(255, 248, 234)",
+              "color": "rgb(152, 101, 21)"
+            }
+          ],
+          "actions": [
+            {
+              "text": "View Details",
+              "w": 111,
+              "h": 29,
+              "right": 1309
+            }
+          ]
+        }
+      },
+      "detail": {
+        "viewport": "1366x768",
+        "clientWidth": 1351,
+        "scrollWidth": 1351,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "detail": {
+          "steps": [
+            "Application Submitted",
+            "FASSG Application Review",
+            "Sponsor Batch Approval",
+            "Ongoing"
+          ],
+          "explainer": "SLE-FHE verification is a separate institutional eligibility record. FASSG reviews your documents, and the sponsor approves the whole batch. Submitting an application does not guarantee a grant.",
+          "docRows": [
+            {
+              "w": 629,
+              "h": 92
+            },
+            {
+              "w": 629,
+              "h": 92
+            },
+            {
+              "w": 629,
+              "h": 92
+            },
+            {
+              "w": 629,
+              "h": 92
+            },
+            {
+              "w": 629,
+              "h": 92
+            }
+          ],
+          "filenames": [
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 1,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": true
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": true
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 1,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "RESEARCH CHAPTER 1 .pdf",
+              "lines": 1,
+              "title": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "ariaLabel": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "truncatedVisually": false
+            }
+          ],
+          "viewLinks": [
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/31",
+              "w": 68,
+              "h": 31,
+              "right": 925
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/32",
+              "w": 68,
+              "h": 31,
+              "right": 925
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/33",
+              "w": 68,
+              "h": 31,
+              "right": 925
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/35",
+              "w": 68,
+              "h": 31,
+              "right": 925
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/34",
+              "w": 68,
+              "h": 31,
+              "right": 925
+            }
+          ],
+          "summaryHeading": null,
+          "backButton": {
+            "w": 328,
+            "h": 35,
+            "right": 1319
+          },
+          "rurality": "Address Classification = Urban"
+        }
+      }
+    },
+    "768x1024": {
+      "dashboard": {
+        "viewport": "768x1024",
+        "clientWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "dashboard": {
+          "metricCount": 3,
+          "cardRects": [
+            {
+              "w": 229,
+              "h": 174,
+              "top": 184
+            },
+            {
+              "w": 229,
+              "h": 174,
+              "top": 184
+            },
+            {
+              "w": 229,
+              "h": 174,
+              "top": 184
+            }
+          ],
+          "values": [
+            "1",
+            "0",
+            "Verified"
+          ],
+          "valueFontSizes": [
+            "28px",
+            "28px",
+            "28px"
+          ],
+          "icons": [
+            "bi bi-file-earmark-text",
+            "bi bi-award",
+            "bi bi-shield-check"
+          ],
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px"
+          },
+          "rowHeights": [
+            81
+          ],
+          "actionButtons": [
+            {
+              "text": "View Details",
+              "w": 85,
+              "h": 48,
+              "right": 727
+            }
+          ]
+        }
+      },
+      "sle-fhe": {
+        "viewport": "768x1024",
+        "clientWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "sle": {
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-shield-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "disabledCount": 4,
+          "disabledStyle": {
+            "bg": "rgb(248, 250, 252)",
+            "border": "rgb(203, 213, 225)",
+            "color": "rgb(51, 65, 85)",
+            "cursor": "not-allowed"
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "statusBadges": [
+            "Verified"
+          ],
+          "campus": "Campus \u2014"
+        }
+      },
+      "applications": {
+        "viewport": "768x1024",
+        "clientWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "applications": {
+          "cardStyle": {
+            "borderRadius": "14px",
+            "borderColor": "rgb(225, 232, 236)",
+            "boxShadow": "rgba(15, 37, 55, 0.05) 0px 1px 3px 0px"
+          },
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px",
+            "textTransform": "uppercase"
+          },
+          "headerHeight": {
+            "w": 734,
+            "h": 45,
+            "top": 185,
+            "right": 751
+          },
+          "rowHeights": [
+            72
+          ],
+          "badges": [
+            {
+              "text": "Pending\n         \u2014 Awaiting FASSG review",
+              "bg": "rgb(255, 248, 234)",
+              "color": "rgb(152, 101, 21)"
+            }
+          ],
+          "actions": [
+            {
+              "text": "View Details",
+              "w": 111,
+              "h": 29,
+              "right": 727
+            }
+          ]
+        }
+      },
+      "detail": {
+        "viewport": "768x1024",
+        "clientWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "detail": {
+          "steps": [
+            "Application Submitted",
+            "FASSG Application Review",
+            "Sponsor Batch Approval",
+            "Ongoing"
+          ],
+          "explainer": "SLE-FHE verification is a separate institutional eligibility record. FASSG reviews your documents, and the sponsor approves the whole batch. Submitting an application does not guarantee a grant.",
+          "docRows": [
+            {
+              "w": 686,
+              "h": 92
+            },
+            {
+              "w": 686,
+              "h": 92
+            },
+            {
+              "w": 686,
+              "h": 92
+            },
+            {
+              "w": 686,
+              "h": 92
+            },
+            {
+              "w": 686,
+              "h": 92
+            }
+          ],
+          "filenames": [
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 1,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": true
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": true
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 1,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "RESEARCH CHAPTER 1 .pdf",
+              "lines": 1,
+              "title": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "ariaLabel": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "truncatedVisually": false
+            }
+          ],
+          "viewLinks": [
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/31",
+              "w": 68,
+              "h": 31,
+              "right": 710
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/32",
+              "w": 68,
+              "h": 31,
+              "right": 710
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/33",
+              "w": 68,
+              "h": 31,
+              "right": 710
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/35",
+              "w": 68,
+              "h": 31,
+              "right": 710
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/34",
+              "w": 68,
+              "h": 31,
+              "right": 710
+            }
+          ],
+          "summaryHeading": null,
+          "backButton": {
+            "w": 736,
+            "h": 35,
+            "right": 752
+          },
+          "rurality": "Address Classification = Urban"
+        }
+      }
+    },
+    "430x932": {
+      "dashboard": {
+        "viewport": "430x932",
+        "clientWidth": 430,
+        "scrollWidth": 430,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "dashboard": {
+          "metricCount": 3,
+          "cardRects": [
+            {
+              "w": 398,
+              "h": 136,
+              "top": 204
+            },
+            {
+              "w": 398,
+              "h": 136,
+              "top": 363
+            },
+            {
+              "w": 398,
+              "h": 157,
+              "top": 523
+            }
+          ],
+          "values": [
+            "1",
+            "0",
+            "Verified"
+          ],
+          "valueFontSizes": [
+            "28px",
+            "28px",
+            "28px"
+          ],
+          "icons": [
+            "bi bi-file-earmark-text",
+            "bi bi-award",
+            "bi bi-shield-check"
+          ],
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px"
+          },
+          "rowHeights": [
+            81
+          ],
+          "actionButtons": [
+            {
+              "text": "View Details",
+              "w": 73,
+              "h": 48,
+              "right": 472
+            }
+          ]
+        }
+      },
+      "sle-fhe": {
+        "viewport": "430x932",
+        "clientWidth": 430,
+        "scrollWidth": 430,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "sle": {
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-shield-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "disabledCount": 4,
+          "disabledStyle": {
+            "bg": "rgb(248, 250, 252)",
+            "border": "rgb(203, 213, 225)",
+            "color": "rgb(51, 65, 85)",
+            "cursor": "not-allowed"
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "statusBadges": [
+            "Verified"
+          ],
+          "campus": "Campus \u2014"
+        }
+      },
+      "applications": {
+        "viewport": "430x932",
+        "clientWidth": 430,
+        "scrollWidth": 430,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "applications": {
+          "cardStyle": {
+            "borderRadius": "14px",
+            "borderColor": "rgb(225, 232, 236)",
+            "boxShadow": "rgba(15, 37, 55, 0.05) 0px 1px 3px 0px"
+          },
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px",
+            "textTransform": "uppercase"
+          },
+          "headerHeight": {
+            "w": 606,
+            "h": 45,
+            "top": 205,
+            "right": 623
+          },
+          "rowHeights": [
+            93
+          ],
+          "badges": [
+            {
+              "text": "Pending\n         \u2014 Awaiting FASSG review",
+              "bg": "rgb(255, 248, 234)",
+              "color": "rgb(152, 101, 21)"
+            }
+          ],
+          "actions": [
+            {
+              "text": "View Details",
+              "w": 111,
+              "h": 29,
+              "right": 599
+            }
+          ]
+        }
+      },
+      "detail": {
+        "viewport": "430x932",
+        "clientWidth": 430,
+        "scrollWidth": 430,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "detail": {
+          "steps": [
+            "Application Submitted",
+            "FASSG Application Review",
+            "Sponsor Batch Approval",
+            "Ongoing"
+          ],
+          "explainer": "SLE-FHE verification is a separate institutional eligibility record. FASSG reviews your documents, and the sponsor approves the whole batch. Submitting an application does not guarantee a grant.",
+          "docRows": [
+            {
+              "w": 364,
+              "h": 128
+            },
+            {
+              "w": 364,
+              "h": 128
+            },
+            {
+              "w": 364,
+              "h": 128
+            },
+            {
+              "w": 364,
+              "h": 128
+            },
+            {
+              "w": 364,
+              "h": 128
+            }
+          ],
+          "filenames": [
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 1,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": true
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": true
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 1,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "RESEARCH CHAPTER 1 .pdf",
+              "lines": 1,
+              "title": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "ariaLabel": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "truncatedVisually": false
+            }
+          ],
+          "viewLinks": [
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/31",
+              "w": 68,
+              "h": 31,
+              "right": 380
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/32",
+              "w": 68,
+              "h": 31,
+              "right": 380
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/33",
+              "w": 68,
+              "h": 31,
+              "right": 380
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/35",
+              "w": 68,
+              "h": 31,
+              "right": 380
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/34",
+              "w": 68,
+              "h": 31,
+              "right": 380
+            }
+          ],
+          "summaryHeading": null,
+          "backButton": {
+            "w": 398,
+            "h": 35,
+            "right": 414
+          },
+          "rurality": "Address Classification = Urban"
+        }
+      }
+    },
+    "390x844": {
+      "dashboard": {
+        "viewport": "390x844",
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "dashboard": {
+          "metricCount": 3,
+          "cardRects": [
+            {
+              "w": 358,
+              "h": 136,
+              "top": 203
+            },
+            {
+              "w": 358,
+              "h": 136,
+              "top": 363
+            },
+            {
+              "w": 358,
+              "h": 157,
+              "top": 522
+            }
+          ],
+          "values": [
+            "1",
+            "0",
+            "Verified"
+          ],
+          "valueFontSizes": [
+            "28px",
+            "28px",
+            "28px"
+          ],
+          "icons": [
+            "bi bi-file-earmark-text",
+            "bi bi-award",
+            "bi bi-shield-check"
+          ],
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px"
+          },
+          "rowHeights": [
+            81
+          ],
+          "actionButtons": [
+            {
+              "text": "View Details",
+              "w": 73,
+              "h": 48,
+              "right": 472
+            }
+          ]
+        }
+      },
+      "sle-fhe": {
+        "viewport": "390x844",
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "sle": {
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-shield-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "disabledCount": 4,
+          "disabledStyle": {
+            "bg": "rgb(248, 250, 252)",
+            "border": "rgb(203, 213, 225)",
+            "color": "rgb(51, 65, 85)",
+            "cursor": "not-allowed"
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "statusBadges": [
+            "Verified"
+          ],
+          "campus": "Campus \u2014"
+        }
+      },
+      "applications": {
+        "viewport": "390x844",
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "applications": {
+          "cardStyle": {
+            "borderRadius": "14px",
+            "borderColor": "rgb(225, 232, 236)",
+            "boxShadow": "rgba(15, 37, 55, 0.05) 0px 1px 3px 0px"
+          },
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px",
+            "textTransform": "uppercase"
+          },
+          "headerHeight": {
+            "w": 606,
+            "h": 45,
+            "top": 204,
+            "right": 623
+          },
+          "rowHeights": [
+            93
+          ],
+          "badges": [
+            {
+              "text": "Pending\n         \u2014 Awaiting FASSG review",
+              "bg": "rgb(255, 248, 234)",
+              "color": "rgb(152, 101, 21)"
+            }
+          ],
+          "actions": [
+            {
+              "text": "View Details",
+              "w": 111,
+              "h": 29,
+              "right": 599
+            }
+          ]
+        }
+      },
+      "detail": {
+        "viewport": "390x844",
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "detail": {
+          "steps": [
+            "Application Submitted",
+            "FASSG Application Review",
+            "Sponsor Batch Approval",
+            "Ongoing"
+          ],
+          "explainer": "SLE-FHE verification is a separate institutional eligibility record. FASSG reviews your documents, and the sponsor approves the whole batch. Submitting an application does not guarantee a grant.",
+          "docRows": [
+            {
+              "w": 324,
+              "h": 128
+            },
+            {
+              "w": 324,
+              "h": 128
+            },
+            {
+              "w": 324,
+              "h": 128
+            },
+            {
+              "w": 324,
+              "h": 128
+            },
+            {
+              "w": 324,
+              "h": 128
+            }
+          ],
+          "filenames": [
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": true
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": true
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "RESEARCH CHAPTER 1 .pdf",
+              "lines": 1,
+              "title": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "ariaLabel": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "truncatedVisually": false
+            }
+          ],
+          "viewLinks": [
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/31",
+              "w": 68,
+              "h": 31,
+              "right": 340
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/32",
+              "w": 68,
+              "h": 31,
+              "right": 340
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/33",
+              "w": 68,
+              "h": 31,
+              "right": 340
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/35",
+              "w": 68,
+              "h": 31,
+              "right": 340
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/34",
+              "w": 68,
+              "h": 31,
+              "right": 340
+            }
+          ],
+          "summaryHeading": null,
+          "backButton": {
+            "w": 358,
+            "h": 35,
+            "right": 374
+          },
+          "rurality": "Address Classification = Urban"
+        }
+      },
+      "applications-empty": {
+        "viewport": "390x844",
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "applicationsEmpty": {
+          "rect": {
+            "w": 356,
+            "h": 357,
+            "top": 204,
+            "right": 373
+          },
+          "heading": "No applications yet",
+          "link": "Browse Sponsorship Opportunities"
+        }
+      },
+      "sle-fhe-verified": {
+        "viewport": "390x844",
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "sle": {
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-shield-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "disabledCount": 4,
+          "disabledStyle": {
+            "bg": "rgb(248, 250, 252)",
+            "border": "rgb(203, 213, 225)",
+            "color": "rgb(51, 65, 85)",
+            "cursor": "not-allowed"
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "statusBadges": [
+            "Verified"
+          ],
+          "campus": "Campus \u2014"
+        }
+      }
+    },
+    "360x800": {
+      "dashboard": {
+        "viewport": "360x800",
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "dashboard": {
+          "metricCount": 3,
+          "cardRects": [
+            {
+              "w": 328,
+              "h": 136,
+              "top": 203
+            },
+            {
+              "w": 328,
+              "h": 136,
+              "top": 362
+            },
+            {
+              "w": 328,
+              "h": 157,
+              "top": 522
+            }
+          ],
+          "values": [
+            "1",
+            "0",
+            "Verified"
+          ],
+          "valueFontSizes": [
+            "28px",
+            "28px",
+            "28px"
+          ],
+          "icons": [
+            "bi bi-file-earmark-text",
+            "bi bi-award",
+            "bi bi-shield-check"
+          ],
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px"
+          },
+          "rowHeights": [
+            81
+          ],
+          "actionButtons": [
+            {
+              "text": "View Details",
+              "w": 73,
+              "h": 48,
+              "right": 472
+            }
+          ]
+        }
+      },
+      "sle-fhe": {
+        "viewport": "360x800",
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "sle": {
+          "headerIcons": [
+            "bi bi-person-vcard fs-5",
+            "bi bi-geo-alt fs-5",
+            "bi bi-shield-check fs-5",
+            "bi bi-info-circle fs-5"
+          ],
+          "disabledCount": 4,
+          "disabledStyle": {
+            "bg": "rgb(248, 250, 252)",
+            "border": "rgb(203, 213, 225)",
+            "color": "rgb(51, 65, 85)",
+            "cursor": "not-allowed"
+          },
+          "lockNotice": "Your residential address is locked because your SLE-FHE status is already verified.",
+          "statusBadges": [
+            "Verified"
+          ],
+          "campus": "Campus \u2014"
+        }
+      },
+      "applications": {
+        "viewport": "360x800",
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "applications": {
+          "cardStyle": {
+            "borderRadius": "14px",
+            "borderColor": "rgb(225, 232, 236)",
+            "boxShadow": "rgba(15, 37, 55, 0.05) 0px 1px 3px 0px"
+          },
+          "headerFont": {
+            "fontSize": "11.52px",
+            "fontWeight": "700",
+            "letterSpacing": "0.576px",
+            "textTransform": "uppercase"
+          },
+          "headerHeight": {
+            "w": 606,
+            "h": 45,
+            "top": 204,
+            "right": 623
+          },
+          "rowHeights": [
+            93
+          ],
+          "badges": [
+            {
+              "text": "Pending\n         \u2014 Awaiting FASSG review",
+              "bg": "rgb(255, 248, 234)",
+              "color": "rgb(152, 101, 21)"
+            }
+          ],
+          "actions": [
+            {
+              "text": "View Details",
+              "w": 111,
+              "h": 29,
+              "right": 599
+            }
+          ]
+        }
+      },
+      "detail": {
+        "viewport": "360x800",
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "horizontalOverflow": 0,
+        "overflowingElements": [],
+        "h1": null,
+        "h1Style": null,
+        "pageSubtitle": [],
+        "detail": {
+          "steps": [
+            "Application Submitted",
+            "FASSG Application Review",
+            "Sponsor Batch Approval",
+            "Ongoing"
+          ],
+          "explainer": "SLE-FHE verification is a separate institutional eligibility record. FASSG reviews your documents, and the sponsor approves the whole batch. Submitting an application does not guarantee a grant.",
+          "docRows": [
+            {
+              "w": 294,
+              "h": 128
+            },
+            {
+              "w": 294,
+              "h": 128
+            },
+            {
+              "w": 294,
+              "h": 128
+            },
+            {
+              "w": 294,
+              "h": 128
+            },
+            {
+              "w": 294,
+              "h": 128
+            }
+          ],
+          "filenames": [
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": true
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUERBO ET AL.-FACET-BSIT - CopyFORM 9-37-CUE.pdf",
+              "truncatedVisually": true
+            },
+            {
+              "text": "FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "lines": 2,
+              "title": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "ariaLabel": "Filename: FORM 9-37-CUERBO ET AL.-FACET-BSIT.pdf",
+              "truncatedVisually": false
+            },
+            {
+              "text": "RESEARCH CHAPTER 1 .pdf",
+              "lines": 1,
+              "title": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "ariaLabel": "Filename: RESEARCH CHAPTER 1 .pdf",
+              "truncatedVisually": false
+            }
+          ],
+          "viewLinks": [
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/31",
+              "w": 68,
+              "h": 31,
+              "right": 310
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/32",
+              "w": 68,
+              "h": 31,
+              "right": 310
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/33",
+              "w": 68,
+              "h": 31,
+              "right": 310
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/35",
+              "w": 68,
+              "h": 31,
+              "right": 310
+            },
+            {
+              "text": "View",
+              "href": "http://127.0.0.1:8001/documents/34",
+              "w": 68,
+              "h": 31,
+              "right": 310
+            }
+          ],
+          "summaryHeading": null,
+          "backButton": {
+            "w": 328,
+            "h": 35,
+            "right": 344
+          },
+          "rurality": "Address Classification = Urban"
+        }
+      }
+    }
+  },
+  "logins": {
+    "populated": "/student/dashboard",
+    "empty_verified": "/student/dashboard"
+  }
+}

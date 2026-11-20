@@ -11,6 +11,170 @@
         display: none;
     }
 
+    /* Standard Student Portal Secondary Action Buttons (matching Reset Filters institutional convention) */
+    .sf-btn-student-secondary,
+    .btn.sf-btn-student-secondary,
+    .sf-btn-secondary,
+    .btn.sf-btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        line-height: 1;
+        padding: 0 14px;
+        height: 36px;
+        border-radius: 8px;
+        background-color: #FFFFFF;
+        border: 1px solid #D5E0E8;
+        color: #173B57;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+        cursor: pointer;
+    }
+
+    .sf-btn-student-secondary i,
+    .btn.sf-btn-student-secondary i,
+    .sf-btn-secondary i,
+    .btn.sf-btn-secondary i {
+        font-size: 14px;
+        line-height: 1;
+        color: #173B57;
+        transition: color 180ms ease;
+        flex-shrink: 0;
+    }
+
+    .sf-btn-student-secondary:hover,
+    .btn.sf-btn-student-secondary:hover,
+    .sf-btn-secondary:hover,
+    .btn.sf-btn-secondary:hover {
+        background-color: #EEF3F7;
+        color: #0F2942;
+        border-color: #AFC3D3;
+        text-decoration: none;
+    }
+
+    .sf-btn-student-secondary:hover i,
+    .btn.sf-btn-student-secondary:hover i,
+    .sf-btn-secondary:hover i,
+    .btn.sf-btn-secondary:hover i {
+        color: #0F2942;
+    }
+
+    .sf-btn-student-secondary:focus-visible,
+    .btn.sf-btn-student-secondary:focus-visible,
+    .sf-btn-secondary:focus-visible,
+    .btn.sf-btn-secondary:focus-visible {
+        outline: none;
+        border-color: #173B57;
+        box-shadow: 0 0 0 3px rgba(23, 59, 87, 0.2);
+        color: #0F2942;
+    }
+
+    .sf-btn-student-secondary:active,
+    .btn.sf-btn-student-secondary:active,
+    .sf-btn-secondary:active,
+    .btn.sf-btn-secondary:active {
+        background-color: #E2EAF0;
+        border-color: #9DB4C6;
+        color: #0F2942;
+    }
+
+    .sf-btn-student-secondary.w-100,
+    .btn.sf-btn-student-secondary.w-100,
+    .sf-btn-secondary.w-100,
+    .btn.sf-btn-secondary.w-100 {
+        height: 38px;
+        padding: 0 16px;
+    }
+
+    /* Standardized Application Progress Timeline (Dashboard & Application Detail) */
+    .sf-app-timeline {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+
+    .sf-app-timeline-track {
+        position: absolute;
+        top: 18px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: #E2E8F0;
+        z-index: 0;
+    }
+
+    .sf-app-timeline-step {
+        position: relative;
+        z-index: 1;
+        flex: 1;
+        padding: 0 4px;
+        text-align: center;
+    }
+
+    .sf-app-timeline-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        line-height: 1;
+        transition: all 0.2s ease;
+    }
+
+    /* 1. Completed: Institutional Navy with White Checkmark */
+    .sf-app-timeline-circle.is-completed {
+        background-color: #0F2942;
+        border: 1px solid #0F2942;
+        color: #FFFFFF;
+    }
+
+    /* 2. Current / Active: Light Blue-Gray with Navy 2px Border and Navy Outline Icon */
+    .sf-app-timeline-circle.is-current {
+        background-color: #E8F0F6;
+        border: 2px solid #0F2942;
+        color: #0F2942;
+    }
+
+    /* 3. Upcoming / Pending: Clean White with Subtle Border and Muted Slate Icon */
+    .sf-app-timeline-circle.is-upcoming {
+        background-color: #FFFFFF;
+        border: 1px solid #D5E0E8;
+        color: #94A3B8;
+    }
+
+    .sf-app-timeline-label {
+        font-size: 0.8125rem;
+        line-height: 1.35;
+        margin-top: 8px;
+        margin-bottom: 2px;
+    }
+
+    .sf-app-timeline-label.is-completed,
+    .sf-app-timeline-label.is-current {
+        font-weight: 600;
+        color: #0F2942;
+    }
+
+    .sf-app-timeline-label.is-upcoming {
+        font-weight: 500;
+        color: #64748B;
+    }
+
+    .sf-app-timeline-status {
+        font-size: 0.75rem;
+        line-height: 1.3;
+        margin-bottom: 0;
+    }
+
     @media screen and (min-width: 992px) {
         body.sf-student-portal {
             --sf-student-sidebar-width: 256px;

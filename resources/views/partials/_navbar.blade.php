@@ -460,6 +460,20 @@
         flex-wrap: nowrap !important;
     }
 
+    @media (min-width: 768px) and (max-width: 991.98px) {
+        .sf-navbar .container-fluid {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+        }
+        .sf-navbar .sf-topnav-link {
+            font-size: 0.72rem !important;
+            padding: 0.2rem 0.3rem !important;
+        }
+        .sf-navbar .navbar-brand span {
+            font-size: 0.95rem !important;
+        }
+    }
+
     .sf-topnav-link {
         color: #475569 !important;
         font-weight: 500;
